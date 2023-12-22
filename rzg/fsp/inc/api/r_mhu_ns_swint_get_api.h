@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -50,8 +50,6 @@ FSP_HEADER
 /**********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define MHU_NS_SWINT_GET_API_VERSION_MAJOR    (1U)
-#define MHU_NS_SWINT_GET_API_VERSION_MINOR    (0U)
 
 /**********************************************************************************************************************
  * Typedef definitions
@@ -110,7 +108,7 @@ typedef struct st_mhu_ns_swint_get_api
      *                                       Callback arguments allocated here are only valid during the callback.
      */
     fsp_err_t (* callbackSet)(mhu_ns_swint_get_ctrl_t * const p_api_ctrl,
-                              void (* p_callback)(mhu_ns_swint_get_callback_args_t *), void const * const p_context,
+                              void ( * p_callback ) (mhu_ns_swint_get_callback_args_t *), void const * const p_context,
                               mhu_ns_swint_get_callback_args_t * const p_callback_memory);
 
     /** Closes the driver and releases the MHU device.
@@ -120,14 +118,6 @@ typedef struct st_mhu_ns_swint_get_api
      * @param[in] p_ctrl    Pointer to control block set in mhu_ns_swint_get_api_t::open call.
      */
     fsp_err_t (* close)(mhu_ns_swint_get_ctrl_t * const p_ctrl);
-
-    /* DEPRECATED Get version and stores it in provided pointer p_version.
-     * @par Implemented as
-     * - @ref R_MHU_NS_SWINT_GET_VersionGet()
-     *
-     * @param[out] p_version  Code and API version used.
-     */
-    fsp_err_t (* versionGet)(fsp_version_t * const p_version);
 } mhu_ns_swint_get_api_t;
 
 /** This structure encompasses everything that is needed to use an instance of this interface. */

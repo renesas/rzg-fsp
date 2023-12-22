@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -60,15 +60,6 @@ void gtm_int_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
-/** Version data structure. */
-static const fsp_version_t s_gtm_version =
-{
-    .api_version_minor  = TIMER_API_VERSION_MINOR,
-    .api_version_major  = TIMER_API_VERSION_MAJOR,
-    .code_version_minor = GTM_CODE_VERSION_MINOR,
-    .code_version_major = GTM_CODE_VERSION_MAJOR,
-};
-
 /***********************************************************************************************************************
  * Global Variables
  **********************************************************************************************************************/
@@ -88,7 +79,6 @@ const timer_api_t g_timer_on_gtm =
     .statusGet    = R_GTM_StatusGet,
     .callbackSet  = R_GTM_CallbackSet,
     .close        = R_GTM_Close,
-    .versionGet   = R_GTM_VersionGet
 };
 
 /*******************************************************************************************************************//**
@@ -134,8 +124,6 @@ fsp_err_t R_GTM_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_c
 
     /* Power on the GTM channel. */
     R_BSP_MODULE_START(FSP_IP_GTM, p_cfg->channel);
-    R_BSP_MODULE_CLKON(FSP_IP_GTM, p_cfg->channel);
-    R_BSP_MODULE_RSTOFF(FSP_IP_GTM, p_cfg->channel);
 
     /* Forcibly stop timer. */
     p_instance_ctrl->p_reg->OSTMnTT = 1;
@@ -438,24 +426,8 @@ fsp_err_t R_GTM_Close (timer_ctrl_t * const p_ctrl)
 
     p_instance_ctrl->open = 0U;
 
-    return FSP_SUCCESS;
-}
-
-/***********************************************************************************************************************
- * DEPRECATED Sets driver version based on compile time macros.  Implements @ref timer_api_t::versionGet.
- *
- * @retval     FSP_SUCCESS          Version in p_version.
- * @retval     FSP_ERR_ASSERTION    The parameter p_version is NULL.
- **********************************************************************************************************************/
-fsp_err_t R_GTM_VersionGet (fsp_version_t * const p_version)
-{
-#if GTM_CFG_PARAM_CHECKING_ENABLE
-
-    /* Verify parameters are valid */
-    FSP_ASSERT(NULL != p_version);
-#endif
-
-    p_version->version_id = s_gtm_version.version_id;
+    /* Remove power to the channel. */
+    R_BSP_MODULE_STOP(FSP_IP_GTM, p_instance_ctrl->p_cfg->channel);
 
     return FSP_SUCCESS;
 }
@@ -604,6 +576,7 @@ void gtm_int_isr (void)
             callback_args = *p_args;
         }
 
+        p_args->event     = TIMER_EVENT_CYCLE_END;
         p_args->p_context = p_instance_ctrl->p_context;
 
 #if BSP_TZ_SECURE_BUILD

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -31,8 +31,8 @@
 #define MHU_NS_OPEN                (0x00774855ULL)
 
 #define MHU_NS_SHMEM_CH_SIZE       (0x8)
-#define MHU_NS_SHMEM_TXD_OFFSET    (0x0)
-#define MHU_NS_SHMEM_RXD_OFFSET    (0x4)
+#define MHU_NS_RSP_TXD_OFFSET      (0x0)
+#define MHU_NS_MSG_TXD_OFFSET      (0x4)
 
 /**********************************************************************************************************************
  * Typedef definitions
@@ -65,13 +65,6 @@ void metal_irq_isr(uint32_t vector);
  **********************************************************************************************************************/
 
 /** Version data structure. */
-static const fsp_version_t s_mhu_ns_version =
-{
-    .api_version_minor  = MHU_API_VERSION_MINOR,
-    .api_version_major  = MHU_API_VERSION_MAJOR,
-    .code_version_minor = MHU_NS_CODE_VERSION_MINOR,
-    .code_version_major = MHU_NS_CODE_VERSION_MAJOR,
-};
 
 extern uint32_t __mhu_shmem_start;
 
@@ -88,7 +81,6 @@ const mhu_api_t g_mhu_ns_on_mhu_ns =
     .msgSend     = R_MHU_NS_MsgSend,
     .callbackSet = R_MHU_NS_CallbackSet,
     .close       = R_MHU_NS_Close,
-    .versionGet  = R_MHU_NS_VersionGet
 };
 
 /*******************************************************************************************************************//**
@@ -118,53 +110,59 @@ fsp_err_t R_MHU_NS_Open (mhu_ctrl_t * const p_ctrl, mhu_cfg_t const * const p_cf
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 #endif
 
-    p_instance_ctrl->p_regs = (R_MHU0_Type *) (R_MHU0_BASE +
-                                               (p_cfg->channel * ((intptr_t) R_MHU1_BASE - (intptr_t) R_MHU0_BASE)));
+    p_instance_ctrl->p_regs = (R_MHU0_Type *) (R_MHU_NS0_BASE +
+                                               (p_cfg->channel *
+                                                ((intptr_t) R_MHU_NS1_BASE - (intptr_t) R_MHU_NS0_BASE)));
     p_instance_ctrl->p_cfg   = p_cfg;
     p_instance_ctrl->channel = p_cfg->channel;
 
-    switch (p_cfg->channel)
-    {
-        case 4:
-        case 5:
-        {
-            p_instance_ctrl->send_type = MHU_SEND_TYPE_MSG;
-            break;
-        }
-
-        case 1:
-        case 3:
-        {
-            p_instance_ctrl->send_type = MHU_SEND_TYPE_RSP;
-            break;
-        }
-
-        default:
-        {
-            p_instance_ctrl->send_type = MHU_SEND_TYPE_MSG;
-            break;
-        }
-    }
+    p_instance_ctrl->send_type =
+        ((1U << p_cfg->channel) &
+         BSP_FEATURE_MHU_NS_SEND_TYPE_RSP_VALID_CHANNEL_MASK) ? MHU_SEND_TYPE_RSP : MHU_SEND_TYPE_MSG;
 
     if (0 != p_cfg->p_shared_memory)
     {
         /* Use specified address */
-        p_instance_ctrl->p_shared_memory_tx = (uint32_t *) p_cfg->p_shared_memory;
-        p_instance_ctrl->p_shared_memory_rx = (uint32_t *) (((uint32_t) p_cfg->p_shared_memory) + 0x4);
+        if (p_instance_ctrl->send_type == MHU_SEND_TYPE_RSP)
+        {
+            p_instance_ctrl->p_shared_memory_tx = (uint32_t *) (((uint32_t) p_cfg->p_shared_memory) +
+                                                                MHU_NS_RSP_TXD_OFFSET);
+            p_instance_ctrl->p_shared_memory_rx = (uint32_t *) (((uint32_t) p_cfg->p_shared_memory) +
+                                                                MHU_NS_MSG_TXD_OFFSET);
+        }
+        else
+        {
+            p_instance_ctrl->p_shared_memory_tx = (uint32_t *) (((uint32_t) p_cfg->p_shared_memory) +
+                                                                MHU_NS_MSG_TXD_OFFSET);
+            p_instance_ctrl->p_shared_memory_rx = (uint32_t *) (((uint32_t) p_cfg->p_shared_memory) +
+                                                                MHU_NS_RSP_TXD_OFFSET);
+        }
     }
     else
     {
         /* Use default location */
-        p_instance_ctrl->p_shared_memory_tx = (uint32_t *) (g_shmem_base + (MHU_NS_SHMEM_CH_SIZE * p_cfg->channel) +
-                                                            MHU_NS_SHMEM_TXD_OFFSET);
-        p_instance_ctrl->p_shared_memory_rx = (uint32_t *) (g_shmem_base + (MHU_NS_SHMEM_CH_SIZE * p_cfg->channel) +
-                                                            MHU_NS_SHMEM_RXD_OFFSET);
+        if (p_instance_ctrl->send_type == MHU_SEND_TYPE_RSP)
+        {
+            p_instance_ctrl->p_shared_memory_tx =
+                (uint32_t *) (g_shmem_base + (MHU_NS_SHMEM_CH_SIZE * p_cfg->channel) +
+                              MHU_NS_RSP_TXD_OFFSET);
+            p_instance_ctrl->p_shared_memory_rx =
+                (uint32_t *) (g_shmem_base + (MHU_NS_SHMEM_CH_SIZE * p_cfg->channel) +
+                              MHU_NS_MSG_TXD_OFFSET);
+        }
+        else
+        {
+            p_instance_ctrl->p_shared_memory_tx =
+                (uint32_t *) (g_shmem_base + (MHU_NS_SHMEM_CH_SIZE * p_cfg->channel) +
+                              MHU_NS_MSG_TXD_OFFSET);
+            p_instance_ctrl->p_shared_memory_rx =
+                (uint32_t *) (g_shmem_base + (MHU_NS_SHMEM_CH_SIZE * p_cfg->channel) +
+                              MHU_NS_RSP_TXD_OFFSET);
+        }
     }
 
     /* Power on the MHU_NS channel. */
     R_BSP_MODULE_START(FSP_IP_MHU, p_cfg->channel);
-    R_BSP_MODULE_CLKON(FSP_IP_MHU, p_cfg->channel);
-    R_BSP_MODULE_RSTOFF(FSP_IP_MHU, p_cfg->channel);
 
     R_BSP_IrqCfgEnable(p_cfg->rx_irq, p_cfg->rx_ipl, p_instance_ctrl);
 
@@ -299,29 +297,6 @@ fsp_err_t R_MHU_NS_Close (mhu_ctrl_t * const p_ctrl)
 
 /**********************************************************************************************************************
  * End of function R_MHU_NS_Close
- *********************************************************************************************************************/
-
-/***********************************************************************************************************************
- * DEPRECATED Sets driver version based on compile time macros.  Implements @ref mhu_api_t::versionGet.
- *
- * @retval     FSP_SUCCESS          Version in p_version.
- * @retval     FSP_ERR_ASSERTION    The parameter p_version is NULL.
- **********************************************************************************************************************/
-fsp_err_t R_MHU_NS_VersionGet (fsp_version_t * const p_version)
-{
-#if MHU_NS_CFG_PARAM_CHECKING_ENABLE
-
-    /* Verify parameters are valid */
-    FSP_ASSERT(NULL != p_version);
-#endif
-
-    p_version->version_id = s_mhu_ns_version.version_id;
-
-    return FSP_SUCCESS;
-}
-
-/**********************************************************************************************************************
- * End of function R_MHU_NS_VersionGet
  *********************************************************************************************************************/
 
 /** @} (end addtogroup MHU_NS) */

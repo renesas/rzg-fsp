@@ -335,29 +335,6 @@ static void prvSetupFPU(void) PRIVILEGED_FUNCTION;
 void vPortSetupTimerInterrupt(void) PRIVILEGED_FUNCTION;
 
 /**
- * @brief Checks whether the current execution context is interrupt.
- *
- * @return pdTRUE if the current execution context is interrupt, pdFALSE
- * otherwise.
- */
-BaseType_t xPortIsInsideInterrupt(void);
-
-/**
- * @brief Yield the processor.
- */
-void vPortYield(void) PRIVILEGED_FUNCTION;
-
-/**
- * @brief Enter critical section.
- */
-void vPortEnterCritical(void) PRIVILEGED_FUNCTION;
-
-/**
- * @brief Exit from critical section.
- */
-void vPortExitCritical(void) PRIVILEGED_FUNCTION;
-
-/**
  * @brief SysTick handler.
  */
 void SysTick_Handler(timer_callback_args_t * p_args) PRIVILEGED_FUNCTION;
@@ -373,6 +350,11 @@ portDONT_DISCARD void vPortSVCHandler_C(uint32_t * pulCallerStackAddress) PRIVIL
 void vApplicationIdleHook(void);
 
 /**
+ * @brief IRQ Wake Up
+ */
+IRQn_Type vPortGetWakeUpIrq(void);
+
+/**
  * @brief Idle Hook
  */
 void rm_freertos_port_sleep_preserving_lpm(uint32_t xExpectedIdleTime);
@@ -383,7 +365,7 @@ void rm_freertos_port_sleep_preserving_lpm(uint32_t xExpectedIdleTime);
  * @brief Each task maintains its own interrupt status in the critical nesting
  * variable.
  */
-PRIVILEGED_DATA static volatile uint32_t ulCriticalNesting = 0xaaaaaaaaUL;
+PRIVILEGED_DATA static volatile uint32_t ulCriticalNesting = UCN0;
 
 #if (configENABLE_TRUSTZONE == 1)
 
@@ -1005,31 +987,31 @@ StackType_t * pxPortInitialiseStack(StackType_t * pxTopOfStack,
         pxTopOfStack--;
         *pxTopOfStack = (StackType_t) portTASK_RETURN_ADDRESS; /* LR */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x12121212UL;            /* R12 */
+        *pxTopOfStack = (StackType_t) R12_INIT_VALUE;          /* R12 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x03030303UL;            /* R3 */
+        *pxTopOfStack = (StackType_t) R3_INIT_VALUE;           /* R3 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x02020202UL;            /* R2 */
+        *pxTopOfStack = (StackType_t) R2_INIT_VALUE;           /* R2 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x01010101UL;            /* R1 */
+        *pxTopOfStack = (StackType_t) R1_INIT_VALUE;           /* R1 */
         pxTopOfStack--;
         *pxTopOfStack = (StackType_t) pvParameters;            /* R0 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x11111111UL;            /* R11 */
+        *pxTopOfStack = (StackType_t) R11_INIT_VALUE;          /* R11 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x10101010UL;            /* R10 */
+        *pxTopOfStack = (StackType_t) R10_INIT_VALUE;          /* R10 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x09090909UL;            /* R09 */
+        *pxTopOfStack = (StackType_t) R9_INIT_VALUE;           /* R09 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x08080808UL;            /* R08 */
+        *pxTopOfStack = (StackType_t) R8_INIT_VALUE;           /* R08 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x07070707UL;            /* R07 */
+        *pxTopOfStack = (StackType_t) R7_INIT_VALUE;           /* R07 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x06060606UL;            /* R06 */
+        *pxTopOfStack = (StackType_t) R6_INIT_VALUE;           /* R06 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x05050505UL;            /* R05 */
+        *pxTopOfStack = (StackType_t) R5_INIT_VALUE;           /* R05 */
         pxTopOfStack--;
-        *pxTopOfStack = (StackType_t) 0x04040404UL;            /* R04 */
+        *pxTopOfStack = (StackType_t) R4_INIT_VALUE;           /* R04 */
         pxTopOfStack--;
         *pxTopOfStack = portINITIAL_EXC_RETURN;                /* EXC_RETURN */
 
@@ -1111,7 +1093,7 @@ void vPortEndScheduler (void)          /* PRIVILEGED_FUNCTION */
 {
     /* Not implemented in ports where there is nothing to return to.
      * Artificially force an assert. */
-    configASSERT(ulCriticalNesting == 1000UL);
+    configASSERT(ulCriticalNesting == UCN1);
 }
 
 /*-----------------------------------------------------------*/
@@ -1270,12 +1252,14 @@ BaseType_t xPortIsInsideInterrupt (void)
 #if configUSE_IDLE_HOOK || configUSE_TICKLESS_IDLE
 
 /*-----------------------------------------------------------*/
-#if !defined(portGENERATED_GET_WAKEUP_IRQ)
-__attribute__((weak)) IRQn_Type vPortGetWakeUpIrq(void)
+ #if !defined(portGENERATED_GET_WAKEUP_IRQ)
+__attribute__((weak)) IRQn_Type vPortGetWakeUpIrq (void)
 {
     return GTM2_OSTM2INT_IRQn;
 }
-#endif
+
+ #endif
+
 /***********************************************************************************************************************
  * Saves the LPM state, then enters sleep mode. After waking, reenables interrupts briefly to allow any pending
  * interrupts to run.
@@ -1288,8 +1272,9 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
 {
     /* Get IRQ number for the return factor. */
     IRQn_Type irq_for_wakeup = vPortGetWakeUpIrq();
+
     /* This program jumps to IRQ handler of the return factor. */
-    #define portJUMP_TO_IRQ_HANDLER_OF_RETURN_FACTOR    (1)
+ #define portJUMP_TO_IRQ_HANDLER_OF_RETURN_FACTOR    (1)
 
     /* Sleep until something happens.  configPRE_SLEEP_PROCESSING() can
      * set its parameter to 0 to indicate that its implementation contains
@@ -1299,8 +1284,9 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
     configPRE_SLEEP_PROCESSING(xExpectedIdleTime);
     if (xExpectedIdleTime > 0)
     {
-        uint32_t nvic_iser_backup[sizeof(NVIC->ISER)/sizeof(uint32_t)];
-        uint32_t nvic_icer[sizeof(NVIC->ICER)/sizeof(uint32_t)];
+        uint32_t nvic_iser_backup[sizeof(NVIC->ISER) / sizeof(uint32_t)];
+        uint32_t nvic_icer[sizeof(NVIC->ICER) / sizeof(uint32_t)];
+
         /* Go to Cortex-M33 Sleep Mode. Refer to "Cortex-M33 Sleep Mode" section of Hardware Manual */
 
         /* Sequence "1. Slow down the speed of Cortex-M33 clock" is not mandatory. */
@@ -1311,20 +1297,20 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
          * The IM33_MASK bit is automatically cleared after completing the transition to Cortex-M33 Sleep Mode.
          * Refer to the SYS_LP_CTL7 register in the SYSC section.
          */
-        R_SYSC->SYS_LP_CTL7_b.IM33_MASK = 1;
+        R_BSP_IM33_ENABLE();
 
         /* Sequence 3.
          * Set the return factor to NVIC. Enables only the interrupts used for return from Cortex-M33 Sleep Mode and
          * disables the interrupts used for the normal operation.
-         */
-        /* Backup all NVIC ISER registers */
-        memcpy((void*)nvic_iser_backup, (void*)NVIC->ISER, sizeof(NVIC->ISER));
-        /* Set all NVIC ICER registers except the return factor */
-        memset((void*)nvic_icer, 0xffu, sizeof(nvic_icer));
-        nvic_icer[irq_for_wakeup / 32] = (uint32_t)~(1u << (uint32_t)(irq_for_wakeup % 32));
-        memcpy((void*)NVIC->ICER, (void*)nvic_icer, sizeof(NVIC->ICER));
+         *//* Backup all NVIC ISER registers */
+        memcpy((void *) nvic_iser_backup, (void *) NVIC->ISER, sizeof(NVIC->ISER));
 
-        /* Sequence 4. 
+        /* Set all NVIC ICER registers except the return factor */
+        memset((void *) nvic_icer, ICER1, sizeof(nvic_icer));
+        nvic_icer[irq_for_wakeup / ICER2] = (uint32_t) ~(1U << (uint32_t) (irq_for_wakeup % ICER2));
+        memcpy((void *) NVIC->ICER, (void *) nvic_icer, sizeof(NVIC->ICER));
+
+        /* Sequence 4.
          * Issue Barrier instruction.
          *
          * DSB should be last instruction executed before WFI
@@ -1332,19 +1318,22 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
          */
         __DSB();
 
-        /* Sequence 5. 
+        /* Sequence 5.
          * Set the SLEEPDEEP bit of the SCR register in Cortex-M33 to 1.
          * Note that to do above in the case of non-secure mode, SLEEPDEEPS bit is required to be 0.
          */
         SCB->SCR = (SCB->SCR & (~SCB_SCR_SLEEPDEEP_Msk)) |
                    ((1 << SCB_SCR_SLEEPDEEP_Pos) & SCB_SCR_SLEEPDEEP_Msk);
 
-        /* Sequence 6. 
+        /* Sequence 6.
          * Read SCR register to confirm whether the SLEEPDEEP bit is set to 1.
          */
-        while(!(SCB->SCR & SCB_SCR_SLEEPDEEP_Msk));
+        while (!(SCB->SCR & SCB_SCR_SLEEPDEEP_Msk))
+        {
+            ;
+        }
 
-        /* Sequence 7. 
+        /* Sequence 7.
          * Issue a WFI instruction to enter Cortex-M33 Sleep Mode.
          *
          * If there is a pending interrupt (wake up condition for WFI is true), the MCU does not enter low power mode:
@@ -1354,27 +1343,28 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
         __WFI();
         __ISB();
 
-        /* Sequence 8. 
+        /* Sequence 8.
          * Return from Cortex-M33 Sleep Mode when the event ocurrs or the interrupt set in NVIC occurs.
          */
 
-        /* Sequence 9. 
+        /* Sequence 9.
          * Confirm the interrupt cause and perform the processing required for returning from Cortex-M33 Sleep Mode.
          */
 
-        /* Sequence 10. 
+        /* Sequence 10.
          * And then clear the interrupt cause.
          */
-#if !portJUMP_TO_IRQ_HANDLER_OF_RETURN_FACTOR
+ #if !portJUMP_TO_IRQ_HANDLER_OF_RETURN_FACTOR
         R_BSP_IrqClearPending(irq_for_wakeup);
-#endif
+ #endif
 
-        /* Sequence 11. 
+        /* Sequence 11.
          * Set the interrupt causes for the normal operation to NVIC.
          */
+
         /* Restore NVIC ISER register from backup */
-        memcpy((void*)NVIC->ISER, (void*)nvic_iser_backup, sizeof(NVIC->ISER));
-        
+        memcpy((void *) NVIC->ISER, (void *) nvic_iser_backup, sizeof(NVIC->ISER));
+
         /* Sequence "12. Recover the speed of Cortex-M33 clock." is not mandatory. */
 
         /* Re-enable interrupts to allow the interrupt that brought the MCU
@@ -1427,6 +1417,7 @@ __attribute__((weak)) void vApplicationIdleHook (void)
 __attribute__((weak)) void vPortConfigureTimerForRunTimeStatus (void)
 {
 #if configGENERATE_RUN_TIME_STATS
+
     /* open and start GTM0 */
 #endif
 }

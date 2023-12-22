@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -30,6 +30,7 @@
  * Includes
  **********************************************************************************************************************/
 #include "bsp_api.h"
+#include "r_poeg_cfg.h"
 #include "r_poeg_api.h"
 
 /* Common macro for FSP header files. There is also a corresponding FSP_FOOTER macro at the end of this file. */
@@ -38,8 +39,6 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define POEG_CODE_VERSION_MAJOR    (1U) // DEPRECATED
-#define POEG_CODE_VERSION_MINOR    (0U) // DEPRECATED
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -50,7 +49,7 @@ typedef struct st_poeg_instance_ctrl
 {
     uint32_t           open;                     // Whether or not channel is open
     const poeg_cfg_t * p_cfg;                    // Pointer to initial configurations
-    R_POEGA_Type * p_reg;                    // Base register for this channel
+    R_POEGA_Type     * p_reg;                    // Base register for this channel
 
     void (* p_callback)(poeg_callback_args_t *); // Pointer to callback
     poeg_callback_args_t * p_callback_memory;    // Pointer to optional callback argument memory
@@ -79,7 +78,6 @@ fsp_err_t R_POEG_CallbackSet(poeg_ctrl_t * const          p_ctrl,
 fsp_err_t R_POEG_OutputDisable(poeg_ctrl_t * const p_ctrl);
 fsp_err_t R_POEG_Reset(poeg_ctrl_t * const p_ctrl);
 fsp_err_t R_POEG_Close(poeg_ctrl_t * const p_ctrl);
-fsp_err_t R_POEG_VersionGet(fsp_version_t * const p_version);
 
 /*******************************************************************************************************************//**
  * @} (end defgroup POEG)

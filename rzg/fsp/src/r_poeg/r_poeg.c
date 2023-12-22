@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -58,15 +58,6 @@ void poeg_event_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
-/* Version data structure used by error logger macro. */
-static const fsp_version_t g_poeg_version =
-{
-    .api_version_minor  = POEG_API_VERSION_MINOR,
-    .api_version_major  = POEG_API_VERSION_MAJOR,
-    .code_version_major = POEG_CODE_VERSION_MAJOR,
-    .code_version_minor = POEG_CODE_VERSION_MINOR
-};
-
 /***********************************************************************************************************************
  * Global Variables
  **********************************************************************************************************************/
@@ -80,7 +71,6 @@ const poeg_api_t g_poeg_on_poeg =
     .statusGet     = R_POEG_StatusGet,
     .callbackSet   = R_POEG_CallbackSet,
     .close         = R_POEG_Close,
-    .versionGet    = R_POEG_VersionGet
 };
 
 /*******************************************************************************************************************//**
@@ -132,17 +122,11 @@ fsp_err_t R_POEG_Open (poeg_ctrl_t * const p_ctrl, poeg_cfg_t const * const p_cf
 
     /* Power on POEG before setting any hardware registers. */
     R_BSP_MODULE_START(FSP_IP_POEG, p_cfg->channel);
-	
-    /* Supply clock to all GPT channels. */
-    R_BSP_MODULE_CLKON(FSP_IP_POEG, p_cfg->channel);
-
-    /* Negate reset signal for all GPT channels. */
-    R_BSP_MODULE_RSTOFF(FSP_IP_POEG, p_cfg->channel);
 
     /* Configure the POEGG register. */
     p_instance_ctrl->p_reg->POEGGn = ((uint32_t) p_cfg->trigger << R_POEG_POEGGn_PIDE_Pos) |
-                                    ((uint32_t) p_cfg->polarity << R_POEG_POEGGn_INV_Pos) |
-                                    ((uint32_t) p_cfg->noise_filter << R_POEG_POEGGn_NFEN_Pos);
+                                     ((uint32_t) p_cfg->polarity << R_POEG_POEGGn_INV_Pos) |
+                                     ((uint32_t) p_cfg->noise_filter << R_POEG_POEGGn_NFEN_Pos);
 
     /* Set callback and context pointers, if configured */
     p_instance_ctrl->p_callback        = p_cfg->p_callback;
@@ -307,25 +291,7 @@ fsp_err_t R_POEG_Close (poeg_ctrl_t * const p_ctrl)
     p_instance_ctrl->open = 0U;
 
     /* Remove power to the channel. */
-    R_BSP_MODULE_CLKOFF(FSP_IP_POEG, p_instance_ctrl->p_cfg->channel);
     R_BSP_MODULE_STOP(FSP_IP_POEG, p_instance_ctrl->p_cfg->channel);
-
-    return FSP_SUCCESS;
-}
-
-/***********************************************************************************************************************
- * DEPRECATED Sets driver version based on compile time macros. Implements @ref poeg_api_t::versionGet.
- *
- * @retval FSP_SUCCESS                 Version stored in p_version.
- * @retval FSP_ERR_ASSERTION           p_version was NULL.
- **********************************************************************************************************************/
-fsp_err_t R_POEG_VersionGet (fsp_version_t * const p_version)
-{
-#if POEG_CFG_PARAM_CHECKING_ENABLE
-    FSP_ASSERT(NULL != p_version);
-#endif
-
-    p_version->version_id = g_poeg_version.version_id;
 
     return FSP_SUCCESS;
 }
@@ -342,7 +308,7 @@ fsp_err_t R_POEG_VersionGet (fsp_version_t * const p_version)
 void poeg_event_isr (void)
 {
     /* Save context if RTOS is used */
-    FSP_CONTEXT_SAVE;
+    FSP_CONTEXT_SAVE
 
     poeg_callback_args_t args;
 
@@ -398,5 +364,5 @@ void poeg_event_isr (void)
     R_BSP_IrqStatusClear(irq);
 
     /* Restore context if RTOS is used */
-    FSP_CONTEXT_RESTORE;
+    FSP_CONTEXT_RESTORE
 }

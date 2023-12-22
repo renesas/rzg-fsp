@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -119,7 +119,11 @@ BSP_DONT_REMOVE static uint8_t g_heap[BSP_CFG_HEAP_BYTES] BSP_ALIGN_VARIABLE(BSP
  #pragma weak SysTick_Handler_NS                       = Default_Handler
 #elif defined(__GNUC__)
 
- #define WEAK_REF_ATTRIBUTE    __attribute__((weak, alias("Default_Handler")))
+ #if !BSP_NONSECURE_TRANSITION
+  #define WEAK_REF_ATTRIBUTE    __attribute__((weak, section(".non_secure")))
+ #else
+  #define WEAK_REF_ATTRIBUTE    __attribute__((weak, alias("Default_Handler")))
+ #endif
 #endif
 
 void HardFault_Handler_NS(void) WEAK_REF_ATTRIBUTE;
@@ -130,6 +134,104 @@ void SVC_Handler_NS(void) WEAK_REF_ATTRIBUTE;
 void DebugMon_Handler_NS(void) WEAK_REF_ATTRIBUTE;
 void PendSV_Handler_NS(void) WEAK_REF_ATTRIBUTE;
 void SysTick_Handler_NS(void) WEAK_REF_ATTRIBUTE;
+
+#if !BSP_NONSECURE_TRANSITION
+void Dummy_Handler_NS(void) WEAK_REF_ATTRIBUTE;
+
+void Dummy_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void HardFault_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void MemManage_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void BusFault_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void UsageFault_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void SVC_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void DebugMon_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void PendSV_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+void SysTick_Handler_NS (void)
+{
+    while (1)
+    {
+        ;
+    }
+}
+
+BSP_DONT_REMOVE const exc_ptr_t __Vectors[BSP_CORTEX_VECTOR_TABLE_ENTRIES] BSP_PLACE_IN_SECTION(
+    BSP_SECTION_FIXED_VECTORS) =
+{
+    (exc_ptr_t) (&g_main_stack[0] + BSP_CFG_STACK_MAIN_BYTES), /*      Initial Stack Pointer     */
+    Dummy_Handler_NS,                                          /*      Reset Handler             */
+    NMI_Handler_NS,                                            /*      NMI Handler               */
+    HardFault_Handler_NS,                                      /*      Hard Fault Handler        */
+    MemManage_Handler_NS,                                      /*      MPU Fault Handler         */
+    BusFault_Handler_NS,                                       /*      Bus Fault Handler         */
+    UsageFault_Handler_NS,                                     /*      Usage Fault Handler       */
+    0,                                                         /*      Reserved                  */
+    0,                                                         /*      Reserved                  */
+    0,                                                         /*      Reserved                  */
+    0,                                                         /*      Reserved                  */
+    SVC_Handler_NS,                                            /*      SVCall Handler            */
+    DebugMon_Handler_NS,                                       /*      Debug Monitor Handler     */
+    0,                                                         /*      Reserved                  */
+    PendSV_Handler_NS,                                         /*      PendSV Handler            */
+    SysTick_Handler_NS,                                        /*      SysTick Handler           */
+};
+
+#else
 
 /* Vector table. */
 BSP_DONT_REMOVE const exc_ptr_t __Vectors[BSP_CORTEX_VECTOR_TABLE_ENTRIES] BSP_PLACE_IN_SECTION(
@@ -152,5 +254,6 @@ BSP_DONT_REMOVE const exc_ptr_t __Vectors[BSP_CORTEX_VECTOR_TABLE_ENTRIES] BSP_P
     PendSV_Handler_NS,                                         /*      PendSV Handler            */
     SysTick_Handler_NS,                                        /*      SysTick Handler           */
 };
+#endif
 
 /** @} (end addtogroup BSP_MCU) */

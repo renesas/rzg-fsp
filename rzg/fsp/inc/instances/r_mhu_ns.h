@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -27,6 +27,7 @@
  * Includes
  **********************************************************************************************************************/
 #include "r_mhu_api.h"
+#include "r_mhu_ns_cfg.h"
 
 #ifndef R_MHU_NS_H
  #define R_MHU_NS_H
@@ -37,9 +38,6 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-
- #define MHU_NS_CODE_VERSION_MAJOR    (1U)
- #define MHU_NS_CODE_VERSION_MINOR    (0U)
 
 /*************************************************************************************************
  * Type defines
@@ -90,10 +88,8 @@ fsp_err_t R_MHU_NS_MsgSend(mhu_ctrl_t * const p_ctrl, uint32_t const msg);
 
 fsp_err_t R_MHU_NS_Close(mhu_ctrl_t * const p_ctrl);
 
-fsp_err_t R_MHU_NS_VersionGet(fsp_version_t * p_version);
-
 fsp_err_t R_MHU_NS_CallbackSet(mhu_ctrl_t * const          p_api_ctrl,
-                               void (                    * p_callback)(mhu_callback_args_t *),
+                               void (                    * p_callback ) (mhu_callback_args_t *),
                                void const * const          p_context,
                                mhu_callback_args_t * const p_callback_memory);
 

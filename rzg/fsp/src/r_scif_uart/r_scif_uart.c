@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -28,31 +28,37 @@
  * Macro definitions
  **********************************************************************************************************************/
 #ifndef SCIF_UART_CFG_RX_ENABLE
- #define SCIF_UART_CFG_RX_ENABLE        1
+ #define SCIF_UART_CFG_RX_ENABLE               1
 #endif
 #ifndef SCIF_UART_CFG_TX_ENABLE
- #define SCIF_UART_CFG_TX_ENABLE        1
+ #define SCIF_UART_CFG_TX_ENABLE               1
 #endif
 
 /** Number of divisors in the data table used for baud rate calculation. */
-#define SCIF_UART_NUM_DIVISORS_ASYNC    (9U)
+#define SCIF_UART_NUM_DIVISORS_ASYNC           (9U)
 
 /** Valid range of values for the modulation duty register is 128 - 256 (256 = modulation disabled). */
-#define SCIF_UART_MDDR_MIN              (128U)
-#define SCIF_UART_MDDR_MAX              (256U)
+#define SCIF_UART_MDDR_MIN                     (128U)
+#define SCIF_UART_MDDR_MAX                     (256U)
 
 /** The bit rate register is 8-bits, so the maximum value is 255. */
-#define SCIF_UART_BRR_MAX               (255U)
+#define SCIF_UART_BRR_MAX                      (255U)
 
 /** No limit to the number of bytes to read or write. */
-#define SCIF_UART_MAX_READ_WRITE        (0xFFFFFFFFU)
+#define SCIF_UART_MAX_READ_WRITE               (0xFFFFFFFFU)
 
 /** "SCFU" in ASCIFAI.  Used to determine if the control block is open. */
-#define SCIF_UART_OPEN                  (0x53434655U)
+#define SCIF_UART_OPEN                         (0x53434655U)
 
-#define SCIF_UART_BRR_DEFAULT_VALUE     (0xFFU)
+#define SCIF_UART_BRR_DEFAULT_VALUE            (0xFFU)
 
-#define SCIF_REG_SIZE                   (R_SCIFA1_BASE - R_SCIFA0_BASE)
+#define SCIF_UART_DMAC_RX_TRIGGER_LEVEL        (1U)
+
+#define SCIF_UART_DMAC_MAX_TRANSFER            (0xFFFFFFFFU)
+
+#define SCIF_REG_SIZE                          (R_SCIFA1_BASE - R_SCIFA0_BASE)
+
+#define SCI_UART_INVALID_16BIT_PARAM           (0xFFFFU)
 
 /***********************************************************************************************************************
  * Private constants
@@ -84,6 +90,8 @@ typedef BSP_CMSE_NONSECURE_CALL void (*volatile scif_uart_prv_ns_callback)(uart_
 /***********************************************************************************************************************
  * Private function prototypes
  **********************************************************************************************************************/
+static void r_scif_negate_de_pin(scif_uart_instance_ctrl_t const * const p_ctrl);
+
 #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
 
 static fsp_err_t r_scif_read_write_param_check(scif_uart_instance_ctrl_t const * const p_ctrl,
@@ -119,6 +127,20 @@ void scif_uart_txi_isr(void);
 
 #if (SCIF_UART_CFG_TX_ENABLE || SCIF_UART_CFG_RX_ENABLE)
 void scif_uart_tei_isr(void);
+
+#endif
+
+#if SCIF_UART_CFG_DMAC_ENABLE
+static fsp_err_t r_scif_uart_transfer_configure(transfer_instance_t const * p_transfer,
+                                                uint32_t                  * p_transfer_reg,
+                                                uint32_t                    address);
+
+static fsp_err_t r_scif_uart_transfer_open(scif_uart_instance_ctrl_t * const p_ctrl, uart_cfg_t const * const p_cfg);
+
+static void r_scif_uart_transfer_close(scif_uart_instance_ctrl_t * p_ctrl);
+
+void scif_uart_tx_dmac_callback(scif_uart_instance_ctrl_t * p_ctrl);
+void scif_uart_rx_dmac_callback(scif_uart_instance_ctrl_t * p_ctrl);
 
 #endif
 
@@ -158,15 +180,6 @@ static const uint16_t g_div_coefficient[SCIF_UART_NUM_DIVISORS_ASYNC] =
     2048U,
 };
 
-/** SCIF UART HAL module version data structure */
-static const fsp_version_t g_module_version =
-{
-    .api_version_minor  = UART_API_VERSION_MINOR,
-    .api_version_major  = UART_API_VERSION_MAJOR,
-    .code_version_major = SCIF_UART_CODE_VERSION_MAJOR,
-    .code_version_minor = SCIF_UART_CODE_VERSION_MINOR
-};
-
 /** UART on SCIF HAL API mapping for UART interface */
 const uart_api_t g_uart_on_scif =
 {
@@ -176,9 +189,9 @@ const uart_api_t g_uart_on_scif =
     .read               = R_SCIF_UART_Read,
     .infoGet            = R_SCIF_UART_InfoGet,
     .baudSet            = R_SCIF_UART_BaudSet,
-    .versionGet         = R_SCIF_UART_VersionGet,
     .communicationAbort = R_SCIF_UART_Abort,
     .callbackSet        = R_SCIF_UART_CallbackSet,
+    .readStop           = R_SCIF_UART_ReadStop,
 };
 
 /*******************************************************************************************************************//**
@@ -199,6 +212,7 @@ const uart_api_t g_uart_on_scif =
  * @retval  FSP_ERR_IP_CHANNEL_NOT_PRESENT The requested channel does not exist on this MPU.
  * @retval  FSP_ERR_ALREADY_OPEN           Control block has already been opened or channel is being used by another
  *                                         instance. Call close() then open() to reconfigure.
+ * @retval  FSP_ERR_INVALID_ARGUMENT       Setting for RS485 DE Control pin is invalid
  *
  * @return                       See @ref RENESAS_ERROR_CODES
  **********************************************************************************************************************/
@@ -223,9 +237,31 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
     FSP_ASSERT(p_cfg->tei_irq >= 0);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
     FSP_ASSERT(((scif_uart_extended_cfg_t *) p_cfg->p_extend)->bri_irq >= 0);
+ #if (SCIF_UART_CFG_FLOW_CONTROL_SUPPORT)
+    if (((scif_uart_extended_cfg_t *) p_cfg->p_extend)->uart_mode != SCIF_UART_MODE_RS232)
+    {
+        FSP_ERROR_RETURN(
+            ((scif_uart_extended_cfg_t *) p_cfg->p_extend)->rs485_setting.de_control_pin != SCI_UART_INVALID_16BIT_PARAM,
+            FSP_ERR_INVALID_ARGUMENT);
+    }
+ #endif
 #endif
 
+#if defined(BSP_MCU_GROUP_RZG3S)
+
+    /* The difference of base address between channel 4 and 5 is 0x1800. But the difference between other channel is 0x0400 */
+    if (5U == p_cfg->channel)
+    {
+        p_ctrl->p_reg = ((R_SCIFA0_Type *) (R_SCIFA5_BASE));
+    }
+    else
+    {
+        p_ctrl->p_reg = ((R_SCIFA0_Type *) (R_SCIFA0_BASE + (SCIF_REG_SIZE * p_cfg->channel)));
+    }
+
+#else
     p_ctrl->p_reg = ((R_SCIFA0_Type *) (R_SCIFA0_BASE + (SCIF_REG_SIZE * p_cfg->channel)));
+#endif
 
     p_ctrl->p_cfg = p_cfg;
 
@@ -236,10 +272,18 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
     /* Configure the interrupts. */
     r_scif_irqs_cfg(p_ctrl, p_cfg);
 
+#if SCIF_UART_CFG_DMAC_ENABLE
+
+    /* Configure the transfer interface for transmission and reception if provided. */
+    fsp_err_t err = r_scif_uart_transfer_open(p_ctrl, p_cfg);
+
+    FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+#endif
+
+    scif_uart_extended_cfg_t * p_extend = (scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend;
+
     /* Enable the SCIF channel and reset the registers to their initial state. */
     R_BSP_MODULE_START(FSP_IP_SCIF, p_cfg->channel);
-    R_BSP_MODULE_CLKON(FSP_IP_SCIF, p_cfg->channel);
-    R_BSP_MODULE_RSTOFF(FSP_IP_SCIF, p_cfg->channel);
 
     /* Initialize registers as defined in section "SCIFA Initialization in Asynchronous Mode" in the user's
      * manual or the relevant section for the MPU being used. */
@@ -253,7 +297,7 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
     p_ctrl->p_reg->LSR = 0;
 
     uint32_t scr = 0;
-    scif_uart_extended_cfg_t * p_extend = (scif_uart_extended_cfg_t *) p_cfg->p_extend;
+
     switch (p_extend->clock)
     {
         case SCIF_UART_CLOCK_INT:
@@ -322,23 +366,25 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
     }
 
 #if SCIF_UART_CFG_FLOW_CONTROL_SUPPORT
-    if ((p_extend->driver_enable_pin != SCIF_UART_INVALID_16BIT_PARAM) && (p_extend->uart_mode != SCIF_UART_MODE_RS232))
+    if ((p_extend->rs485_setting.de_control_pin != SCIF_UART_INVALID_16BIT_PARAM) &&
+        (p_extend->uart_mode != SCIF_UART_MODE_RS232))
     {
-        p_ctrl->driver_enable_pin = p_extend->driver_enable_pin;
-
-        R_BSP_PinAccessEnable();
         if (p_extend->uart_mode == SCIF_UART_MODE_RS485_FD)
         {
-            /* Driver enable if FullDuplex */
-            R_BSP_PinWrite(p_ctrl->driver_enable_pin, BSP_IO_LEVEL_HIGH);
+            R_BSP_PinAccessEnable();
+
+            /* Assert driver enable if RS-485 FullDuplex mode is enabled. */
+            bsp_io_level_t level = SCI_UART_RS485_DE_POLARITY_HIGH ==
+                                   p_extend->rs485_setting.polarity ? BSP_IO_LEVEL_HIGH : BSP_IO_LEVEL_LOW;
+            R_BSP_PinWrite(p_extend->rs485_setting.de_control_pin, level);
+
+            R_BSP_PinAccessDisable();
         }
         else
         {
-            /* Otherwise, driver disable until Write */
-            R_BSP_PinWrite(p_ctrl->driver_enable_pin, BSP_IO_LEVEL_LOW);
+            /* Negate driver enable if RS-485 HalfDuplex mode is enabled. */
+            r_scif_negate_de_pin(p_ctrl);
         }
-
-        R_BSP_PinAccessDisable();
     }
 #endif
 
@@ -386,9 +432,17 @@ fsp_err_t R_SCIF_UART_Close (uart_ctrl_t * const p_api_ctrl)
     R_BSP_IrqDisable(p_ctrl->p_cfg->tei_irq);
 #endif
 
+#if SCIF_UART_CFG_DMAC_ENABLE
+
+    /* Close the lower level transfer instances. */
+    r_scif_uart_transfer_close(p_ctrl);
+#endif
+
     /* Remove power to the channel. */
-    R_BSP_MODULE_CLKOFF(FSP_IP_SCIF, p_ctrl->p_cfg->channel);
     R_BSP_MODULE_STOP(FSP_IP_SCIF, p_ctrl->p_cfg->channel);
+
+    /* Negate driver enable if RS-485 mode is enabled. */
+    r_scif_negate_de_pin(p_ctrl);
 
     return FSP_SUCCESS;
 }
@@ -415,6 +469,28 @@ fsp_err_t R_SCIF_UART_Read (uart_ctrl_t * const p_api_ctrl, uint8_t * const p_de
     err = r_scif_read_write_param_check(p_ctrl, p_dest, bytes);
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
     FSP_ERROR_RETURN(0U == p_ctrl->rx_dest_bytes, FSP_ERR_IN_USE);
+ #endif
+
+ #if SCIF_UART_CFG_DMAC_ENABLE
+
+    /* Configure transfer instance to receive the requested number of bytes if transfer is used for reception. */
+    if (NULL != p_ctrl->p_cfg->p_transfer_rx)
+    {
+  #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
+
+        /* Check that the number of transfers is within the 16-bit limit. */
+        FSP_ASSERT(bytes <= SCIF_UART_DMAC_MAX_TRANSFER);
+  #endif
+        p_ctrl->p_cfg->p_transfer_rx->p_cfg->p_info->p_dest = (void *) p_dest;
+        p_ctrl->p_cfg->p_transfer_rx->p_cfg->p_info->length = bytes;
+
+        err =
+            p_ctrl->p_cfg->p_transfer_rx->p_api->reconfigure(p_ctrl->p_cfg->p_transfer_rx->p_ctrl,
+                                                             p_ctrl->p_cfg->p_transfer_rx->p_cfg->p_info);
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+
+        p_ctrl->rx_dest_bytes = 0;
+    }
  #endif
 
     /* Save the destination address and size for use in rxi_isr. */
@@ -448,8 +524,12 @@ fsp_err_t R_SCIF_UART_Write (uart_ctrl_t * const p_api_ctrl, uint8_t const * con
 #if (SCIF_UART_CFG_TX_ENABLE)
     scif_uart_instance_ctrl_t * p_ctrl = (scif_uart_instance_ctrl_t *) p_api_ctrl;
 
+ #if SCIF_UART_CFG_PARAM_CHECKING_ENABLE || SCIF_UART_CFG_DMAC_ENABLE
+    fsp_err_t err = FSP_SUCCESS;
+ #endif
+
  #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
-    fsp_err_t err = r_scif_read_write_param_check(p_ctrl, p_src, bytes);
+    err = r_scif_read_write_param_check(p_ctrl, p_src, bytes);
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
     FSP_ERROR_RETURN(0U == p_ctrl->tx_src_bytes, FSP_ERR_IN_USE);
  #endif
@@ -461,12 +541,41 @@ fsp_err_t R_SCIF_UART_Write (uart_ctrl_t * const p_api_ctrl, uint8_t const * con
     p_ctrl->tx_src_bytes = bytes;
     p_ctrl->p_tx_src     = p_src;
 
- #if SCIF_UART_CFG_FLOW_CONTROL_SUPPORT
-    if ((((scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend)->uart_mode == SCIF_UART_MODE_RS485_HD) &&
-        (p_ctrl->driver_enable_pin != SCIF_UART_INVALID_16BIT_PARAM))
+ #if SCIF_UART_CFG_DMAC_ENABLE
+
+    /* If a transfer instance is used for transmission, reset the transfer instance to transmit the requested
+     * data. */
+    if ((NULL != p_ctrl->p_cfg->p_transfer_tx) && p_ctrl->tx_src_bytes)
+    {
+        uint32_t num_transfer = p_ctrl->tx_src_bytes;
+        p_ctrl->tx_src_bytes = 0;
+  #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
+
+        /* Check that the number of transfers is within the 16-bit limit. */
+        FSP_ASSERT(num_transfer <= SCIF_UART_DMAC_MAX_TRANSFER);
+  #endif
+
+        p_ctrl->p_cfg->p_transfer_tx->p_cfg->p_info->p_src  = (void const *) (p_ctrl->p_tx_src);
+        p_ctrl->p_cfg->p_transfer_tx->p_cfg->p_info->length = num_transfer;
+
+        err = p_ctrl->p_cfg->p_transfer_tx->p_api->reconfigure(p_ctrl->p_cfg->p_transfer_tx->p_ctrl,
+                                                               p_ctrl->p_cfg->p_transfer_tx->p_cfg->p_info);
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+    }
+ #endif
+
+ #if (SCIF_UART_CFG_FLOW_CONTROL_SUPPORT)
+    scif_uart_extended_cfg_t * p_extend = (scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend;
+
+    /* If RS-485 is enabled, then assert the driver enable pin at the start of a write transfer. */
+    if (p_extend->uart_mode == SCIF_UART_MODE_RS485_HD)
     {
         R_BSP_PinAccessEnable();
-        R_BSP_PinWrite(p_ctrl->driver_enable_pin, BSP_IO_LEVEL_HIGH);
+
+        bsp_io_level_t level = SCI_UART_RS485_DE_POLARITY_HIGH ==
+                               p_extend->rs485_setting.polarity ? BSP_IO_LEVEL_HIGH : BSP_IO_LEVEL_LOW;
+        R_BSP_PinWrite(p_extend->rs485_setting.de_control_pin, level);
+
         R_BSP_PinAccessDisable();
     }
  #endif
@@ -613,11 +722,23 @@ fsp_err_t R_SCIF_UART_InfoGet (uart_ctrl_t * const p_api_ctrl, uart_info_t * con
 #if (SCIF_UART_CFG_RX_ENABLE)
 
     /* Store number of bytes that can be read at a time. */
+ #if SCIF_UART_CFG_DMAC_ENABLE
+    if (NULL != p_ctrl->p_cfg->p_transfer_rx)
+    {
+        p_info->write_bytes_max = SCIF_UART_DMAC_MAX_TRANSFER;
+    }
+ #endif
 #endif
 
 #if (SCIF_UART_CFG_TX_ENABLE)
 
     /* Store number of bytes that can be written at a time. */
+ #if SCIF_UART_CFG_DMAC_ENABLE
+    if (NULL != p_ctrl->p_cfg->p_transfer_tx)
+    {
+        p_info->read_bytes_max = SCIF_UART_DMAC_MAX_TRANSFER;
+    }
+ #endif
 #endif
 
     return FSP_SUCCESS;
@@ -655,6 +776,11 @@ fsp_err_t R_SCIF_UART_Abort (uart_ctrl_t * const p_api_ctrl, uart_dir_t communic
         scr               &= (~(R_SCIFA0_SCR_TIE_Msk | R_SCIFA0_SCR_TEIE_Msk));
         p_ctrl->p_reg->SCR = (uint16_t) scr;
 
+        if (NULL != p_ctrl->p_cfg->p_transfer_tx)
+        {
+            err = p_ctrl->p_cfg->p_transfer_tx->p_api->disable(p_ctrl->p_cfg->p_transfer_tx->p_ctrl);
+        }
+
         p_ctrl->tx_src_bytes = 0U;
 
         /* Reset the transmit fifo */
@@ -666,16 +792,8 @@ fsp_err_t R_SCIF_UART_Abort (uart_ctrl_t * const p_api_ctrl, uart_dir_t communic
         /* Clear the TFRST bit */
         p_ctrl->p_reg->FCR_b.TFRST = 0U;
 
- #if SCIF_UART_CFG_FLOW_CONTROL_SUPPORT
-        if ((((scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend)->uart_mode == SCIF_UART_MODE_RS485_HD) &&
-            (p_ctrl->driver_enable_pin != SCIF_UART_INVALID_16BIT_PARAM))
-        {
-            R_BSP_PinAccessEnable();
-            R_BSP_PinWrite(p_ctrl->driver_enable_pin, BSP_IO_LEVEL_LOW);
-            R_BSP_PinAccessDisable();
-        }
- #endif
-
+        /* Negate driver enable if RS-485 mode is enabled. */
+        r_scif_negate_de_pin(p_ctrl);
         FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
     }
 #endif
@@ -685,6 +803,11 @@ fsp_err_t R_SCIF_UART_Abort (uart_ctrl_t * const p_api_ctrl, uart_dir_t communic
         err = FSP_SUCCESS;
 
         p_ctrl->rx_dest_bytes = 0U;
+
+        if (NULL != p_ctrl->p_cfg->p_transfer_rx)
+        {
+            err = p_ctrl->p_cfg->p_transfer_rx->p_api->disable(p_ctrl->p_cfg->p_transfer_rx->p_ctrl);
+        }
 
         /* Reset the receive fifo */
         p_ctrl->p_reg->FCR_b.RFRST = 1U;
@@ -698,6 +821,60 @@ fsp_err_t R_SCIF_UART_Abort (uart_ctrl_t * const p_api_ctrl, uart_dir_t communic
 #endif
 
     return err;
+}
+
+/*******************************************************************************************************************//**
+ * Provides API to abort ongoing read. Reception is still enabled after abort(). Any characters received after abort()
+ * and before the transfer is reset in the next call to read(), will arrive via the callback function with event
+ * UART_EVENT_RX_CHAR.
+ * Implements @ref uart_api_t::readStop
+ *
+ * @retval  FSP_SUCCESS                  UART transaction aborted successfully.
+ * @retval  FSP_ERR_ASSERTION            Pointer to UART control block is NULL.
+ * @retval  FSP_ERR_NOT_OPEN             The control block has not been opened.
+ * @retval  FSP_ERR_UNSUPPORTED          The requested Abort direction is unsupported.
+ *
+ * @return                       See @ref RENESAS_ERROR_CODES or functions called by this function for other possible
+ *                               return codes.
+ **********************************************************************************************************************/
+fsp_err_t R_SCIF_UART_ReadStop (uart_ctrl_t * const p_api_ctrl, uint32_t * remaining_bytes)
+{
+    scif_uart_instance_ctrl_t * p_ctrl = (scif_uart_instance_ctrl_t *) p_api_ctrl;
+
+#if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
+    FSP_ASSERT(p_ctrl);
+    FSP_ERROR_RETURN(SCIF_UART_OPEN == p_ctrl->open, FSP_ERR_NOT_OPEN);
+#endif
+
+#if (SCIF_UART_CFG_RX_ENABLE)
+    *remaining_bytes      = p_ctrl->rx_dest_bytes;
+    p_ctrl->rx_dest_bytes = 0U;
+
+    if (NULL != p_ctrl->p_cfg->p_transfer_rx)
+    {
+        fsp_err_t err = p_ctrl->p_cfg->p_transfer_rx->p_api->disable(p_ctrl->p_cfg->p_transfer_rx->p_ctrl);
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+
+        transfer_properties_t transfer_info;
+        err = p_ctrl->p_cfg->p_transfer_rx->p_api->infoGet(p_ctrl->p_cfg->p_transfer_rx->p_ctrl, &transfer_info);
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+        *remaining_bytes = transfer_info.transfer_length_remaining;
+    }
+
+    /* Reset the receive fifo */
+    p_ctrl->p_reg->FCR_b.RFRST = 1U;
+
+    /* Confirm that 1 can be written to RFRST. */
+    FSP_HARDWARE_REGISTER_WAIT(p_ctrl->p_reg->FCR_b.RFRST, 1);
+
+    /* Clear the RFRST bit */
+    p_ctrl->p_reg->FCR_b.RFRST = 0U;
+#else
+
+    return FSP_ERR_UNSUPPORTED;
+#endif
+
+    return FSP_SUCCESS;
 }
 
 /*******************************************************************************************************************//**
@@ -725,13 +902,13 @@ fsp_err_t R_SCIF_UART_BaudCalculate (uart_ctrl_t * const         p_api_ctrl,
 #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
     FSP_ASSERT(p_api_ctrl);
     FSP_ASSERT(p_baud_setting);
-    FSP_ERROR_RETURN(SCIF_UART_MAX_BAUD_RATE_ERROR_X_1000 > baud_rate_error_x_1000, FSP_ERR_INVALID_ARGUMENT);
+    FSP_ERROR_RETURN(SCIF_UART_MAX_BAUD_RATE_ERROR_X_1000 >= baud_rate_error_x_1000, FSP_ERR_INVALID_ARGUMENT);
     FSP_ERROR_RETURN((0U != baudrate), FSP_ERR_INVALID_ARGUMENT);
 #endif
     scif_uart_instance_ctrl_t const * p_ctrl = (scif_uart_instance_ctrl_t const *) p_api_ctrl;
 
-    p_baud_setting->brr  = SCIF_UART_BRR_MAX;
-    p_baud_setting->brme = 0U;
+    p_baud_setting->brr = SCIF_UART_BRR_MAX;
+    p_baud_setting->semr_baudrate_bits_b.brme = 0U;
     p_baud_setting->mddr = SCIF_UART_MDDR_MIN;
 
     /* Find the best BRR (bit rate register) value.
@@ -837,19 +1014,19 @@ fsp_err_t R_SCIF_UART_BaudCalculate (uart_ctrl_t * const         p_api_ctrl,
                      */
                     if (bit_err < hit_bit_err)
                     {
-                        p_baud_setting->bgdm = g_async_baud[i].bgdm;
-                        p_baud_setting->abcs = g_async_baud[i].abcs;
-                        p_baud_setting->cks  = g_async_baud[i].cks;
-                        p_baud_setting->brr  = (uint8_t) temp_brr;
-                        hit_bit_err          = bit_err;
+                        p_baud_setting->semr_baudrate_bits_b.bgdm = g_async_baud[i].bgdm;
+                        p_baud_setting->semr_baudrate_bits_b.abcs = g_async_baud[i].abcs;
+                        p_baud_setting->semr_baudrate_bits_b.cks  = g_async_baud[i].cks;
+                        p_baud_setting->brr = (uint8_t) temp_brr;
+                        hit_bit_err         = bit_err;
                         if (SCIF_UART_MDDR_MAX <= mddr)
                         {
-                            p_baud_setting->brme = 0U;
+                            p_baud_setting->semr_baudrate_bits_b.brme = 0U;
                             p_baud_setting->mddr = SCIF_UART_MDDR_MAX - 1;
                         }
                         else
                         {
-                            p_baud_setting->brme = 1U;
+                            p_baud_setting->semr_baudrate_bits_b.brme = 1U;
                             p_baud_setting->mddr = (uint8_t) mddr;
                         }
 
@@ -869,25 +1046,6 @@ fsp_err_t R_SCIF_UART_BaudCalculate (uart_ctrl_t * const         p_api_ctrl,
     return FSP_SUCCESS;
 }
 
-/***********************************************************************************************************************
- * DEPRECATED Provides API and code version in the user provided pointer. Implements @ref uart_api_t::versionGet
- *
- * @param[in] p_version   Version number set here
- *
- * @retval  FSP_SUCCESS                  Version information stored in provided p_version.
- * @retval  FSP_ERR_ASSERTION            p_version is NULL.
- **********************************************************************************************************************/
-fsp_err_t R_SCIF_UART_VersionGet (fsp_version_t * p_version)
-{
-#if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
-    FSP_ASSERT(p_version);
-#endif
-
-    *p_version = g_module_version;
-
-    return FSP_SUCCESS;
-}
-
 /*******************************************************************************************************************//**
  * @} (end addtogroup SCIF_UART)
  **********************************************************************************************************************/
@@ -895,6 +1053,32 @@ fsp_err_t R_SCIF_UART_VersionGet (fsp_version_t * p_version)
 /***********************************************************************************************************************
  * Private Functions
  **********************************************************************************************************************/
+
+/*******************************************************************************************************************//**
+ * Negate the DE pin if it is enabled.
+ *
+ * @param[in] p_ctrl Pointer to the control block for the channel.
+ **********************************************************************************************************************/
+static void r_scif_negate_de_pin (scif_uart_instance_ctrl_t const * const p_ctrl)
+{
+#if (SCIF_UART_CFG_FLOW_CONTROL_SUPPORT)
+    scif_uart_extended_cfg_t * p_extend = (scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend;
+
+    /* If RS-485 is enabled, then negate the driver enable pin at the end of a write transfer. */
+    if (p_extend->uart_mode == SCIF_UART_MODE_RS485_HD)
+    {
+        R_BSP_PinAccessEnable();
+        bsp_io_level_t level = SCI_UART_RS485_DE_POLARITY_HIGH ==
+                               p_extend->rs485_setting.polarity ? BSP_IO_LEVEL_LOW : BSP_IO_LEVEL_HIGH;
+        R_BSP_PinWrite(p_extend->rs485_setting.de_control_pin, level);
+
+        R_BSP_PinAccessDisable();
+    }
+
+#else
+    FSP_PARAMETER_NOT_USED(p_ctrl);
+#endif
+}
 
 #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
 
@@ -919,6 +1103,116 @@ static fsp_err_t r_scif_read_write_param_check (scif_uart_instance_ctrl_t const 
     FSP_ERROR_RETURN(SCIF_UART_OPEN == p_ctrl->open, FSP_ERR_NOT_OPEN);
 
     return FSP_SUCCESS;
+}
+
+#endif
+
+#if SCIF_UART_CFG_DMAC_ENABLE
+
+/*******************************************************************************************************************//**
+ * Subroutine to apply common UART transfer settings.
+ *
+ * @param[in]  p_cfg              Pointer to UART specific configuration structure
+ * @param[in]  p_transfer         Pointer to transfer instance to configure
+ *
+ * @retval     FSP_SUCCESS        UART transfer drivers successfully configured
+ * @retval     FSP_ERR_ASSERTION  Invalid pointer
+ **********************************************************************************************************************/
+static fsp_err_t r_scif_uart_transfer_configure (transfer_instance_t const * p_transfer,
+                                                 uint32_t                  * p_transfer_reg,
+                                                 uint32_t                    scif_buffer_address)
+{
+    /* Configure the transfer instance, if enabled. */
+ #if (SCIF_UART_CFG_PARAM_CHECKING_ENABLE)
+    FSP_ASSERT(NULL != p_transfer->p_api);
+    FSP_ASSERT(NULL != p_transfer->p_ctrl);
+    FSP_ASSERT(NULL != p_transfer->p_cfg);
+    FSP_ASSERT(NULL != p_transfer->p_cfg->p_info);
+    FSP_ASSERT(NULL != p_transfer->p_cfg->p_extend);
+ #endif
+
+    /* Casting for compatibility with 7 or 8 bit mode. */
+    *p_transfer_reg = scif_buffer_address;
+
+    fsp_err_t err = p_transfer->p_api->open(p_transfer->p_ctrl, p_transfer->p_cfg);
+    FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+
+    return FSP_SUCCESS;
+}
+
+/*******************************************************************************************************************//**
+ * Configures UART related transfer drivers (if enabled).
+ *
+ * @param[in]     p_ctrl  Pointer to UART control structure
+ * @param[in]     p_cfg   Pointer to UART specific configuration structure
+ *
+ * @retval        FSP_SUCCESS        UART transfer drivers successfully configured
+ * @retval        FSP_ERR_ASSERTION  Invalid pointer or required interrupt not enabled in vector table
+ *
+ * @return                       See @ref RENESAS_ERROR_CODES or functions called by this function for other possible
+ *                               return codes. This function calls:
+ *                                   * @ref transfer_api_t::open
+ **********************************************************************************************************************/
+static fsp_err_t r_scif_uart_transfer_open (scif_uart_instance_ctrl_t * const p_ctrl, uart_cfg_t const * const p_cfg)
+{
+    fsp_err_t err = FSP_SUCCESS;
+
+ #if (SCIF_UART_CFG_RX_ENABLE)
+
+    /* If a transfer instance is used for reception, apply UART specific settings and open the transfer instance. */
+    if (NULL != p_cfg->p_transfer_rx)
+    {
+        transfer_info_t * p_info = p_cfg->p_transfer_rx->p_cfg->p_info;
+
+        err = r_scif_uart_transfer_configure(p_cfg->p_transfer_rx,
+                                             (uint32_t *) &p_info->p_src,
+                                             (uint32_t) (uintptr_t) &(p_ctrl->p_reg->FRDR));
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+    }
+ #endif
+ #if (SCIF_UART_CFG_TX_ENABLE)
+
+    /* If a transfer instance is used for transmission, apply UART specific settings and open the transfer instance. */
+    if (NULL != p_cfg->p_transfer_tx)
+    {
+        transfer_info_t * p_info = p_cfg->p_transfer_tx->p_cfg->p_info;
+
+        err = r_scif_uart_transfer_configure(p_cfg->p_transfer_tx,
+                                             (uint32_t *) &p_info->p_dest,
+                                             (uint32_t) (uintptr_t) &(p_ctrl->p_reg->FTDR));
+
+  #if (SCIF_UART_CFG_RX_ENABLE)
+        if ((err != FSP_SUCCESS) && (NULL != p_cfg->p_transfer_rx))
+        {
+            p_cfg->p_transfer_rx->p_api->close(p_cfg->p_transfer_rx->p_ctrl);
+        }
+  #endif
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+    }
+ #endif
+
+    return err;
+}
+
+/*******************************************************************************************************************//**
+ * Closes transfer interfaces.
+ *
+ * @param[in]     p_ctrl     Pointer to UART instance control block
+ **********************************************************************************************************************/
+static void r_scif_uart_transfer_close (scif_uart_instance_ctrl_t * p_ctrl)
+{
+ #if (SCIF_UART_CFG_RX_ENABLE)
+    if (NULL != p_ctrl->p_cfg->p_transfer_rx)
+    {
+        p_ctrl->p_cfg->p_transfer_rx->p_api->close(p_ctrl->p_cfg->p_transfer_rx->p_ctrl);
+    }
+ #endif
+ #if (SCIF_UART_CFG_TX_ENABLE)
+    if (NULL != p_ctrl->p_cfg->p_transfer_tx)
+    {
+        p_ctrl->p_cfg->p_transfer_tx->p_api->close(p_ctrl->p_cfg->p_transfer_tx->p_ctrl);
+    }
+ #endif
 }
 
 #endif
@@ -1243,6 +1537,21 @@ static void r_scif_uart_fifo_cfg (scif_uart_instance_ctrl_t * const p_ctrl)
          * Reception in Asynchronous Mode" in the user's manual or the relevant section for the MPU being used. */
         ftcr = r_scif_uart_make_rftc(p_extend->rx_fifo_trigger);
         fcr |= r_scif_uart_make_rtrg(p_extend->rx_fifo_trigger);
+
+ #if SCIF_UART_CFG_DMAC_ENABLE
+
+        /* When using DMAC transfer, set the threshold of the interrupt generation condition to 0. */
+        if (NULL != p_ctrl->p_cfg->p_transfer_rx)
+        {
+            ftcr |= R_SCIFA0_FTCR_RTRGS_Msk | (SCIF_UART_DMAC_RX_TRIGGER_LEVEL << R_SCIFA0_FTCR_RFTC_Pos);
+        }
+
+        if (NULL != p_ctrl->p_cfg->p_transfer_tx)
+        {
+            ftcr |= R_SCIFA0_FTCR_TTRGS_Msk;
+        }
+ #endif
+
         fcr |= r_scif_uart_make_rstrg(p_extend->rts_fifo_trigger);
     }
 #endif
@@ -1309,10 +1618,10 @@ static void r_scif_uart_baud_set (R_SCIFA0_Type * p_scif_reg, scif_baud_setting_
     p_scif_reg->BRR  = p_baud_setting->brr;
 
     /* Set clock source for the on-chip baud rate generator. */
-    p_scif_reg->SMR_b.CKS = p_baud_setting->cks;
+    p_scif_reg->SMR_b.CKS = p_baud_setting->semr_baudrate_bits_b.cks;
 
     /* Set MDDR register value. */
-    if (p_baud_setting->brme && (p_baud_setting->mddr >= SCIF_UART_MDDR_MIN))
+    if (p_baud_setting->semr_baudrate_bits_b.brme && (p_baud_setting->mddr >= SCIF_UART_MDDR_MIN))
     {
         p_scif_reg->SEMR = (uint8_t) semr | R_SCIFA0_SEMR_MDDRS_Msk;
         p_scif_reg->MDDR = p_baud_setting->mddr;
@@ -1320,8 +1629,8 @@ static void r_scif_uart_baud_set (R_SCIFA0_Type * p_scif_reg, scif_baud_setting_
     }
 
     /* Set clock divisor settings. */
-    semr            |= ((unsigned) p_baud_setting->abcs << R_SCIFA0_SEMR_ABCS0_Pos);
-    semr            |= ((unsigned) p_baud_setting->bgdm << R_SCIFA0_SEMR_BGDM_Pos);
+    semr            |= ((unsigned) p_baud_setting->semr_baudrate_bits_b.abcs << R_SCIFA0_SEMR_ABCS0_Pos);
+    semr            |= ((unsigned) p_baud_setting->semr_baudrate_bits_b.bgdm << R_SCIFA0_SEMR_BGDM_Pos);
     p_scif_reg->SEMR = (uint8_t) semr;
 }
 
@@ -1399,7 +1708,6 @@ void scif_uart_txi_isr (void)
 
     IRQn_Type irq = R_FSP_CurrentIrqGet();
 
-    /* Clear pending IRQ to make sure it doesn't fire again after exiting */
     R_BSP_IrqStatusClear(irq);
 
     /* Recover ISR context saved in open. */
@@ -1407,14 +1715,7 @@ void scif_uart_txi_isr (void)
 
     if ((NULL == p_ctrl->p_cfg->p_transfer_tx) && (0U != p_ctrl->tx_src_bytes))
     {
-        /* Write 1byte (uint8_t) data to (uint8_t) data register */
-        p_ctrl->p_reg->FTDR = *(p_ctrl->p_tx_src);
-
-        /* Update pointer to the next data and number of remaining bytes in the control block. */
-        p_ctrl->tx_src_bytes -= 1;
-        p_ctrl->p_tx_src     += 1;
-
-        /* If transfer is not used, write data until FIFO is full. */
+        /* Write data until FIFO is full. */
         uint32_t fifo_count = (uint32_t) p_ctrl->p_reg->FDR_b.T;
         for (uint32_t cnt = fifo_count; (cnt < SCIF_UART_TX_FIFO_STAGES) && p_ctrl->tx_src_bytes; cnt++)
         {
@@ -1438,7 +1739,10 @@ void scif_uart_txi_isr (void)
         p_ctrl->p_reg->SCR = (uint16_t) scr_temp;
 
         p_ctrl->p_tx_src = NULL;
-        r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_TX_DATA_EMPTY);
+        if (NULL != p_ctrl->p_callback)
+        {
+            r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_TX_DATA_EMPTY);
+        }
     }
 
     /* Restore context if RTOS is used */
@@ -1486,13 +1790,19 @@ static void scif_uart_receive_sub (scif_uart_instance_ctrl_t * const p_ctrl)
                 event |= UART_EVENT_RX_CHAR;
             }
 
-            r_scif_uart_call_callback(p_ctrl, (uint32_t) data, event);
+            if (NULL != p_ctrl->p_callback)
+            {
+                r_scif_uart_call_callback(p_ctrl, (uint32_t) data, event);
+            }
         }
         else
         {
             if (event)
             {
-                r_scif_uart_call_callback(p_ctrl, (uint32_t) data, event);
+                if (NULL != p_ctrl->p_callback)
+                {
+                    r_scif_uart_call_callback(p_ctrl, (uint32_t) data, event);
+                }
             }
             else
             {
@@ -1502,7 +1812,10 @@ static void scif_uart_receive_sub (scif_uart_instance_ctrl_t * const p_ctrl)
 
                 if (0 == p_ctrl->rx_dest_bytes)
                 {
-                    r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_RX_COMPLETE);
+                    if (NULL != p_ctrl->p_callback)
+                    {
+                        r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_RX_COMPLETE);
+                    }
                 }
             }
         }
@@ -1597,21 +1910,17 @@ void scif_uart_tei_isr (void)
 
         p_ctrl->p_reg->SCR = (uint16_t) scr;
 
-        r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_TX_COMPLETE);
+        if (NULL != p_ctrl->p_callback)
+        {
+            r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_TX_COMPLETE);
+        }
     }
 
     /* Clear pending IRQ to make sure it doesn't fire again after exiting */
     R_BSP_IrqStatusClear(irq);
 
- #if SCIF_UART_CFG_FLOW_CONTROL_SUPPORT
-    if ((((scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend)->uart_mode == SCIF_UART_MODE_RS485_HD) &&
-        (p_ctrl->driver_enable_pin != SCIF_UART_INVALID_16BIT_PARAM))
-    {
-        R_BSP_PinAccessEnable();
-        R_BSP_PinWrite(p_ctrl->driver_enable_pin, BSP_IO_LEVEL_LOW);
-        R_BSP_PinAccessDisable();
-    }
- #endif
+    /* Negate driver enable if RS-485 mode is enabled. */
+    r_scif_negate_de_pin(p_ctrl);
 
     /* Restore context if RTOS is used */
     FSP_CONTEXT_RESTORE;
@@ -1692,7 +2001,10 @@ void scif_uart_bri_isr (void)
     /* Call callback. */
     if (event)
     {
-        r_scif_uart_call_callback(p_ctrl, data, event);
+        if (NULL != p_ctrl->p_callback)
+        {
+            r_scif_uart_call_callback(p_ctrl, data, event);
+        }
     }
 
     /* Clear pending IRQ to make sure it doesn't fire again after exiting */
@@ -1700,6 +2012,39 @@ void scif_uart_bri_isr (void)
 
     /* Restore context if RTOS is used */
     FSP_CONTEXT_RESTORE;
+}
+
+#endif
+
+#if SCIF_UART_CFG_DMAC_ENABLE
+
+/*******************************************************************************************************************//**
+ * Dedicated function for DMAC linkage at the time of transmission.
+ **********************************************************************************************************************/
+void scif_uart_tx_dmac_callback (scif_uart_instance_ctrl_t * p_ctrl)
+{
+    /* After all data has been transmitted, disable transmit interrupts and enable the transmit end interrupt. */
+    uint32_t scr_temp;
+    scr_temp           = p_ctrl->p_reg->SCR;
+    scr_temp          |= R_SCIFA0_SCR_TEIE_Msk;
+    scr_temp          &= (uint32_t) (~R_SCIFA0_SCR_TIE_Msk);
+    p_ctrl->p_reg->SCR = (uint16_t) scr_temp;
+
+    p_ctrl->p_tx_src = NULL;
+    r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_TX_DATA_EMPTY);
+}
+
+/*******************************************************************************************************************//**
+ * Dedicated function for DMAC linkage at the time of receptions.
+ **********************************************************************************************************************/
+void scif_uart_rx_dmac_callback (scif_uart_instance_ctrl_t * p_ctrl)
+{
+    p_ctrl->rx_dest_bytes = 0;
+
+    p_ctrl->p_rx_dest = NULL;
+
+    /* Call callback */
+    r_scif_uart_call_callback(p_ctrl, 0U, UART_EVENT_RX_COMPLETE);
 }
 
 #endif

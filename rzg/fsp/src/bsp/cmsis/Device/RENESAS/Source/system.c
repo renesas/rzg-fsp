@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -166,27 +166,30 @@ void SystemInit (void)
     memset((uint32_t *) __section_begin(".bss"), 0U, (uint32_t) __section_size(".bss"));
  #endif
 
+ #if BSP_FEATURE_REQUIRE_DATA_REGION_COPY
+
     /* Copy initialized RAM data from ROM to RAM. */
- #if defined(__ARMCC_VERSION)
+  #if defined(__ARMCC_VERSION)
     memcpy((uint8_t *) &Image$$DATA$$Base, (uint8_t *) &Load$$DATA$$Base, (uint32_t) &Image$$DATA$$Length);
- #elif defined(__GNUC__)
+  #elif defined(__GNUC__)
     memcpy(&__data_start__, &__etext, ((uint32_t) &__data_end__ - (uint32_t) &__data_start__));
- #elif defined(__ICCARM__)
+  #elif defined(__ICCARM__)
     memcpy((uint32_t *) __section_begin(".data"), (uint32_t *) __section_begin(".data_init"),
            (uint32_t) __section_size(".data"));
 
     /* Copy functions to be executed from RAM. */
-  #pragma section=".code_in_ram"
-  #pragma section=".code_in_ram_init"
+   #pragma section=".code_in_ram"
+   #pragma section=".code_in_ram_init"
     memcpy((uint32_t *) __section_begin(".code_in_ram"),
            (uint32_t *) __section_begin(".code_in_ram_init"),
            (uint32_t) __section_size(".code_in_ram"));
 
     /* Copy main thread TLS to RAM. */
-  #pragma section="__DLIB_PERTHREAD_init"
-  #pragma section="__DLIB_PERTHREAD"
+   #pragma section="__DLIB_PERTHREAD_init"
+   #pragma section="__DLIB_PERTHREAD"
     memcpy((uint32_t *) __section_begin("__DLIB_PERTHREAD"), (uint32_t *) __section_begin("__DLIB_PERTHREAD_init"),
            (uint32_t) __section_size("__DLIB_PERTHREAD_init"));
+  #endif
  #endif
 
     /* Initialize static constructors */
@@ -223,6 +226,14 @@ void SystemInit (void)
 
     /* Call Post C runtime initialization hook. */
     R_BSP_WarmStart(BSP_WARM_START_POST_C);
+
+#if BSP_FEATURE_BSP_CLOCK_FREQ_INIT_CFG_SUPPORT
+    if (0 == (R_SYSC_SYS_LSI_MODE_STAT_BOOTCPUSEL_Msk & R_SYSC->SYS_LSI_MODE))
+    {
+        /* Change the frequency based on the settings on the Clocks tab. */
+        bsp_clock_freq_init_cfg();
+    }
+#endif
 
     /* Initialize NVIC interrupts. */
     bsp_irq_cfg();

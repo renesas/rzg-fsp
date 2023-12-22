@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -113,6 +113,12 @@ FSP_HEADER
  #define FSP_HARDWARE_REGISTER_WAIT(reg, required_value)    while (reg != required_value) { /* Wait. */}
 #endif
 
+#ifndef FSP_REGISTER_READ
+
+/* Read a register and discard the result. */
+ #define FSP_REGISTER_READ(A)    __ASM volatile ("" : : "r" (A));
+#endif
+
 /** Version data structure used by error logger macro. */
 extern const fsp_version_t g_bsp_version;
 
@@ -191,6 +197,8 @@ typedef enum e_bsp_warm_start_event
     BSP_WARM_START_POST_C              ///< Called after clocks and C runtime environment have been set up
 } bsp_warm_start_event_t;
 
+#ifndef BSP_OVERRIDE_FSP_PRIV_CLOCK_T
+
 /* Private enum used in R_FSP_SystemClockHzGet. */
 typedef enum e_fsp_priv_clock
 {
@@ -217,6 +225,8 @@ typedef enum e_fsp_priv_clock
     FSP_PRIV_CLOCK_OSCCLK,             /* OSC Clock */
     FSP_PRIV_CLOCK_NUM,
 } fsp_priv_clock_t;
+
+#endif
 
 typedef struct st_bsp_unique_id
 {
@@ -266,6 +276,7 @@ __STATIC_INLINE bsp_unique_id_t const * R_BSP_UniqueIdGet ()
  * Exported global functions (to be accessed by other files)
  **********************************************************************************************************************/
 uint32_t R_FSP_SystemClockHzGet(fsp_priv_clock_t clock);
+void     R_FSP_SystemClockHzSet(fsp_priv_clock_t clock, uint32_t clock_sel, uint32_t clock_div);
 
 #if ((1 == BSP_CFG_ERROR_LOG) || (1 == BSP_CFG_ASSERT))
 
@@ -288,4 +299,4 @@ void fsp_error_log(fsp_err_t err, const char * file, int32_t line);
 /** Common macro for FSP header files. There is also a corresponding FSP_HEADER macro at the top of this file. */
 FSP_FOOTER
 
-#endif                                 /* BSP_COMMON_H */
+#endif

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -17,12 +17,6 @@
  * LOST PROFITS, OTHER ECONOMIC DAMAGE, PROPERTY DAMAGE, OR PERSONAL INJURY; AND EVEN IF RENESAS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
  **********************************************************************************************************************/
-
-/**********************************************************************************************************************
- * File Name    : bsp_irq.h
- * Version      : 1.00
- * Description  : bsp_irq header source code
- *********************************************************************************************************************/
 
 /** @} (end addtogroup BSP_MCU) */
 
@@ -42,14 +36,18 @@ FSP_HEADER
  *
  * @param
  **********************************************************************************************************************/
-#define R_BSP_IM33_DISABLE()    {R_SYSC->SYS_LP_CTL7 = R_SYSC->SYS_LP_CTL7 | R_SYSC_SYS_LP_CTL7_IM33_MASK_Msk;}
+#ifndef R_BSP_IM33_DISABLE
+ #define R_BSP_IM33_DISABLE()    {R_SYSC->SYS_LP_CTL7 = R_SYSC->SYS_LP_CTL7 | R_SYSC_SYS_LP_CTL7_IM33_MASK_Msk;}
+#endif
 
 /***********************************************************************************************************************
  * IM33 ENABLE
  *
  * @param
  **********************************************************************************************************************/
-#define R_BSP_IM33_ENABLE()     {R_SYSC->SYS_LP_CTL7 = R_SYSC->SYS_LP_CTL7 & ~R_SYSC_SYS_LP_CTL7_IM33_MASK_Msk;}
+#ifndef R_BSP_IM33_ENABLE
+ #define R_BSP_IM33_ENABLE()     {R_SYSC->SYS_LP_CTL7 = R_SYSC->SYS_LP_CTL7 & ~R_SYSC_SYS_LP_CTL7_IM33_MASK_Msk;}
+#endif
 
 #define R_INTC_IM33_BEISR1_BESTAT_Msk    (0x00001FFFUL)
 #define R_INTC_IM33_EREISR_E1STAT_Msk    (0x000000FFUL)
@@ -127,17 +125,25 @@ __STATIC_INLINE void R_BSP_IrqClearPending (IRQn_Type irq)
  **********************************************************************************************************************/
 __STATIC_INLINE void R_BSP_IrqCfg (IRQn_Type const irq, uint32_t priority, void * p_context)
 {
+    uint32_t priority_level = priority;
+
+    if ((uint8_t) (UINT8_MAX << __NVIC_PRIO_BITS) & ((uint8_t) priority_level))
+    {
+        priority_level = (uint32_t) UINT8_MAX >> (8U - __NVIC_PRIO_BITS);
+    }
+
     /* The following statement is used in place of NVIC_SetPriority to avoid including a branch for system exceptions
      * every time a priority is configured in the NVIC. */
 #if (4U == __CORTEX_M)
-    NVIC->IP[((uint32_t) irq)] = (uint8_t) ((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t) UINT8_MAX);
+    NVIC->IP[((uint32_t) irq)] = (uint8_t) ((priority_level << (8U - __NVIC_PRIO_BITS)) & (uint32_t) UINT8_MAX);
 #elif (33 == __CORTEX_M)
-    NVIC->IPR[((uint32_t) irq)] = (uint8_t) ((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t) UINT8_MAX);
+    NVIC->IPR[((uint32_t) irq)] = (uint8_t) ((priority_level << (8U - __NVIC_PRIO_BITS)) & (uint32_t) UINT8_MAX);
 #elif (23 == __CORTEX_M)
     NVIC->IPR[_IP_IDX(irq)] = ((uint32_t) (NVIC->IPR[_IP_IDX(irq)] & ~((uint32_t) UINT8_MAX << _BIT_SHIFT(irq))) |
-                               (((priority << (8U - __NVIC_PRIO_BITS)) & (uint32_t) UINT8_MAX) << _BIT_SHIFT(irq)));
+                               (((priority_level << (8U - __NVIC_PRIO_BITS)) & (uint32_t) UINT8_MAX) <<
+                                _BIT_SHIFT(irq)));
 #else
-    NVIC_SetPriority(irq, priority);
+    NVIC_SetPriority(irq, priority_level);
 #endif
 
     /* Store the context. The context is recovered in the ISR. */
@@ -240,4 +246,4 @@ void bsp_irq_cfg(void);                // Used internally by BSP
 /** Common macro for FSP header files. There is also a corresponding FSP_HEADER macro at the top of this file. */
 FSP_FOOTER
 
-#endif                                 /* BSP_IRQ_H */
+#endif

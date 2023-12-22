@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -38,8 +38,6 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define INTC_IRQ_CODE_VERSION_MAJOR    (1U) // DEPRECATED
-#define INTC_IRQ_CODE_VERSION_MINOR    (1U) // DEPRECATED
 
 /*********************************************************************************************************************
  * Typedef definitions
@@ -80,10 +78,9 @@ fsp_err_t R_INTC_IRQ_ExternalIrqEnable(external_irq_ctrl_t * const p_api_ctrl);
 
 fsp_err_t R_INTC_IRQ_ExternalIrqDisable(external_irq_ctrl_t * const p_api_ctrl);
 
-fsp_err_t R_INTC_IRQ_ExternalIrqVersionGet(fsp_version_t * const p_version);
-
-fsp_err_t R_INTC_IRQ_ExternalIrqCallbackSet(external_irq_ctrl_t * const          p_api_ctrl,
-                                            void (                             * p_callback)(external_irq_callback_args_t *),
+fsp_err_t R_INTC_IRQ_ExternalIrqCallbackSet(external_irq_ctrl_t * const p_api_ctrl,
+                                            void (                    * p_callback)(
+                                                external_irq_callback_args_t *),
                                             void const * const                   p_context,
                                             external_irq_callback_args_t * const p_callback_memory);
 

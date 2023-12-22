@@ -107,6 +107,31 @@
     #define portDONT_DISCARD                   __attribute__( ( used ) )
 /*-----------------------------------------------------------*/
 
+/* General purpose registers */
+ #define R1_INIT_VALUE              (0x01010101UL)
+ #define R2_INIT_VALUE              (0x02020202UL)
+ #define R3_INIT_VALUE              (0x03030303UL)
+ #define R4_INIT_VALUE              (0x04040404UL)
+ #define R5_INIT_VALUE              (0x05050505UL)
+ #define R6_INIT_VALUE              (0x06060606UL)
+ #define R7_INIT_VALUE              (0x07070707UL)
+ #define R8_INIT_VALUE              (0x08080808UL)
+ #define R9_INIT_VALUE              (0x09090909UL)
+ #define R10_INIT_VALUE             (0x10101010UL)
+ #define R11_INIT_VALUE             (0x11111111UL)
+ #define R12_INIT_VALUE             (0x12121212UL)
+
+/*-----------------------------------------------------------*/
+/* Initial value of variable */
+ #define UCN0                       (0xaaaaaaaaUL)
+ #define UCN1                       (1000UL)
+
+/*-----------------------------------------------------------*/
+/* NVIC ICER registers */
+ #define ICER1                       (0xffU)
+ #define ICER2                       (32)
+
+/*-----------------------------------------------------------*/
 /**
  * @brief Extern declarations.
  */

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -55,8 +55,6 @@ FSP_HEADER
 /**********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define UART_API_VERSION_MAJOR    (1U)
-#define UART_API_VERSION_MINOR    (1U)
 
 /**********************************************************************************************************************
  * Typedef definitions
@@ -78,9 +76,9 @@ typedef enum e_sf_event
 /** UART Data bit length definition */
 typedef enum e_uart_data_bits
 {
-    UART_DATA_BITS_8,                  ///< Data bits 8-bit
-    UART_DATA_BITS_7,                  ///< Data bits 7-bit
-    UART_DATA_BITS_9                   ///< Data bits 9-bit
+    UART_DATA_BITS_9 = 0U,             ///< Data bits 9-bit
+    UART_DATA_BITS_8 = 2U,             ///< Data bits 8-bit
+    UART_DATA_BITS_7 = 3U,             ///< Data bits 7-bit
 } uart_data_bits_t;
 
 /** UART Parity definition */
@@ -259,13 +257,14 @@ typedef struct st_uart_api
      */
     fsp_err_t (* close)(uart_ctrl_t * const p_ctrl);
 
-    /* DEPRECATED Get version.
+    /** Stop ongoing read and return the number of bytes remaining in the read.
      * @par Implemented as
-     * - @ref R_SCIF_UART_VersionGet()
+     * - @ref R_SCIF_UART_ReadStop()
      *
-     * @param[in]   p_version  Pointer to the memory to store the version information.
+     * @param[in]      p_ctrl                Pointer to the UART control block.
+     * @param[in,out]  remaining_bytes       Pointer to location to store remaining bytes for read.
      */
-    fsp_err_t (* versionGet)(fsp_version_t * p_version);
+    fsp_err_t (* readStop)(uart_ctrl_t * const p_ctrl, uint32_t * remaining_bytes);
 } uart_api_t;
 
 /** This structure encompasses everything that is needed to use an instance of this interface. */

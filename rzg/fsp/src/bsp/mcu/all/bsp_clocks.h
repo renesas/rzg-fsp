@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -17,12 +17,6 @@
  * LOST PROFITS, OTHER ECONOMIC DAMAGE, PROPERTY DAMAGE, OR PERSONAL INJURY; AND EVEN IF RENESAS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
  **********************************************************************************************************************/
-
-/**********************************************************************************************************************
- * File Name    : bsp_clocks.h
- * Version      : 1.00
- * Description  : bsp_clocks header
- *********************************************************************************************************************/
 
 #ifndef BSP_CLOCKS_H
 #define BSP_CLOCKS_H
@@ -43,2870 +37,423 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Start clock supply
  *
- * @param      unit     bsp_clk_unit_t enum value for the unit to which the clock is supplied.
- * @param      ch       The channel. Use ch 0 for units without channels. Only single bit can be set.
+ * @param      ip       fsp_ip_t enum value for the unit to which the clock is supplied.
+ * @param      channel  The channel. Use ch 0 for units without channels. Only single bit can be set.
  **********************************************************************************************************************/
-#define R_BSP_CLKON(unit, ch)                         {BSP_CLKON_REG_ ## unit(ch) = 0x00000000U                      \
-                                                                                    | (BSP_CLKON_BIT_ ## unit(ch) << \
-                                                                                       16U)                          \
-                                                                                    | (BSP_CLKON_BIT_ ## unit(ch));  \
-                                                       while ((BSP_CLKMON_REG_ ## unit(ch) &                         \
-                                                               BSP_CLKMON_BIT_ ## unit(ch)) == 0U)                   \
-                                                       { /* wait */};                                                \
-}
+#define R_BSP_MODULE_CLKON(ip, channel)          {FSP_CRITICAL_SECTION_DEFINE;                                        \
+                                                  FSP_CRITICAL_SECTION_ENTER;                                         \
+                                                  BSP_CLKON_REG_ ## ip(channel) = 0x00000000U                         \
+                                                                                  | (BSP_CLKON_BIT_ ## ip(channel) << \
+                                                                                     16U)                             \
+                                                                                  | (BSP_CLKON_BIT_ ## ip(channel));  \
+                                                  while ((BSP_CLKMON_REG_ ## ip(channel) &                            \
+                                                          BSP_CLKMON_BIT_ ## ip(channel)) == 0U)                      \
+                                                  { /* wait */};                                                      \
+                                                  FSP_CRITICAL_SECTION_EXIT;}
 
 /***********************************************************************************************************************
  * Stop clock supply
  *
- * @param      unit     bsp_clk_unit_t enum value for the unit to stop clock.
- * @param      ch       The channel. Use ch 0 for units without channels. Only single bit can be set.
+ * @param      ip       fsp_ip_t enum value for the unit to stop clock.
+ * @param      channel  The channel. Use ch 0 for units without channels. Only single bit can be set.
  **********************************************************************************************************************/
-#define R_BSP_CLKOFF(unit, ch)                        {BSP_CLKON_REG_ ## unit(ch) = 0x00000000U                      \
-                                                                                    | (BSP_CLKON_BIT_ ## unit(ch) << \
-                                                                                       16U);                         \
-                                                       while ((BSP_CLKMON_REG_ ## unit(ch) &                         \
-                                                               BSP_CLKMON_BIT_ ## unit(ch)) != 0U)                   \
-                                                       { /* wait */};                                                \
-}
+#define R_BSP_MODULE_CLKOFF(ip, channel)         {FSP_CRITICAL_SECTION_DEFINE;                                        \
+                                                  FSP_CRITICAL_SECTION_ENTER;                                         \
+                                                  BSP_CLKON_REG_ ## ip(channel) = 0x00000000U                         \
+                                                                                  | (BSP_CLKON_BIT_ ## ip(channel) << \
+                                                                                     16U);                            \
+                                                  while ((BSP_CLKMON_REG_ ## ip(channel) &                            \
+                                                          BSP_CLKMON_BIT_ ## ip(channel)) != 0U)                      \
+                                                  { /* wait */};                                                      \
+                                                  FSP_CRITICAL_SECTION_EXIT;}
 
 /***********************************************************************************************************************
- * Reset unit
+ * Reset assertion
  *
- * @param      unit     bsp_clk_unit_t enum value for the unit to be reset.
- * @param      ch       The channel. Use ch 0 for units without channels. Only single bit can be set.
+ * @param      ip       fsp_ip_t enum value for the unit to be reset.
+ * @param      channel  The channel. Use ch 0 for units without channels. Only single bit can be set.
  **********************************************************************************************************************/
-#define R_BSP_RSTON(unit, ch)                         {BSP_RST_REG_ ## unit(ch) = 0x00000000U                          \
-                                                                                  | (BSP_RST_BIT_ ## unit(ch) << 16U); \
-}
+#define R_BSP_MODULE_RSTON(ip, channel)          {FSP_CRITICAL_SECTION_DEFINE;                                          \
+                                                  FSP_CRITICAL_SECTION_ENTER;                                           \
+                                                  BSP_RST_REG_ ## ip(channel) = 0x00000000U                             \
+                                                                                | (BSP_RST_BIT_ ## ip(channel) << 16U); \
+                                                  FSP_CRITICAL_SECTION_EXIT;}
 
 /***********************************************************************************************************************
- * Reset unit
+ * Reset deassertion
  *
- * @param      unit     bsp_clk_unit_t enum value for the unit to be reset.
- * @param      ch       The channel. Use ch 0 for units without channels. Only single bit can be set.
+ * @param      ip       fsp_ip_t enum value for the unit to release from reset state.
+ * @param      channel  The channel. Use ch 0 for units without channels. Only single bit can be set.
  **********************************************************************************************************************/
-#define R_BSP_RSTOFF(unit, ch)                        {BSP_RST_REG_ ## unit(ch) = 0x00000000U                         \
-                                                                                  | (BSP_RST_BIT_ ## unit(ch) << 16U) \
-                                                                                  | (BSP_RST_BIT_ ## unit(ch));       \
-                                                       while ((BSP_RSTMON_REG_ ## unit(ch) &                          \
-                                                               BSP_RSTMON_BIT_ ## unit(ch)) != 0U)                    \
-                                                       { /* wait */};                                                 \
-}
+#define R_BSP_MODULE_RSTOFF(ip, channel)         {FSP_CRITICAL_SECTION_DEFINE;                                         \
+                                                  FSP_CRITICAL_SECTION_ENTER;                                          \
+                                                  BSP_RST_REG_ ## ip(channel) = 0x00000000U                            \
+                                                                                | (BSP_RST_BIT_ ## ip(channel) << 16U) \
+                                                                                | (BSP_RST_BIT_ ## ip(channel));       \
+                                                  while ((BSP_RSTMON_REG_ ## ip(channel) &                             \
+                                                          BSP_RSTMON_BIT_ ## ip(channel)) != 0U)                       \
+                                                  { /* wait */};                                                       \
+                                                  FSP_CRITICAL_SECTION_EXIT;}
 
 /***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_CA55(ch)                (R_CPG->CPG_CLKON_CA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 5.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_CA55(ch)                (1U << (R_CPG_CPG_CLKON_CA55_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_CA55(ch)               (R_CPG->CPG_CLKMON_CA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 5.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_CA55(ch)               (1U << (R_CPG_CPG_CLKMON_CA55_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_CA55(ch)                  (R_CPG->CPG_RST_CA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 12.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_CA55(ch)                  (1U << (R_CPG_CPG_RST_CA55_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_CA55(ch)               (R_CPG->CPG_RSTMON_CA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 12.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_CA55(ch)               (1U << (R_CPG_CPG_RSTMON_CA55_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_CM33(ch)                (R_CPG->CPG_CLKON_CM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_CM33(ch)                (1U << (R_CPG_CPG_CLKON_CM33_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_CM33(ch)               (R_CPG->CPG_CLKMON_CM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_CM33(ch)               (1U << (R_CPG_CPG_CLKMON_CM33_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_CM33(ch)                  (R_CPG->CPG_RST_CM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_CM33(ch)                  (1U << (R_CPG_CPG_RST_CM33_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_CM33(ch)               (R_CPG->CPG_RSTMON_CM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_CM33(ch)               (1U << (R_CPG_CPG_RSTMON_CM33_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SRAM_ACPU(ch)           (R_CPG->CPG_CLKON_SRAM_ACPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SRAM_ACPU(ch)           (1U << (R_CPG_CPG_CLKON_SRAM_ACPU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SRAM_ACPU(ch)          (R_CPG->CPG_CLKMON_SRAM_ACPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SRAM_ACPU(ch)          (1U << (R_CPG_CPG_CLKMON_SRAM_ACPU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SRAM_ACPU(ch)             (R_CPG->CPG_RST_SRAM_ACPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SRAM_ACPU(ch)             (1U << (R_CPG_CPG_RST_SRAM_ACPU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SRAM_ACPU(ch)          (R_CPG->CPG_RSTMON_SRAM_ACPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SRAM_ACPU(ch)          (1U << (R_CPG_CPG_RSTMON_SRAM_ACPU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SRAM_MCPU(ch)           (R_CPG->CPG_CLKON_SRAM_MCPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SRAM_MCPU(ch)           (1U << (R_CPG_CPG_CLKON_SRAM_MCPU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SRAM_MCPU(ch)          (R_CPG->CPG_CLKMON_SRAM_MCPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SRAM_MCPU(ch)          (1U << (R_CPG_CPG_CLKMON_SRAM_MCPU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SRAM_MCPU(ch)             (R_CPG->CPG_RST_SRAM_MCPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SRAM_MCPU(ch)             (1U << (R_CPG_CPG_RST_SRAM_MCPU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SRAM_MCPU(ch)          (R_CPG->CPG_RSTMON_SRAM_MCPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SRAM_MCPU(ch)          (1U << (R_CPG_CPG_RSTMON_SRAM_MCPU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_ROM(ch)                 (R_CPG->CPG_CLKON_ROM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_ROM(ch)                 (1U << (R_CPG_CPG_CLKON_ROM_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_ROM(ch)                (R_CPG->CPG_CLKMON_ROM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_ROM(ch)                (1U << (R_CPG_CPG_CLKMON_ROM_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_ROM(ch)                   (R_CPG->CPG_RST_ROM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_ROM(ch)                   (1U << (R_CPG_CPG_RST_ROM_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_ROM(ch)                (R_CPG->CPG_RSTMON_ROM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_ROM(ch)                (1U << (R_CPG_CPG_RSTMON_ROM_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_GIC600(ch)              (R_CPG->CPG_CLKON_GIC600)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_GIC600(ch)              (1U << (R_CPG_CPG_CLKON_GIC600_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_GIC600(ch)             (R_CPG->CPG_CLKMON_GIC600)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_GIC600(ch)             (1U << (R_CPG_CPG_CLKMON_GIC600_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_GIC600(ch)                (R_CPG->CPG_RST_GIC600)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_GIC600(ch)                (1U << (R_CPG_CPG_RST_GIC600_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_GIC600(ch)             (R_CPG->CPG_RSTMON_GIC600)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_GIC600(ch)             (1U << (R_CPG_CPG_RSTMON_GIC600_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_IA55(ch)                (R_CPG->CPG_CLKON_IA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_IA55(ch)                (1U << (R_CPG_CPG_CLKON_IA55_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_IA55(ch)               (R_CPG->CPG_CLKMON_IA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_IA55(ch)               (1U << (R_CPG_CPG_CLKMON_IA55_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_IA55(ch)                  (R_CPG->CPG_RST_IA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_IA55(ch)                  (1U << (R_CPG_CPG_RST_IA55_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_IA55(ch)               (R_CPG->CPG_RSTMON_IA55)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_IA55(ch)               (1U << (R_CPG_CPG_RSTMON_IA55_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_IM33(ch)                (R_CPG->CPG_CLKON_IM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_IM33(ch)                (1U << (R_CPG_CPG_CLKON_IM33_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_IM33(ch)               (R_CPG->CPG_CLKMON_IM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_IM33(ch)               (1U << (R_CPG_CPG_CLKMON_IM33_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_IM33(ch)                  (R_CPG->CPG_RST_IM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_IM33(ch)                  (1U << (R_CPG_CPG_RST_IM33_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_IM33(ch)               (R_CPG->CPG_RSTMON_IM33)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_IM33(ch)               (1U << (R_CPG_CPG_RSTMON_IM33_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_MHU(ch)                 (R_CPG->CPG_CLKON_MHU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_MHU(ch)                 (1U << (R_CPG_CPG_CLKON_MHU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_MHU(ch)                (R_CPG->CPG_CLKMON_MHU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_MHU(ch)                (1U << (R_CPG_CPG_CLKMON_MHU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_MHU(ch)                   (R_CPG->CPG_RST_MHU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_MHU(ch)                   (1U << (R_CPG_CPG_RST_MHU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_MHU(ch)                (R_CPG->CPG_RSTMON_MHU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_MHU(ch)                (1U << (R_CPG_CPG_RSTMON_MHU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_CST(ch)                 (R_CPG->CPG_CLKON_CST)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 10.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_CST(ch)                 (1U << (R_CPG_CPG_CLKON_CST_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_CST(ch)                (R_CPG->CPG_CLKMON_CST)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 10.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_CST(ch)                (1U << (R_CPG_CPG_CLKMON_CST_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SYC(ch)                 (R_CPG->CPG_CLKON_SYC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SYC(ch)                 (1U << (R_CPG_CPG_CLKON_SYC_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SYC(ch)                (R_CPG->CPG_CLKMON_SYC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SYC(ch)                (1U << (R_CPG_CPG_CLKMON_SYC_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SYC(ch)                   (R_CPG->CPG_RST_SYC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SYC(ch)                   (1U << (R_CPG_CPG_RST_SYC_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SYC(ch)                (R_CPG->CPG_RSTMON_SYC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SYC(ch)                (1U << (R_CPG_CPG_RSTMON_SYC_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_DMAC(ch)                (R_CPG->CPG_CLKON_DMAC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_DMAC(ch)                (1U << (R_CPG_CPG_CLKON_DMAC_CLK0_ON_Pos))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_DMAC(ch)               (R_CPG->CPG_CLKMON_DMAC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_DMAC(ch)               (1U << (R_CPG_CPG_CLKMON_DMAC_CLK0_MON_Pos))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_DMAC(ch)                  (R_CPG->CPG_RST_DMAC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_DMAC(ch)                  (1U << (R_CPG_CPG_RST_DMAC_UNIT0_RSTB_Pos))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_DMAC(ch)               (R_CPG->CPG_RSTMON_DMAC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_DMAC(ch)               (1U << (R_CPG_CPG_RSTMON_DMAC_RST0_MON_Pos))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SYSC(ch)                (R_CPG->CPG_CLKON_SYSC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SYSC(ch)                (1U << (R_CPG_CPG_CLKON_SYSC_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SYSC(ch)               (R_CPG->CPG_CLKMON_SYSC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SYSC(ch)               (1U << (R_CPG_CPG_CLKMON_SYSC_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SYSC(ch)                  (R_CPG->CPG_RST_SYSC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SYSC(ch)                  (1U << (R_CPG_CPG_RST_SYSC_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SYSC(ch)               (R_CPG->CPG_RSTMON_SYSC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SYSC(ch)               (1U << (R_CPG_CPG_RSTMON_SYSC_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_GTM(ch)                 (R_CPG->CPG_CLKON_OSTM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_GTM(ch)                 (1U << (R_CPG_CPG_CLKON_OSTM_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_GTM(ch)                (R_CPG->CPG_CLKMON_OSTM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_GTM(ch)                (1U << (R_CPG_CPG_CLKMON_OSTM_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_GTM(ch)                   (R_CPG->CPG_RST_OSTM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_GTM(ch)                   (1U << (R_CPG_CPG_RST_OSTM_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_GTM(ch)                (R_CPG->CPG_RSTMON_OSTM)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_GTM(ch)                (1U << (R_CPG_CPG_RSTMON_OSTM_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_MTU(ch)                 (R_CPG->CPG_CLKON_MTU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_MTU(ch)                 (1U << (R_CPG_CPG_CLKON_MTU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_MTU(ch)                (R_CPG->CPG_CLKMON_MTU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_MTU(ch)                (1U << (R_CPG_CPG_CLKMON_MTU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_MTU(ch)                   (R_CPG->CPG_RST_MTU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_MTU(ch)                   (1U << (R_CPG_CPG_RST_MTU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_MTU(ch)                (R_CPG->CPG_RSTMON_MTU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_MTU(ch)                (1U << (R_CPG_CPG_RSTMON_MTU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_POE3(ch)                (R_CPG->CPG_CLKON_POE3)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_POE3(ch)                (1U << (R_CPG_CPG_CLKON_POE3_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_POE3(ch)               (R_CPG->CPG_CLKMON_POE3)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_POE3(ch)               (1U << (R_CPG_CPG_CLKMON_POE3_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_POE3(ch)                  (R_CPG->CPG_RST_POE3)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_POE3(ch)                  (1U << (R_CPG_CPG_RST_POE3_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_POE3(ch)               (R_CPG->CPG_RSTMON_POE3)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_POE3(ch)               (1U << (R_CPG_CPG_RSTMON_POE3_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_GPT(ch)                 (R_CPG->CPG_CLKON_GPT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_GPT(ch)                 (1U << (R_CPG_CPG_CLKON_GPT_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_GPT(ch)                (R_CPG->CPG_CLKMON_GPT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_GPT(ch)                (1U << (R_CPG_CPG_CLKMON_GPT_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_GPT(ch)                   (R_CPG->CPG_RST_GPT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_GPT(ch)                   (1U << (R_CPG_CPG_RST_GPT_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_GPT(ch)                (R_CPG->CPG_RSTMON_GPT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_GPT(ch)                (1U << (R_CPG_CPG_RSTMON_GPT_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_POEG(ch)                (R_CPG->CPG_CLKON_POEG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_POEG(ch)                (1U << (R_CPG_CPG_CLKON_POEG_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_POEG(ch)               (R_CPG->CPG_CLKMON_POEG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_POEG(ch)               (1U << (R_CPG_CPG_CLKMON_POEG_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_POEG(ch)                  (R_CPG->CPG_RST_POEG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_POEG(ch)                  (1U << (R_CPG_CPG_RST_POEG_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_POEG(ch)               (R_CPG->CPG_RSTMON_POEG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_POEG(ch)               (1U << (R_CPG_CPG_RSTMON_POEG_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_WDT(ch)                 (R_CPG->CPG_CLKON_WDT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 5.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_WDT(ch)                 (1U << (R_CPG_CPG_CLKON_WDT_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_WDT(ch)                (R_CPG->CPG_CLKMON_WDT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 5.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_WDT(ch)                (1U << (R_CPG_CPG_CLKMON_WDT_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_WDT(ch)                   (R_CPG->CPG_RST_WDT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_WDT(ch)                   (1U << (R_CPG_CPG_RST_WDT_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_WDT(ch)                (R_CPG->CPG_RSTMON_WDT)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_WDT(ch)                (1U << (R_CPG_CPG_RSTMON_WDT_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_DDR(ch)                 (R_CPG->CPG_CLKON_DDR)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_DDR(ch)                 (1U << (R_CPG_CPG_CLKON_DDR_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_DDR(ch)                (R_CPG->CPG_CLKMON_DDR)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_DDR(ch)                (1U << (R_CPG_CPG_CLKMON_DDR_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_DDR(ch)                   (R_CPG->CPG_RST_DDR)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 6.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_DDR(ch)                   (1U << (R_CPG_CPG_RST_DDR_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_DDR(ch)                (R_CPG->CPG_RSTMON_DDR)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 6.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_DDR(ch)                (1U << (R_CPG_CPG_RSTMON_DDR_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SPI_MULTI(ch)           (R_CPG->CPG_CLKON_SPI_MULTI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SPI_MULTI(ch)           (1U << (R_CPG_CPG_CLKON_SPI_MULTI_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SPI_MULTI(ch)          (R_CPG->CPG_CLKMON_SPI_MULTI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SPI_MULTI(ch)          (1U << (R_CPG_CPG_CLKMON_SPI_MULTI_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SPI_MULTI(ch)             (R_CPG->CPG_RST_SPI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SPI_MULTI(ch)             (1U << (R_CPG_CPG_RST_SPI_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SPI_MULTI(ch)          (R_CPG->CPG_RSTMON_SPI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SPI_MULTI(ch)          (1U << (R_CPG_CPG_RSTMON_SPI_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SDHI(ch)                (R_CPG->CPG_CLKON_SDHI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 7.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SDHI(ch)                (1U << (R_CPG_CPG_CLKON_SDHI_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SDHI(ch)               (R_CPG->CPG_CLKMON_SDHI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 7.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SDHI(ch)               (1U << (R_CPG_CPG_CLKMON_SDHI_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SDHI(ch)                  (R_CPG->CPG_RST_SDHI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SDHI(ch)                  (1U << (R_CPG_CPG_RST_SDHI_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SDHI(ch)               (R_CPG->CPG_RSTMON_SDHI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SDHI(ch)               (1U << (R_CPG_CPG_RSTMON_SDHI_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_GPU(ch)                 (R_CPG->CPG_CLKON_GPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_GPU(ch)                 (1U << (R_CPG_CPG_CLKON_GPU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_GPU(ch)                (R_CPG->CPG_CLKMON_GPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_GPU(ch)                (1U << (R_CPG_CPG_CLKMON_GPU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_GPU(ch)                   (R_CPG->CPG_RST_GPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_GPU(ch)                   (1U << (R_CPG_CPG_RST_GPU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_GPU(ch)                (R_CPG->CPG_RSTMON_GPU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_GPU(ch)                (1U << (R_CPG_CPG_RSTMON_GPU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_ISU(ch)                 (R_CPG->CPG_CLKON_ISU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_ISU(ch)                 (1U << (R_CPG_CPG_CLKON_ISU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_ISU(ch)                (R_CPG->CPG_CLKMON_ISU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_ISU(ch)                (1U << (R_CPG_CPG_CLKMON_ISU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_ISU(ch)                   (R_CPG->CPG_RST_ISU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_ISU(ch)                   (1U << (R_CPG_CPG_RST_ISU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_ISU(ch)                (R_CPG->CPG_RSTMON_ISU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_ISU(ch)                (1U << (R_CPG_CPG_RSTMON_ISU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_H264(ch)                (R_CPG->CPG_CLKON_H264)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_H264(ch)                (1U << (R_CPG_CPG_CLKON_H264_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_H264(ch)               (R_CPG->CPG_CLKMON_H264)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_H264(ch)               (1U << (R_CPG_CPG_CLKMON_H264_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_H264(ch)                  (R_CPG->CPG_RST_H264)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_H264(ch)                  (1U << (R_CPG_CPG_RST_H264_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_H264(ch)               (R_CPG->CPG_RSTMON_H264)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_H264(ch)               (1U << (R_CPG_CPG_RSTMON_H264_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_CRU(ch)                 (R_CPG->CPG_CLKON_CRU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_CRU(ch)                 (1U << (R_CPG_CPG_CLKON_CRU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_CRU(ch)                (R_CPG->CPG_CLKMON_CRU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_CRU(ch)                (1U << (R_CPG_CPG_CLKMON_CRU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_CRU(ch)                   (R_CPG->CPG_RST_CRU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_CRU(ch)                   (1U << (R_CPG_CPG_RST_CRU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_CRU(ch)                (R_CPG->CPG_RSTMON_CRU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_CRU(ch)                (1U << (R_CPG_CPG_RSTMON_CRU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_MIPI_DSI(ch)            (R_CPG->CPG_CLKON_MIPI_DSI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 5.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_MIPI_DSI(ch)            (1U << (R_CPG_CPG_CLKON_MIPI_DSI_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_MIPI_DSI(ch)           (R_CPG->CPG_CLKMON_MIPI_DSI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 5.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_MIPI_DSI(ch)           (1U << (R_CPG_CPG_CLKMON_MIPI_DSI_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_MIPI_DSI(ch)              (R_CPG->CPG_RST_MIPI_DSI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_MIPI_DSI(ch)              (1U << (R_CPG_CPG_RST_MIPI_DSI_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_MIPI_DSI(ch)           (R_CPG->CPG_RSTMON_MIPI_DSI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_MIPI_DSI(ch)           (1U << (R_CPG_CPG_RSTMON_MIPI_DSI_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_LCDC(ch)                (R_CPG->CPG_CLKON_LCDC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_LCDC(ch)                (1U << (R_CPG_CPG_CLKON_LCDC_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_LCDC(ch)               (R_CPG->CPG_CLKMON_LCDC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_LCDC(ch)               (1U << (R_CPG_CPG_CLKMON_LCDC_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_LCDC(ch)                  (R_CPG->CPG_RST_LCDC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_LCDC(ch)                  (1U << (R_CPG_CPG_RST_LCDC_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_LCDC(ch)               (R_CPG->CPG_RSTMON_LCDC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_LCDC(ch)               (1U << (R_CPG_CPG_RSTMON_LCDC_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SSIF(ch)                (R_CPG->CPG_CLKON_SSIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 7.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SSIF(ch)                (1U << (R_CPG_CPG_CLKON_SSIF_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SSIF(ch)               (R_CPG->CPG_CLKMON_SSIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 7.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SSIF(ch)               (1U << (R_CPG_CPG_CLKMON_SSIF_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SSIF(ch)                  (R_CPG->CPG_RST_SSIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SSIF(ch)                  (1U << (R_CPG_CPG_RST_SSIF_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SSIF(ch)               (R_CPG->CPG_RSTMON_SSIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SSIF(ch)               (1U << (R_CPG_CPG_RSTMON_SSIF_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SRC(ch)                 (R_CPG->CPG_CLKON_SRC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SRC(ch)                 (1U << (R_CPG_CPG_CLKON_SRC_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SRC(ch)                (R_CPG->CPG_CLKMON_SRC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SRC(ch)                (1U << (R_CPG_CPG_CLKMON_SRC_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SRC(ch)                   (R_CPG->CPG_RST_SRC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SRC(ch)                   (1U << (R_CPG_CPG_RST_SRC_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SRC(ch)                (R_CPG->CPG_RSTMON_SRC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SRC(ch)                (1U << (R_CPG_CPG_RSTMON_SRC_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_USB(ch)                 (R_CPG->CPG_CLKON_USB)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_USB(ch)                 (1U << (R_CPG_CPG_CLKON_USB_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_USB(ch)                (R_CPG->CPG_CLKMON_USB)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_USB(ch)                (1U << (R_CPG_CPG_CLKMON_USB_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_USB(ch)                   (R_CPG->CPG_RST_USB)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_USB(ch)                   (1U << (R_CPG_CPG_RST_USB_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_USB(ch)                (R_CPG->CPG_RSTMON_USB)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_USB(ch)                (1U << (R_CPG_CPG_RSTMON_USB_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_ETH(ch)                 (R_CPG->CPG_CLKON_ETH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_ETH(ch)                 (1U << (R_CPG_CPG_CLKON_ETH_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_ETH(ch)                (R_CPG->CPG_CLKMON_ETH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_ETH(ch)                (1U << (R_CPG_CPG_CLKMON_ETH_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_ETH(ch)                   (R_CPG->CPG_RST_ETH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_ETH(ch)                   (1U << (R_CPG_CPG_RST_ETH_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_ETH(ch)                (R_CPG->CPG_RSTMON_ETH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_ETH(ch)                (1U << (R_CPG_CPG_RSTMON_ETH_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_I2C(ch)                 (R_CPG->CPG_CLKON_I2C)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_I2C(ch)                 (1U << (R_CPG_CPG_CLKON_I2C_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_I2C(ch)                (R_CPG->CPG_CLKMON_I2C)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_I2C(ch)                (1U << (R_CPG_CPG_CLKMON_I2C_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_I2C(ch)                   (R_CPG->CPG_RST_I2C)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_I2C(ch)                   (1U << (R_CPG_CPG_RST_I2C_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_I2C(ch)                (R_CPG->CPG_RSTMON_I2C)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_I2C(ch)                (1U << (R_CPG_CPG_RSTMON_I2C_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SCIF(ch)                (R_CPG->CPG_CLKON_SCIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SCIF(ch)                (1U << (R_CPG_CPG_CLKON_SCIF_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SCIF(ch)               (R_CPG->CPG_CLKMON_SCIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SCIF(ch)               (1U << (R_CPG_CPG_CLKMON_SCIF_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SCIF(ch)                  (R_CPG->CPG_RST_SCIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SCIF(ch)                  (1U << (R_CPG_CPG_RST_SCIF_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SCIF(ch)               (R_CPG->CPG_RSTMON_SCIF)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SCIF(ch)               (1U << (R_CPG_CPG_RSTMON_SCIF_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_SCI(ch)                 (R_CPG->CPG_CLKON_SCI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_SCI(ch)                 (1U << (R_CPG_CPG_CLKON_SCI_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_SCI(ch)                (R_CPG->CPG_CLKMON_SCI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_SCI(ch)                (1U << (R_CPG_CPG_CLKMON_SCI_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_SCI(ch)                   (R_CPG->CPG_RST_SCI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_SCI(ch)                   (1U << (R_CPG_CPG_RST_SCI_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_SCI(ch)                (R_CPG->CPG_RSTMON_SCI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_SCI(ch)                (1U << (R_CPG_CPG_RSTMON_SCI_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_IRDA(ch)                (R_CPG->CPG_CLKON_IRDA)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_IRDA(ch)                (1U << (R_CPG_CPG_CLKON_IRDA_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_IRDA(ch)               (R_CPG->CPG_CLKMON_IRDA)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_IRDA(ch)               (1U << (R_CPG_CPG_CLKMON_IRDA_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_IRDA(ch)                  (R_CPG->CPG_RST_IRDA)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_IRDA(ch)                  (1U << (R_CPG_CPG_RST_IRDA_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_IRDA(ch)               (R_CPG->CPG_RSTMON_IRDA)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_IRDA(ch)               (1U << (R_CPG_CPG_RSTMON_IRDA_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_RSPI(ch)                (R_CPG->CPG_CLKON_RSPI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_RSPI(ch)                (1U << (R_CPG_CPG_CLKON_RSPI_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_RSPI(ch)               (R_CPG->CPG_CLKMON_RSPI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_RSPI(ch)               (1U << (R_CPG_CPG_CLKMON_RSPI_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_RSPI(ch)                  (R_CPG->CPG_RST_RSPI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_RSPI(ch)                  (1U << (R_CPG_CPG_RST_RSPI_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_RSPI(ch)               (R_CPG->CPG_RSTMON_RSPI)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_RSPI(ch)               (1U << (R_CPG_CPG_RSTMON_RSPI_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_CANFD(ch)               (R_CPG->CPG_CLKON_CANFD)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_CANFD(ch)               (1U << (R_CPG_CPG_CLKON_CANFD_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_CANFD(ch)              (R_CPG->CPG_CLKMON_CANFD)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_CANFD(ch)              (1U << (R_CPG_CPG_CLKMON_CANFD_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_CANFD(ch)                 (R_CPG->CPG_RST_CANFD)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_CANFD(ch)                 (1U << (R_CPG_CPG_RST_CANFD_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_CANFD(ch)              (R_CPG->CPG_RSTMON_CANFD)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_CANFD(ch)              (1U << (R_CPG_CPG_RSTMON_CANFD_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_GPIO(ch)                (R_CPG->CPG_CLKON_GPIO)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_GPIO(ch)                (1U << (R_CPG_CPG_CLKON_GPIO_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_GPIO(ch)               (R_CPG->CPG_CLKMON_GPIO)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_GPIO(ch)               (1U << (R_CPG_CPG_CLKMON_GPIO_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_GPIO(ch)                  (R_CPG->CPG_RST_GPIO)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_GPIO(ch)                  (1U << (R_CPG_CPG_RST_GPIO_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_GPIO(ch)               (R_CPG->CPG_RSTMON_GPIO)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_GPIO(ch)               (1U << (R_CPG_CPG_RSTMON_GPIO_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_TSIPG(ch)               (R_CPG->CPG_CLKON_TSIPG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_TSIPG(ch)               (1U << (R_CPG_CPG_CLKON_TSIPG_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_TSIPG(ch)              (R_CPG->CPG_CLKMON_TSIPG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_TSIPG(ch)              (1U << (R_CPG_CPG_CLKMON_TSIPG_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_TSIPG(ch)                 (R_CPG->CPG_RST_TSIPG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_TSIPG(ch)                 (1U << (R_CPG_CPG_RST_TSIPG_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_TSIPG(ch)              (R_CPG->CPG_RSTMON_TSIPG)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_TSIPG(ch)              (1U << (R_CPG_CPG_RSTMON_TSIPG_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_JAUTH(ch)              (R_CPG->CPG_CLKMON_JAUTH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_JAUTH(ch)              (1U << (R_CPG_CPG_CLKMON_JAUTH_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_JAUTH(ch)                 (R_CPG->CPG_RST_JAUTH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_JAUTH(ch)                 (1U << (R_CPG_CPG_RST_JAUTH_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_JAUTH(ch)              (R_CPG->CPG_RSTMON_JAUTH)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_JAUTH(ch)              (1U << (R_CPG_CPG_RSTMON_JAUTH_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_OTP(ch)                 (R_CPG->CPG_CLKON_OTP)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_OTP(ch)                 (1U << (R_CPG_CPG_CLKON_OTP_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_OTP(ch)                (R_CPG->CPG_CLKMON_OTP)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_OTP(ch)                (1U << (R_CPG_CPG_CLKMON_OTP_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_OTP(ch)                   (R_CPG->CPG_RST_OTP)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_OTP(ch)                   (1U << (R_CPG_CPG_RST_OTP_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_OTP(ch)                (R_CPG->CPG_RSTMON_OTP)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_OTP(ch)                (1U << (R_CPG_CPG_RSTMON_OTP_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_ADC(ch)                 (R_CPG->CPG_CLKON_ADC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_ADC(ch)                 (1U << (R_CPG_CPG_CLKON_ADC_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_ADC(ch)                (R_CPG->CPG_CLKMON_ADC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_ADC(ch)                (1U << (R_CPG_CPG_CLKMON_ADC_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_ADC(ch)                   (R_CPG->CPG_RST_ADC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_ADC(ch)                   (1U << (R_CPG_CPG_RST_ADC_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_ADC(ch)                (R_CPG->CPG_RSTMON_ADC)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_ADC(ch)                (1U << (R_CPG_CPG_RSTMON_ADC_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_TSU(ch)                 (R_CPG->CPG_CLKON_TSU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_TSU(ch)                 (1U << (R_CPG_CPG_CLKON_TSU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_TSU(ch)                (R_CPG->CPG_CLKMON_TSU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_TSU(ch)                (1U << (R_CPG_CPG_CLKMON_TSU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_TSU(ch)                   (R_CPG->CPG_RST_TSU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_TSU(ch)                   (1U << (R_CPG_CPG_RST_TSU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_TSU(ch)                (R_CPG->CPG_RSTMON_TSU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_TSU(ch)                (1U << (R_CPG_CPG_RSTMON_TSU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_BBGU(ch)                (R_CPG->CPG_CLKON_BBGU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_BBGU(ch)                (1U << (R_CPG_CPG_CLKON_BBGU_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_BBGU(ch)               (R_CPG->CPG_CLKMON_BBGU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_BBGU(ch)               (1U << (R_CPG_CPG_CLKMON_BBGU_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_BBGU(ch)                  (R_CPG->CPG_RST_BBGU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_BBGU(ch)                  (1U << (R_CPG_CPG_RST_BBGU_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_BBGU(ch)               (R_CPG->CPG_RSTMON_BBGU)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_BBGU(ch)               (1U << (R_CPG_CPG_RSTMON_BBGU_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_AXI_ACPU_BUS(ch)        (R_CPG->CPG_CLKON_AXI_ACPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_AXI_ACPU_BUS(ch)        (1U << (R_CPG_CPG_CLKON_AXI_ACPU_BUS_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_AXI_ACPU_BUS(ch)       (R_CPG->CPG_CLKMON_AXI_ACPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_AXI_ACPU_BUS(ch)       (1U << (R_CPG_CPG_CLKMON_AXI_ACPU_BUS_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_AXI_ACPU_BUS(ch)          (R_CPG->CPG_RST_AXI_ACPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_AXI_ACPU_BUS(ch)          (1U << (R_CPG_CPG_RST_AXI_ACPU_BUS_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_AXI_ACPU_BUS(ch)       (R_CPG->CPG_RSTMON_AXI_ACPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_AXI_ACPU_BUS(ch)       (1U << (R_CPG_CPG_RSTMON_AXI_ACPU_BUS_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_AXI_MCPU_BUS(ch)        (R_CPG->CPG_CLKON_AXI_MCPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 10.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_AXI_MCPU_BUS(ch)        (1U << (R_CPG_CPG_CLKON_AXI_MCPU_BUS_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_AXI_MCPU_BUS(ch)       (R_CPG->CPG_CLKMON_AXI_MCPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 10.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_AXI_MCPU_BUS(ch)       (1U << (R_CPG_CPG_CLKMON_AXI_MCPU_BUS_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_AXI_MCPU_BUS(ch)          (R_CPG->CPG_RST_AXI_MCPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_AXI_MCPU_BUS(ch)          (1U << (R_CPG_CPG_RST_AXI_MCPU_BUS_UNIT0_RSTB_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_AXI_MCPU_BUS(ch)       (R_CPG->CPG_RSTMON_AXI_MCPU_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_AXI_MCPU_BUS(ch)       (1U << (R_CPG_CPG_RSTMON_AXI_MCPU_BUS_RST0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_AXI_COM_BUS(ch)         (R_CPG->CPG_CLKON_AXI_COM_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_AXI_COM_BUS(ch)         (1U << (R_CPG_CPG_CLKON_AXI_COM_BUS_CLK0_ON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_AXI_COM_BUS(ch)        (R_CPG->CPG_CLKMON_AXI_COM_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_AXI_COM_BUS(ch)        (1U << (R_CPG_CPG_CLKMON_AXI_COM_BUS_CLK0_MON_Pos + (ch)))
-
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_AXI_COM_BUS(ch)           (R_CPG->CPG_RST_AXI_COM_BUS)
-
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control GTM clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_AXI_COM_BUS(ch)           (1U << (R_CPG_CPG_RST_AXI_COM_BUS_UNIT0_RSTB_Pos + (ch)))
+#ifndef BSP_CLKON_REG_FSP_IP_GTM
+ #define BSP_CLKON_REG_FSP_IP_GTM(channel)       (R_CPG->CPG_CLKON_GTM)
+#endif
+#ifndef BSP_CLKON_BIT_FSP_IP_GTM
+ #define BSP_CLKON_BIT_FSP_IP_GTM(channel)       (1U << (R_CPG_CPG_CLKON_GTM_CLK0_ON_Pos + (channel)))
+#endif
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_AXI_COM_BUS(ch)        (R_CPG->CPG_RSTMON_AXI_COM_BUS)
+#ifndef BSP_CLKMON_REG_FSP_IP_GTM
+ #define BSP_CLKMON_REG_FSP_IP_GTM(channel)      (R_CPG->CPG_CLKMON_GTM)
+#endif
+#ifndef BSP_CLKMON_BIT_FSP_IP_GTM
+ #define BSP_CLKMON_BIT_FSP_IP_GTM(channel)      (1U << (R_CPG_CPG_CLKMON_GTM_CLK0_MON_Pos + (channel)))
+#endif
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_AXI_COM_BUS(ch)        (1U << (R_CPG_CPG_RSTMON_AXI_COM_BUS_RST0_MON_Pos + (ch)))
+#ifndef BSP_RST_REG_FSP_IP_GTM
+ #define BSP_RST_REG_FSP_IP_GTM(channel)         (R_CPG->CPG_RST_GTM)
+#endif
+#ifndef BSP_RST_BIT_FSP_IP_GTM
+ #define BSP_RST_BIT_FSP_IP_GTM(channel)         (1U << (R_CPG_CPG_RST_GTM_UNIT0_RSTB_Pos + (channel)))
+#endif
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_AXI_VIDEO_BUS(ch)       (R_CPG->CPG_CLKON_AXI_VIDEO_BUS)
+#ifndef BSP_RSTMON_REG_FSP_IP_GTM
+ #define BSP_RSTMON_REG_FSP_IP_GTM(channel)      (R_CPG->CPG_RSTMON_GTM)
+#endif
+#ifndef BSP_RSTMON_BIT_FSP_IP_GTM
+ #define BSP_RSTMON_BIT_FSP_IP_GTM(channel)      (1U << (R_CPG_CPG_RSTMON_GTM_RST0_MON_Pos + (channel)))
+#endif
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
+ * Definition of macros to control GPT clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_AXI_VIDEO_BUS(ch)       (1U << (R_CPG_CPG_CLKON_AXI_VIDEO_BUS_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_GPT(channel)        (R_CPG->CPG_CLKON_GPT)
+#define BSP_CLKON_BIT_FSP_IP_GPT(channel)        (1U << (R_CPG_CPG_CLKON_GPT_CLK0_ON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_AXI_VIDEO_BUS(ch)      (R_CPG->CPG_CLKMON_AXI_VIDEO_BUS)
+#define BSP_CLKMON_REG_FSP_IP_GPT(channel)       (R_CPG->CPG_CLKMON_GPT)
+#define BSP_CLKMON_BIT_FSP_IP_GPT(channel)       (1U << (R_CPG_CPG_CLKMON_GPT_CLK0_MON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_AXI_VIDEO_BUS(ch)      (1U << (R_CPG_CPG_CLKMON_AXI_VIDEO_BUS_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_GPT(channel)          (R_CPG->CPG_RST_GPT)
+#define BSP_RST_BIT_FSP_IP_GPT(channel)          (1U << (R_CPG_CPG_RST_GPT_UNIT0_RSTB_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_AXI_VIDEO_BUS(ch)         (R_CPG->CPG_RST_AXI_VIDEO_BUS)
+#define BSP_RSTMON_REG_FSP_IP_GPT(channel)       (R_CPG->CPG_RSTMON_GPT)
+#define BSP_RSTMON_BIT_FSP_IP_GPT(channel)       (1U << (R_CPG_CPG_RSTMON_GPT_RST0_MON_Pos))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control POEG clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_AXI_VIDEO_BUS(ch)         (1U << (R_CPG_CPG_RST_AXI_VIDEO_BUS_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_POEG(channel)       (R_CPG->CPG_CLKON_POEG)
+#define BSP_CLKON_BIT_FSP_IP_POEG(channel)       (1U << (R_CPG_CPG_CLKON_POEG_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_AXI_VIDEO_BUS(ch)      (R_CPG->CPG_RSTMON_AXI_VIDEO_BUS)
+#define BSP_CLKMON_REG_FSP_IP_POEG(channel)      (R_CPG->CPG_CLKMON_POEG)
+#define BSP_CLKMON_BIT_FSP_IP_POEG(channel)      (1U << (R_CPG_CPG_CLKMON_POEG_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_AXI_VIDEO_BUS(ch)      (1U << (R_CPG_CPG_RSTMON_AXI_VIDEO_BUS_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_POEG(channel)         (R_CPG->CPG_RST_POEG)
+#define BSP_RST_BIT_FSP_IP_POEG(channel)         (1U << (R_CPG_CPG_RST_POEG_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_PERI_COM(ch)            (R_CPG->CPG_CLKON_PERI_COM)
+#define BSP_RSTMON_REG_FSP_IP_POEG(channel)      (R_CPG->CPG_RSTMON_POEG)
+#define BSP_RSTMON_BIT_FSP_IP_POEG(channel)      (1U << (R_CPG_CPG_RSTMON_POEG_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
+ * Definition of macros to control IM33 clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_PERI_COM(ch)            (1U << (R_CPG_CPG_CLKON_PERI_COM_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_IM33(channel)       (R_CPG->CPG_CLKON_IM33)
+#define BSP_CLKON_BIT_FSP_IP_IM33(channel)       (1U << (R_CPG_CPG_CLKON_IM33_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_PERI_COM(ch)           (R_CPG->CPG_CLKMON_PERI_COM)
+#define BSP_CLKMON_REG_FSP_IP_IM33(channel)      (R_CPG->CPG_CLKMON_IM33)
+#define BSP_CLKMON_BIT_FSP_IP_IM33(channel)      (1U << (R_CPG_CPG_CLKMON_IM33_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_PERI_COM(ch)           (1U << (R_CPG_CPG_CLKMON_PERI_COM_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_IM33(channel)         (R_CPG->CPG_RST_IM33)
+#define BSP_RST_BIT_FSP_IP_IM33(channel)         (1U << (R_CPG_CPG_RST_IM33_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_PERI_COM(ch)              (R_CPG->CPG_RST_PERI_COM)
+#define BSP_RSTMON_REG_FSP_IP_IM33(channel)      (R_CPG->CPG_RSTMON_IM33)
+#define BSP_RSTMON_BIT_FSP_IP_IM33(channel)      (1U << (R_CPG_CPG_RSTMON_IM33_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control SCIF clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_PERI_COM(ch)              (1U << (R_CPG_CPG_RST_PERI_COM_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_SCIF(channel)       (R_CPG->CPG_CLKON_SCIF)
+#define BSP_CLKON_BIT_FSP_IP_SCIF(channel)       (1U << (R_CPG_CPG_CLKON_SCIF_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_PERI_COM(ch)           (R_CPG->CPG_RSTMON_PERI_COM)
+#define BSP_CLKMON_REG_FSP_IP_SCIF(channel)      (R_CPG->CPG_CLKMON_SCIF)
+#define BSP_CLKMON_BIT_FSP_IP_SCIF(channel)      (1U << (R_CPG_CPG_CLKMON_SCIF_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_PERI_COM(ch)           (1U << (R_CPG_CPG_RSTMON_PERI_COM_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_SCIF(channel)         (R_CPG->CPG_RST_SCIF)
+#define BSP_RST_BIT_FSP_IP_SCIF(channel)         (1U << (R_CPG_CPG_RST_SCIF_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_REG1_BUS(ch)            (R_CPG->CPG_CLKON_REG1_BUS)
+#define BSP_RSTMON_REG_FSP_IP_SCIF(channel)      (R_CPG->CPG_RSTMON_SCIF)
+#define BSP_RSTMON_BIT_FSP_IP_SCIF(channel)      (1U << (R_CPG_CPG_RSTMON_SCIF_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
+ * Definition of macros to control RIIC clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_REG1_BUS(ch)            (1U << (R_CPG_CPG_CLKON_REG1_BUS_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_RIIC(channel)       (R_CPG->CPG_CLKON_I2C)
+#define BSP_CLKON_BIT_FSP_IP_RIIC(channel)       (1U << (R_CPG_CPG_CLKON_I2C_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_REG1_BUS(ch)           (R_CPG->CPG_CLKMON_REG1_BUS)
+#define BSP_CLKMON_REG_FSP_IP_RIIC(channel)      (R_CPG->CPG_CLKMON_I2C)
+#define BSP_CLKMON_BIT_FSP_IP_RIIC(channel)      (1U << (R_CPG_CPG_CLKMON_I2C_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_REG1_BUS(ch)           (1U << (R_CPG_CPG_CLKMON_REG1_BUS_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_RIIC(channel)         (R_CPG->CPG_RST_I2C)
+#define BSP_RST_BIT_FSP_IP_RIIC(channel)         (1U << (R_CPG_CPG_RST_I2C_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_REG1_BUS(ch)              (R_CPG->CPG_RST_REG1_BUS)
+#define BSP_RSTMON_REG_FSP_IP_RIIC(channel)      (R_CPG->CPG_RSTMON_I2C)
+#define BSP_RSTMON_BIT_FSP_IP_RIIC(channel)      (1U << (R_CPG_CPG_RSTMON_I2C_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control RSPI clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_REG1_BUS(ch)              (1U << (R_CPG_CPG_RST_REG1_BUS_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_RSPI(channel)       (R_CPG->CPG_CLKON_RSPI)
+#define BSP_CLKON_BIT_FSP_IP_RSPI(channel)       (1U << (R_CPG_CPG_CLKON_RSPI_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_REG1_BUS(ch)           (R_CPG->CPG_RSTMON_REG1_BUS)
+#define BSP_CLKMON_REG_FSP_IP_RSPI(channel)      (R_CPG->CPG_CLKMON_RSPI)
+#define BSP_CLKMON_BIT_FSP_IP_RSPI(channel)      (1U << (R_CPG_CPG_CLKMON_RSPI_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_REG1_BUS(ch)           (1U << (R_CPG_CPG_RSTMON_REG1_BUS_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_RSPI(channel)         (R_CPG->CPG_RST_RSPI)
+#define BSP_RST_BIT_FSP_IP_RSPI(channel)         (1U << (R_CPG_CPG_RST_RSPI_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_REG0_BUS(ch)            (R_CPG->CPG_CLKON_REG0_BUS)
+#define BSP_RSTMON_REG_FSP_IP_RSPI(channel)      (R_CPG->CPG_RSTMON_RSPI)
+#define BSP_RSTMON_BIT_FSP_IP_RSPI(channel)      (1U << (R_CPG_CPG_RSTMON_RSPI_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
+ * Definition of macros to control MHU clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_REG0_BUS(ch)            (1U << (R_CPG_CPG_CLKON_REG0_BUS_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_MHU(channel)        (R_CPG->CPG_CLKON_MHU)
+#define BSP_CLKON_BIT_FSP_IP_MHU(channel)        (1U << (R_CPG_CPG_CLKON_MHU_CLK0_ON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_REG0_BUS(ch)           (R_CPG->CPG_CLKMON_REG0_BUS)
+#define BSP_CLKMON_REG_FSP_IP_MHU(channel)       (R_CPG->CPG_CLKMON_MHU)
+#define BSP_CLKMON_BIT_FSP_IP_MHU(channel)       (1U << (R_CPG_CPG_CLKMON_MHU_CLK0_MON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_REG0_BUS(ch)           (1U << (R_CPG_CPG_CLKMON_REG0_BUS_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_MHU(channel)          (R_CPG->CPG_RST_MHU)
+#define BSP_RST_BIT_FSP_IP_MHU(channel)          (1U << (R_CPG_CPG_RST_MHU_UNIT0_RSTB_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_REG0_BUS(ch)              (R_CPG->CPG_RST_REG0_BUS)
+#define BSP_RSTMON_REG_FSP_IP_MHU(channel)       (R_CPG->CPG_RSTMON_MHU)
+#define BSP_RSTMON_BIT_FSP_IP_MHU(channel)       (1U << (R_CPG_CPG_RSTMON_MHU_RST0_MON_Pos))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control DMAC clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_REG0_BUS(ch)              (1U << (R_CPG_CPG_RST_REG0_BUS_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_DMAC(channel)       (R_CPG->CPG_CLKON_DMAC_REG)
+#define BSP_CLKON_BIT_FSP_IP_DMAC(channel)       (3U << (R_CPG_CPG_CLKON_DMAC_REG_CLK0_ON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_REG0_BUS(ch)           (R_CPG->CPG_RSTMON_REG0_BUS)
+#define BSP_CLKMON_REG_FSP_IP_DMAC(channel)      (R_CPG->CPG_CLKMON_DMAC_REG)
+#define BSP_CLKMON_BIT_FSP_IP_DMAC(channel)      (3U << (R_CPG_CPG_CLKMON_DMAC_REG_CLK0_MON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_REG0_BUS(ch)           (1U << (R_CPG_CPG_RSTMON_REG0_BUS_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_DMAC(channel)         (R_CPG->CPG_RST_DMAC)
+#define BSP_RST_BIT_FSP_IP_DMAC(channel)         (3U << (R_CPG_CPG_RST_DMAC_UNIT0_RSTB_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_PERI_CPU(ch)            (R_CPG->CPG_CLKON_PERI_CPU)
+#define BSP_RSTMON_REG_FSP_IP_DMAC(channel)      (R_CPG->CPG_RSTMON_DMAC)
+#define BSP_RSTMON_BIT_FSP_IP_DMAC(channel)      (3U << (R_CPG_CPG_RSTMON_DMAC_RST0_MON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_PERI_CPU(ch)            (1U << (R_CPG_CPG_CLKON_PERI_CPU_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_DMAC_s(channel)     BSP_CLKON_REG_FSP_IP_DMAC(channel)
+#define BSP_CLKON_BIT_FSP_IP_DMAC_s(channel)     BSP_CLKON_BIT_FSP_IP_DMAC(channel)
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_PERI_CPU(ch)           (R_CPG->CPG_CLKMON_PERI_CPU)
+#define BSP_CLKMON_REG_FSP_IP_DMAC_s(channel)    BSP_CLKMON_REG_FSP_IP_DMAC(channel)
+#define BSP_CLKMON_BIT_FSP_IP_DMAC_s(channel)    BSP_CLKMON_BIT_FSP_IP_DMAC(channel)
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 3.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_PERI_CPU(ch)           (1U << (R_CPG_CPG_CLKMON_PERI_CPU_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_DMAC_s(channel)       BSP_RST_REG_FSP_IP_DMAC(channel)
+#define BSP_RST_BIT_FSP_IP_DMAC_s(channel)       BSP_RST_BIT_FSP_IP_DMAC(channel)
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_PERI_CPU(ch)              (R_CPG->CPG_RST_PERI_CPU)
+#define BSP_RSTMON_REG_FSP_IP_DMAC_s(channel)    BSP_RSTMON_REG_FSP_IP_DMAC(channel)
+#define BSP_RSTMON_BIT_FSP_IP_DMAC_s(channel)    BSP_RSTMON_BIT_FSP_IP_DMAC(channel)
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control SSI clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_PERI_CPU(ch)              (1U << (R_CPG_CPG_RST_PERI_CPU_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_SSI(channel)        (R_CPG->CPG_CLKON_SSI)
+#define BSP_CLKON_BIT_FSP_IP_SSI(channel)        (1U << (R_CPG_CPG_CLKON_SSI_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_PERI_CPU(ch)           (R_CPG->CPG_RSTMON_PERI_CPU)
+#define BSP_CLKMON_REG_FSP_IP_SSI(channel)       (R_CPG->CPG_CLKMON_SSI)
+#define BSP_CLKMON_BIT_FSP_IP_SSI(channel)       (1U << (R_CPG_CPG_CLKMON_SSI_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_PERI_CPU(ch)           (1U << (R_CPG_CPG_RSTMON_PERI_CPU_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_SSI(channel)          (R_CPG->CPG_RST_SSIF)
+#define BSP_RST_BIT_FSP_IP_SSI(channel)          (1U << (R_CPG_CPG_RST_SSIF_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_PERI_VIDEO(ch)          (R_CPG->CPG_CLKON_PERI_VIDEO)
+#define BSP_RSTMON_REG_FSP_IP_SSI(channel)       (R_CPG->CPG_RSTMON_SSIF)
+#define BSP_RSTMON_BIT_FSP_IP_SSI(channel)       (1U << (R_CPG_CPG_RSTMON_SSIF_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
+ * Definition of macros to control CANFD clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_PERI_VIDEO(ch)          (1U << (R_CPG_CPG_CLKON_PERI_VIDEO_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_CANFD(channel)      (R_CPG->CPG_CLKON_CANFD)
+#define BSP_CLKON_BIT_FSP_IP_CANFD(channel)      (1U << (R_CPG_CPG_CLKON_CANFD_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_PERI_VIDEO(ch)         (R_CPG->CPG_CLKMON_PERI_VIDEO)
+#define BSP_CLKMON_REG_FSP_IP_CANFD(channel)     (R_CPG->CPG_CLKMON_CANFD)
+#define BSP_CLKMON_BIT_FSP_IP_CANFD(channel)     (1U << (R_CPG_CPG_CLKMON_CANFD_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 2.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_PERI_VIDEO(ch)         (1U << (R_CPG_CPG_CLKMON_PERI_VIDEO_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_CANFD(channel)        (R_CPG->CPG_RST_CANFD)
+#define BSP_RST_BIT_FSP_IP_CANFD(channel)        (1U << (R_CPG_CPG_RST_CANFD_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_PERI_VIDEO(ch)            (R_CPG->CPG_RST_PERI_VIDEO)
+#define BSP_RSTMON_REG_FSP_IP_CANFD(channel)     (R_CPG->CPG_RSTMON_CANFD)
+#define BSP_RSTMON_BIT_FSP_IP_CANFD(channel)     (1U << (R_CPG_CPG_RSTMON_CANFD_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control ADC clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_PERI_VIDEO(ch)            (1U << (R_CPG_CPG_RST_PERI_VIDEO_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_ADC(channel)        (R_CPG->CPG_CLKON_ADC)
+#define BSP_CLKON_BIT_FSP_IP_ADC(channel)        (3U << R_CPG_CPG_CLKON_ADC_CLK0_ON_Pos)
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_PERI_VIDEO(ch)         (R_CPG->CPG_RSTMON_PERI_VIDEO)
+#define BSP_CLKMON_REG_FSP_IP_ADC(channel)       (R_CPG->CPG_CLKMON_ADC)
+#define BSP_CLKMON_BIT_FSP_IP_ADC(channel)       (3U << R_CPG_CPG_CLKMON_ADC_CLK0_MON_Pos)
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_PERI_VIDEO(ch)         (1U << (R_CPG_CPG_RSTMON_PERI_VIDEO_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_ADC(channel)          (R_CPG->CPG_RST_ADC)
+#define BSP_RST_BIT_FSP_IP_ADC(channel)          (3U << R_CPG_CPG_RST_ADC_UNIT0_RSTB_Pos)
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_PERI_DDR(ch)            (R_CPG->CPG_CLKON_PERI_DDR)
+#define BSP_RSTMON_REG_FSP_IP_ADC(channel)       (R_CPG->CPG_RSTMON_ADC)
+#define BSP_RSTMON_BIT_FSP_IP_ADC(channel)       (3U << R_CPG_CPG_RSTMON_ADC_RST0_MON_Pos)
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control TSU clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_PERI_DDR(ch)            (1U << (R_CPG_CPG_CLKON_PERI_DDR_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_TSU(channel)        (R_CPG->CPG_CLKON_TSU)
+#define BSP_CLKON_BIT_FSP_IP_TSU(channel)        (1U << (R_CPG_CPG_CLKON_TSU_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_PERI_DDR(ch)           (R_CPG->CPG_CLKMON_PERI_DDR)
+#define BSP_CLKMON_REG_FSP_IP_TSU(channel)       (R_CPG->CPG_CLKMON_TSU)
+#define BSP_CLKMON_BIT_FSP_IP_TSU(channel)       (1U << (R_CPG_CPG_CLKMON_TSU_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_PERI_DDR(ch)           (1U << (R_CPG_CPG_CLKMON_PERI_DDR_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_TSU(channel)          (R_CPG->CPG_RST_TSU)
+#define BSP_RST_BIT_FSP_IP_TSU(channel)          (1U << (R_CPG_CPG_RST_TSU_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_PERI_DDR(ch)              (R_CPG->CPG_RST_PERI_DDR)
+#define BSP_RSTMON_REG_FSP_IP_TSU(channel)       (R_CPG->CPG_RSTMON_TSU)
+#define BSP_RSTMON_BIT_FSP_IP_TSU(channel)       (1U << (R_CPG_CPG_RSTMON_TSU_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
+ * Definition of macros to control WDT clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_PERI_DDR(ch)              (1U << (R_CPG_CPG_RST_PERI_DDR_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_WDT(channel)        (R_CPG->CPG_CLKON_WDT)
+#define BSP_CLKON_BIT_FSP_IP_WDT(channel)        (3U << (R_CPG_CPG_CLKON_WDT_CLK0_ON_Pos + 2U * (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_PERI_DDR(ch)           (R_CPG->CPG_RSTMON_PERI_DDR)
+#define BSP_CLKMON_REG_FSP_IP_WDT(channel)       (R_CPG->CPG_CLKMON_WDT)
+#define BSP_CLKMON_BIT_FSP_IP_WDT(channel)       (3U << (R_CPG_CPG_CLKMON_WDT_CLK0_MON_Pos + 2U * (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_PERI_DDR(ch)           (1U << (R_CPG_CPG_RSTMON_PERI_DDR_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_WDT(channel)          (R_CPG->CPG_RST_WDT)
+#define BSP_RST_BIT_FSP_IP_WDT(channel)          (1U << (R_CPG_CPG_RST_WDT_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_AXI_TZCDDR(ch)          (R_CPG->CPG_CLKON_AXI_TZCDDR)
+#define BSP_RSTMON_REG_FSP_IP_WDT(channel)       (R_CPG->CPG_RSTMON_WDT)
+#define BSP_RSTMON_BIT_FSP_IP_WDT(channel)       (1U << (R_CPG_CPG_RSTMON_WDT_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
+ * Definition of macros to control SCI clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_AXI_TZCDDR(ch)          (1U << (R_CPG_CPG_CLKON_AXI_TZCDDR_CLK0_ON_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_SCI(channel)        (R_CPG->CPG_CLKON_SCI)
+#define BSP_CLKON_BIT_FSP_IP_SCI(channel)        (1U << (R_CPG_CPG_CLKON_SCI_CLK0_ON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_AXI_TZCDDR(ch)         (R_CPG->CPG_CLKMON_AXI_TZCDDR)
+#define BSP_CLKMON_REG_FSP_IP_SCI(channel)       (R_CPG->CPG_CLKMON_SCI)
+#define BSP_CLKMON_BIT_FSP_IP_SCI(channel)       (1U << (R_CPG_CPG_CLKMON_SCI_CLK0_MON_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_AXI_TZCDDR(ch)         (1U << (R_CPG_CPG_CLKMON_AXI_TZCDDR_CLK0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_SCI(channel)          (R_CPG->CPG_RST_SCI)
+#define BSP_RST_BIT_FSP_IP_SCI(channel)          (1U << (R_CPG_CPG_RST_SCI_UNIT0_RSTB_Pos + (channel)))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_AXI_TZCDDR(ch)            (R_CPG->CPG_RST_AXI_TZCDDR)
+#define BSP_RSTMON_REG_FSP_IP_SCI(channel)       (R_CPG->CPG_RSTMON_SCI)
+#define BSP_RSTMON_BIT_FSP_IP_SCI(channel)       (1U << (R_CPG_CPG_RSTMON_SCI_RST0_MON_Pos + (channel)))
 
 /***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
+ * Definition of macros to control TSU clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_AXI_TZCDDR(ch)            (1U << (R_CPG_CPG_RST_AXI_TZCDDR_UNIT0_RSTB_Pos + (ch)))
+#define BSP_CLKON_REG_FSP_IP_MTU3(channel)       (R_CPG->CPG_CLKON_MTU)
+#define BSP_CLKON_BIT_FSP_IP_MTU3(channel)       (1U << (R_CPG_CPG_CLKON_MTU_CLK0_ON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_AXI_TZCDDR(ch)         (R_CPG->CPG_RSTMON_AXI_TZCDDR)
+#define BSP_CLKMON_REG_FSP_IP_MTU3(channel)      (R_CPG->CPG_CLKMON_MTU)
+#define BSP_CLKMON_BIT_FSP_IP_MTU3(channel)      (1U << (R_CPG_CPG_CLKMON_MTU_CLK0_MON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 4.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_AXI_TZCDDR(ch)         (1U << (R_CPG_CPG_RSTMON_AXI_TZCDDR_RST0_MON_Pos + (ch)))
+#define BSP_RST_REG_FSP_IP_MTU3(channel)         (R_CPG->CPG_RST_MTU)
+#define BSP_RST_BIT_FSP_IP_MTU3(channel)         (1U << (R_CPG_CPG_RST_MTU_UNIT0_RSTB_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_MTGPGS(ch)              (R_CPG->CPG_CLKON_MTGPGS)
+#define BSP_RSTMON_REG_FSP_IP_MTU3(channel)      (R_CPG->CPG_RSTMON_MTU)
+#define BSP_RSTMON_BIT_FSP_IP_MTU3(channel)      (1U << (R_CPG_CPG_RSTMON_MTU_RST0_MON_Pos))
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_MTGPGS(ch)              (1U << (R_CPG_CPG_CLKON_MTGPGS_CLK0_ON_Pos + (ch)))
+/* CPG_PL1_DDIV.DIVPL1_SET options. */
+#define BSP_CLOCKS_PL1_DIV_1                (0) // Divide ICLK source clock by 1
+#define BSP_CLOCKS_PL1_DIV_2                (1) // Divide ICLK source clock by 2
+#define BSP_CLOCKS_PL1_DIV_4                (2) // Divide ICLK source clock by 4
+#define BSP_CLOCKS_PL1_DIV_8                (3) // Divide ICLK source clock by 8
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_MTGPGS(ch)             (R_CPG->CPG_CLKMON_MTGPGS)
+/* CPG_PL2_DDIV.DIVPL2B_SET options. */
+#define BSP_CLOCKS_PL2B_DIV_1               (0) // Divide P0CLK source clock by 1
+#define BSP_CLOCKS_PL2B_DIV_2               (1) // Divide P0CLK source clock by 2
+#define BSP_CLOCKS_PL2B_DIV_4               (2) // Divide P0CLK source clock by 4
+#define BSP_CLOCKS_PL2B_DIV_8               (3) // Divide P0CLK source clock by 8
+#define BSP_CLOCKS_PL2B_DIV_32              (4) // Divide P0CLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_MTGPGS(ch)             (1U << (R_CPG_CPG_CLKMON_MTGPGS_CLK0_MON_Pos + (ch)))
+/* CPG_PL3_DDIV.DIVPL3C_SET options. */
+#define BSP_CLOCKS_PL3C_DIV_1               (0) // Divide SPI0CLK source clock by 1
+#define BSP_CLOCKS_PL3C_DIV_2               (1) // Divide SPI0CLK source clock by 2
+#define BSP_CLOCKS_PL3C_DIV_4               (2) // Divide SPI0CLK source clock by 4
+#define BSP_CLOCKS_PL3C_DIV_8               (3) // Divide SPI0CLK source clock by 8
+#define BSP_CLOCKS_PL3C_DIV_32              (4) // Divide SPI0CLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_MTGPGS(ch)                (R_CPG->CPG_RST_MTGPGS)
+/* CPG_PL3_DDIV.DIVPL3B_SET options. */
+#define BSP_CLOCKS_PL3B_DIV_1               (0) // Divide P1CLK source clock by 1
+#define BSP_CLOCKS_PL3B_DIV_2               (1) // Divide P1CLK source clock by 2
+#define BSP_CLOCKS_PL3B_DIV_4               (2) // Divide P1CLK source clock by 4
+#define BSP_CLOCKS_PL3B_DIV_8               (3) // Divide P1CLK source clock by 8
+#define BSP_CLOCKS_PL3B_DIV_32              (4) // Divide P1CLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_MTGPGS(ch)                (1U << (R_CPG_CPG_RST_MTGPGS_UNIT0_RSTB_Pos + (ch)))
+/* CPG_PL3_DDIV.DIVPL3A_SET options. */
+#define BSP_CLOCKS_PL3A_DIV_1               (0) // Divide P2CLK source clock by 1
+#define BSP_CLOCKS_PL3A_DIV_2               (1) // Divide P2CLK source clock by 2
+#define BSP_CLOCKS_PL3A_DIV_4               (2) // Divide P2CLK source clock by 4
+#define BSP_CLOCKS_PL3A_DIV_8               (3) // Divide P2CLK source clock by 8
+#define BSP_CLOCKS_PL3A_DIV_32              (4) // Divide P2CLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_MTGPGS(ch)             (R_CPG->CPG_RSTMON_MTGPGS)
+/* CPG_PL6_DDIV.DIVPL6B_SET options. */
+#define BSP_CLOCKS_PL6B_DIV_1               (0) // Divide I3CLK source clock by 1
+#define BSP_CLOCKS_PL6B_DIV_2               (1) // Divide I3CLK source clock by 2
+#define BSP_CLOCKS_PL6B_DIV_4               (2) // Divide I3CLK source clock by 4
+#define BSP_CLOCKS_PL6B_DIV_8               (3) // Divide I3CLK source clock by 8
+#define BSP_CLOCKS_PL6B_DIV_32              (4) // Divide I3CLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0 - 1.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_MTGPGS(ch)             (1U << (R_CPG_CPG_RSTMON_MTGPGS_RST0_MON_Pos + (ch)))
+/* CPG_PL6_DDIV.DIVPL6A_SET options. */
+#define BSP_CLOCKS_PL6A_DIV_1               (0) // Divide I2CLK source clock by 1
+#define BSP_CLOCKS_PL6A_DIV_2               (1) // Divide I2CLK source clock by 2
+#define BSP_CLOCKS_PL6A_DIV_4               (2) // Divide I2CLK source clock by 4
+#define BSP_CLOCKS_PL6A_DIV_8               (3) // Divide I2CLK source clock by 8
+#define BSP_CLOCKS_PL6A_DIV_32              (4) // Divide I2CLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKON_REG_BSP_CLK_AXI_DEFAULT_SLV(ch)     (R_CPG->CPG_CLKON_AXI_DEFAULT_SLV)
+/* CPG_SDHI_DDIV.DIVSDHI2_SET options. */
+#define BSP_CLOCKS_SDHI2_DIV_1              (0) // Divide SD2CLK source clock by 1
+#define BSP_CLOCKS_SDHI2_DIV_2              (1) // Divide SD2CLK source clock by 2
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKON_BIT_BSP_CLK_AXI_DEFAULT_SLV(ch)     (1U << (R_CPG_CPG_CLKON_AXI_DEFAULT_SLV_CLK0_ON_Pos + (ch)))
+/* CPG_SDHI_DDIV.DIVSDHI1_SET options. */
+#define BSP_CLOCKS_SDHI1_DIV_1              (0) // Divide SD1CLK source clock by 1
+#define BSP_CLOCKS_SDHI1_DIV_2              (1) // Divide SD1CLK source clock by 2
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_CLKMON_REG_BSP_CLK_AXI_DEFAULT_SLV(ch)    (R_CPG->CPG_CLKMON_AXI_DEFAULT_SLV)
+/* CPG_SDHI_DDIV.DIVSDHI0_SET options. */
+#define BSP_CLOCKS_SDHI0_DIV_1              (0) // Divide SD0CLK source clock by 1
+#define BSP_CLOCKS_SDHI0_DIV_2              (1) // Divide SD0CLK source clock by 2
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_CLKMON_BIT_BSP_CLK_AXI_DEFAULT_SLV(ch)    (1U << (R_CPG_CPG_CLKMON_AXI_DEFAULT_SLV_CLK0_MON_Pos + (ch)))
+/* CPG_OCTA_DDIV.DIVOCTA_SET options. */
+#define BSP_CLOCKS_OCTA_DIV_1               (0) // Divide OCCLK source clock by 1
+#define BSP_CLOCKS_OCTA_DIV_2               (1) // Divide OCCLK source clock by 2
+#define BSP_CLOCKS_OCTA_DIV_4               (2) // Divide OCCLK source clock by 4
+#define BSP_CLOCKS_OCTA_DIV_8               (3) // Divide OCCLK source clock by 8
+#define BSP_CLOCKS_OCTA_DIV_32              (4) // Divide OCCLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RST_REG_BSP_CLK_AXI_DEFAULT_SLV(ch)       (R_CPG->CPG_RST_AXI_DEFAULT_SLV)
+/* CPG_SPI_DDIV.DIVSPI_SET options. */
+#define BSP_CLOCKS_SPI_DIV_1                (0) // Divide SPICLK source clock by 1
+#define BSP_CLOCKS_SPI_DIV_2                (1) // Divide SPICLK source clock by 2
+#define BSP_CLOCKS_SPI_DIV_4                (2) // Divide SPICLK source clock by 4
+#define BSP_CLOCKS_SPI_DIV_8                (3) // Divide SPICLK source clock by 8
+#define BSP_CLOCKS_SPI_DIV_32               (4) // Divide SPICLK source clock by 32
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RST_BIT_BSP_CLK_AXI_DEFAULT_SLV(ch)       (1U << (R_CPG_CPG_RST_AXI_DEFAULT_SLV_UNIT0_RSTB_Pos + (ch)))
+/* CPG_PLL_DSEL options. */
+#define BSP_CLOCKS_SOURCE_CLOCK_OSC_0024    (0) // Select OSC/1000 clock
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL4        (1) // Select PLL4 clock
 
-/***********************************************************************************************************************
- *
- * @param      ch  Dummy parameter.
- **********************************************************************************************************************/
-#define BSP_RSTMON_REG_BSP_CLK_AXI_DEFAULT_SLV(ch)    (R_CPG->CPG_RSTMON_AXI_DEFAULT_SLV)
+/* CPG_SDHI_DSEL options. */
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL2_800    (0) // Select 800MHz
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL6_500    (2) // Select 500MHz
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL2_266    (3) // Select 266MHz
 
-/***********************************************************************************************************************
- *
- * @param      ch  The channel. Use ch 0 for units without channels. Only single bit can be set. ch 0.
- **********************************************************************************************************************/
-#define BSP_RSTMON_BIT_BSP_CLK_AXI_DEFAULT_SLV(ch)    (1U << (R_CPG_CPG_RSTMON_AXI_DEFAULT_SLV_RST0_MON_Pos + (ch)))
+/* CPG_OCTA_SSEL and CPG_SPI_SSEL options. */
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL3_400    (0) // Select 400MHz
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL3_266    (2) // Select 266MHz
+#define BSP_CLOCKS_SOURCE_CLOCK_PLL6_250    (3) // Select 250MHz
 
 /***********************************************************************************************************************
  * Typedef definitions
  **********************************************************************************************************************/
-
-/** Following Units are available clock generation & control, also reset generation & control. */
-typedef enum e_bsp_clk_unit
-{
-    BSP_CLK_CA55 = 0,
-    BSP_CLK_CM33,
-    BSP_CLK_SRAM_ACPU,
-    BSP_CLK_SRAM_MCPU,
-    BSP_CLK_ROM,
-    BSP_CLK_GIC600,
-    BSP_CLK_IA55,
-    BSP_CLK_IM33,
-    BSP_CLK_MHU,
-    BSP_CLK_CST,
-    BSP_CLK_SYC,
-    BSP_CLK_DMAC,
-    BSP_CLK_SYSC,
-    BSP_CLK_GTM,
-    BSP_CLK_MTU,
-    BSP_CLK_POE3,
-    BSP_CLK_GPT,
-    BSP_CLK_POEG,
-    BSP_CLK_WDT,
-    BSP_CLK_DDR,
-    BSP_CLK_SPI_MULTI,
-    BSP_CLK_SDHI,
-    BSP_CLK_GPU,
-    BSP_CLK_ISU,
-    BSP_CLK_H264,
-    BSP_CLK_CRU,
-    BSP_CLK_MIPI_DSI,
-    BSP_CLK_LCDC,
-    BSP_CLK_SSIF,
-    BSP_CLK_SRC,
-    BSP_CLK_USB,
-    BSP_CLK_ETH,
-    BSP_CLK_I2C,
-    BSP_CLK_SCIF,
-    BSP_CLK_SCI,
-    BSP_CLK_IRDA,
-    BSP_CLK_RSPI,
-    BSP_CLK_CANFD,
-    BSP_CLK_GPIO,
-    BSP_CLK_TSIPG,
-    BSP_CLK_JAUTH,
-    BSP_CLK_OTP,
-    BSP_CLK_ADC,
-    BSP_CLK_TSU,
-    BSP_CLK_BBGU,
-    BSP_CLK_AXI_ACPU_BUS,
-    BSP_CLK_AXI_MCPU_BUS,
-    BSP_CLK_AXI_COM_BUS,
-    BSP_CLK_AXI_VIDEO_BUS,
-    BSP_CLK_PERI_COM,
-    BSP_CLK_REG1_BUS,
-    BSP_CLK_REG0_BUS,
-    BSP_CLK_PERI_CPU,
-    BSP_CLK_PERI_VIDEO,
-    BSP_CLK_PERI_DDR,
-    BSP_CLK_AXI_TZCDDR,
-    BSP_CLK_MTGPGS,
-    BSP_CLK_AXI_DEFAULT_SLV,
-} bsp_clk_unit_t;
 
 /***********************************************************************************************************************
  * Exported global variables
@@ -2918,6 +465,7 @@ typedef enum e_bsp_clk_unit
 
 /* Public functions defined in bsp_clocks.c */
 void bsp_clock_init(void);             // Used internally by BSP
+void bsp_clock_freq_init_cfg(void);    // Used internally by BSP
 
 #if BSP_TZ_CFG_INIT_SECURE_ONLY
 void bsp_clock_freq_var_init(void);    // Used internally by BSP
@@ -2927,4 +475,4 @@ void bsp_clock_freq_var_init(void);    // Used internally by BSP
 /** Common macro for FSP header files. There is also a corresponding FSP_HEADER macro at the top of this file. */
 FSP_FOOTER
 
-#endif                                 /* BSP_CLOCKS_H */
+#endif

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -58,9 +58,9 @@
  *
  * @param
  **********************************************************************************************************************/
-#define R_BSP_NVIC_CM33_RESET()    {SCB->AIRCR = (uint32_t) ((0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |    \
-                                                             (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | \
-                                                             SCB_AIRCR_SYSRESETREQ_Msk);             \
+#define R_BSP_NVIC_CM33_RESET()     {SCB->AIRCR = (uint32_t) ((0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |    \
+                                                              (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | \
+                                                              SCB_AIRCR_SYSRESETREQ_Msk);             \
 }
 
 /***********************************************************************************************************************
@@ -68,9 +68,11 @@
  *
  * @param
  **********************************************************************************************************************/
-#define R_BSP_WAIT_CM33_RESET()    {while ((R_SYSC->SYS_LP_CM33CTL0 & R_SYSC_SYS_LP_CM33CTL0_SYSRESETREQ_Msk) == 0U) \
-                                    { /* wait */};                                                                   \
+#ifndef R_BSP_WAIT_CM33_RESET
+ #define R_BSP_WAIT_CM33_RESET()    {while ((R_SYSC->SYS_LP_CM33CTL0 & R_SYSC_SYS_LP_CM33CTL0_SYSRESETREQ_Msk) == 0U) \
+                                     { /* wait */};                                                                   \
 }
+#endif
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -100,10 +102,18 @@ extern uint32_t __S_StackTop;
 extern void * __Secure_Vectors[];
 
 extern void R_BSP_SecurityInit(void);
+extern void Reset_Handler_S(void);
+
+#if !BSP_NONSECURE_TRANSITION
+extern void Reset_Handler_NS(void);
+
+#endif
 
 /***********************************************************************************************************************
  * Private global variables and functions
  **********************************************************************************************************************/
+static void warm_reset_sub(void);
+static void entry_function_sub(void);
 
 /*******************************************************************************************************************//**
  * Initialize the MPU and the runtime environment.
@@ -131,7 +141,11 @@ void SystemInit_S (void)
     bsp_irq_cfg_s();
 
     /* Enter non-secure code */
+#if BSP_NONSECURE_TRANSITION
     R_BSP_NonSecureEnter();
+#else
+    Reset_Handler_NS();
+#endif
 }
 
 /*******************************************************************************************************************//**
@@ -141,8 +155,27 @@ void SystemInit_S (void)
  * The Cortex-M33's program works on the assumption that the appropriate vector address values have been set
  * in SYS_CM33_CFG2 and SYS_CM33_CFG3 in the Cortex-A55 program.
  **********************************************************************************************************************/
-__attribute__((optimize("-O1"))) void Warm_Reset_S (void)
+__attribute__((naked)) void Warm_Reset_S (void)
 {
+    /* Set the main stack pointer to BSP_PRV_SECURE_STACK_TOP */
+    __asm volatile ("msr msp, %0"
+                    :
+                    : "r" (BSP_PRV_SECURE_STACK_TOP)
+                    :
+                    );
+
+    __asm volatile ("b.w %0"
+                    :
+                    : "i" (&warm_reset_sub)
+                    :
+                    );
+}
+
+static void warm_reset_sub (void)
+{
+    /* Set Secure vector address to SYSC */
+    R_BSP_SECURE_VECTOR_SET((uint32_t) &__Secure_Vectors);
+
     /* CM33 reset */
     R_BSP_NVIC_CM33_RESET();
 
@@ -158,6 +191,56 @@ __attribute__((optimize("-O1"))) void Warm_Reset_S (void)
     {
         ;
     }
+}
+
+/*******************************************************************************************************************//**
+ * Entry function when debugging RAM load using a debugger
+ **********************************************************************************************************************/
+__attribute__((naked)) void Entry_Function_S (void)
+{
+    /* Set the main stack pointer to BSP_PRV_SECURE_STACK_TOP */
+    __asm volatile ("msr msp, %0"
+                    :
+                    : "r" (BSP_PRV_SECURE_STACK_TOP)
+                    :
+                    );
+
+    __asm volatile ("b.w %0"
+                    :
+                    : "i" (&entry_function_sub)
+                    :
+                    );
+}
+
+static void entry_function_sub (void)
+{
+    /* Set Secure vector address to SYSC */
+    R_BSP_SECURE_VECTOR_SET((uint32_t) &__Secure_Vectors);
+
+    __asm volatile ("b.w %0"
+                    :
+                    : "i" (&Reset_Handler_S)
+                    :
+                    );
+}
+
+/*******************************************************************************************************************//**
+ * Same function as Warm_Reset_S. Used as an entry function at XSPI boot.
+ **********************************************************************************************************************/
+__attribute__((naked)) void XSPI_Boot_Entry (void)
+{
+    /* Set the main stack pointer to BSP_PRV_SECURE_STACK_TOP */
+    __asm volatile ("msr msp, %0"
+                    :
+                    : "r" (BSP_PRV_SECURE_STACK_TOP)
+                    :
+                    );
+
+    __asm volatile ("b.w %0"
+                    :
+                    : "i" (&entry_function_sub)
+                    :
+                    );
 }
 
 /** @} (end addtogroup BSP_MCU) */

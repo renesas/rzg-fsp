@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -36,8 +36,6 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define RIIC_MASTER_CODE_VERSION_MAJOR    (1U)
-#define RIIC_MASTER_CODE_VERSION_MINOR    (1U)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -49,6 +47,12 @@ typedef enum e_iic_master_timeout_mode
     IIC_MASTER_TIMEOUT_MODE_LONG  = 0, ///< Timeout Detection Time Select: Long Mode -> TMOS = 0
     IIC_MASTER_TIMEOUT_MODE_SHORT = 1  ///< Timeout Detection Time Select: Short Mode -> TMOS = 1
 } iic_master_timeout_mode_t;
+
+typedef enum e_iic_master_timeout_scl_low
+{
+    IIC_MASTER_TIMEOUT_SCL_LOW_DISABLED = 0, ///< Timeout detection during SCL low disabled
+    IIC_MASTER_TIMEOUT_SCL_LOW_ENABLED  = 1  ///< Timeout detection during SCL low enabled
+} iic_master_timeout_scl_low_t;
 
 /** I2C clock settings */
 typedef struct iic_master_clock_settings
@@ -89,7 +93,6 @@ typedef struct st_iic_master_instance_ctrl
     volatile bool             activation_on_txi;    // Tracks whether the transfer is activated on TXI interrupt
     volatile bool             address_restarted;    // Tracks whether the restart condition is send on 10 bit read
     volatile bool             nack_before_stop;     // Tracks whether or not a reception of NACK before Stop condition detect
-    iic_master_timeout_mode_t timeout_mode;         // Holds the timeout mode value. i.e short mode or long mode
 
     /* Pointer to callback and optional working memory */
     void (* p_callback)(i2c_master_callback_args_t *);
@@ -102,14 +105,15 @@ typedef struct st_iic_master_instance_ctrl
 /** RIIC extended configuration */
 typedef struct st_riic_master_extended_cfg
 {
-    iic_master_timeout_mode_t   timeout_mode;   ///< Timeout Detection Time Select: Long Mode = 0 and Short Mode = 1.
-    iic_master_clock_settings_t clock_settings; ///< I2C Clock settings
-    uint8_t   noise_filter_stage;               ///< Noise Filter Stage Selection
-    IRQn_Type naki_irq;                         ///< NACK IRQ Number
-    IRQn_Type sti_irq;                          ///< Start condition IRQ Number
-    IRQn_Type spi_irq;                          ///< Stop condition IRQ Number
-    IRQn_Type ali_irq;                          ///< Arbitration lost IRQ Number
-    IRQn_Type tmoi_irq;                         ///< Timeout IRQ Number
+    iic_master_timeout_mode_t    timeout_mode;    ///< Timeout Detection Time Select: Long Mode = 0 and Short Mode = 1.
+    iic_master_timeout_scl_low_t timeout_scl_low; ///< Allows timeouts to occur when SCL is held low.
+    iic_master_clock_settings_t  clock_settings;  ///< I2C Clock settings
+    uint8_t   noise_filter_stage;                 ///< Noise Filter Stage Selection
+    IRQn_Type naki_irq;                           ///< NACK IRQ Number
+    IRQn_Type sti_irq;                            ///< Start condition IRQ Number
+    IRQn_Type spi_irq;                            ///< Stop condition IRQ Number
+    IRQn_Type ali_irq;                            ///< Arbitration lost IRQ Number
+    IRQn_Type tmoi_irq;                           ///< Timeout IRQ Number
 } riic_master_extended_cfg_t;
 
 /**********************************************************************************************************************
@@ -140,7 +144,6 @@ fsp_err_t R_RIIC_MASTER_SlaveAddressSet(i2c_master_ctrl_t * const    p_api_ctrl,
                                         uint32_t const               slave,
                                         i2c_master_addr_mode_t const addr_mode);
 fsp_err_t R_RIIC_MASTER_Close(i2c_master_ctrl_t * const p_api_ctrl);
-fsp_err_t R_RIIC_MASTER_VersionGet(fsp_version_t * const p_version);
 fsp_err_t R_RIIC_MASTER_CallbackSet(i2c_master_ctrl_t * const          p_api_ctrl,
                                     void (                           * p_callback)(i2c_master_callback_args_t *),
                                     void const * const                 p_context,

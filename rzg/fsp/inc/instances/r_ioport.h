@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -40,8 +40,9 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define IOPORT_CODE_VERSION_MAJOR    (1U)
-#define IOPORT_CODE_VERSION_MINOR    (0U)
+
+/* Private definition to set enumeration values. */
+#define IOPORT_PRV_PFS_PSEL_OFFSET    (24)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -50,246 +51,241 @@ FSP_HEADER
 /** IOPORT private control block. DO NOT MODIFY. Initialization occurs when R_IOPORT_Open() is called. */
 typedef struct st_ioport_instance_ctrl
 {
-    uint32_t     open;
-    void const * p_context;
+    uint32_t             open;
+    void const         * p_context;
+    ioport_cfg_t const * p_cfg;
 } ioport_instance_ctrl_t;
 
-#ifndef BSP_OVERRIDE_IOPORT_PIN_T
+#ifndef BSP_OVERRIDE_IOPORT_PERIPHERAL_T
 
-/* This typedef is here temporarily. See SWFLEX-144 for details. */
-/** Superset list of all possible IO port pins. */
-typedef enum e_ioport_port_pin_t
+/** Superset of all peripheral functions.  */
+typedef enum e_ioport_peripheral
 {
-    IOPORT_PORT_00_PIN_00 = 0x0000,       ///< IO port 0 pin 0
-    IOPORT_PORT_00_PIN_01 = 0x0001,       ///< IO port 0 pin 1
+    /** Pin will function as a Mode0 peripheral pin */
+    IOPORT_PERIPHERAL_MODE0 = (0x0UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_01_PIN_00 = 0x0100,       ///< IO port 1 pin 0
-    IOPORT_PORT_01_PIN_01 = 0x0101,       ///< IO port 1 pin 1
+    /** Pin will function as a Mode1 peripheral pin */
+    IOPORT_PERIPHERAL_MODE1 = (0x1UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_02_PIN_00 = 0x0200,       ///< IO port 2 pin 0
-    IOPORT_PORT_02_PIN_01 = 0x0201,       ///< IO port 2 pin 1
+    /** Pin will function as a Mode2 peripheral pin */
+    IOPORT_PERIPHERAL_MODE2 = (0x2UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_03_PIN_00 = 0x0300,       ///< IO port 3 pin 0
-    IOPORT_PORT_03_PIN_01 = 0x0301,       ///< IO port 3 pin 1
+    /** Pin will function as a Mode3 peripheral pin */
+    IOPORT_PERIPHERAL_MODE3 = (0x3UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_04_PIN_00 = 0x0400,       ///< IO port 4 pin 0
-    IOPORT_PORT_04_PIN_01 = 0x0401,       ///< IO port 4 pin 1
+    /** Pin will function as a Mode4 peripheral pin */
+    IOPORT_PERIPHERAL_MODE4 = (0x4UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_05_PIN_00 = 0x0500,       ///< IO port 5 pin 0
-    IOPORT_PORT_05_PIN_01 = 0x0501,       ///< IO port 5 pin 1
-    IOPORT_PORT_05_PIN_02 = 0x0502,       ///< IO port 5 pin 2
+    /** Pin will function as a Mode5 peripheral pin */
+    IOPORT_PERIPHERAL_MODE5 = (0x5UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_06_PIN_00 = 0x0600,       ///< IO port 6 pin 0
-    IOPORT_PORT_06_PIN_01 = 0x0601,       ///< IO port 6 pin 1
+    /** Pin will function as a Mode6 peripheral pin */
+    IOPORT_PERIPHERAL_MODE6 = (0x6UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_07_PIN_00 = 0x0700,       ///< IO port 7 pin 0
-    IOPORT_PORT_07_PIN_01 = 0x0701,       ///< IO port 7 pin 1
-    IOPORT_PORT_07_PIN_02 = 0x0702,       ///< IO port 7 pin 2
+    /** Pin will function as a Mode7 peripheral pin */
+    IOPORT_PERIPHERAL_MODE7 = (0x7UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_08_PIN_00 = 0x0800,       ///< IO port 8 pin 0
-    IOPORT_PORT_08_PIN_01 = 0x0801,       ///< IO port 8 pin 1
-    IOPORT_PORT_08_PIN_02 = 0x0802,       ///< IO port 8 pin 2
+    /** Pin will function as a Mode8 peripheral pin */
+    IOPORT_PERIPHERAL_MODE8 = (0x8UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_09_PIN_00 = 0x0900,       ///< IO port 9 pin 0
-    IOPORT_PORT_09_PIN_01 = 0x0901,       ///< IO port 9 pin 1
+    /** Pin will function as a Mode9 peripheral pin */
+    IOPORT_PERIPHERAL_MODE9 = (0x9UL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_10_PIN_00 = 0x0A00,       ///< IO port 10 pin 0
-    IOPORT_PORT_10_PIN_01 = 0x0A01,       ///< IO port 10 pin 1
+    /** Pin will function as a Mode10 peripheral pin */
+    IOPORT_PERIPHERAL_MODE10 = (0xAUL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_11_PIN_00 = 0x0B00,       ///< IO port 11 pin 0
-    IOPORT_PORT_11_PIN_01 = 0x0B01,       ///< IO port 11 pin 1
+    /** Pin will function as a Mode11 peripheral pin */
+    IOPORT_PERIPHERAL_MODE11 = (0xBUL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_12_PIN_00 = 0x0C00,       ///< IO port 12 pin 0
-    IOPORT_PORT_12_PIN_01 = 0x0C01,       ///< IO port 12 pin 1
+    /** Pin will function as a Mode12 peripheral pin */
+    IOPORT_PERIPHERAL_MODE12 = (0xCUL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_13_PIN_00 = 0x0D00,       ///< IO port 13 pin 0
-    IOPORT_PORT_13_PIN_01 = 0x0D01,       ///< IO port 13 pin 1
-    IOPORT_PORT_13_PIN_02 = 0x0D02,       ///< IO port 13 pin 2
+    /** Pin will function as a Mode13 peripheral pin */
+    IOPORT_PERIPHERAL_MODE13 = (0xDUL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_14_PIN_00 = 0x0E00,       ///< IO port 14 pin 0
-    IOPORT_PORT_14_PIN_01 = 0x0E01,       ///< IO port 14 pin 1
+    /** Pin will function as a Mode14 peripheral pin */
+    IOPORT_PERIPHERAL_MODE14 = (0xEUL << IOPORT_PRV_PFS_PSEL_OFFSET),
 
-    IOPORT_PORT_15_PIN_00 = 0x0F00,       ///< IO port 15 pin 0
-    IOPORT_PORT_15_PIN_01 = 0x0F01,       ///< IO port 15 pin 1
-
-    IOPORT_PORT_16_PIN_00 = 0x1000,       ///< IO port 16 pin 0
-    IOPORT_PORT_16_PIN_01 = 0x1001,       ///< IO port 16 pin 1
-
-    IOPORT_PORT_17_PIN_00 = 0x1100,       ///< IO port 17 pin 0
-    IOPORT_PORT_17_PIN_01 = 0x1101,       ///< IO port 17 pin 1
-    IOPORT_PORT_17_PIN_02 = 0x1102,       ///< IO port 17 pin 2
-
-    IOPORT_PORT_18_PIN_00 = 0x1200,       ///< IO port 18 pin 0
-    IOPORT_PORT_18_PIN_01 = 0x1201,       ///< IO port 18 pin 1
-
-    IOPORT_PORT_19_PIN_00 = 0x1300,       ///< IO port 19 pin 0
-    IOPORT_PORT_19_PIN_01 = 0x1301,       ///< IO port 19 pin 1
-
-    IOPORT_PORT_20_PIN_00 = 0x1400,       ///< IO port 20 pin 0
-    IOPORT_PORT_20_PIN_01 = 0x1401,       ///< IO port 20 pin 1
-    IOPORT_PORT_20_PIN_02 = 0x1402,       ///< IO port 20 pin 2
-
-    IOPORT_PORT_21_PIN_00 = 0x1500,       ///< IO port 21 pin 0
-    IOPORT_PORT_21_PIN_01 = 0x1501,       ///< IO port 21 pin 1
-
-    IOPORT_PORT_22_PIN_00 = 0x1600,       ///< IO port 22 pin 0
-    IOPORT_PORT_22_PIN_01 = 0x1601,       ///< IO port 22 pin 1
-
-    IOPORT_PORT_23_PIN_00 = 0x1700,       ///< IO port 23 pin 0
-    IOPORT_PORT_23_PIN_01 = 0x1701,       ///< IO port 23 pin 1
-
-    IOPORT_PORT_24_PIN_00 = 0x1800,       ///< IO port 24 pin 0
-    IOPORT_PORT_24_PIN_01 = 0x1801,       ///< IO port 24 pin 1
-
-    IOPORT_PORT_25_PIN_00 = 0x1900,       ///< IO port 25 pin 0
-    IOPORT_PORT_25_PIN_01 = 0x1901,       ///< IO port 25 pin 1
-
-    IOPORT_PORT_26_PIN_00 = 0x1A00,       ///< IO port 26 pin 0
-    IOPORT_PORT_26_PIN_01 = 0x1A01,       ///< IO port 26 pin 1
-
-    IOPORT_PORT_27_PIN_00 = 0x1B00,       ///< IO port 27 pin 0
-    IOPORT_PORT_27_PIN_01 = 0x1B01,       ///< IO port 27 pin 1
-
-    IOPORT_PORT_28_PIN_00 = 0x1C00,       ///< IO port 28 pin 0
-    IOPORT_PORT_28_PIN_01 = 0x1C01,       ///< IO port 28 pin 1
-
-    IOPORT_PORT_29_PIN_00 = 0x1D00,       ///< IO port 29 pin 0
-    IOPORT_PORT_29_PIN_01 = 0x1D01,       ///< IO port 29 pin 1
-
-    IOPORT_PORT_30_PIN_00 = 0x1E00,       ///< IO port 30 pin 0
-    IOPORT_PORT_30_PIN_01 = 0x1E01,       ///< IO port 30 pin 1
-
-    IOPORT_PORT_31_PIN_00 = 0x1F00,       ///< IO port 31 pin 0
-    IOPORT_PORT_31_PIN_01 = 0x1F01,       ///< IO port 31 pin 1
-
-    IOPORT_PORT_32_PIN_00 = 0x2000,       ///< IO port 32 pin 0
-    IOPORT_PORT_32_PIN_01 = 0x2001,       ///< IO port 32 pin 1
-
-    IOPORT_PORT_33_PIN_00 = 0x2100,       ///< IO port 33 pin 0
-    IOPORT_PORT_33_PIN_01 = 0x2101,       ///< IO port 33 pin 1
-
-    IOPORT_PORT_34_PIN_00 = 0x2200,       ///< IO port 34 pin 0
-    IOPORT_PORT_34_PIN_01 = 0x2201,       ///< IO port 34 pin 1
-
-    IOPORT_PORT_35_PIN_00 = 0x2300,       ///< IO port 35 pin 0
-    IOPORT_PORT_35_PIN_01 = 0x2301,       ///< IO port 35 pin 1
-
-    IOPORT_PORT_36_PIN_00 = 0x2400,       ///< IO port 36 pin 0
-    IOPORT_PORT_36_PIN_01 = 0x2401,       ///< IO port 36 pin 1
-
-    IOPORT_PORT_37_PIN_00 = 0x2500,       ///< IO port 37 pin 0
-    IOPORT_PORT_37_PIN_01 = 0x2501,       ///< IO port 37 pin 1
-    IOPORT_PORT_37_PIN_02 = 0x2502,       ///< IO port 37 pin 2
-
-    IOPORT_PORT_38_PIN_00 = 0x2600,       ///< IO port 38 pin 0
-    IOPORT_PORT_38_PIN_01 = 0x2601,       ///< IO port 38 pin 1
-
-    IOPORT_PORT_39_PIN_00 = 0x2700,       ///< IO port 39 pin 0
-    IOPORT_PORT_39_PIN_01 = 0x2701,       ///< IO port 39 pin 1
-    IOPORT_PORT_39_PIN_02 = 0x2702,       ///< IO port 39 pin 2
-
-    IOPORT_PORT_40_PIN_00 = 0x2800,       ///< IO port 40 pin 0
-    IOPORT_PORT_40_PIN_01 = 0x2801,       ///< IO port 40 pin 1
-    IOPORT_PORT_40_PIN_02 = 0x2802,       ///< IO port 40 pin 2
-
-    IOPORT_PORT_41_PIN_00 = 0x2900,       ///< IO port 41 pin 0
-    IOPORT_PORT_41_PIN_01 = 0x2901,       ///< IO port 41 pin 1
-
-    IOPORT_PORT_42_PIN_00 = 0x2A00,       ///< IO port 42 pin 0
-    IOPORT_PORT_42_PIN_01 = 0x2A01,       ///< IO port 42 pin 1
-    IOPORT_PORT_42_PIN_02 = 0x2A02,       ///< IO port 42 pin 2
-    IOPORT_PORT_42_PIN_03 = 0x2A03,       ///< IO port 42 pin 3
-    IOPORT_PORT_42_PIN_04 = 0x2A04,       ///< IO port 42 pin 4
-
-    IOPORT_PORT_43_PIN_00 = 0x2B00,       ///< IO port 43 pin 0
-    IOPORT_PORT_43_PIN_01 = 0x2B01,       ///< IO port 43 pin 1
-    IOPORT_PORT_43_PIN_02 = 0x2B02,       ///< IO port 43 pin 2
-    IOPORT_PORT_43_PIN_03 = 0x2B03,       ///< IO port 43 pin 3
-
-    IOPORT_PORT_44_PIN_00 = 0x2C00,       ///< IO port 44 pin 0
-    IOPORT_PORT_44_PIN_01 = 0x2C01,       ///< IO port 44 pin 1
-    IOPORT_PORT_44_PIN_02 = 0x2C02,       ///< IO port 44 pin 2
-    IOPORT_PORT_44_PIN_03 = 0x2C03,       ///< IO port 44 pin 3
-
-    IOPORT_PORT_45_PIN_00 = 0x2D00,       ///< IO port 45 pin 0
-    IOPORT_PORT_45_PIN_01 = 0x2D01,       ///< IO port 45 pin 1
-    IOPORT_PORT_45_PIN_02 = 0x2D02,       ///< IO port 45 pin 2
-    IOPORT_PORT_45_PIN_03 = 0x2D03,       ///< IO port 45 pin 3
-
-    IOPORT_PORT_46_PIN_00 = 0x2E00,       ///< IO port 46 pin 0
-    IOPORT_PORT_46_PIN_01 = 0x2E01,       ///< IO port 46 pin 1
-    IOPORT_PORT_46_PIN_02 = 0x2E02,       ///< IO port 46 pin 2
-    IOPORT_PORT_46_PIN_03 = 0x2E03,       ///< IO port 46 pin 3
-
-    IOPORT_PORT_47_PIN_00 = 0x2F00,       ///< IO port 47 pin 0
-    IOPORT_PORT_47_PIN_01 = 0x2F01,       ///< IO port 47 pin 1
-    IOPORT_PORT_47_PIN_02 = 0x2F02,       ///< IO port 47 pin 2
-    IOPORT_PORT_47_PIN_03 = 0x2F03,       ///< IO port 47 pin 3
-
-    IOPORT_PORT_48_PIN_00 = 0x3000,       ///< IO port 48 pin 0
-    IOPORT_PORT_48_PIN_01 = 0x3001,       ///< IO port 48 pin 1
-    IOPORT_PORT_48_PIN_02 = 0x3002,       ///< IO port 48 pin 2
-    IOPORT_PORT_48_PIN_03 = 0x3003,       ///< IO port 48 pin 3
-    IOPORT_PORT_48_PIN_04 = 0x3004,       ///< IO port 48 pin 4
-
-    /* Special purpose port */
-    IOPORT_NMI = 0xFFFF0100,              ///< NMI
-
-    IOPORT_TMS_SWDIO = 0xFFFF0200,        ///< TMS_SWDIO
-
-    IOPORT_TDO = 0xFFFF0300,              ///< TDO
-
-    IOPORT_AUDIO_CLK1 = 0xFFFF0400,       ///< AUDIO_CLK1
-    IOPORT_AUDIO_CLK2 = 0xFFFF0401,       ///< AUDIO_CLK2
-
-    IOPORT_SD0_CLK   = 0xFFFF0600,        ///< CD0_CLK
-    IOPORT_SD0_CMD   = 0xFFFF0601,        ///< CD0_CMD
-    IOPORT_SD0_RST_N = 0xFFFF0602,        ///< CD0_RST_N
-
-    IOPORT_SD0_DATA0 = 0xFFFF0700,        ///< SD0_DATA0
-    IOPORT_SD0_DATA1 = 0xFFFF0701,        ///< SD0_DATA1
-    IOPORT_SD0_DATA2 = 0xFFFF0702,        ///< SD0_DATA2
-    IOPORT_SD0_DATA3 = 0xFFFF0703,        ///< SD0_DATA3
-    IOPORT_SD0_DATA4 = 0xFFFF0704,        ///< SD0_DATA4
-    IOPORT_SD0_DATA5 = 0xFFFF0705,        ///< SD0_DATA5
-    IOPORT_SD0_DATA6 = 0xFFFF0706,        ///< SD0_DATA6
-    IOPORT_SD0_DATA7 = 0xFFFF0707,        ///< SD0_DATA7
-
-    IOPORT_SD1_CLK = 0xFFFF0800,          ///< SD1_CLK
-    IOPORT_SD1_CMD = 0xFFFF0801,          ///< SD1_CMD
-
-    IOPORT_SD1_DATA0 = 0xFFFF0900,        ///< SD1_DATA0
-    IOPORT_SD1_DATA1 = 0xFFFF0901,        ///< SD1_DATA1
-    IOPORT_SD1_DATA2 = 0xFFFF0902,        ///< SD1_DATA2
-    IOPORT_SD1_DATA3 = 0xFFFF0903,        ///< SD1_DATA3
-
-    IOPORT_QSPI0_SPCLK = 0xFFFF0A00,      ///< QSPI0_SPCLK
-    IOPORT_QSPI0_IO0   = 0xFFFF0A01,      ///< QSPI0_IO0
-    IOPORT_QSPI0_IO1   = 0xFFFF0A02,      ///< QSPI0_IO1
-    IOPORT_QSPI0_IO2   = 0xFFFF0A03,      ///< QSPI0_IO2
-    IOPORT_QSPI0_IO3   = 0xFFFF0A04,      ///< QSPI0_IO3
-    IOPORT_QSPI0_SSL   = 0xFFFF0A05,      ///< QSPI0_SSL
-
-    IOPORT_QSPI1_SPCLK = 0xFFFF0B00,      ///< QSPI1_SPCLK
-    IOPORT_QSPI1_IO0   = 0xFFFF0B01,      ///< QSPI1_IO0
-    IOPORT_QSPI1_IO1   = 0xFFFF0B02,      ///< QSPI1_IO1
-    IOPORT_QSPI1_IO2   = 0xFFFF0B03,      ///< QSPI1_IO2
-    IOPORT_QSPI1_IO3   = 0xFFFF0B04,      ///< QSPI1_IO3
-    IOPORT_QSPI1_SSL   = 0xFFFF0B05,      ///< QSPI1_SSL
-
-    IOPORT_QSPI_RESET_N = 0xFFFF0C00,     ///< QSPI_RESET_N
-    IOPORT_QSPI_WP_N    = 0xFFFF0C01,     ///< QSPI_WP_N
-    IOPORT_QSPI_INT_N   = 0xFFFF0C02,     ///< QSPI_INT_N
-
-    IOPORT_WDTOVF_PERROUT_N = 0xFFFF0D00, ///< WDTOVF_PERROUT_N
-
-    IOPORT_RIIC0_SDA = 0xFFFF0E00,        ///< RIIC0_SDA
-    IOPORT_RIIC0_SCL = 0xFFFF0E01,        ///< RIIC0_SCL
-    IOPORT_RIIC1_SDA = 0xFFFF0E02,        ///< RIIC1_SDA
-    IOPORT_RIIC1_SCL = 0xFFFF0E03,        ///< RIIC1_SCL
-} ioport_port_pin_t;
+    /** Pin will function as a Mode15 peripheral pin */
+    IOPORT_PERIPHERAL_MODE15 = (0xFUL << IOPORT_PRV_PFS_PSEL_OFFSET),
+} ioport_peripheral_t;
 
 #endif
+
+#ifndef BSP_OVERRIDE_IOPORT_OPTIONS_T
+
+/** Options to configure pin functions  */
+typedef enum e_ioport_cfg_options
+{
+    /* For PM Register */
+    IOPORT_CFG_PORT_DIRECTION_HIZ          = 0x00000000,        ///< Sets the pin direction to Hi-Z (default)
+    IOPORT_CFG_PORT_DIRECTION_INPUT        = 0x00000004,        ///< Sets the pin direction to input
+    IOPORT_CFG_PORT_DIRECTION_OUTPUT       = 0x00000008,        ///< Sets the pin direction to output (input disable)
+    IOPORT_CFG_PORT_DIRECTION_OUTPUT_INPUT = 0x0000000C,        ///< Sets the pin direction to output (input enable)
+
+    /* For P Register */
+    IOPORT_CFG_PORT_OUTPUT_LOW  = 0x00000000,                   ///< Sets the pin level to low
+    IOPORT_CFG_PORT_OUTPUT_HIGH = 0x00000001,                   ///< Sets the pin level to high
+
+    /* For PUPD Register */
+    IOPORT_CFG_PULLUP_PULLDOWN_DISABLE = 0x00000000,            ///< Disable the pin's internal pull-up and pull-down
+    IOPORT_CFG_PULLUP_ENABLE           = 0x00000010,            ///< Enables the pin's internal pull-up
+    IOPORT_CFG_PULLDOWN_ENABLE         = 0x00000020,            ///< Enables the pin's internal pull-down
+
+    /* For NOD Register */
+    IOPORT_CFG_NOD_DISABLE = 0x00000000,                        ///< Disable the pin's N-ch open-drain
+    IOPORT_CFG_NOD_ENABLE  = 0x00000040,                        ///< Enables the pin's N-ch open-drain
+
+    /* For SMT Register */
+    IOPORT_CFG_SCHMITT_DISABLE = 0x00000000,                    ///< Disable the pin's Schmitt-trigger input
+    IOPORT_CFG_SCHMITT_ENABLE  = 0x80000000,                    ///< Enables the pin's Schmitt-trigger input
+
+    /* For IOLH Register */
+    IOPORT_CFG_DRIVE_B00 = 0x00000000,                          ///< Sets the IOLH register value to b'00
+    IOPORT_CFG_DRIVE_B01 = 0x00000400,                          ///< Sets the IOLH register value to b'01
+    IOPORT_CFG_DRIVE_B10 = 0x00000800,                          ///< Sets the IOLH register value to b'10
+    IOPORT_CFG_DRIVE_B11 = 0x00000C00,                          ///< Sets the IOLH register value to b'11
+
+    /* For ISEL Register */
+    IOPORT_CFG_TINT_DISABLE = 0x00000000,                       ///< Disable IRQ functionality for a pin
+    IOPORT_CFG_TINT_ENABLE  = 0x00004000,                       ///< Sets pin as an IRQ pin
+
+    /* For SR Register */
+    IOPORT_CFG_SLEW_RATE_SLOW = 0x00000000,                     ///< Sets the pin slew-rate to slow
+    IOPORT_CFG_SLEW_RATE_FAST = 0x00020000,                     ///< Sets the pin slew-rate to fast
+
+    /* For IEN Register */
+    IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_DISABLE = 0x00000000, ///< Disable input the pin of special purpose port
+    IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_ENABLE  = 0x00040000, ///< Sets the pin of special purpose port to input
+
+    /* For FILONOFF Register */
+    IOPORT_CFG_NOISE_FILTER_OFF = 0x00000000,                   ///< Noise filter disable
+    IOPORT_CFG_NOISE_FILTER_ON  = 0x00080000,                   ///< Noise filter enable
+
+    /* For FILNUM Register */
+    IOPORT_CFG_NOISE_FILTER_NUM_4STAGE  = 0x00000000,           ///< Sets the pin noise filter to 4-stage filter
+    IOPORT_CFG_NOISE_FILTER_NUM_8STAGE  = 0x00100000,           ///< Sets the pin noise filter to 8-stage filter
+    IOPORT_CFG_NOISE_FILTER_NUM_12STAGE = 0x00200000,           ///< Sets the pin noise filter to 12-stage filter
+    IOPORT_CFG_NOISE_FILTER_NUM_16STAGE = 0x00300000,           ///< Sets the pin noise filter to 16-stage filter
+
+    /* For FILCLKSEL Register */
+    IOPORT_CFG_NOISE_FILTER_DIVIDED_B00 = 0x00000000,           ///< Sets the FILCLKSEL register value to b'00
+    IOPORT_CFG_NOISE_FILTER_DIVIDED_B01 = 0x00400000,           ///< Sets the FILCLKSEL register value to b'01
+    IOPORT_CFG_NOISE_FILTER_DIVIDED_B10 = 0x00800000,           ///< Sets the FILCLKSEL register value to b'10
+    IOPORT_CFG_NOISE_FILTER_DIVIDED_B11 = 0x00C00000,           ///< Sets the FILCLKSEL register value to b'11
+
+    /* For PMC Register */
+    IOPORT_CFG_PERIPHERAL_PIN = 0x00010000                      ///< Enables pin to operate as a peripheral pin
+} ioport_cfg_options_t;
+
+#endif
+
+/** Pin selection for port group
+ *  @note Event link must be configured by the ELC
+ */
+typedef enum e_ioport_event_pin_selection
+{
+    IOPORT_EVENT_PIN_SELECTION_NONE  = 0x00, ///< No pin selection for port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_0 = 0x01, ///< Select pin 0 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_1 = 0x02, ///< Select pin 1 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_2 = 0x04, ///< Select pin 2 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_3 = 0x08, ///< Select pin 3 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_4 = 0x10, ///< Select pin 4 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_5 = 0x20, ///< Select pin 5 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_6 = 0x40, ///< Select pin 6 to port group
+    IOPORT_EVENT_PIN_SELECTION_PIN_7 = 0x80, ///< Select pin 7 to port group
+} ioport_event_pin_selection_t;
+
+/** Port group operation
+ *  @note Event link must be configured by the ELC
+ */
+typedef enum e_ioport_event_output_operation
+{
+    IOPORT_EVENT_OUTPUT_OPERATION_LOW    = 0x0, ///< Set Low output to output operation
+    IOPORT_EVENT_OUTPUT_OPERATION_HIGH   = 0x1, ///< Set High output to output operation
+    IOPORT_EVENT_OUTPUT_OPERATION_TOGGLE = 0x2, ///< Set toggle output to output operation
+    IOPORT_EVENT_OUTPUT_OPERATION_BUFFER = 0x3, ///< Set buffer value output to output operation
+} ioport_event_output_operation_t;
+
+/** Input port group event control
+ *  @note Event link must be configured by the ELC
+ */
+typedef enum e_ioport_event_control
+{
+    IOPORT_EVENT_CONTROL_DISABLE = 0x0, ///< Disable function related with event link
+    IOPORT_EVENT_CONTROL_ENABLE  = 0x1, ///< Enable function related with event link
+} ioport_event_control_t;
+
+/** Single port event direction
+ *  @note Event link must be configured by the ELC
+ */
+typedef enum e_ioport_event_direction
+{
+    IOPORT_EVENT_DIRECTION_OUTPUT = 0x0, ///< Set output direction to single port
+    IOPORT_EVENT_DIRECTION_INPUT  = 0x1, ///< Set input direction to single port
+} ioport_event_direction_t;
+
+/** Input event edge detection
+ *  @note Event link must be configured by the ELC
+ */
+typedef enum e_ioport_event_detection
+{
+    IOPORT_EVENT_DETECTION_RISING_EDGE  = 0x0, ///< Set rising edge to event detection for input event
+    IOPORT_EVENT_DETECTION_FALLING_EDGE = 0x1, ///< Set falling edge to event detection for input event
+    IOPORT_EVENT_DETECTION_BOTH_EGDE    = 0x2, ///< Set both edges to event detection for input event
+} ioport_event_detection_t;
+
+/** Initial value for buffer register
+ *  @note Event link must be configured by the ELC
+ */
+typedef enum e_ioport_event_initial_buffer_value
+{
+    IOPORT_EVENT_INITIAL_BUFFER_VALUE_LOW  = 0U, ///< Set low to initial value of buffer register for input port group
+    IOPORT_EVENT_INITIAL_BUFFER_VALUE_HIGH = 1U, ///< Set high to initial value of buffer register for input port group
+} ioport_event_initial_buffer_value_t;
+
+/** Single port configuration
+ *  @note Event link must be configured by the ELC
+ */
+typedef struct st_ioport_event_single
+{
+    ioport_event_control_t          event_control;  ///< Event link control for single port
+    ioport_event_direction_t        direction;      ///< Event direction for single port
+    uint16_t                        port_num;       ///< Port number specified to single port
+    ioport_event_output_operation_t operation;      ///< Single port operation select
+    ioport_event_detection_t        edge_detection; ///< Edge detection select
+} ioport_event_single_t;
+
+/** Output port group configuration
+ *  @note Event link must be configured by the ELC
+ */
+typedef struct st_ioport_event_group_output
+{
+    uint8_t pin_select;                        ///< Port number specified to output port group
+    ioport_event_output_operation_t operation; ///< Port group operation select
+} ioport_event_group_output_t;
+
+/** Input port group configuration
+ *  @note Event link must be configured by the ELC
+ */
+typedef struct st_ioport_event_group_input
+{
+    ioport_event_control_t   event_control;     ///< Event link control for input port group
+    ioport_event_detection_t edge_detection;    ///< Edge detection select
+    ioport_event_control_t   overwrite_control; ///< Buffer register overwrite control
+    uint8_t pin_select;                         ///< Port number specified to input port group
+    uint8_t buffer_init_value;                  ///< Buffer register initial value
+} ioport_event_group_input_t;
+
+/** IOPORT extended configuration for event link function
+ *  @note Event link must be configured by the ELC
+ */
+typedef struct  st_ioport_extend_cfg
+{
+    ioport_event_group_output_t const * p_port_group_output_cfg; ///< Pointer to output port group configuration
+    ioport_event_group_input_t const  * p_port_group_input_cfg;  ///< Pointer to input port group configuration
+    ioport_event_single_t const       * p_single_port_cfg;       ///< Pointer to single input port configuration
+} ioport_extend_cfg_t;
 
 /**********************************************************************************************************************
  * Exported global variables
@@ -324,19 +320,6 @@ fsp_err_t R_IOPORT_PortEventOutputWrite(ioport_ctrl_t * const p_ctrl,
                                         ioport_size_t         mask_value);
 fsp_err_t R_IOPORT_PortRead(ioport_ctrl_t * const p_ctrl, bsp_io_port_t port, ioport_size_t * p_port_value);
 fsp_err_t R_IOPORT_PortWrite(ioport_ctrl_t * const p_ctrl, bsp_io_port_t port, ioport_size_t value, ioport_size_t mask);
-fsp_err_t R_IOPORT_SDVoltageModeCfg(ioport_ctrl_t * const p_ctrl,
-                                    ioport_sd_channel_t   channel,
-                                    ioport_sd_voltage_t   voltage);
-fsp_err_t R_IOPORT_QSPIVoltageModeCfg(ioport_ctrl_t * const p_ctrl,
-                                      ioport_qspi_channel_t channel,
-                                      ioport_qspi_voltage_t voltage);
-fsp_err_t R_IOPORT_EthernetVoltageModeCfg(ioport_ctrl_t * const     p_ctrl,
-                                          ioport_ethernet_channel_t channel,
-                                          ioport_ethernet_voltage_t voltage);
-fsp_err_t R_IOPORT_EthernetModeCfg(ioport_ctrl_t * const     p_ctrl,
-                                   ioport_ethernet_channel_t channel,
-                                   ioport_ethernet_mode_t    mode);
-fsp_err_t R_IOPORT_VersionGet(fsp_version_t * p_data);
 
 /*******************************************************************************************************************//**
  * @} (end defgroup IOPORT)

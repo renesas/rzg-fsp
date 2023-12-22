@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -30,6 +30,7 @@
  * Includes
  **********************************************************************************************************************/
 #include "r_mhu_ns_swint_set_api.h"
+#include "r_mhu_ns_swint_set_cfg.h"
 
 /* Common macro for FSP header files. There is also a corresponding FSP_FOOTER macro at the end of this file. */
 FSP_HEADER
@@ -37,9 +38,6 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-
-#define MHU_NS_SWINT_SET_CODE_VERSION_MAJOR    (1U)
-#define MHU_NS_SWINT_SET_CODE_VERSION_MINOR    (0U)
 
 /*************************************************************************************************
  * Type defines
@@ -73,8 +71,6 @@ fsp_err_t R_MHU_NS_SWINT_SET_Open(mhu_ns_swint_set_ctrl_t * p_ctrl, mhu_ns_swint
 fsp_err_t R_MHU_NS_SWINT_SET_InterruptSet(mhu_ns_swint_set_ctrl_t * const p_ctrl);
 
 fsp_err_t R_MHU_NS_SWINT_SET_Close(mhu_ns_swint_set_ctrl_t * const p_ctrl);
-
-fsp_err_t R_MHU_NS_SWINT_SET_VersionGet(fsp_version_t * p_version);
 
 /*******************************************************************************************************************//**
  * @} (end ingroup MHU_NS_SWINT_SET)

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -27,8 +27,8 @@
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define BSP_DELAY_NS_PER_SECOND    (1000000000)
-#define BSP_DELAY_NS_PER_US        (1000)
+#define BSP_DELAY_UNIT_CONV_S_TO_NS     (1000000000)
+#define BSP_DELAY_UNIT_CONV_US_TO_NS    (1000)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -91,27 +91,27 @@ void R_BSP_SoftwareDelay (uint32_t delay, bsp_delay_units_t units)
 {
     uint32_t iclk_hz;
     uint32_t cycles_requested;
-    uint32_t ns_per_cycle;
+    uint32_t us_per_cycle;
     uint32_t loops_required = 0;
     uint32_t total_us       = (delay * units);
     uint64_t ns_64bits;
 
     iclk_hz      = SystemCoreClock;
-    ns_per_cycle = BSP_DELAY_NS_PER_SECOND / iclk_hz;
-    ns_64bits    = (uint64_t) total_us * (uint64_t) BSP_DELAY_NS_PER_US;
+    us_per_cycle = BSP_DELAY_UNIT_CONV_S_TO_NS / (iclk_hz / BSP_DELAY_UNIT_CONV_US_TO_NS);
+    ns_64bits    = (uint64_t) total_us * (uint64_t) BSP_DELAY_UNIT_CONV_US_TO_NS;
 
     /* Have we overflowed 32 bits? */
     if (ns_64bits <= UINT32_MAX)
     {
         /* No, we will not overflow. */
-        cycles_requested = ((uint32_t) ns_64bits / ns_per_cycle);
+        cycles_requested = (((uint32_t) ns_64bits / us_per_cycle) * BSP_DELAY_UNIT_CONV_US_TO_NS);
         loops_required   = cycles_requested / BSP_DELAY_LOOP_CYCLES;
     }
     else
     {
         /* We did overflow. Try dividing down first. */
-        total_us  = (total_us / (ns_per_cycle * BSP_DELAY_LOOP_CYCLES));
-        ns_64bits = (uint64_t) total_us * (uint64_t) BSP_DELAY_NS_PER_US; // Convert to ns.
+        total_us  = (total_us / ((us_per_cycle * BSP_DELAY_LOOP_CYCLES) / BSP_DELAY_UNIT_CONV_US_TO_NS));
+        ns_64bits = (uint64_t) total_us * (uint64_t) BSP_DELAY_UNIT_CONV_US_TO_NS; // Convert to ns.
 
         /* Have we overflowed 32 bits? */
         if (ns_64bits <= UINT32_MAX)

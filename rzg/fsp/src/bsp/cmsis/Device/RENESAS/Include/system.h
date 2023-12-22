@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -17,12 +17,6 @@
  * LOST PROFITS, OTHER ECONOMIC DAMAGE, PROPERTY DAMAGE, OR PERSONAL INJURY; AND EVEN IF RENESAS HAS BEEN ADVISED OF THE
  * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
  **********************************************************************************************************************/
-
-/**********************************************************************************************************************
- * File Name    : system.h
- * Version      : 1.00
- * Description  : system header
- *********************************************************************************************************************/
 
 #ifndef SYSTEM_RENESAS_ARM_H
  #define SYSTEM_RENESAS_ARM_H
@@ -55,7 +49,29 @@ extern void SystemInit_S(void);
  * @brief  Warm reset(Secure).
  *
  */
-__attribute__((optimize("-O1"))) extern void Warm_Reset_S(void);
+__attribute__((naked)) extern void Warm_Reset_S(void);
+
+/**
+ * Entry function
+ *
+ * @param  none
+ * @return none
+ *
+ * @brief  Entry function for debugger(Secure).
+ *
+ */
+__attribute__((naked)) extern void Entry_Function_S(void);
+
+/**
+ * XSPI boot entry
+ *
+ * @param  none
+ * @return none
+ *
+ * @brief  Entry functon of XSPI boot mode(Secure).
+ *
+ */
+__attribute__((naked)) extern void XSPI_Boot_Entry(void);
 
 /**
  * Initialize the system

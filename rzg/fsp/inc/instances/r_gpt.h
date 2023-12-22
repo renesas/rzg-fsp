@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -38,8 +38,6 @@ FSP_HEADER
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define GPT_CODE_VERSION_MAJOR    (1U)
-#define GPT_CODE_VERSION_MINOR    (0U)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -48,10 +46,20 @@ FSP_HEADER
 /** Input/Output pins, used to select which duty cycle to update in R_GPT_DutyCycleSet(). */
 typedef enum e_gpt_io_pin
 {
-    GPT_IO_PIN_GTIOCA            = 0,  ///< GTIOCA
-    GPT_IO_PIN_GTIOCB            = 1,  ///< GTIOCB
-    GPT_IO_PIN_GTIOCA_AND_GTIOCB = 2,  ///< GTIOCA and GTIOCB
+    GPT_IO_PIN_GTIOCA                 = 0, ///< GTIOCA
+    GPT_IO_PIN_GTIOCB                 = 1, ///< GTIOCB
+    GPT_IO_PIN_GTIOCA_AND_GTIOCB      = 2, ///< GTIOCA and GTIOCB
+    GPT_IO_PIN_TROUGH                 = 4, ///< Used in @ref R_GPT_DutyCycleSet when Triangle-wave PWM Mode 3 is selected.
+    GPT_IO_PIN_CREST                  = 8, ///< Used in @ref R_GPT_DutyCycleSet when Triangle-wave PWM Mode 3 is selected.
+    GPT_IO_PIN_ONE_SHOT_LEADING_EDGE  = 4, ///< Used in @ref R_GPT_DutyCycleSet to set GTCCRC and GTCCRE registers when One-Shot Pulse mode is selected.
+    GPT_IO_PIN_ONE_SHOT_TRAILING_EDGE = 8, ///< Used in @ref R_GPT_DutyCycleSet to set GTCCRD and GTCCRF registers when One-Shot Pulse mode is selected.
 } gpt_io_pin_t;
+
+/** Forced buffer push operation used in One-Sot Pulse mode with R_GPT_DutyCycleSet(). */
+typedef enum e_gpt_buffer_force_push
+{
+    GPT_BUFFER_FORCE_PUSH = 64,        ///< Used in @ref R_GPT_DutyCycleSet to force push the data from GTCCRn registers to temporary buffer A or B when One-Shot Pulse mode is selected.
+} gpt_buffer_force_push;
 
 /** Level of GPT pin */
 typedef enum e_gpt_pin_level
@@ -59,13 +67,6 @@ typedef enum e_gpt_pin_level
     GPT_PIN_LEVEL_LOW  = 0,            ///< Pin level low
     GPT_PIN_LEVEL_HIGH = 1,            ///< Pin level high
 } gpt_pin_level_t;
-
-/* DEPRECATED - Do not use. */
-typedef enum e_gpt_shortest_level
-{
-    GPT_SHORTEST_LEVEL_OFF = 0,
-    GPT_SHORTEST_LEVEL_ON  = 1,
-} gpt_shortest_level_t;
 
 /** Sources can be used to start the timer, stop the timer, count up, or count down. These enumerations represent
  * a bitmask. Multiple sources can be ORed together. */
@@ -130,6 +131,39 @@ typedef struct s_gpt_output_pin
     gpt_pin_level_t stop_level;        ///< Select a stop level from ::gpt_pin_level_t
 } gpt_output_pin_t;
 
+/** Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. */
+typedef struct s_gpt_gtior_setting
+{
+    union
+    {
+        uint32_t gtior;
+        struct
+        {
+            /* Settings for GTIOCxA pin. */
+            uint32_t gtioa  : 5;       ///< GTIOCA Pin Function Select.
+            uint32_t        : 1;       // Reserved
+            uint32_t oadflt : 1;       ///< GTIOCA Pin Output Value Setting at the Count Stop.
+            uint32_t oahld  : 1;       ///< GTIOCA Pin Output Setting at the Start/Stop Count.
+            uint32_t oae    : 1;       ///< GTIOCA Pin Output Enable
+            uint32_t oadf   : 2;       ///< GTIOCA Pin Disable Value Setting.
+            uint32_t        : 2;       /// Reserved
+            uint32_t nfaen  : 1;       /// Noise Filter A Enable.
+            uint32_t nfcsa  : 2;       /// Noise Filter A Sampling Clock Select.
+
+            /* Settings for GTIOCxB pin. */
+            uint32_t gtiob  : 5;       ///< GTIOCB Pin Function Select.
+            uint32_t        : 1;       // Reserved
+            uint32_t obdflt : 1;       ///< GTIOCB Pin Output Value Setting at the Count Stop.
+            uint32_t obhld  : 1;       ///< GTIOCB Pin Output Setting at the Start/Stop Count.
+            uint32_t obe    : 1;       ///< GTIOCB Pin Output Enable
+            uint32_t obdf   : 2;       ///< GTIOCB Pin Disable Value Setting.
+            uint32_t        : 2;       /// Reserved
+            uint32_t nfben  : 1;       /// Noise Filter B Enable.
+            uint32_t nfcsb  : 2;       /// Noise Filter B Sampling Clock Select.
+        } gtior_b;
+    };
+} gpt_gtior_setting_t;
+
 /** Input capture signal noise filter (debounce) setting. Only available for input signals GTIOCxA and GTIOCxB.
  *   The noise filter samples the external signal at intervals of the P0CLK divided by one of the values.
  *   When 3 consecutive samples are at the same level (high or low), then that level is passed on as
@@ -138,10 +172,10 @@ typedef struct s_gpt_output_pin
 typedef enum e_gpt_capture_filter
 {
     GPT_CAPTURE_FILTER_NONE         = 0U, ///< None - no filtering
-    GPT_CAPTURE_FILTER_P0CLK_DIV_1  = 1U, ///< P0CLK/1 - fast sampling
-    GPT_CAPTURE_FILTER_P0CLK_DIV_4  = 3U, ///< P0CLK/4
-    GPT_CAPTURE_FILTER_P0CLK_DIV_16 = 5U, ///< P0CLK/16
-    GPT_CAPTURE_FILTER_P0CLK_DIV_64 = 7U, ///< P0CLK/64 - slow sampling
+    GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_1  = 1U, ///< CLK/1 - fast sampling
+    GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_4  = 3U, ///< CLK/4
+    GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_16 = 5U, ///< CLK/16
+    GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_64 = 7U, ///< CLK/64 - slow sampling
 } gpt_capture_filter_t;
 
 /** Trigger options to start A/D conversion. */
@@ -234,13 +268,59 @@ typedef enum e_gpt_buffer_mode
     GPT_BUFFER_MODE_DOUBLE = 2         ///< Double-buffer mode
 } gpt_buffer_mode_t;
 
+/** Delay setting for the PWM Delay Generation Circuit (PDG). */
+typedef enum e_gpt_pwm_output_delay_setting
+{
+    GPT_PWM_OUTPUT_DELAY_SETTING_0_32,   ///< Delay is not applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_1_32,   ///< Delay of 1 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_2_32,   ///< Delay of 2 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_3_32,   ///< Delay of 3 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_4_32,   ///< Delay of 4 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_5_32,   ///< Delay of 5 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_6_32,   ///< Delay of 6 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_7_32,   ///< Delay of 7 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_8_32,   ///< Delay of 8 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_9_32,   ///< Delay of 9 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_10_32,  ///< Delay of 10 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_11_32,  ///< Delay of 11 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_12_32,  ///< Delay of 12 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_13_32,  ///< Delay of 13 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_14_32,  ///< Delay of 14 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_15_32,  ///< Delay of 15 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_16_32,  ///< Delay of 16 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_17_32,  ///< Delay of 17 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_18_32,  ///< Delay of 18 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_19_32,  ///< Delay of 19 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_20_32,  ///< Delay of 20 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_21_32,  ///< Delay of 21 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_22_32,  ///< Delay of 22 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_23_32,  ///< Delay of 23 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_24_32,  ///< Delay of 24 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_25_32,  ///< Delay of 25 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_26_32,  ///< Delay of 26 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_27_32,  ///< Delay of 27 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_28_32,  ///< Delay of 28 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_29_32,  ///< Delay of 29 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_30_32,  ///< Delay of 30 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_31_32,  ///< Delay of 31 / 32 GTCLK period applied.
+    GPT_PWM_OUTPUT_DELAY_SETTING_BYPASS, ///< Bypass the PWM Output Delay Circuit.
+} gpt_pwm_output_delay_setting_t;
+
+/** Select which PWM Output Delay setting to apply. */
+typedef enum e_gpt_pwm_output_delay_edge
+{
+    GPT_PWM_OUTPUT_DELAY_EDGE_RISING,  ///< Configure the PWM Output Delay setting for rising edge.
+    GPT_PWM_OUTPUT_DELAY_EDGE_FALLING, ///< Configure the PWM Output Delay setting for falling edge.
+} gpt_pwm_output_delay_edge_t;
+
 /** Channel control block. DO NOT INITIALIZE.  Initialization occurs when @ref timer_api_t::open is called. */
 typedef struct st_gpt_instance_ctrl
 {
     uint32_t            open;                     // Whether or not channel is open
     const timer_cfg_t * p_cfg;                    // Pointer to initial configurations
-    R_GPT32E0_Type    * p_reg;                    // Base register for this channel
+    R_GPT0_Type       * p_reg;                    // Base register for this channel
     uint32_t            channel_mask;             // Channel bitmask
+    timer_variant_t     variant;                  // Timer variant
 
     void (* p_callback)(timer_callback_args_t *); // Pointer to callback
     timer_callback_args_t * p_callback_memory;    // Pointer to optional callback argument memory
@@ -269,14 +349,13 @@ typedef struct st_gpt_extended_pwm_cfg
 /** GPT extension configures the output pins for GPT. */
 typedef struct st_gpt_extended_cfg
 {
-    gpt_output_pin_t     gtioca;              ///< Configuration for GPT I/O pin A
-    gpt_output_pin_t     gtiocb;              ///< Configuration for GPT I/O pin B
-    gpt_shortest_level_t shortest_pwm_signal; // DEPRECATED - Do not use
-    gpt_source_t         start_source;        ///< Event sources that trigger the timer to start
-    gpt_source_t         stop_source;         ///< Event sources that trigger the timer to stop
-    gpt_source_t         clear_source;        ///< Event sources that trigger the timer to clear
-    gpt_source_t         capture_a_source;    ///< Event sources that trigger capture of GTIOCA
-    gpt_source_t         capture_b_source;    ///< Event sources that trigger capture of GTIOCB
+    gpt_output_pin_t gtioca;           ///< Configuration for GPT I/O pin A
+    gpt_output_pin_t gtiocb;           ///< Configuration for GPT I/O pin B
+    gpt_source_t     start_source;     ///< Event sources that trigger the timer to start
+    gpt_source_t     stop_source;      ///< Event sources that trigger the timer to stop
+    gpt_source_t     clear_source;     ///< Event sources that trigger the timer to clear
+    gpt_source_t     capture_a_source; ///< Event sources that trigger capture of GTIOCA
+    gpt_source_t     capture_b_source; ///< Event sources that trigger capture of GTIOCB
 
     /** Event sources that trigger a single up count. If GPT_SOURCE_NONE is selected for both count_up_source
      * and count_down_source, then the timer count source is P0CLK.  */
@@ -292,11 +371,12 @@ typedef struct st_gpt_extended_cfg
     /* Debounce filter for GTIOCxB input signal pin. */
     gpt_capture_filter_t capture_filter_gtiocb;
 
-    uint8_t   capture_a_ipl;                  ///< Capture A interrupt priority
-    uint8_t   capture_b_ipl;                  ///< Capture B interrupt priority
-    IRQn_Type capture_a_irq;                  ///< Capture A interrupt
-    IRQn_Type capture_b_irq;                  ///< Capture B interrupt
-    gpt_extended_pwm_cfg_t const * p_pwm_cfg; ///< Advanced PWM features, optional
+    uint8_t   capture_a_ipl;                      ///< Capture A interrupt priority
+    uint8_t   capture_b_ipl;                      ///< Capture B interrupt priority
+    IRQn_Type capture_a_irq;                      ///< Capture A interrupt
+    IRQn_Type capture_b_irq;                      ///< Capture B interrupt
+    gpt_extended_pwm_cfg_t const * p_pwm_cfg;     ///< Advanced PWM features, optional
+    gpt_gtior_setting_t            gtior_setting; ///< Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins.
 } gpt_extended_cfg_t;
 
 /**********************************************************************************************************************
@@ -328,12 +408,16 @@ fsp_err_t R_GPT_OutputDisable(timer_ctrl_t * const p_ctrl, gpt_io_pin_t pin);
 fsp_err_t R_GPT_AdcTriggerSet(timer_ctrl_t * const    p_ctrl,
                               gpt_adc_compare_match_t which_compare_match,
                               uint32_t                compare_match_value);
+fsp_err_t R_GPT_PwmOutputDelaySet(timer_ctrl_t * const           p_ctrl,
+                                  gpt_pwm_output_delay_edge_t    edge,
+                                  gpt_pwm_output_delay_setting_t delay_setting,
+                                  uint32_t const                 pin);
 fsp_err_t R_GPT_CallbackSet(timer_ctrl_t * const          p_api_ctrl,
                             void (                      * p_callback)(timer_callback_args_t *),
                             void const * const            p_context,
                             timer_callback_args_t * const p_callback_memory);
 fsp_err_t R_GPT_Close(timer_ctrl_t * const p_ctrl);
-fsp_err_t R_GPT_VersionGet(fsp_version_t * const p_version);
+fsp_err_t R_GPT_PwmOutputDelayInitialize();
 
 /*******************************************************************************************************************//**
  * @} (end defgroup GPT)

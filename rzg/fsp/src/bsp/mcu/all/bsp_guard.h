@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -18,22 +18,16 @@
  * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
  **********************************************************************************************************************/
 
-/**********************************************************************************************************************
- * File Name    : bsp_guard.h
- * Version      : 1.00
- * Description  : bsp_guard header
- *********************************************************************************************************************/
-
 #ifndef BSP_GUARD_H
 #define BSP_GUARD_H
 
 #include "bsp_api.h"
 
-/******************************************************************************************************************//**
+/*******************************************************************************************************************//**
  * @addtogroup BSP_MCU
  *
  * @{
- *********************************************************************************************************************/
+ **********************************************************************************************************************/
 
 /** Common macro for FSP header files. There is also a corresponding FSP_FOOTER macro at the end of this file. */
 FSP_HEADER
@@ -43,4 +37,4 @@ FSP_HEADER
 /** Common macro for FSP header files. There is also a corresponding FSP_HEADER macro at the top of this file. */
     FSP_FOOTER
 
-#endif                                 /* BSP_GUARD_H */
+#endif

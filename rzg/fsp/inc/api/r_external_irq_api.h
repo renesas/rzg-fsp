@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -28,6 +28,7 @@
  * external IRQ pin.
  *
  * The  External IRQ Interface can be implemented by:
+ * - @ref INTC_NMI
  * - @ref INTC_IRQ
  *
  * @{
@@ -49,8 +50,6 @@ FSP_HEADER
 /**********************************************************************************************************************
  * Macro definitions
  *********************************************************************************************************************/
-#define EXTERNAL_IRQ_API_VERSION_MAJOR    (1U) // DEPRECATED ///< EXTERNAL IRQ API version number (Major)
-#define EXTERNAL_IRQ_API_VERSION_MINOR    (0U) // DEPRECATED ///< EXTERNAL IRQ API version number (Minor)
 
 /*********************************************************************************************************************
  * Typedef definitions
@@ -67,10 +66,10 @@ typedef struct st_external_irq_callback_args
 /** Condition that will trigger an interrupt when detected. */
 typedef enum e_external_irq_trigger
 {
-    EXTERNAL_IRQ_TRIG_FALLING    = 0,   ///< Falling edge trigger
-    EXTERNAL_IRQ_TRIG_RISING     = 1,   ///< Rising edge trigger
-    EXTERNAL_IRQ_TRIG_BOTH_EDGE  = 2,   ///< Both edges trigger
-    EXTERNAL_IRQ_TRIG_LEVEL_LOW  = 3,   ///< Low level trigger
+    EXTERNAL_IRQ_TRIG_FALLING   = 0,   ///< Falling edge trigger
+    EXTERNAL_IRQ_TRIG_RISING    = 1,   ///< Rising edge trigger
+    EXTERNAL_IRQ_TRIG_BOTH_EDGE = 2,   ///< Both edges trigger
+    EXTERNAL_IRQ_TRIG_LEVEL_LOW = 3,   ///< Low level trigger
 } external_irq_trigger_t;
 
 /** External IRQ input pin digital filtering sample clock divisor settings. The digital filter rejects trigger
@@ -104,6 +103,7 @@ typedef struct st_external_irq_cfg
 
 /** External IRQ control block.  Allocate an instance specific control block to pass into the external IRQ API calls.
  * @par Implemented as
+ * - intc_nmi_instance_ctrl_t
  * - intc_irq_instance_ctrl_t
  */
 typedef void external_irq_ctrl_t;
@@ -113,6 +113,7 @@ typedef struct st_external_irq_api
 {
     /** Initial configuration.
      * @par Implemented as
+     * - @ref R_INTC_NMI_ExternalIrqOpen()
      * - @ref R_INTC_IRQ_ExternalIrqOpen()
      *
      * @param[out]  p_ctrl  Pointer to control block. Must be declared by user. Value set here.
@@ -122,6 +123,7 @@ typedef struct st_external_irq_api
 
     /** Enable callback when an external trigger condition occurs.
      * @par Implemented as
+     * - @ref R_INTC_NMI_ExternalIrqEnable()
      * - @ref R_INTC_IRQ_ExternalIrqEnable()
      *
      * @param[in]  p_ctrl      Control block set in Open call for this external interrupt.
@@ -130,6 +132,7 @@ typedef struct st_external_irq_api
 
     /** Disable callback when external trigger condition occurs.
      * @par Implemented as
+     * - @ref R_INTC_NMI_ExternalIrqDisable()
      * - @ref R_INTC_IRQ_ExternalIrqDisable()
      *
      * @param[in]  p_ctrl      Control block set in Open call for this external interrupt.
@@ -139,6 +142,7 @@ typedef struct st_external_irq_api
     /**
      * Specify callback function and optional context pointer and working memory pointer.
      * @par Implemented as
+     * - R_INTC_NMI_ExternalIrqCallbackSet()
      * - R_INTC_IRQ_ExternalIrqCallbackSet()
      *
      * @param[in]   p_ctrl                   Pointer to the Extneral IRQ control block.
@@ -154,18 +158,12 @@ typedef struct st_external_irq_api
 
     /** Allow driver to be reconfigured. May reduce power consumption.
      * @par Implemented as
+     * - @ref R_INTC_NMI_ExternalIrqClose()
      * - @ref R_INTC_IRQ_ExternalIrqClose()
      *
      * @param[in]  p_ctrl      Control block set in Open call for this external interrupt.
      */
     fsp_err_t (* close)(external_irq_ctrl_t * const p_ctrl);
-
-    /* DEPRECATED Get version and store it in provided pointer p_version.
-     * @par Implemented as
-     * - @ref R_INTC_IRQ_ExternalIrqVersionGet()
-     *
-     * @param[out]  p_version  Code and API version used.     */
-    fsp_err_t (* versionGet)(fsp_version_t * const p_version);
 } external_irq_api_t;
 
 /** This structure encompasses everything that is needed to use an instance of this interface. */

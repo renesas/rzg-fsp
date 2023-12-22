@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -51,8 +51,6 @@ FSP_HEADER
 /**********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define I2C_MASTER_API_VERSION_MAJOR    (1U)
-#define I2C_MASTER_API_VERSION_MINOR    (1U)
 
 /**********************************************************************************************************************
  * Typedef definitions
@@ -211,14 +209,6 @@ typedef struct st_i2c_master_api
      * @param[in] p_ctrl    Pointer to control block set in i2c_api_master_t::open call.
      */
     fsp_err_t (* close)(i2c_master_ctrl_t * const p_ctrl);
-
-    /* DEPRECATED Gets version information and stores it in the provided version struct.
-     * @par Implemented as
-     * - @ref R_RIIC_MASTER_VersionGet()
-     *
-     * @param[out] p_version  Code and API version used.
-     */
-    fsp_err_t (* versionGet)(fsp_version_t * const p_version);
 } i2c_master_api_t;
 
 /** This structure encompasses everything that is needed to use an instance of this interface. */

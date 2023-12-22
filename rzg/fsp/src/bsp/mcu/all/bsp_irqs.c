@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -69,12 +69,14 @@ void bsp_irq_cfg_s (void)
     R_BSP_MODULE_RSTOFF(FSP_IP_DMAC, 1);
     R_BSP_IM33_ENABLE();
 
-#if FSP_PRIV_TZ_USE_SECURE_REGS
+#if BSP_NONSECURE_TRANSITION
+ #if FSP_PRIV_TZ_USE_SECURE_REGS
 
     /* Place all vectors in non-secure state. */
     for (uint32_t i = 0U; i < (BSP_ICU_VECTOR_MAX_ENTRIES / BSP_PRV_BITS_PER_WORD); i++)
     {
         NVIC->ITNS[i] = UINT32_MAX;
     }
+ #endif
 #endif
 }

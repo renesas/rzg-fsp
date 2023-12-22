@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -62,15 +62,6 @@ void mhu_ns_swint_get_int_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
-/** Version data structure. */
-static const fsp_version_t s_mhu_ns_swint_get_version =
-{
-    .api_version_minor  = MHU_NS_SWINT_GET_API_VERSION_MINOR,
-    .api_version_major  = MHU_NS_SWINT_GET_API_VERSION_MAJOR,
-    .code_version_minor = MHU_NS_SWINT_GET_CODE_VERSION_MINOR,
-    .code_version_major = MHU_NS_SWINT_GET_CODE_VERSION_MAJOR,
-};
-
 /***********************************************************************************************************************
  * Global Variables
  **********************************************************************************************************************/
@@ -81,7 +72,6 @@ const mhu_ns_swint_get_api_t g_mhu_ns_swint_get_on_mhu_ns_swint_get =
     .open        = R_MHU_NS_SWINT_GET_Open,
     .callbackSet = R_MHU_NS_SWINT_GET_CallbackSet,
     .close       = R_MHU_NS_SWINT_GET_Close,
-    .versionGet  = R_MHU_NS_SWINT_GET_VersionGet
 };
 
 /*******************************************************************************************************************//**
@@ -119,10 +109,8 @@ fsp_err_t R_MHU_NS_SWINT_GET_Open (mhu_ns_swint_get_ctrl_t * const p_ctrl, mhu_n
 
     /* Power on the MHU_NS_SWINT_GET channel. */
     R_BSP_MODULE_START(FSP_IP_MHU, p_cfg->channel);
-    R_BSP_CLKON(BSP_CLK_MHU, 0);
-    R_BSP_RSTOFF(BSP_CLK_MHU, 0);
 
-     R_BSP_IrqCfgEnable(p_cfg->rx_irq, p_cfg->rx_ipl, p_instance_ctrl);
+    R_BSP_IrqCfgEnable(p_cfg->rx_irq, p_cfg->rx_ipl, p_instance_ctrl);
 
     /* Set callback and context pointers */
 
@@ -217,25 +205,6 @@ fsp_err_t R_MHU_NS_SWINT_GET_Close (mhu_ns_swint_get_ctrl_t * const p_ctrl)
     R_FSP_IsrContextSet(p_instance_ctrl->p_cfg->rx_irq, p_instance_ctrl);
 
     p_instance_ctrl->open = 0U;
-
-    return FSP_SUCCESS;
-}
-
-/***********************************************************************************************************************
- * DEPRECATED Sets driver version based on compile time macros.  Implements @ref mhu_ns_swint_get_api_t::versionGet.
- *
- * @retval     FSP_SUCCESS          Version in p_version.
- * @retval     FSP_ERR_ASSERTION    The parameter p_version is NULL.
- **********************************************************************************************************************/
-fsp_err_t R_MHU_NS_SWINT_GET_VersionGet (fsp_version_t * const p_version)
-{
-#if MHU_NS_SWINT_GET_CFG_PARAM_CHECKING_ENABLE
-
-    /* Verify parameters are valid */
-    FSP_ASSERT(NULL != p_version);
-#endif
-
-    p_version->version_id = s_mhu_ns_swint_get_version.version_id;
 
     return FSP_SUCCESS;
 }

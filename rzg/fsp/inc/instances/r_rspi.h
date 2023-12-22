@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -38,9 +38,6 @@ FSP_HEADER
  * Macro definitions
  **********************************************************************************************************************/
 
-#define RSPI_CODE_VERSION_MAJOR    (1U) // DEPRECATED
-#define RSPI_CODE_VERSION_MINOR    (2U) // DEPRECATED
-
 /*************************************************************************************************
  * Type defines for the RSPI interface API
  *************************************************************************************************/
@@ -59,6 +56,13 @@ typedef enum e_rspi_mosi_idle_value_fixing
     RSPI_MOSI_IDLE_VALUE_FIXING_LOW,     ///< MOSIn level low during MOSI idling
     RSPI_MOSI_IDLE_VALUE_FIXING_HIGH     ///< MOSIn level high during MOSI idling
 } rspi_mosi_idle_value_fixing_t;
+
+/** SSL Signal Level Keeping Enable/Disable. */
+typedef enum e_rspi_ssl_level_keep
+{
+    RSPI_SSL_LEVEL_KEEP_DISABLE,       ///< Disable SSL Level Keep Mode
+    RSPI_SSL_LEVEL_KEEP_ENABLE         ///< Enable SSL Level Keep Mode
+} rspi_ssl_level_keep_t;
 
 /** Delay count for SPI delay settings. */
 typedef enum e_rspi_delay_count
@@ -111,6 +115,7 @@ typedef struct st_rspi_extended_cfg
     rspi_delay_count_t            spck_delay;         ///< SPI Clock Delay Register Setting
     rspi_delay_count_t            ssl_negation_delay; ///< SPI Slave Select Negation Delay Register Setting
     rspi_delay_count_t            next_access_delay;  ///< SPI Next-Access Delay Register Setting
+    rspi_ssl_level_keep_t         ssl_level_keep;     ///< Select SSL signal level keep mode
     rspi_rx_trigger_level_t       rx_trigger_level;   ///< Receiver FIFO trigger level
     rspi_tx_trigger_level_t       tx_trigger_level;   ///< Transmitter FIFO trigger level
 } rspi_extended_cfg_t;
@@ -135,10 +140,6 @@ typedef struct st_rspi_instance_ctrl
     /* Pointer to context to be passed into callback function */
     void const  * p_context;
     uint32_t      rxfifo_trigger_bytes; ///< Receive buffer data triggering number
-    uint32_t      reg_spcr;             ///< Backup SPCR register content
-    uint32_t      reg_spdcr;            ///< Backup SPDCR register content
-    uint32_t      reg_spcmd0;           ///< Backup SPCMD0 register content
-    uint32_t      reg_spbfcr;           ///< Backup SPBFCR register content
     volatile bool transfer_is_pending;  ///< Transfer is pending
 } rspi_instance_ctrl_t;
 
@@ -174,8 +175,6 @@ fsp_err_t R_RSPI_WriteRead(spi_ctrl_t * const    p_api_ctrl,
                            spi_bit_width_t const bit_width);
 
 fsp_err_t R_RSPI_Close(spi_ctrl_t * const p_api_ctrl);
-
-fsp_err_t R_RSPI_VersionGet(fsp_version_t * p_version);
 
 fsp_err_t R_RSPI_CalculateBitrate(uint32_t bitrate, rspi_rspck_div_setting_t * spck_div);
 

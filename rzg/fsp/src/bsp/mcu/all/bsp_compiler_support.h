@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -27,7 +27,7 @@
 #define BSP_COMPILER_SUPPORT_H
 
 #if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3))
- #include <arm_cmse.h>
+ #include "arm_cmse.h"
 #endif
 
 /***********************************************************************************************************************
@@ -70,7 +70,7 @@
 
 #define BSP_ALIGN_VARIABLE(x)      __attribute__((aligned(x)))
 
-#define BSP_PACKED                    __attribute__((aligned(1)))
+#define BSP_PACKED                    __attribute__((aligned(1))) // DEPRECATED
 
 #define BSP_WEAK_REFERENCE            __attribute__((weak))
 
@@ -80,7 +80,7 @@
 /***********************************************************************************************************************
  * TrustZone definitions
  **********************************************************************************************************************/
-#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3))
+#if (defined(__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3)) && !defined(__clang_analyzer__)
  #if defined(__ICCARM__)               /* IAR compiler */
   #define BSP_CMSE_NONSECURE_CALL     __cmse_nonsecure_call
   #define BSP_CMSE_NONSECURE_ENTRY    __cmse_nonsecure_entry
@@ -103,4 +103,4 @@
 
 /** @} (end of addtogroup BSP_MCU) */
 
-#endif                                 /* BSP_COMPILER_SUPPORT_H */
+#endif

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -102,8 +102,9 @@ static void gpt_hardware_events_disable(gpt_instance_ctrl_t * p_instance_ctrl);
 
 static void r_gpt_disable_irq(IRQn_Type irq);
 
-static inline void r_gpt_write_protect_enable(gpt_instance_ctrl_t * const p_instance_ctrl);
-static inline void r_gpt_write_protect_disable(gpt_instance_ctrl_t * const p_instance_ctrl);
+static inline void r_gpt_write_protect_enable(gpt_instance_ctrl_t * const p_instance_ctrl,
+                                              uint32_t                    write_protect_setting);
+static inline uint32_t r_gpt_write_protect_disable(gpt_instance_ctrl_t * const p_instance_ctrl);
 
 /* Noinline attribute added to reduce code size for CM23 GCC build. */
 static void r_gpt_enable_irq(IRQn_Type const irq, uint32_t priority, void * p_context) __attribute__((noinline));
@@ -112,7 +113,8 @@ static void r_gpt_enable_irq(IRQn_Type const irq, uint32_t priority, void * p_co
 
 static void gpt_calculate_duty_cycle(gpt_instance_ctrl_t * const p_instance_ctrl,
                                      uint32_t const              duty_cycle_counts,
-                                     gpt_prv_duty_registers_t  * p_duty_reg);
+                                     gpt_prv_duty_registers_t  * p_duty_reg,
+                                     uint32_t                    pin);
 
 static uint32_t gpt_gtior_calculate(timer_cfg_t const * const p_cfg, gpt_pin_level_t const stop_level);
 
@@ -131,15 +133,6 @@ void gpt_capture_b_isr(void);
 /***********************************************************************************************************************
  * Private global variables
  **********************************************************************************************************************/
-
-/* Version data structure used by error logger macro. */
-static const fsp_version_t g_gpt_version =
-{
-    .api_version_minor  = TIMER_API_VERSION_MINOR,
-    .api_version_major  = TIMER_API_VERSION_MAJOR,
-    .code_version_major = GPT_CODE_VERSION_MAJOR,
-    .code_version_minor = GPT_CODE_VERSION_MINOR
-};
 
 /***********************************************************************************************************************
  * Global Variables
@@ -160,7 +153,6 @@ const timer_api_t g_timer_on_gpt =
     .statusGet    = R_GPT_StatusGet,
     .callbackSet  = R_GPT_CallbackSet,
     .close        = R_GPT_Close,
-    .versionGet   = R_GPT_VersionGet
 };
 
 /*******************************************************************************************************************//**
@@ -187,6 +179,8 @@ const timer_api_t g_timer_on_gpt =
  *                                        NULL, but ISR is not enabled.  ISR must be enabled to use one-shot mode or
  *                                        callback.
  * @retval FSP_ERR_INVALID_MODE           Triangle wave PWM is only supported if GPT_CFG_OUTPUT_SUPPORT_ENABLE is 2.
+ *                                        Selected channel does not support external count sources.
+ *                                        External and event count sources not are available in this mode.
  * @retval FSP_ERR_IP_CHANNEL_NOT_PRESENT The channel requested in the p_cfg parameter is not available on this device.
  **********************************************************************************************************************/
 fsp_err_t R_GPT_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_cfg)
@@ -196,10 +190,21 @@ fsp_err_t R_GPT_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_c
     FSP_ASSERT(NULL != p_cfg);
     FSP_ASSERT(NULL != p_cfg->p_extend);
     FSP_ASSERT(NULL != p_instance_ctrl);
-    FSP_ASSERT(0U == (p_cfg->source_div % 2U));
- #if GPT_PRV_EXTRA_FEATURES_ENABLED != GPT_CFG_OUTPUT_SUPPORT_ENABLE
-    FSP_ERROR_RETURN(p_cfg->mode <= TIMER_MODE_PWM, FSP_ERR_INVALID_MODE);
+
+ #if (2U == BSP_FEATURE_GPT_CLOCK_DIVIDER_STEP_SIZE)
+  #if (BSP_FEATURE_GPT_CLOCK_DIVIDER_VALUE_7_9_VALID)
+    FSP_ASSERT(p_cfg->source_div <= 10U);
+  #else
+    FSP_ASSERT((p_cfg->source_div != 7U) && (p_cfg->source_div != 9U) && (p_cfg->source_div <= 10));
+  #endif
+ #else
+    FSP_ASSERT((0U == (p_cfg->source_div % 2U)) && (p_cfg->source_div <= 10));
  #endif
+
+ #if GPT_PRV_EXTRA_FEATURES_ENABLED != GPT_CFG_OUTPUT_SUPPORT_ENABLE
+    FSP_ERROR_RETURN(p_cfg->mode <= TIMER_MODE_ONE_SHOT_PULSE, FSP_ERR_INVALID_MODE);
+ #endif
+
     FSP_ERROR_RETURN(GPT_OPEN != p_instance_ctrl->open, FSP_ERR_ALREADY_OPEN);
 #endif
 
@@ -213,11 +218,21 @@ fsp_err_t R_GPT_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_c
         FSP_ERROR_RETURN(p_cfg->cycle_end_irq >= 0, FSP_ERR_IRQ_BSP_DISABLED);
     }
 
+    gpt_extended_cfg_t * p_extend = (gpt_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ERROR_RETURN((!p_extend->count_up_source && !p_extend->count_down_source) ||
+                     (BSP_FEATURE_GPT_EVENT_COUNT_CHANNEL_MASK & p_instance_ctrl->channel_mask),
+                     FSP_ERR_INVALID_MODE);
+
  #if GPT_PRV_EXTRA_FEATURES_ENABLED == GPT_CFG_OUTPUT_SUPPORT_ENABLE
 
+    /* Alternate count sources cannot be used in triangle PWM modes */
+    FSP_ERROR_RETURN(!((p_cfg->mode >= TIMER_MODE_ONE_SHOT_PULSE) &&
+                       (p_extend->count_up_source || p_extend->count_down_source)),
+                     FSP_ERR_INVALID_MODE);
+
     /* Callback is required if underflow interrupt is enabled. */
-    gpt_extended_cfg_t           * p_extend  = (gpt_extended_cfg_t *) p_cfg->p_extend;
     gpt_extended_pwm_cfg_t const * p_pwm_cfg = p_extend->p_pwm_cfg;
+
     if (NULL != p_pwm_cfg)
     {
         if (p_pwm_cfg->trough_irq >= 0)
@@ -330,7 +345,7 @@ fsp_err_t R_GPT_Enable (timer_ctrl_t * const p_ctrl)
     gtpsr |= p_extend->stop_source;
     gtcsr |= p_extend->clear_source;
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     /* Set the count sources. Ensure stop and clear sources are set before start source, and capture sources are set
      * after start source. */
@@ -340,7 +355,7 @@ fsp_err_t R_GPT_Enable (timer_ctrl_t * const p_ctrl)
     p_instance_ctrl->p_reg->GTICASR = p_extend->capture_a_source;
     p_instance_ctrl->p_reg->GTICBSR = p_extend->capture_b_source;
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 }
@@ -362,11 +377,11 @@ fsp_err_t R_GPT_Disable (timer_ctrl_t * const p_ctrl)
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     gpt_hardware_events_disable(p_instance_ctrl);
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 }
@@ -392,7 +407,7 @@ fsp_err_t R_GPT_PeriodSet (timer_ctrl_t * const p_ctrl, uint32_t const period_co
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     /* Update period buffer register. The actual period is one cycle longer than the register value for saw waves
      * and twice the register value for triangle waves. Reference section "General PWM Timer Cycle Setting
@@ -434,7 +449,7 @@ fsp_err_t R_GPT_PeriodSet (timer_ctrl_t * const p_ctrl, uint32_t const period_co
         p_instance_ctrl->p_reg->GTCLR = p_instance_ctrl->channel_mask;
     }
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 }
@@ -453,50 +468,123 @@ fsp_err_t R_GPT_PeriodSet (timer_ctrl_t * const p_ctrl, uint32_t const period_co
  * @retval FSP_ERR_ASSERTION           p_ctrl was NULL or the pin is not one of gpt_io_pin_t
  * @retval FSP_ERR_NOT_OPEN            The instance is not opened.
  * @retval FSP_ERR_INVALID_ARGUMENT    Duty cycle is larger than period.
+ * @retval FSP_ERR_INVALID_MODE        GPT_IO_PIN_TROUGH, and GPT_IO_PIN_CREST settings are invalid in the this mode.
  * @retval FSP_ERR_UNSUPPORTED         GPT_CFG_OUTPUT_SUPPORT_ENABLE is 0.
  **********************************************************************************************************************/
 fsp_err_t R_GPT_DutyCycleSet (timer_ctrl_t * const p_ctrl, uint32_t const duty_cycle_counts, uint32_t const pin)
 {
 #if GPT_CFG_OUTPUT_SUPPORT_ENABLE
+    uint32_t              tmp_pin         = pin & 3U;
     gpt_instance_ctrl_t * p_instance_ctrl = (gpt_instance_ctrl_t *) p_ctrl;
  #if GPT_CFG_PARAM_CHECKING_ENABLE
     FSP_ASSERT(NULL != p_instance_ctrl);
-    FSP_ASSERT(pin <= GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+    FSP_ASSERT(tmp_pin <= GPT_IO_PIN_GTIOCA_AND_GTIOCB);
+    bool pwm_mode3_pin = 0 != (pin & (GPT_IO_PIN_CREST | GPT_IO_PIN_TROUGH));
+    if (TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3 == p_instance_ctrl->p_cfg->mode)
+    {
+        /* In TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3, the duty cycle must be for either a trough or crest. */
+        FSP_ERROR_RETURN(pwm_mode3_pin, FSP_ERR_INVALID_MODE);
+    }
+    else
+    {
+        FSP_ERROR_RETURN((!pwm_mode3_pin) || (TIMER_MODE_ONE_SHOT_PULSE == p_instance_ctrl->p_cfg->mode),
+                         FSP_ERR_INVALID_MODE);
+    }
+
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
     FSP_ERROR_RETURN(duty_cycle_counts <= (p_instance_ctrl->p_reg->GTPR + 1), FSP_ERR_INVALID_ARGUMENT);
  #endif
 
     /* Set duty cycle. */
     gpt_prv_duty_registers_t duty_regs = {UINT32_MAX, 0};
-    gpt_calculate_duty_cycle(p_instance_ctrl, duty_cycle_counts, &duty_regs);
+    gpt_calculate_duty_cycle(p_instance_ctrl, duty_cycle_counts, &duty_regs, pin);
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
-    /* Read modify write bitfield access is used to update GTUDDTYC to make sure we don't clobber settings for the
+    /* Read modify write bit field access is used to update GTUDDTYC to make sure we don't clobber settings for the
      * other pin. */
 
     uint32_t gtuddtyc = p_instance_ctrl->p_reg->GTUDDTYC;
-    if (GPT_IO_PIN_GTIOCB != pin)
-    {
-        p_instance_ctrl->p_reg->GTCCRC = duty_regs.gtccr_buffer;
 
-        /* GTIOCA or both GTIOCA and GTIOCB. */
-        gtuddtyc &= ~R_GPT_GTUDDTYC_OADTY_Msk;
-        gtuddtyc |= duty_regs.omdty << R_GPT_GTUDDTYC_OADTY_Pos;
+    if (!duty_regs.omdty)
+    {
+        if (0U != (pin & GPT_IO_PIN_CREST))
+        {
+            /*
+             * In TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3, if this is a crest duty cycle, then update the crest
+             * duty cycle register. Otherwise, update the trough duty cycle register.
+             * Or in case of One-Shot pulse mode, buffer registers are either GTCCRC and GTCCRD for pulses on GTIOCnA pin
+             * or GTCCRE and GTCCRF for pulses on GTIOCnB pin.
+             * Hence update registers GTCCRD, GTCCRF for trailing edge dutycycle counts on GTIOCnA, GTIOCnB respectively, otherwise update
+             * registers GTCCRC,GTCCRE for leading edge dutycycle counts on GTIOCnA, GTIOCnB respectively.
+             */
+            if (0U != (pin & GPT_IO_PIN_GTIOCA_AND_GTIOCB))
+            {
+                p_instance_ctrl->p_reg->GTCCRD = duty_regs.gtccr_buffer;
+                p_instance_ctrl->p_reg->GTCCRF = duty_regs.gtccr_buffer;
+            }
+            else
+            {
+                if (0U != (pin & GPT_IO_PIN_GTIOCB))
+                {
+                    p_instance_ctrl->p_reg->GTCCRF = duty_regs.gtccr_buffer;
+                }
+                else
+                {
+                    p_instance_ctrl->p_reg->GTCCRD = duty_regs.gtccr_buffer;
+                }
+            }
+        }
+        else
+        {
+            if (0U != (pin & GPT_IO_PIN_GTIOCA_AND_GTIOCB))
+            {
+                p_instance_ctrl->p_reg->GTCCRC = duty_regs.gtccr_buffer;
+                p_instance_ctrl->p_reg->GTCCRE = duty_regs.gtccr_buffer;
+            }
+            else
+            {
+                if (0U != (pin & GPT_IO_PIN_GTIOCB))
+                {
+                    p_instance_ctrl->p_reg->GTCCRE = duty_regs.gtccr_buffer;
+                }
+                else
+                {
+                    p_instance_ctrl->p_reg->GTCCRC = duty_regs.gtccr_buffer;
+                }
+            }
+        }
     }
 
-    if (GPT_IO_PIN_GTIOCA != pin)
+    if (0U != (pin & GPT_BUFFER_FORCE_PUSH))
     {
-        p_instance_ctrl->p_reg->GTCCRE = duty_regs.gtccr_buffer;
+        /* Enable the compare match buffer. */
+        p_instance_ctrl->p_reg->GTBER |= 1U << R_GPT0_GTBER_CCRSWT_Pos;
+    }
 
+    if (GPT_IO_PIN_GTIOCB != tmp_pin)
+    {
+        /* GTIOCA or both GTIOCA and GTIOCB. */
+        gtuddtyc &= ~R_GPT0_GTUDDTYC_OADTY_Msk;
+        gtuddtyc |= duty_regs.omdty << R_GPT0_GTUDDTYC_OADTY_Pos;
+    }
+
+    if ((GPT_IO_PIN_GTIOCA_AND_GTIOCB == pin) && duty_regs.omdty)
+    {
+        /* When setting both pins to 0%/100% duty recalculate OBDTY before setting */
+        gpt_calculate_duty_cycle(p_instance_ctrl, duty_cycle_counts, &duty_regs, GPT_IO_PIN_GTIOCB);
+    }
+
+    if (GPT_IO_PIN_GTIOCA != tmp_pin)
+    {
         /* GTIOCB or both GTIOCA and GTIOCB. */
-        gtuddtyc &= ~R_GPT_GTUDDTYC_OBDTY_Msk;
-        gtuddtyc |= duty_regs.omdty << R_GPT_GTUDDTYC_OBDTY_Pos;
+        gtuddtyc &= ~R_GPT0_GTUDDTYC_OBDTY_Msk;
+        gtuddtyc |= duty_regs.omdty << R_GPT0_GTUDDTYC_OBDTY_Pos;
     }
 
     p_instance_ctrl->p_reg->GTUDDTYC = gtuddtyc;
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 #else
@@ -590,12 +678,12 @@ fsp_err_t R_GPT_CounterSet (timer_ctrl_t * const p_ctrl, uint32_t counter)
     FSP_ERROR_RETURN(0U == p_instance_ctrl->p_reg->GTCR_b.CST, FSP_ERR_IN_USE);
 #endif
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     /* Set counter value */
     p_instance_ctrl->p_reg->GTCNT = counter;
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 }
@@ -615,24 +703,24 @@ fsp_err_t R_GPT_OutputEnable (timer_ctrl_t * const p_ctrl, gpt_io_pin_t pin)
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     uint32_t gtior = p_instance_ctrl->p_reg->GTIOR;
     if (GPT_IO_PIN_GTIOCB != pin)
     {
         /* GTIOCA or both GTIOCA and GTIOCB. */
-        gtior |= R_GPT_GTIOR_OAE_Msk;
+        gtior |= R_GPT0_GTIOR_OAE_Msk;
     }
 
     if (GPT_IO_PIN_GTIOCA != pin)
     {
         /* GTIOCB or both GTIOCA and GTIOCB. */
-        gtior |= R_GPT_GTIOR_OBE_Msk;
+        gtior |= R_GPT0_GTIOR_OBE_Msk;
     }
 
     p_instance_ctrl->p_reg->GTIOR = gtior;
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 }
@@ -652,24 +740,24 @@ fsp_err_t R_GPT_OutputDisable (timer_ctrl_t * const p_ctrl, gpt_io_pin_t pin)
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     uint32_t gtior = p_instance_ctrl->p_reg->GTIOR;
     if (GPT_IO_PIN_GTIOCB != pin)
     {
         /* GTIOCA or both GTIOCA and GTIOCB. */
-        gtior &= ~R_GPT_GTIOR_OAE_Msk;
+        gtior &= ~R_GPT0_GTIOR_OAE_Msk;
     }
 
     if (GPT_IO_PIN_GTIOCA != pin)
     {
         /* GTIOCB or both GTIOCA and GTIOCB. */
-        gtior &= ~R_GPT_GTIOR_OBE_Msk;
+        gtior &= ~R_GPT0_GTIOR_OBE_Msk;
     }
 
     p_instance_ctrl->p_reg->GTIOR = gtior;
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
 }
@@ -691,15 +779,160 @@ fsp_err_t R_GPT_AdcTriggerSet (timer_ctrl_t * const    p_ctrl,
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    r_gpt_write_protect_disable(p_instance_ctrl);
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
     /* Set A/D converter start request compare match value. */
     volatile uint32_t * p_gtadtr = &p_instance_ctrl->p_reg->GTADTRA;
     p_gtadtr[which_compare_match] = compare_match_value;
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return FSP_SUCCESS;
+}
+
+/*******************************************************************************************************************//**
+ * Set the Output Delay setting for the PWM output pin.
+ *
+ * @retval FSP_SUCCESS                 The output delay was set.
+ * @retval FSP_ERR_ASSERTION           An input parameter was invalid.
+ * @retval FSP_ERR_NOT_OPEN            The instance is not opened.
+ * @retval FSP_ERR_INVALID_CHANNEL     The channel does not support this feature.
+ * @retval FSP_ERR_NOT_INITIALIZED     The PWM Output Delay Circuit has not been initialized.
+ * @retval FSP_ERR_INVALID_STATE       The PWM Output Delay setting cannot be updated in the current state.
+ * @retval FSP_ERR_UNSUPPORTED         This feature is not supported on this MCU.
+ **********************************************************************************************************************/
+fsp_err_t R_GPT_PwmOutputDelaySet (timer_ctrl_t * const           p_ctrl,
+                                   gpt_pwm_output_delay_edge_t    edge,
+                                   gpt_pwm_output_delay_setting_t delay_setting,
+                                   uint32_t const                 pin)
+{
+#if 0U != BSP_FEATURE_GPT_ODC_VALID_CHANNEL_MASK && GPT_CFG_OUTPUT_SUPPORT_ENABLE
+    gpt_instance_ctrl_t * p_instance_ctrl = (gpt_instance_ctrl_t *) p_ctrl;
+
+ #if GPT_CFG_PARAM_CHECKING_ENABLE
+    FSP_ASSERT(NULL != p_instance_ctrl);
+    FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
+    FSP_ERROR_RETURN(0U != (BSP_FEATURE_GPT_ODC_VALID_CHANNEL_MASK & p_instance_ctrl->channel_mask),
+                     FSP_ERR_INVALID_CHANNEL);
+    FSP_ERROR_RETURN(0U != (R_GPT_ODC->GTDLYCR1 & R_GPT_ODC_GTDLYCR1_DLLEN_Msk), FSP_ERR_NOT_INITIALIZED);
+
+    if (TIMER_MODE_PWM == p_instance_ctrl->p_cfg->mode)
+    {
+        /* In Saw-wave mode, do not change the settings for the delay while the compare-match value is greater than or
+         * equal to GTPR - 2. */
+        uint32_t gtpr          = p_instance_ctrl->p_reg->GTPR;
+        uint32_t compare_match = p_instance_ctrl->p_reg->GTCCR[GPT_PRV_GTCCRC + pin];
+        FSP_ERROR_RETURN(gtpr - 2 > compare_match, FSP_ERR_INVALID_STATE);
+    }
+    else
+    {
+        uint32_t compare_match;
+        if ((TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3 == p_instance_ctrl->p_cfg->mode) ||
+            (TIMER_MODE_ONE_SHOT_PULSE == p_instance_ctrl->p_cfg->mode))
+        {
+            /* In TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3, the trough compare match value is set in
+             * GTCCRD, and GTCCRF. */
+            compare_match = p_instance_ctrl->p_reg->GTCCR[GPT_PRV_GTCCRD + pin];
+        }
+        else
+        {
+            /* In TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM and TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM, the trough compare match value is
+             * set in GTCCRC, and GTCCRE. */
+            compare_match = p_instance_ctrl->p_reg->GTCCR[GPT_PRV_GTCCRC + pin];
+        }
+
+        timer_direction_t count_direction = (timer_direction_t) p_instance_ctrl->p_reg->GTST_b.TUCF;
+
+        /* In Triangle-wave mode, do not change the settings for the delay while the counter if going down and the compare-match
+         * value is less than or equal to 2. */
+        FSP_ERROR_RETURN(TIMER_DIRECTION_DOWN != count_direction || 2 < compare_match, FSP_ERR_INVALID_STATE);
+    }
+ #endif
+
+    FSP_CRITICAL_SECTION_DEFINE;
+
+    if (GPT_PWM_OUTPUT_DELAY_SETTING_BYPASS == delay_setting)
+    {
+        /* Enter a critical section in order to ensure that multiple GPT channels don't access the common
+         * register simultaneously. */
+        FSP_CRITICAL_SECTION_ENTER;
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+        /* GTDLYCR2 is protected by R_GPT::GTWP. */
+        uint32_t wp = R_GPT0->GTWP;
+        R_GPT0->GTWP = GPT_PRV_GTWP_RESET_VALUE;
+        R_GPT0->GTWP;
+ #endif
+
+        /* Enable the Delay Generation Circuit bypass. */
+        R_GPT_ODC->GTDLYCR2 &= (uint16_t) (~p_instance_ctrl->channel_mask & UINT16_MAX);
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+        /* Restore the previous value of GTWP. */
+        R_GPT0->GTWP = wp | GPT_PRV_GTWP_RESET_VALUE;
+ #endif
+
+        FSP_CRITICAL_SECTION_EXIT;
+    }
+    else
+    {
+        /* Calculate the offset for the register than needs to be set. */
+        uint32_t channel_offset = sizeof(uint32_t) * p_instance_ctrl->p_cfg->channel;
+        uint32_t pin_offset     =
+            (uint32_t) ((uint32_t) &R_GPT_ODC->GTDLYR[0].B - (uint32_t) &R_GPT_ODC->GTDLYR[0].A) * pin;
+        uint32_t edge_offset =
+            (uint32_t) ((uint32_t) &R_GPT_ODC->GTDLYF[0].A - (uint32_t) &R_GPT_ODC->GTDLYR[0].A) * edge;
+        uint16_t * p_gtdlyfnx =
+            (uint16_t *) ((uint32_t) &R_GPT_ODC->GTDLYR[0].A + channel_offset + pin_offset + edge_offset);
+
+        /* Unprotect the delay setting register. */
+        uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
+
+        /* Write the delay setting to the register. */
+        *p_gtdlyfnx = (uint16_t) delay_setting;
+
+        /* Restore the previous value of GTWP. */
+        r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
+
+        /* Check if the channel has already been enabled. */
+        if (0U == (R_GPT_ODC->GTDLYCR2 & p_instance_ctrl->channel_mask))
+        {
+            /* Enter a critical section in order to ensure that multiple GPT channels don't access the common
+             * register simultaneously. */
+            FSP_CRITICAL_SECTION_ENTER;
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+            /* GTDLYCR2 is protected by R_GPT::GTWP. */
+            wp           = R_GPT0->GTWP;
+            R_GPT0->GTWP = GPT_PRV_GTWP_RESET_VALUE;
+            R_GPT0->GTWP;
+ #endif
+
+            /* Disable the Delay Generation Circuit bypass. */
+            R_GPT_ODC->GTDLYCR2 |= (uint16_t) p_instance_ctrl->channel_mask;
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+            /* Restore the previous value of GTWP. */
+            R_GPT0->GTWP = wp | GPT_PRV_GTWP_RESET_VALUE;
+ #endif
+
+            FSP_CRITICAL_SECTION_EXIT;
+        }
+    }
+
+    return FSP_SUCCESS;
+#else
+    FSP_PARAMETER_NOT_USED(p_ctrl);
+    FSP_PARAMETER_NOT_USED(edge);
+    FSP_PARAMETER_NOT_USED(delay_setting);
+    FSP_PARAMETER_NOT_USED(pin);
+
+    return FSP_ERR_UNSUPPORTED;
+#endif
 }
 
 /*******************************************************************************************************************//**
@@ -769,24 +1002,6 @@ fsp_err_t R_GPT_Close (timer_ctrl_t * const p_ctrl)
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    /* Clear open flag. */
-    p_instance_ctrl->open = 0U;
-
-    r_gpt_write_protect_disable(p_instance_ctrl);
-
-    /* Stop counter. */
-    p_instance_ctrl->p_reg->GTSTP = p_instance_ctrl->channel_mask;
-
-    /* Disable output. */
-    p_instance_ctrl->p_reg->GTIOR = 0U;
-
-    /* Disable interrupts.
-     * Set General PWM Timer Interrupt Output Setting Register(GTINTAD)
-     */
-    p_instance_ctrl->p_reg->GTINTAD = 0x00000000;
-
-    r_gpt_write_protect_enable(p_instance_ctrl);
-
     /* Disable interrupts. */
     gpt_extended_cfg_t * p_extend = (gpt_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend;
     r_gpt_disable_irq(p_instance_ctrl->p_cfg->cycle_end_irq);
@@ -801,30 +1016,118 @@ fsp_err_t R_GPT_Close (timer_ctrl_t * const p_ctrl)
     }
 #endif
 
-    /* Remove power to the channel. */
-    R_BSP_MODULE_CLKOFF(FSP_IP_GPT, p_ctrl->p_cfg->channel);
-    R_BSP_MODULE_STOP(FSP_IP_GPT, p_ctrl->p_cfg->channel);
+    /* Clear open flag. */
+    p_instance_ctrl->open = 0U;
+
+    uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
+
+    /* Stop counter. */
+    p_instance_ctrl->p_reg->GTSTP = p_instance_ctrl->channel_mask;
+
+    /* Disable output. */
+    p_instance_ctrl->p_reg->GTIOR = 0U;
+
+    /* Disable interrupts.
+     * Set General PWM Timer Interrupt Output Setting Register(GTINTAD)
+     */
+    p_instance_ctrl->p_reg->GTINTAD = 0x00000000;
+
+    r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
     return err;
 }
 
-/***********************************************************************************************************************
- * DEPRECATED Sets driver version based on compile time macros. Implements @ref timer_api_t::versionGet.
+/*******************************************************************************************************************//**
+ * Initialize the PWM Delay Generation Circuit (PDG).
+ * This function must be called before calling @ref R_GPT_PwmOutputDelaySet.
  *
- * @retval FSP_SUCCESS                 Version stored in p_version.
- * @retval FSP_ERR_ASSERTION           p_version was NULL.
+ * @note This function will delay for 20 microseconds.
+ *
+ * @retval FSP_SUCCESS                 Initialization sequence completed successfully.
+ * @retval FSP_ERR_INVALID_STATE       The source clock frequnecy is out of the required range for the PDG.
+ * @retval FSP_ERR_UNSUPPORTED         This feature is not supported.
  **********************************************************************************************************************/
-fsp_err_t R_GPT_VersionGet (fsp_version_t * const p_version)
+fsp_err_t R_GPT_PwmOutputDelayInitialize ()
 {
-#if GPT_CFG_PARAM_CHECKING_ENABLE
+#if 0U != BSP_FEATURE_GPT_ODC_VALID_CHANNEL_MASK && GPT_CFG_OUTPUT_SUPPORT_ENABLE
+ #if BSP_FEATURE_GPT_ODC_FRANGE_FREQ_MIN > 0 || GPT_CFG_PARAM_CHECKING_ENABLE
+  #if BSP_FEATURE_BSP_HAS_GPT_CLOCK && GPT_CFG_GPTCLK_BYPASS == 0
 
-    /* Verify parameters are valid */
-    FSP_ASSERT(NULL != p_version);
-#endif
+    /* Calculate the GPTCK Divider. */
+    uint32_t divider = R_SYSTEM->GPTCKDIVCR;
 
-    p_version->version_id = g_gpt_version.version_id;
+    if (0U == divider)
+    {
+        divider = 1U;
+    }
+    else
+    {
+        divider *= 2U;
+    }
+
+    /* Calculate the GPTCK Frequency. */
+    uint32_t gpt_frequency = R_BSP_SourceClockHzGet((fsp_priv_source_clock_t) R_SYSTEM->GPTCKCR_b.GPTCKSEL) / divider;
+  #else
+
+    /* Calculate the PCLKD Frequency. */
+    uint32_t gpt_frequency = R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_PCLKD);
+  #endif
+ #endif
+
+ #if GPT_CFG_PARAM_CHECKING_ENABLE
+    FSP_ERROR_RETURN(BSP_FEATURE_GPT_ODC_FREQ_MAX >= gpt_frequency, FSP_ERR_INVALID_STATE);
+    FSP_ERROR_RETURN(BSP_FEATURE_GPT_ODC_FREQ_MIN <= gpt_frequency, FSP_ERR_INVALID_STATE);
+ #endif
+
+    uint32_t gtdlycr1 = R_GPT_ODC_GTDLYCR1_DLYRST_Msk;
+
+ #if BSP_FEATURE_GPT_ODC_FRANGE_FREQ_MIN > 0
+    if (BSP_FEATURE_GPT_ODC_FRANGE_FREQ_MIN >= gpt_frequency)
+    {
+        gtdlycr1 |= R_GPT_ODC_GTDLYCR1_FRANGE_Msk;
+    }
+ #endif
+
+ #if BSP_FEATURE_BSP_HAS_GPT_CLOCK && GPT_CFG_GPTCLK_BYPASS
+
+    /* Bypass the GPTCLK. GPT instances will use PCLKD as the GPT Core clock. */
+    R_GPT_GTCLK->GTCLKCR = 1U;
+ #endif
+
+    /* Cancel the module-stop state for the PDG. */
+    R_BSP_MODULE_START(FSP_IP_GPT, 0);
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+    /* Disable write protection for GPT registers if they are protected. */
+    R_GPT0->GTWP = GPT_PRV_GTWP_RESET_VALUE;
+    R_GPT0->GTWP;
+ #endif
+
+    /* Reset the PWM Delay Generation Circuit. */
+    R_GPT_ODC->GTDLYCR1 = (uint16_t) gtdlycr1;
+    R_GPT_ODC->GTDLYCR2 = 0;
+
+    /* Enable the DLL. */
+    R_GPT_ODC->GTDLYCR1 = (uint16_t) (gtdlycr1 | R_GPT_ODC_GTDLYCR1_DLLEN_Msk);
+
+    /* Wait for the DLL to be enabled. */
+    R_BSP_SoftwareDelay(20, BSP_DELAY_UNITS_MICROSECONDS);
+
+    /* Release the PWM Delay Generation Circuit from reset. */
+    R_GPT_ODC->GTDLYCR1 &= (uint16_t) ~R_GPT_ODC_GTDLYCR1_DLYRST_Msk;
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+    /* Re-enable write protection for GPT registers. */
+    R_GPT0->GTWP = GPT_PRV_GTWP_WRITE_PROTECT;
+ #endif
 
     return FSP_SUCCESS;
+#else
+
+    return FSP_ERR_UNSUPPORTED;
+#endif
 }
 
 /** @} (end addtogroup GPT) */
@@ -837,13 +1140,16 @@ fsp_err_t R_GPT_VersionGet (fsp_version_t * const p_version)
  * Enables write protection.
  *
  * @param[in]  p_instance_ctrl         Instance control block.
+ * @param[in]  write_protect_setting   The value of GTWP prior to being cleared.
  **********************************************************************************************************************/
-static inline void r_gpt_write_protect_enable (gpt_instance_ctrl_t * const p_instance_ctrl)
+static inline void r_gpt_write_protect_enable (gpt_instance_ctrl_t * const p_instance_ctrl,
+                                               uint32_t                    write_protect_setting)
 {
 #if GPT_CFG_WRITE_PROTECT_ENABLE
-    p_instance_ctrl->p_reg->GTWP = GPT_PRV_GTWP_WRITE_PROTECT;
+    p_instance_ctrl->p_reg->GTWP = write_protect_setting;
 #else
     FSP_PARAMETER_NOT_USED(p_instance_ctrl);
+    FSP_PARAMETER_NOT_USED(write_protect_setting);
 #endif
 }
 
@@ -852,12 +1158,17 @@ static inline void r_gpt_write_protect_enable (gpt_instance_ctrl_t * const p_ins
  *
  * @param[in]  p_instance_ctrl         Instance control block.
  **********************************************************************************************************************/
-static inline void r_gpt_write_protect_disable (gpt_instance_ctrl_t * const p_instance_ctrl)
+static inline uint32_t r_gpt_write_protect_disable (gpt_instance_ctrl_t * const p_instance_ctrl)
 {
 #if GPT_CFG_WRITE_PROTECT_ENABLE
+    uint32_t write_protect_setting = p_instance_ctrl->p_reg->GTWP;
     p_instance_ctrl->p_reg->GTWP = GPT_PRV_GTWP_RESET_VALUE;
+
+    return write_protect_setting;
 #else
     FSP_PARAMETER_NOT_USED(p_instance_ctrl);
+
+    return 0U;
 #endif
 }
 
@@ -875,9 +1186,12 @@ static void gpt_common_open (gpt_instance_ctrl_t * const p_instance_ctrl, timer_
     /* If callback is not null or timer mode is one shot, make sure the IRQ is enabled and store callback in the
      *  control block.
      *  @note The GPT hardware does not support one-shot mode natively.  To support one-shot mode, the timer will be
-     *  stopped and cleared using software in the ISR. *//* Save register base address. */
-    uint32_t base_address = (uint32_t) R_GPT32E0 + (p_cfg->channel * ((uint32_t) R_GPT32E1 - (uint32_t) R_GPT32E0));
-    p_instance_ctrl->p_reg = (R_GPT32E0_Type *) base_address;
+     *  stopped and cleared using software in the ISR. *//* Determine if this is a 32-bit or a 16-bit timer. */
+    p_instance_ctrl->variant = TIMER_VARIANT_32_BIT;
+
+    /* Save register base address. */
+    uint32_t base_address = (uint32_t) R_GPT0 + (p_cfg->channel * ((uint32_t) R_GPT1 - (uint32_t) R_GPT0));
+    p_instance_ctrl->p_reg = (R_GPT0_Type *) base_address;
 
     /* Set callback and context pointers, if configured */
     p_instance_ctrl->p_callback        = p_cfg->p_callback;
@@ -896,16 +1210,43 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     /* Save pointer to extended configuration structure. */
     gpt_extended_cfg_t * p_extend = (gpt_extended_cfg_t *) p_cfg->p_extend;
 
+#if BSP_FEATURE_BSP_HAS_GPT_CLOCK && GPT_CFG_GPTCLK_BYPASS
+
+    /* Bypass the GPTCLK. GPT instances will use PCLKD as the GPT Core clock. */
+    R_GPT_GTCLK->GTCLKCR = 1U;
+#endif
+
     /* Power on GPT before setting any hardware registers. Make sure the counter is stopped before setting mode
      * register, P0 clock divisor register, and counter register.
      */
     R_BSP_MODULE_START(FSP_IP_GPT, p_cfg->channel);
 
-    /* Supply clock to all GPT channels. */
-    R_BSP_MODULE_CLKON(FSP_IP_GPT, p_cfg->channel);
+#if GPT_CFG_OUTPUT_SUPPORT_ENABLE && BSP_FEATURE_GPT_ODC_VALID_CHANNEL_MASK
+    if (0U != (BSP_FEATURE_GPT_ODC_VALID_CHANNEL_MASK & p_instance_ctrl->channel_mask))
+    {
+        /* Enter a critical section in order to ensure that multiple GPT channels don't access the common
+         * register simultaneously. */
+        FSP_CRITICAL_SECTION_DEFINE;
+        FSP_CRITICAL_SECTION_ENTER;
 
-    /* Negate reset signal for all GPT channels. */
-    R_BSP_MODULE_RSTOFF(FSP_IP_GPT, p_cfg->channel);
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+
+        /* Disable write protection for GPT registers if they are protected. */
+        uint32_t wp = R_GPT0->GTWP;
+        R_GPT0->GTWP = GPT_PRV_GTWP_RESET_VALUE;
+        R_GPT0->GTWP;
+ #endif
+
+        /* Enable the Delay Generation Circuit bypass. */
+        R_GPT_ODC->GTDLYCR2 &= (uint16_t) (~p_instance_ctrl->channel_mask & UINT16_MAX);
+
+ #if GPT_CFG_WRITE_PROTECT_ENABLE
+        R_GPT0->GTWP = wp | GPT_PRV_GTWP_RESET_VALUE;
+ #endif
+
+        FSP_CRITICAL_SECTION_EXIT;
+    }
+#endif
 
     /* Initialize all registers that may affect operation of this driver to reset values.  Skip these since they
      * affect all channels, and are initialized in GTCR and GTCNT: GTSTR, GTSTP, GTCLR. GTCR is set immediately after
@@ -922,21 +1263,28 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
      *  in the user's manual) and other registers required by the driver. */
 
     /* Dividers for GPT are half the enum value. */
-    uint32_t gtcr_tpcs = p_cfg->source_div;
-    uint32_t gtcr      = gtcr_tpcs << R_GPT_GTCR_TPCS_Pos;
+    uint32_t gtcr_tpcs = p_cfg->source_div >> BSP_FEATURE_GPT_TPCS_SHIFT;
+    uint32_t gtcr      = gtcr_tpcs << R_GPT0_GTCR_TPCS_Pos;
 
     /* Store period register setting. The actual period and is one cycle longer than the register value for saw waves
      * and twice the register value for triangle waves. Reference section "General PWM Timer Cycle Setting
      * Register (GTPR)". The setting passed to the configuration is expected to be half the desired period for
      * triangle waves. */
     uint32_t gtpr = p_cfg->period_counts - 1U;
+
+    /* Set GTCR.MD = 0x001 for TIMER_MODE_ONE_SHOT_PULSE mode. */
+    if (TIMER_MODE_ONE_SHOT_PULSE == p_cfg->mode)
+    {
+        gtcr |= (1U << R_GPT0_GTCR_MD_Pos);
+    }
+
 #if GPT_PRV_EXTRA_FEATURES_ENABLED == GPT_CFG_OUTPUT_SUPPORT_ENABLE
 
     /* Saw-wave PWM mode is set in GTCR.MD for all modes except TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM and
      * TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM. */
     if (p_cfg->mode >= TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM)
     {
-        gtcr |= ((uint32_t) p_cfg->mode << R_GPT_GTCR_MD_Pos);
+        gtcr |= ((uint32_t) p_cfg->mode << R_GPT0_GTCR_MD_Pos);
         gtpr  = p_cfg->period_counts;
     }
 #endif
@@ -957,7 +1305,7 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     p_instance_ctrl->p_reg->GTPR  = gtpr;
 
     uint32_t gtuddtyc = 0U;
-    uint32_t gtior    = 0U;
+    uint32_t gtior    = p_extend->gtior_setting.gtior;
 
 #if GPT_CFG_OUTPUT_SUPPORT_ENABLE
 
@@ -977,7 +1325,7 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
 
     if (p_cfg->mode >= TIMER_MODE_PWM)
     {
-        gpt_calculate_duty_cycle(p_instance_ctrl, p_cfg->duty_cycle_counts, &duty_regs);
+        gpt_calculate_duty_cycle(p_instance_ctrl, p_cfg->duty_cycle_counts, &duty_regs, GPT_IO_PIN_GTIOCA);
     }
 
     /* Set the compare match and compare match buffer registers based on previously calculated values. */
@@ -985,20 +1333,24 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     p_instance_ctrl->p_reg->GTCCRE = duty_regs.gtccr_buffer;
 
     /* If the requested duty cycle is 0% or 100%, set this in the registers. */
-    gtuddtyc |= duty_regs.omdty << R_GPT_GTUDDTYC_OADTY_Pos;
-    gtuddtyc |= duty_regs.omdty << R_GPT_GTUDDTYC_OBDTY_Pos;
+    gtuddtyc |= duty_regs.omdty << R_GPT0_GTUDDTYC_OADTY_Pos;
+    gtuddtyc |= duty_regs.omdty << R_GPT0_GTUDDTYC_OBDTY_Pos;
 
-    /* Calculate GTIOR. */
-    if (p_extend->gtioca.output_enabled)
+    /* Check if custom GTIOR settings are provided. */
+    if (0 == p_extend->gtior_setting.gtior)
     {
-        uint32_t gtioca_gtior = gpt_gtior_calculate(p_cfg, p_extend->gtioca.stop_level);
-        gtior |= gtioca_gtior << R_GPT_GTIOR_GTIOA_Pos;
-    }
+        /* If custom GTIOR settings are not provided, calculate GTIOR. */
+        if (p_extend->gtioca.output_enabled)
+        {
+            uint32_t gtioca_gtior = gpt_gtior_calculate(p_cfg, p_extend->gtioca.stop_level);
+            gtior |= gtioca_gtior << R_GPT0_GTIOR_GTIOA_Pos;
+        }
 
-    if (p_extend->gtiocb.output_enabled)
-    {
-        uint32_t gtiocb_gtior = gpt_gtior_calculate(p_cfg, p_extend->gtiocb.stop_level);
-        gtior |= gtiocb_gtior << R_GPT_GTIOR_GTIOB_Pos;
+        if (p_extend->gtiocb.output_enabled)
+        {
+            uint32_t gtiocb_gtior = gpt_gtior_calculate(p_cfg, p_extend->gtiocb.stop_level);
+            gtior |= gtiocb_gtior << R_GPT0_GTIOR_GTIOB_Pos;
+        }
     }
 #endif
 
@@ -1011,23 +1363,28 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     gpt_extended_pwm_cfg_t const * p_pwm_cfg = p_extend->p_pwm_cfg;
     if (NULL != p_pwm_cfg)
     {
-        p_instance_ctrl->p_reg->GTINTAD = ((uint32_t) p_pwm_cfg->output_disable << R_GPT_GTINTAD_GRPDTE_Pos) |
-                                          ((uint32_t) p_pwm_cfg->poeg_link << R_GPT_GTINTAD_GRP_Pos) |
-                                          ((uint32_t) p_pwm_cfg->adc_trigger << R_GPT_GTINTAD_ADTRAUEN_Pos);
+        p_instance_ctrl->p_reg->GTINTAD = ((uint32_t) p_pwm_cfg->output_disable << R_GPT0_GTINTAD_GRPDTE_Pos) |
+                                          ((uint32_t) p_pwm_cfg->poeg_link << R_GPT0_GTINTAD_GRP_Pos) |
+                                          ((uint32_t) p_pwm_cfg->adc_trigger << R_GPT0_GTINTAD_ADTRAUEN_Pos);
         p_instance_ctrl->p_reg->GTDVU = p_pwm_cfg->dead_time_count_up;
 
         /* Set GTDTCR.TDE only if one of the dead time values is non-zero. */
         uint32_t gtdtcr = ((p_pwm_cfg->dead_time_count_up > 0) || (p_pwm_cfg->dead_time_count_down > 0));
 
-        p_instance_ctrl->p_reg->GTITC = ((uint32_t) p_pwm_cfg->interrupt_skip_source << R_GPT_GTITC_IVTC_Pos) |
-                                        ((uint32_t) p_pwm_cfg->interrupt_skip_count << R_GPT_GTITC_IVTT_Pos) |
-                                        ((uint32_t) p_pwm_cfg->interrupt_skip_adc << R_GPT_GTITC_ADTAL_Pos);
+        p_instance_ctrl->p_reg->GTITC = ((uint32_t) p_pwm_cfg->interrupt_skip_source << R_GPT0_GTITC_IVTC_Pos) |
+                                        ((uint32_t) p_pwm_cfg->interrupt_skip_count << R_GPT0_GTITC_IVTT_Pos) |
+                                        ((uint32_t) p_pwm_cfg->interrupt_skip_adc << R_GPT0_GTITC_ADTAL_Pos);
         p_instance_ctrl->p_reg->GTDVD   = p_pwm_cfg->dead_time_count_down;
         p_instance_ctrl->p_reg->GTADTRA = p_pwm_cfg->adc_a_compare_match;
         p_instance_ctrl->p_reg->GTADTRB = p_pwm_cfg->adc_b_compare_match;
 
-        gtior |= (uint32_t) (p_pwm_cfg->gtioca_disable_setting << R_GPT_GTIOR_OADF_Pos);
-        gtior |= (uint32_t) (p_pwm_cfg->gtiocb_disable_setting << R_GPT_GTIOR_OBDF_Pos);
+        /* Check if custom GTIOR settings are provided. */
+        if (0 == p_extend->gtior_setting.gtior)
+        {
+            /* If custom GTIOR settings are not provided, set gtioca_disable_settings and gtiocb_disable_settings. */
+            gtior |= (uint32_t) (p_pwm_cfg->gtioca_disable_setting << R_GPT0_GTIOR_OADF_Pos);
+            gtior |= (uint32_t) (p_pwm_cfg->gtiocb_disable_setting << R_GPT0_GTIOR_OBDF_Pos);
+        }
 
         p_instance_ctrl->p_reg->GTDTCR = gtdtcr;
     }
@@ -1042,9 +1399,16 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
         /* GTDVU, GTDVD, GTDBU, GTDBD, and GTSOTR are not used if GTDTCR is cleared. */
     }
 
-    /* Configure the noise filter for the GTIOC pins. */
-    gtior |= (uint32_t) (p_extend->capture_filter_gtioca << R_GPT_GTIOR_NFAEN_Pos);
-    gtior |= (uint32_t) (p_extend->capture_filter_gtiocb << R_GPT_GTIOR_NFBEN_Pos);
+    /* Check if custom GTIOR settings are provided. */
+    if (0 == p_extend->gtior_setting.gtior)
+    {
+        /*
+         * If custom GTIOR settings are not provided, configure the noise filter for
+         * the GTIOC pins.
+         */
+        gtior |= (uint32_t) (p_extend->capture_filter_gtioca << R_GPT0_GTIOR_NFAEN_Pos);
+        gtior |= (uint32_t) (p_extend->capture_filter_gtiocb << R_GPT0_GTIOR_NFBEN_Pos);
+    }
 
     /* Enable the compare match buffer. */
     p_instance_ctrl->p_reg->GTBER = GPT_PRV_GTBER_BUFFER_ENABLE_FORCE_TRANSFER;
@@ -1092,7 +1456,7 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     }
 #endif
 
-    r_gpt_write_protect_enable(p_instance_ctrl);
+    r_gpt_write_protect_enable(p_instance_ctrl, GPT_PRV_GTWP_WRITE_PROTECT);
 }
 
 /*******************************************************************************************************************//**
@@ -1151,7 +1515,8 @@ static void r_gpt_enable_irq (IRQn_Type const irq, uint32_t priority, void * p_c
  **********************************************************************************************************************/
 static void gpt_calculate_duty_cycle (gpt_instance_ctrl_t * const p_instance_ctrl,
                                       uint32_t const              duty_cycle_counts,
-                                      gpt_prv_duty_registers_t  * p_duty_reg)
+                                      gpt_prv_duty_registers_t  * p_duty_reg,
+                                      uint32_t                    pin)
 {
     /* Determine the current period. The actual period is one cycle longer than the register value for saw waves
      * and twice the register value for triangle waves. Reference section "General PWM Timer Cycle Setting
@@ -1165,14 +1530,43 @@ static void gpt_calculate_duty_cycle (gpt_instance_ctrl_t * const p_instance_ctr
         current_period++;
     }
 
-    /* 0% and 100% duty cycle are supported in OADTY/OBDTY. */
-    if (0U == duty_cycle_counts)
+    bool duty_zero = (0U == duty_cycle_counts);
+    bool duty_high = (duty_cycle_counts >= current_period);
+
+    if (duty_zero || duty_high)
     {
-        p_duty_reg->omdty = GPT_DUTY_CYCLE_MODE_0_PERCENT;
-    }
-    else if (duty_cycle_counts >= current_period)
-    {
-        p_duty_reg->omdty = GPT_DUTY_CYCLE_MODE_100_PERCENT;
+        uint32_t gtior;
+
+        if (!(GPT_IO_PIN_GTIOCB & pin))
+        {
+            gtior = p_instance_ctrl->p_reg->GTIOR_b.GTIOA;
+        }
+        else
+        {
+            gtior = p_instance_ctrl->p_reg->GTIOR_b.GTIOB;
+        }
+
+        bool first_level_low;
+
+        if (p_instance_ctrl->p_cfg->mode >= TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM)
+        {
+            /* In triangle PWM modes use the initial pin level to determine 0%/100% setting. */
+            first_level_low = !(gtior & 0x10);
+        }
+        else
+        {
+            /* In normal PWM mode use the cycle end setting to determine 0%/100% setting */
+            first_level_low = (gtior & 0xC) == 0x4;
+        }
+
+        if ((duty_zero && !first_level_low) || (duty_high && first_level_low))
+        {
+            p_duty_reg->omdty = GPT_DUTY_CYCLE_MODE_0_PERCENT;
+        }
+        else
+        {
+            p_duty_reg->omdty = GPT_DUTY_CYCLE_MODE_100_PERCENT;
+        }
     }
     else
     {
@@ -1205,11 +1599,12 @@ static void gpt_calculate_duty_cycle (gpt_instance_ctrl_t * const p_instance_ctr
  **********************************************************************************************************************/
 static uint32_t gpt_clock_frequency_get (gpt_instance_ctrl_t * const p_instance_ctrl)
 {
-    /* Look up P0 clock frequency and divide it by GPT P0 clock divider. */
-    timer_source_div_t p0_divisor = (timer_source_div_t) (p_instance_ctrl->p_reg->GTCR_b.TPCS);
-    uint32_t           p0_freq_hz = R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_P0CLK);
+    /* Look up GPT clock frequency and divide it by GPT clock divider. */
+    timer_source_div_t gptclk_divisor =
+        (timer_source_div_t) ((p_instance_ctrl->p_reg->GTCR_b.TPCS) << BSP_FEATURE_GPT_TPCS_SHIFT);
+    uint32_t gptclk_freq_hz = R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_P0CLK);
 
-    return p0_freq_hz >> p0_divisor;
+    return gptclk_freq_hz >> gptclk_divisor;
 }
 
 #if GPT_CFG_OUTPUT_SUPPORT_ENABLE
@@ -1224,7 +1619,7 @@ static uint32_t gpt_clock_frequency_get (gpt_instance_ctrl_t * const p_instance_
 static uint32_t gpt_gtior_calculate (timer_cfg_t const * const p_cfg, gpt_pin_level_t const stop_level)
 {
     /* The stop level is used as both the initial level and the stop level. */
-    uint32_t gtior = R_GPT_GTIOR_OAE_Msk | ((uint32_t) stop_level << R_GPT_GTIOR_OADFLT_Pos) |
+    uint32_t gtior = R_GPT0_GTIOR_OAE_Msk | ((uint32_t) stop_level << R_GPT0_GTIOR_OADFLT_Pos) |
                      ((uint32_t) stop_level << GPT_PRV_GTIOR_INITIAL_LEVEL_BIT);
 
     uint32_t gtion = GPT_PRV_GTIO_LOW_COMPARE_MATCH_HIGH_CYCLE_END;
@@ -1240,6 +1635,10 @@ static uint32_t gpt_gtior_calculate (timer_cfg_t const * const p_cfg, gpt_pin_le
         gtion = GPT_PRV_GTIO_TOGGLE_COMPARE_MATCH;
     }
  #endif
+    else if (TIMER_MODE_ONE_SHOT_PULSE == p_cfg->mode)
+    {
+        gtion = GPT_PRV_GTIO_TOGGLE_COMPARE_MATCH;
+    }
     else
     {
         /* In one-shot mode, the output pin goes high after the first compare match (one cycle after the timer starts counting). */
@@ -1370,7 +1769,7 @@ static void r_gpt_capture_common_isr (gpt_prv_capture_event_t event)
 void gpt_counter_overflow_isr (void)
 {
     /* Save context if RTOS is used */
-    FSP_CONTEXT_SAVE;
+    FSP_CONTEXT_SAVE
 
     IRQn_Type irq = R_FSP_CurrentIrqGet();
 
@@ -1383,7 +1782,7 @@ void gpt_counter_overflow_isr (void)
     /* If one-shot mode is selected, stop the timer since period has expired. */
     if (TIMER_MODE_ONE_SHOT == p_instance_ctrl->p_cfg->mode)
     {
-        r_gpt_write_protect_disable(p_instance_ctrl);
+        uint32_t wp = r_gpt_write_protect_disable(p_instance_ctrl);
 
         p_instance_ctrl->p_reg->GTSTP = p_instance_ctrl->channel_mask;
 
@@ -1392,7 +1791,7 @@ void gpt_counter_overflow_isr (void)
         p_instance_ctrl->p_reg->GTCCRA = 0;
         p_instance_ctrl->p_reg->GTCCRB = 0;
 
-        r_gpt_write_protect_enable(p_instance_ctrl);
+        r_gpt_write_protect_enable(p_instance_ctrl, wp | GPT_PRV_GTWP_RESET_VALUE);
 
         /* Clear pending interrupt to make sure it doesn't fire again if another overflow has already occurred. */
         R_BSP_IrqClearPending(irq);
@@ -1404,7 +1803,7 @@ void gpt_counter_overflow_isr (void)
     }
 
     /* Restore context if RTOS is used */
-    FSP_CONTEXT_RESTORE;
+    FSP_CONTEXT_RESTORE
 }
 
 #if GPT_PRV_EXTRA_FEATURES_ENABLED == GPT_CFG_OUTPUT_SUPPORT_ENABLE
@@ -1415,7 +1814,7 @@ void gpt_counter_overflow_isr (void)
 void gpt_counter_underflow_isr (void)
 {
     /* Save context if RTOS is used */
-    FSP_CONTEXT_SAVE;
+    FSP_CONTEXT_SAVE
 
     IRQn_Type irq = R_FSP_CurrentIrqGet();
 
@@ -1429,7 +1828,7 @@ void gpt_counter_underflow_isr (void)
     r_gpt_call_callback(p_instance_ctrl, TIMER_EVENT_TROUGH, 0);
 
     /* Restore context if RTOS is used */
-    FSP_CONTEXT_RESTORE;
+    FSP_CONTEXT_RESTORE
 }
 
 #endif

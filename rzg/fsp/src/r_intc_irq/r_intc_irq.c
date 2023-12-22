@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -60,15 +60,6 @@ void r_intc_irq_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
-/** Version data structure used by error logger macro. */
-static const fsp_version_t g_intc_irq_version =
-{
-    .api_version_minor  = EXTERNAL_IRQ_API_VERSION_MINOR,
-    .api_version_major  = EXTERNAL_IRQ_API_VERSION_MAJOR,
-    .code_version_major = INTC_IRQ_CODE_VERSION_MAJOR,
-    .code_version_minor = INTC_IRQ_CODE_VERSION_MINOR
-};
-
 /***********************************************************************************************************************
  * Global Variables
  **********************************************************************************************************************/
@@ -81,7 +72,6 @@ const external_irq_api_t g_external_irq_on_intc_irq =
     .disable     = R_INTC_IRQ_ExternalIrqDisable,
     .callbackSet = R_INTC_IRQ_ExternalIrqCallbackSet,
     .close       = R_INTC_IRQ_ExternalIrqClose,
-    .versionGet  = R_INTC_IRQ_ExternalIrqVersionGet
 };
 
 /*******************************************************************************************************************//**
@@ -105,9 +95,6 @@ const external_irq_api_t g_external_irq_on_intc_irq =
  *                                        Call the associated Close function to reconfigure the channel.
  * @retval FSP_ERR_IP_CHANNEL_NOT_PRESENT The channel requested in p_cfg is not available on the device selected in
  *                                        r_bsp_cfg.h.
- * @retval FSP_ERR_INVALID_ARGUMENT       p_cfg->p_callback is not NULL, but ISR is not enabled. ISR must be enabled to
- *                                        use callback function.
- *
  * @note This function is reentrant for different channels. It is not reentrant for the same channel.
  **********************************************************************************************************************/
 fsp_err_t R_INTC_IRQ_ExternalIrqOpen (external_irq_ctrl_t * const p_api_ctrl, external_irq_cfg_t const * const p_cfg)
@@ -119,12 +106,6 @@ fsp_err_t R_INTC_IRQ_ExternalIrqOpen (external_irq_ctrl_t * const p_api_ctrl, ex
     FSP_ERROR_RETURN(INTC_IRQ_OPEN != p_ctrl->open, FSP_ERR_ALREADY_OPEN);
     FSP_ASSERT(NULL != p_cfg);
     FSP_ERROR_RETURN(0 != ((1U << p_cfg->channel) & BSP_FEATURE_INTC_IRQ_VALID_CHANNEL_MASK), FSP_ERR_IP_CHANNEL_NOT_PRESENT);
-
-    /* Callback must be used with a valid interrupt priority otherwise it will never be called. */
-    if (p_cfg->p_callback)
-    {
-        FSP_ERROR_RETURN(BSP_IRQ_DISABLED != p_cfg->ipl, FSP_ERR_INVALID_ARGUMENT);
-    }
 #endif
 
     p_ctrl->irq = p_cfg->irq;
@@ -325,23 +306,6 @@ fsp_err_t R_INTC_IRQ_ExternalIrqClose (external_irq_ctrl_t * const p_api_ctrl)
     }
 
     p_ctrl->open = 0U;
-
-    return FSP_SUCCESS;
-}
-
-/***********************************************************************************************************************
- * DEPRECATED Set driver version based on compile time macros. Implements @ref external_irq_api_t::versionGet.
- *
- * @retval     FSP_SUCCESS        Successful close.
- * @retval     FSP_ERR_ASSERTION  The parameter p_version is NULL.
- **********************************************************************************************************************/
-fsp_err_t R_INTC_IRQ_ExternalIrqVersionGet (fsp_version_t * const p_version)
-{
-#if INTC_IRQ_CFG_PARAM_CHECKING_ENABLE
-    FSP_ASSERT(NULL != p_version);
-#endif
-
-    p_version->version_id = g_intc_irq_version.version_id;
 
     return FSP_SUCCESS;
 }

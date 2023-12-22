@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
- * Copyright [2020-2021] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
+ * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
  *
  * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
  * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
@@ -36,6 +36,7 @@
  * Implemented by:
  * - @ref GPT
  * - @ref GTM
+ * - @ref MTU3
  *
  * @{
  **********************************************************************************************************************/
@@ -54,10 +55,6 @@ FSP_HEADER
  * Macro definitions
  **********************************************************************************************************************/
 
-/* Leading zeroes removed to avoid coding standard violation. */
-#define TIMER_API_VERSION_MAJOR    (1U)
-#define TIMER_API_VERSION_MINOR    (1U)
-
 /**********************************************************************************************************************
  * Typedef definitions
  **********************************************************************************************************************/
@@ -70,6 +67,12 @@ typedef enum e_timer_event
     TIMER_EVENT_CAPTURE_A,                     ///< A capture has occurred on signal A
     TIMER_EVENT_CAPTURE_B,                     ///< A capture has occurred on signal B
     TIMER_EVENT_TROUGH,                        ///< Timer trough event (counter is 0, triangle-wave PWM only
+    TIMER_EVENT_OUTPUT_COMPARE_0,              ///< An output has occurred on signal 0
+    TIMER_EVENT_OUTPUT_COMPARE_1,              ///< An output has occurred on signal 1
+    TIMER_EVENT_DEAD_TIME,                     ///< Dead time event
+    TIMER_EVENT_CAPTURE_U,                     ///< A capture has occurred on signal U
+    TIMER_EVENT_CAPTURE_V,                     ///< A capture has occurred on signal V
+    TIMER_EVENT_CAPTURE_W,                     ///< A capture has occurred on signal W
 } timer_event_t;
 
 /** Timer variant types. */
@@ -94,6 +97,7 @@ typedef struct st_timer_callback_args
  * @par Implemented as
  * - gpt_instance_ctrl_t
  * - gtm_instance_ctrl_t
+ * - mtu3_instance_ctrl_t
  */
 typedef void timer_ctrl_t;
 
@@ -110,8 +114,16 @@ typedef enum e_timer_mode
     TIMER_MODE_PERIODIC,                          ///< Timer restarts after period elapses.
     TIMER_MODE_ONE_SHOT,                          ///< Timer stops after period elapses.
     TIMER_MODE_PWM,                               ///< Timer generates saw-wave PWM output.
+    TIMER_MODE_ONE_SHOT_PULSE,                    ///< Saw-wave one-shot pulse mode (fixed buffer operation).
     TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM  = 4U, ///< Timer generates symmetric triangle-wave PWM output.
     TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM = 5U, ///< Timer generates asymmetric triangle-wave PWM output.
+
+    /**
+     * Timer generates Asymmetric Triangle-wave PWM output. In PWM mode 3, the duty cycle does
+     * not need to be updated at each tough/crest interrupt. Instead, the trough and crest duty cycle values can be
+     * set once and only need to be updated when the application needs to change the duty cycle.
+     */
+    TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3 = 6U,
 } timer_mode_t;
 
 /** Direction of timer count */
@@ -133,6 +145,7 @@ typedef enum e_timer_source_div
     TIMER_SOURCE_DIV_64   = 6,         ///< Timer clock source divided by 64
     TIMER_SOURCE_DIV_128  = 7,         ///< Timer clock source divided by 128
     TIMER_SOURCE_DIV_256  = 8,         ///< Timer clock source divided by 256
+    TIMER_SOURCE_DIV_512  = 9,         ///< Timer clock source divided by 512
     TIMER_SOURCE_DIV_1024 = 10,        ///< Timer clock source divided by 1024
 } timer_source_div_t;
 
@@ -187,6 +200,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Open()
      * - @ref R_GTM_Open()
+     * - @ref R_MTU3_Open()
      *
      * @param[in]   p_ctrl     Pointer to control block. Must be declared by user. Elements set here.
      * @param[in]   p_cfg      Pointer to configuration structure. All elements of this structure must be set by user.
@@ -197,6 +211,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Start()
      * - @ref R_GTM_Start()
+     * - @ref R_MTU3_Start()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      */
@@ -206,6 +221,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Stop()
      * - @ref R_GTM_Stop()
+     * - @ref R_MTU3_Stop()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      */
@@ -215,6 +231,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Reset()
      * - @ref R_GTM_Reset()
+     * - @ref R_MTU3_Reset()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      */
@@ -224,6 +241,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Enable()
      * - @ref R_GTM_Enable()
+     * - @ref R_MTU3_Enable()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      */
@@ -233,6 +251,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Disable()
      * - @ref R_GTM_Disable()
+     * - @ref R_MTU3_Disable()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      */
@@ -243,6 +262,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_PeriodSet()
      * - @ref R_GTM_PeriodSet()
+     * - @ref R_MTU3_PeriodSet()
      *
      * @note Timer expiration may or may not generate a CPU interrupt based on how the timer is configured in
      * @ref timer_api_t::open.
@@ -257,6 +277,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_DutyCycleSet()
      * - @ref R_GTM_DutyCycleSet()
+     * - @ref R_MTU3_DutyCycleSet()
      *
      * @param[in]   p_ctrl             Control block set in @ref timer_api_t::open call for this timer.
      * @param[in]   duty_cycle_counts  Time until duty cycle should expire.
@@ -268,6 +289,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_InfoGet()
      * - @ref R_GTM_InfoGet()
+     * - @ref R_MTU3_InfoGet()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      * @param[out]  p_info     Collection of information for this timer.
@@ -278,6 +300,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_StatusGet()
      * - @ref R_GTM_StatusGet()
+     * - @ref R_MTU3_StatusGet()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      * @param[out]  p_status   Current status of this timer.
@@ -288,6 +311,7 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_CallbackSet()
      * - @ref R_GTM_CallbackSet()
+     * - @ref R_MTU3_CallbackSet()
      *
      * @param[in]   p_ctrl                   Control block set in @ref timer_api_t::open call for this timer.
      * @param[in]   p_callback               Callback function to register
@@ -302,19 +326,11 @@ typedef struct st_timer_api
      * @par Implemented as
      * - @ref R_GPT_Close()
      * - @ref R_GTM_Close()
+     * - @ref R_MTU3_Close()
      *
      * @param[in]   p_ctrl     Control block set in @ref timer_api_t::open call for this timer.
      */
     fsp_err_t (* close)(timer_ctrl_t * const p_ctrl);
-
-    /* DEPRECATED Get version and store it in provided pointer p_version.
-     * @par Implemented as
-     * - @ref R_GPT_VersionGet()
-     * - @ref R_GTM_VersionGet()
-     *
-     * @param[out]  p_version  Code and API version used.
-     */
-    fsp_err_t (* versionGet)(fsp_version_t * const p_version);
 } timer_api_t;
 
 /** This structure encompasses everything that is needed to use an instance of this interface. */

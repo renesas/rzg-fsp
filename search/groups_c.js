@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['uart_20interface',['UART Interface',['../group___u_a_r_t___a_p_i.html',1,'']]]
+  ['timer_20interface',['Timer Interface',['../group___t_i_m_e_r___a_p_i.html',1,'']]],
+  ['transfer_20interface',['Transfer Interface',['../group___t_r_a_n_s_f_e_r___a_p_i.html',1,'']]]
 ];

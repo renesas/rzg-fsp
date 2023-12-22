@@ -1,6 +1,6 @@
 var NAVTREE =
 [
-  [ "RZ/G Flexible Software Package Documentation", "index.html", [
+  [ "RZG Flexible Software Package Documentation", "index.html", [
     [ "Introduction", "index.html", [
       [ "Overview", "index.html#introduction-overview", null ],
       [ "Using this Manual", "index.html#how-to-read", null ],
@@ -14,46 +14,15 @@ var NAVTREE =
         [ "e2 studio IDE", "index.html#e2-studio-ide", null ]
       ] ]
     ] ],
-    [ "Starting Development", "_s_t_a_r_t__d_e_v.html", null ],
+    [ "Starting Development", "_s_t_a_r_t__d_e_v.html", [
+      [ "Starting Development Introduction", "_s_t_a_r_t__d_e_v.html#starting-development-introduction", null ]
+    ] ],
     [ "FSP Architecture", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html", [
       [ "FSP Architecture Overview", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#renesas-ra-software-package-fsp-architecture", [
         [ "C99 Use", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#c99-use", null ],
         [ "Doxygen", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#doxygen", null ],
         [ "Weak Symbols", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#weak-symbols", null ],
-        [ "Memory Allocation", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#memory-allocation", null ],
-        [ "FSP Terms", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-terms", null ]
-      ] ],
-      [ "FSP Modules", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-modules", null ],
-      [ "FSP Stacks", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-stacks", null ],
-      [ "FSP Interfaces", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-interfaces", [
-        [ "FSP Interface Enumerations", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-interface-enumerations", null ],
-        [ "FSP Interface Callback Functions", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-interface-callback-functions", null ],
-        [ "FSP Interface Data Structures", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-internface-data-structures", [
-          [ "FSP Interface Configuration Structure", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-interface-configuration-structure", null ],
-          [ "FSP Interface API Structure", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-interface-api-structure", null ],
-          [ "FSP Interface Instance Structure", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-instance-structure", null ]
-        ] ]
-      ] ],
-      [ "FSP Instances", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-instances", [
-        [ "FSP Instance Control Structure", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#control-structure", null ],
-        [ "FSP Interface Extensions", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-interface-extensions", [
-          [ "FSP Extended Configuration Structure", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-extended-configuration-structure", null ]
-        ] ],
-        [ "FSP Instance API", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-instance-api", null ]
-      ] ],
-      [ "FSP API Standards", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-api-standards", [
-        [ "FSP Function Names", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-function-names", null ],
-        [ "Use of const in API parameters", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#use-of-const-in-api-parameters", null ],
-        [ "FSP Version Information", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-version-information", null ]
-      ] ],
-      [ "FSP Build Time Configurations", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-build-time-configurations", null ],
-      [ "FSP File Structure", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-file-structure", null ],
-      [ "FSP Architecture in Practice", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-architecture-in-practice", [
-        [ "FSP Connecting Layers", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#fsp-connecting-layers", null ],
-        [ "Using FSP Modules in an Application", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#using-fsp-modules-in-an-application", [
-          [ "Create a Module Instance in the RZ Configuration Editor", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#create-a-module-instance", null ],
-          [ "Use the Instance API in the Application", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#use-the-instance-api", null ]
-        ] ]
+        [ "Memory Allocation", "_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html#memory-allocation", null ]
       ] ]
     ] ],
     [ "API Reference", "modules.html", "modules" ],
@@ -64,14 +33,16 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "_c_o_p_y_r_i_g_h_t.html",
-"group___b_s_p___i_o.html#ga33a147902fb258f531c0bae40166f46eae6713d42094e3ab520aabae92ebd40bc",
-"group___e_x_t_e_r_n_a_l___i_r_q___a_p_i.html#ga2d1960d763da14da209e16fbb972d57c",
-"group___i_o_p_o_r_t.html#ga3a0a7f66458384069f25931ecb83840ea2a58348e464d6088768d03d709d8a26c",
-"group___i_o_p_o_r_t___a_p_i.html#ggac617eebcb7c2c1e45fa8e04fc473e574ac882c17c38a2a20dfd0b5e1dd3eaeaf4",
-"group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#ggadfb1288da0fcc7ae1dc88c58601374f8a39f6c51c69fd754c9a16551bbd8a7b59",
-"group___r_m___h_s300_x___a_p_i.html#a7e4a14435b06b381e41e2838af87a38c",
-"group___s_c_i_f___u_a_r_t.html#a04920b030d567052f3b4efb1f85753e9",
-"group___t_r_a_n_s_f_e_r___a_p_i.html#ggadce62e6c2407d6ffd5a94636736f7c51a56a87e1587844119831414f3d5e6d761"
+"group___a_d_c___c.html#gga7491e0c2eab4266fd44d7f92a3c69324aad2f3ddd5eb3347f71232e5bb3b561d1",
+"group___b_s_p___i_o.html#ga96797df60510eb9bc4a73613de51fae5",
+"group___c_a_n___a_p_i.html#structcan__cfg__t",
+"group___g_p_t.html#gac737ceea25e4989a9afbf47969a71ba3",
+"group___i_o_p_o_r_t.html#gaebbb969fda93422aaf1878d6f4ff8fe8a79024706312ec731e9bf51d957ebbe71",
+"group___m_t_u3.html#ga000c28bcf923d3ccd0642c3c5dd9a794",
+"group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#ggadfb1288da0fcc7ae1dc88c58601374f8a504225c32f7ce922fe8bd6eb3b71cb5a",
+"group___s_c_i_f___u_a_r_t.html#aa990e9d3a5b69c41397f92a86a30174d",
+"group___s_p_i___f_l_a_s_h___a_p_i.html#ggaa1e03cbf0d565f4ae7ad2e41d85802feaccd9eab44effb89164d68dc55c73e10f",
+"group___u_a_r_t___a_p_i.html#gga6da57a73bbdbf830b845d4116f8341d7a44b3bfbe90aebe2b23227f5c011f41cc"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

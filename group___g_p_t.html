@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: General PWM Timer (r_gpt)</title>
+<title>RZG Flexible Software Package Documentation: General PWM Timer (r_gpt)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('group___g_p_t.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('group___g_p_t.html','');});
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a> &#124;
@@ -129,17 +197,21 @@ Functions</h2></td></tr>
 <tr class="separator:gae204e5d6c9305923e98724005dcdf03d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga311c91c55f20338f7082fa4369e7c80f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga311c91c55f20338f7082fa4369e7c80f">R_GPT_AdcTriggerSet</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_ctrl, <a class="el" href="group___g_p_t.html#ga2a838fffcbafd97778bbe3ffbfbf54b1">gpt_adc_compare_match_t</a> which_compare_match, uint32_t compare_match_value)</td></tr>
 <tr class="separator:ga311c91c55f20338f7082fa4369e7c80f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaff2d30ece9bd30b5a9cc2117623834c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#gaff2d30ece9bd30b5a9cc2117623834c6">R_GPT_PwmOutputDelaySet</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_ctrl, <a class="el" href="group___g_p_t.html#ga6a1389fe5c3bef2301d294b88263628e">gpt_pwm_output_delay_edge_t</a> edge, <a class="el" href="group___g_p_t.html#ga749be81f99469c5607a684976d9ae374">gpt_pwm_output_delay_setting_t</a> delay_setting, uint32_t const pin)</td></tr>
+<tr class="separator:gaff2d30ece9bd30b5a9cc2117623834c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2a09de185d3b7f1c301b33330931bac4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga2a09de185d3b7f1c301b33330931bac4">R_GPT_CallbackSet</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___t_i_m_e_r___a_p_i.html#structtimer__callback__args__t">timer_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___t_i_m_e_r___a_p_i.html#structtimer__callback__args__t">timer_callback_args_t</a> *const p_callback_memory)</td></tr>
 <tr class="separator:ga2a09de185d3b7f1c301b33330931bac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga2fc5d6a737a00948802e2bb77fbe8d8c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga2fc5d6a737a00948802e2bb77fbe8d8c">R_GPT_Close</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_ctrl)</td></tr>
 <tr class="separator:ga2fc5d6a737a00948802e2bb77fbe8d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gada982ef1873ca00147f9692b42aba8f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#gada982ef1873ca00147f9692b42aba8f0">R_GPT_PwmOutputDelayInitialize</a> ()</td></tr>
+<tr class="separator:gada982ef1873ca00147f9692b42aba8f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Driver for the GPT peripheral on RZ MPUs. This module implements the <a class="el" href="group___t_i_m_e_r___a_p_i.html">Timer Interface</a>. </p>
 <h1><a class="anchor" id="r-gpt-overview"></a>
 Overview</h1>
 <p>The GPT module can be used to count events, measure external input signals, generate a periodic interrupt, or output a periodic or PWM signal to a GTIOC pin.</p>
-<p>This module supports the GPT peripherals GPT32E are 32-bit timers. The 32-bit timers are all treated the same in this module from the API perspective.</p>
+<p>This module supports the GPT peripherals are 32-bit timers. The 32-bit timers are all treated the same in this module from the API perspective.</p>
 <h2><a class="anchor" id="r-gpt-features"></a>
 Features</h2>
 <p>The GPT module has the following features:</p><ul>
@@ -162,19 +234,20 @@ Features</h2>
 <li>Supports setting the counter value while the timer is stopped.</li>
 <li>Supports enabling and disabling output pins.</li>
 <li>Supports skipping up to seven overflow/underflow (crest/trough) interrupts at a time</li>
+<li>Supports phase count function.</li>
 </ul>
 <h2><a class="anchor" id="r-gpt-selecting-a-timer"></a>
 Selecting a Timer</h2>
-<p>RZ MPUs have two timer peripherals: the General PWM Timer (GPT) and the General Timer (GTM). When selecting between them, consider these factors:</p>
+<p>RZ MPUs have three timer peripherals: the General PWM Timer (GPT), the General Timer (GTM) and the Multi-Function Timer Pulse Unit 3 (MTU3). When selecting between them, consider these factors:</p>
 <table class="doxtable">
 <tr>
-<th></th><th>GPT </th><th>GTM  </th></tr>
+<th></th><th>GPT </th><th>GTM </th><th>MTU3  </th></tr>
 <tr>
-<td>Available Channels</td><td>The number of GPT channels is device specific. All currently supported MPUs have at least 6 GPT channels.</td><td>All MPUs have 3 GTM channels. </td></tr>
+<td>Available Channels</td><td>It is available all GPT channels supported on each device.</td><td>It is available the GTM channels supported on each device.</td><td>It is available all MTU3 channels supported on each device. </td></tr>
 <tr>
-<td>Timer Resolution</td><td>All MPUs have 32-bit GPT timer.</td><td>The GTM timers are 32-bit timers. </td></tr>
+<td>Timer Resolution</td><td>All MPUs have 32-bit GPT timer.</td><td>The GTM timers are 32-bit timers.</td><td>All MPUs support 16-bit and 32-bit MTU3 timer. </td></tr>
 <tr>
-<td>Clock Source</td><td>The GPT runs off P0 clock with a configurable divider up to 1024.</td><td>The GTM runs off P0 clock. </td></tr>
+<td>Clock Source</td><td>The GPT runs off P0 clock with a configurable divider up to 1024.</td><td>The GTM runs off P0 clock.</td><td>The MTU3 runs off P0 clock with a configurable divider up to 1024. </td></tr>
 </table>
 <h1><a class="anchor" id="r-gpt-configuration"></a>
 Configuration</h1>
@@ -202,7 +275,7 @@ Enabled</li>
 <li>
 Enabled with Extra Features</li>
 </ul>
-</td><td>Disabled </td><td>If selected code for outputting a waveform to a pin is included in the build. </td></tr>
+</td><td>Disabled </td><td>Enables or disables support for outputting PWM waveforms on GTIOCx pins. The "Enabled with Extra Features" option enables support for Triangle wave modes and also enables the features located in the "Extra Features" section of each module instance. </td></tr>
 <tr>
 <td>Write Protect Enable</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -211,16 +284,18 @@ Enabled</li>
 Disabled</li>
 </ul>
 </td><td>Disabled </td><td>If selected write protection is applied to all GPT channels. </td></tr>
+<tr>
+<td>Clock Source</td><td>MCU Specific Options</td><td></td><td>The GPT core clock. </td></tr>
 </table>
- <h2>Configurations for Driver &gt; Timers &gt; Timer Driver on r_gpt</h2>
-This module can be added to the Stacks tab via New Stack &gt; Driver &gt; Timers &gt; Timer Driver on r_gpt.<br />
+ <h2>Configurations for Timers &gt; Timer, General PWM (r_gpt)</h2>
+This module can be added to the Stacks tab via New Stack &gt; Timers &gt; Timer, General PWM (r_gpt).<br />
 </p><table class="doxtable">
 <tr>
 <th>Configuration</th><th>Options</th><th>Default</th><th>Description </th></tr>
 <tr>
 <td>General &gt; Name</td><td>Name must be a valid C symbol</td><td>g_timer0 </td><td>Module name. </td></tr>
 <tr>
-<td>General &gt; Channel</td><td>Channel number must exist on this MPU</td><td>0 </td><td>Specify the hardware channel. </td></tr>
+<td>General &gt; Channel</td><td>Channel number must be a positive integer</td><td>0 </td><td>Specify the hardware channel. </td></tr>
 <tr>
 <td>General &gt; Mode</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -230,9 +305,13 @@ One-Shot</li>
 <li>
 PWM</li>
 <li>
+One-Shot Pulse</li>
+<li>
 Triangle-Wave Symmetric PWM</li>
 <li>
 Triangle-Wave Asymmetric PWM</li>
+<li>
+Triangle-Wave Asymmetric PWM (Mode 3)</li>
 </ul>
 </td><td>Periodic </td><td>Mode selection.<br />
 Periodic: Generates periodic interrupts or square waves.<br />
@@ -241,9 +320,9 @@ PWM: Generates basic PWM waveforms.<br />
 Triangle-Wave Symmetric PWM: Generates symmetric PWM waveforms with duty cycle determined by compare match set during a crest interrupt and updated at the next trough.<br />
 Triangle-Wave Asymmetric PWM: Generates asymmetric PWM waveforms with duty cycle determined by compare match set during a crest/trough interrupt and updated at the next trough/crest. </td></tr>
 <tr>
-<td>General &gt; Buffer Mode</td><td>Single Buffer</td><td>Single Buffer </td><td>This device only supports Single Buffer Mode. </td></tr>
-<tr>
-<td>General &gt; Period</td><td>Value must be a non-negative integer less than or equal to 0x40000000000</td><td>1 </td><td>Specify the timer period in units selected below. Setting the period to 0x100000000 raw counts results in the maximum period. Set the period to 0x100000000 raw counts for a free running timer or an input capture configuration. The period can be set up to 0x40000000000, which will use a divider of 1024 with the maximum period. </td></tr>
+<td>General &gt; Period</td><td>Value must be a non-negative integer less than or equal to 0x40000000000</td><td>1 </td><td>Specify the timer period in units selected below. Set the period to 0x100000000 (32-bit) or 0x10000 (16-bit) raw counts for a free running timer or an input capture configuration. The period can be set up to 0x40000000000 (32-bit) or 0x4000000 (16-bit) which will use a divider of 1024 with the maximum period.<br />
+<br />
+If the requested period cannot be achieved, the settings with the largest possible period that is less than or equal to the requested period are used. The theoretical calculated period is printed in a comment in the generated <a class="el" href="group___t_i_m_e_r___a_p_i.html#structtimer__cfg__t">timer_cfg_t</a> structure. </td></tr>
 <tr>
 <td>General &gt; Period Unit</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -262,6 +341,94 @@ Hertz</li>
 Kilohertz</li>
 </ul>
 </td><td>Milliseconds </td><td>Unit of the period specified above </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOA &gt; Initial Output Level</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Pin Level Low</li>
+<li>
+Pin Level High</li>
+</ul>
+</td><td>Pin Level Low </td><td>Set the initial output level of GTIOCxA. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOA &gt; Cycle End Output Level</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Pin Level Retain</li>
+<li>
+Pin Level Low</li>
+<li>
+Pin Level High</li>
+<li>
+Pin Level Toggle</li>
+</ul>
+</td><td>Pin Level Retain </td><td>Set the output level of GTIOCxA at cycle end. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOA &gt; Compare Match Output Level</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Pin Level Retain</li>
+<li>
+Pin Level Low</li>
+<li>
+Pin Level High</li>
+<li>
+Pin Level Toggle</li>
+</ul>
+</td><td>Pin Level Retain </td><td>Set the output level of GTIOCxA at compare match. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOA &gt; Retain Output Level at Count Stop</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Disabled</li>
+<li>
+Enabled</li>
+</ul>
+</td><td>Disabled </td><td>Retain the current GTIOxA output level when counting is stopped. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOB &gt; Initial Output Level</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Pin Level Low</li>
+<li>
+Pin Level High</li>
+</ul>
+</td><td>Pin Level Low </td><td>Set the initial output level of GTIOCxB. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOB &gt; Cycle End Output Level</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Pin Level Retain</li>
+<li>
+Pin Level Low</li>
+<li>
+Pin Level High</li>
+<li>
+Pin Level Toggle</li>
+</ul>
+</td><td>Pin Level Retain </td><td>Set the output level of GTIOCxB at cycle end. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOB &gt; Compare Match Output Level</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Pin Level Retain</li>
+<li>
+Pin Level Low</li>
+<li>
+Pin Level High</li>
+<li>
+Pin Level Toggle</li>
+</ul>
+</td><td>Pin Level Retain </td><td>Set the output level of GTIOCxB at compare match. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; GTIOB &gt; Retain Output Level at Count Stop</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Disabled</li>
+<li>
+Enabled</li>
+</ul>
+</td><td>Disabled </td><td>Retain the current GTIOxB output level when counting is stopped. </td></tr>
+<tr>
+<td>Output &gt; Custom Waveform &gt; Custom Waveform Enable</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Disabled</li>
+<li>
+Enabled</li>
+</ul>
+</td><td>Disabled </td><td>Enable custom waveform configuration. </td></tr>
 <tr>
 <td>Output &gt; Duty Cycle Percent (only applicable in PWM mode)</td><td>Value must be between 0 and 100</td><td>50 </td><td>Specify the timer duty cycle percent. Only used in PWM mode. </td></tr>
 <tr>
@@ -297,35 +464,35 @@ Pin Level High</li>
 </ul>
 </td><td>Pin Level Low </td><td>Select the behavior of the output pin when the timer is stopped. </td></tr>
 <tr>
-<td>Input &gt; Count Up Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will increment the counter. If any count up source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
+<td>Input &gt; Count Up Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will increment the counter. If any count up source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
 <tr>
-<td>Input &gt; Count Down Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will decrement the counter. If any count down source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
+<td>Input &gt; Count Down Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will decrement the counter. If any count down source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
 <tr>
-<td>Input &gt; Start Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will start the timer. <br />
+<td>Input &gt; Start Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will start the timer. <br />
 <br />
  For pulse width measurement, set the Start Source and the Clear Source to the trigger edge (the edge to start the measurement), and set the Stop Source and Capture Source (either A or B) to the opposite edge (the edge to stop the measurement). <br />
 <br />
  For pulse period measurement, set the Start Source, the Clear Source, and the Capture Source (either A or B) to the trigger edge (the edge to start the measurement). </td></tr>
 <tr>
-<td>Input &gt; Stop Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will stop the timer. </td></tr>
+<td>Input &gt; Stop Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will stop the timer. </td></tr>
 <tr>
-<td>Input &gt; Clear Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will clear the timer. </td></tr>
+<td>Input &gt; Clear Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will clear the timer. </td></tr>
 <tr>
-<td>Input &gt; Capture A Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will trigger a capture A event. </td></tr>
+<td>Input &gt; Capture A Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will trigger a capture A event. </td></tr>
 <tr>
-<td>Input &gt; Capture B Source</td><td>MPU Specific Options</td><td></td><td>Select external source that will trigger a capture B event. </td></tr>
+<td>Input &gt; Capture B Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will trigger a capture B event. </td></tr>
 <tr>
 <td>Input &gt; Noise Filter A Sampling Clock Select</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
 No Filter</li>
 <li>
-Filter P0CLK / 1</li>
+Filter CLK / 1</li>
 <li>
-Filter P0CLK / 4</li>
+Filter CLK / 4</li>
 <li>
-Filter P0CLK / 16</li>
+Filter CLK / 16</li>
 <li>
-Filter P0CLK / 64</li>
+Filter CLK / 64</li>
 </ul>
 </td><td>No Filter </td><td>Select the input filter for GTIOCA. </td></tr>
 <tr>
@@ -333,25 +500,33 @@ Filter P0CLK / 64</li>
 <li>
 No Filter</li>
 <li>
-Filter P0CLK / 1</li>
+Filter CLK / 1</li>
 <li>
-Filter P0CLK / 4</li>
+Filter CLK / 4</li>
 <li>
-Filter P0CLK / 16</li>
+Filter CLK / 16</li>
 <li>
-Filter P0CLK / 64</li>
+Filter CLK / 64</li>
 </ul>
 </td><td>No Filter </td><td>Select the input filter for GTIOCB. </td></tr>
 <tr>
 <td>Interrupts &gt; Callback</td><td>Name must be a valid C symbol</td><td>NULL </td><td>A user callback function can be specified here. If this callback function is provided, it will be called from the interrupt service routine (ISR) each time the timer period elapses </td></tr>
 <tr>
+<td>Interrupts &gt; Overflow/Crest Interrupt Enable</td><td>MCU Specific Options</td><td></td><td>Enable the Overflow/Crest Interrupt. </td></tr>
+<tr>
 <td>Interrupts &gt; Overflow/Crest Interrupt Priority</td><td>Value must be an integer between 0 and 255</td><td>4 </td><td>Select the overflow interrupt priority. This is the crest interrupt for triangle-wave PWM. </td></tr>
+<tr>
+<td>Interrupts &gt; Capture A Interrupt Enable</td><td>MCU Specific Options</td><td></td><td>Enable the Capture A Interrupt. </td></tr>
 <tr>
 <td>Interrupts &gt; Capture A Interrupt Priority</td><td>Value must be an integer between 0 and 255</td><td>4 </td><td>Select the interrupt priority for capture A. </td></tr>
 <tr>
+<td>Interrupts &gt; Capture B Interrupt Enable</td><td>MCU Specific Options</td><td></td><td>Enable the Capture B Interrupt. </td></tr>
+<tr>
 <td>Interrupts &gt; Capture B Interrupt Priority</td><td>Value must be an integer between 0 and 255</td><td>4 </td><td>Select the interrupt priority for capture B. </td></tr>
 <tr>
-<td>Interrupts &gt; Trough Interrupt Priority</td><td>Value must be an integer between 0 and 255</td><td>4 </td><td>Select the interrupt priority for the trough interrupt (triangle-wave PWM only). </td></tr>
+<td>Interrupts &gt; Underflow/Trough Interrupt Enable</td><td>MCU Specific Options</td><td></td><td>Enable the Underflow/Trough Interrupt. </td></tr>
+<tr>
+<td>Interrupts &gt; Underflow/Trough Interrupt Priority</td><td>Value must be an integer between 0 and 255</td><td>4 </td><td>Select the interrupt priority for the trough interrupt (triangle-wave PWM only). </td></tr>
 <tr>
 <td>Extra Features &gt; Output Disable &gt; POEG Link</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -474,7 +649,7 @@ Disabled</li>
 </p>
 <h2><a class="anchor" id="r-gpt-clock-configuration"></a>
 Clock Configuration</h2>
-<p>The GPT clock is based on the P0 clock frequency. In RZ/G FSP, the clock frequency is depending on the setting of main core(Arm Cortex-A55). You must set the clock frequency which is same as the setting of main core using the <b>Clocks</b> tab of the Configuration editor.</p>
+<p>The GPT clock is based on the peripheral clock frequency. The peripheral clock frequency can be got from the information set on <b>Clocks</b> tab of the Configuration editor.</p>
 <h2><a class="anchor" id="r-gpt-pin-configuration"></a>
 Pin Configuration</h2>
 <p>This module can use GTETRGA, GTETRGB, GTETRGC, GTETRGD, GTIOCA and GTIOCB pins as count sources.</p>
@@ -482,7 +657,7 @@ Pin Configuration</h2>
 <p>This module can use GTIOCA and GTIOCB as input pins to measure input signals.</p>
 <h1><a class="anchor" id="r-gpt-usage_notes"></a>
 Usage Notes</h1>
-<h2>Maximum Period for GPT32E</h2>
+<h2>Maximum Period</h2>
 <p>The Configuration editor will automatically calculate the period count value and source clock divider based on the selected period time, units and clock speed.</p>
 <p>When the selected period unit is "Raw counts", the maximum period setting is 0x40000000000 on a 32-bit timer. This will configure the timer with the maximum period and a count clock divisor of 1024.</p>
 <dl class="section note"><dt>Note</dt><dd>When manually changing the timer period counts the maximum value for a 32-bit GPT is 0x100000000. This number overflows the 32-bit value for <a class="el" href="group___t_i_m_e_r___a_p_i.html#aa892b6997a1972de6a6ebd48e0fb9233" title="Period in raw timer counts. ">timer_cfg_t::period_counts</a>. To configure the timer for the maximum period, set <a class="el" href="group___t_i_m_e_r___a_p_i.html#aa892b6997a1972de6a6ebd48e0fb9233" title="Period in raw timer counts. ">timer_cfg_t::period_counts</a> to 0.</dd></dl>
@@ -491,7 +666,7 @@ Usage Notes</h1>
 <h2>One-Shot Mode</h2>
 <p>The GPT timer does not support one-shot mode natively. One-shot mode is achieved by stopping the timer in the interrupt service routine before the callback is called. If the interrupt is not serviced before the timer period expires again, the timer generates more than one event. The callback is only called once in this case.</p>
 <h3>One-Shot Mode Output</h3>
-<p>The output waveform in one-shot mode is one P0 clock cycle less than the configured period. The configured period must be at least 2 counts to generate an output pulse.</p>
+<p>The output waveform in one-shot mode is one peripheral clock cycle less than the configured period. The configured period must be at least 2 counts to generate an output pulse.</p>
 <p>Examples of one-shot signals that can be generated by this module are shown below:</p>
 <div class="image">
 <object type="image/svg+xml" data="r_gpt_one_shot_output.svg">r_gpt_one_shot_output.svg</object>
@@ -538,17 +713,21 @@ Examples</h1>
 <p>This is an example of a timer callback.</p>
 <div class="fragment"><div class="line"></div><div class="line"><span class="comment">/* Example callback called when timer expires. */</span></div><div class="line"><span class="keywordtype">void</span> timer_callback (<a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__callback__args__t">timer_callback_args_t</a> * p_args)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> (<a class="code" href="group___t_i_m_e_r___a_p_i.html#ggac3bee51f7c9078f794c5ac19522f91ebae310bef0d640f06765c01b4b91a5b84c">TIMER_EVENT_CYCLE_END</a> == p_args-&gt;<a class="code" href="group___t_i_m_e_r___a_p_i.html#a61b9aabfcafc5e362dce56af7ea36bcf">event</a>)</div><div class="line">    {</div><div class="line">        <span class="comment">/* Add application code to be called periodically here. */</span></div><div class="line">    }</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>GPT Free Running Counter Example</h2>
 <p>To use the GPT as a free running counter, select periodic mode and set the the Period to 0xFFFFFFFF for a 32-bit timer.</p>
-<div class="fragment"><div class="line"></div><div class="line"><span class="keywordtype">void</span> gpt_counter_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* (Optional) If event count mode is used to count edges on a GTETRG pin, POEG must be started to use GTETRG. */</span></div><div class="line">    R_BSP_MODULE_START(<a class="code" href="group___b_s_p___m_c_u.html#gga7880302f0edd7cc4290c037809975950acfc9bb8ff007a7b82cf4fd845dfce053">FSP_IP_POEG</a>, 0U);</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer4_ctrl, &amp;g_timer4_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* (Optional) Stop the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga1e6af74d7faaf735f5847a34121eff71">R_GPT_Stop</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Read the current counter value. Counter value is in status.counter. */</span></div><div class="line">    <a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__status__t">timer_status_t</a> status;</div><div class="line">    (void) <a class="code" href="group___g_p_t.html#gaa6234faf45320a83382d7ea1923a2c49">R_GPT_StatusGet</a>(&amp;g_timer4_ctrl, &amp;status);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>GPT Input Capture Example</h2>
+<div class="fragment"><div class="line"></div><div class="line"><span class="keywordtype">void</span> gpt_counter_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* (Optional) If event count mode is used to count edges on a GTETRG pin, POEG must be started to use GTETRG. */</span></div><div class="line">    <a class="code" href="group___b_s_p___m_c_u.html#ga6c36d1d91a0e4e4a8373b2075f682145">R_BSP_MODULE_START</a>(<a class="code" href="group___b_s_p___m_c_u.html#ga7880302f0edd7cc4290c037809975950acfc9bb8ff007a7b82cf4fd845dfce053">FSP_IP_POEG</a>, 0U);</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer4_ctrl, &amp;g_timer4_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* (Optional) Stop the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga1e6af74d7faaf735f5847a34121eff71">R_GPT_Stop</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Read the current counter value. Counter value is in status.counter. */</span></div><div class="line">    <a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__status__t">timer_status_t</a> status;</div><div class="line">    (void) <a class="code" href="group___g_p_t.html#gaa6234faf45320a83382d7ea1923a2c49">R_GPT_StatusGet</a>(&amp;g_timer4_ctrl, &amp;status);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>GPT Input Capture Example</h2>
 <p>This is an example of using the GPT to capture pulse width or pulse period measurements.</p>
 <div class="fragment"><div class="line"></div><div class="line"><span class="comment">/* Example callback called when a capture occurs. */</span></div><div class="line">uint64_t g_captured_time     = 0U;</div><div class="line">uint32_t g_capture_overflows = 0U;</div><div class="line"><span class="keywordtype">void</span> timer_capture_callback (<a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__callback__args__t">timer_callback_args_t</a> * p_args)</div><div class="line">{</div><div class="line">    <span class="keywordflow">if</span> ((<a class="code" href="group___t_i_m_e_r___a_p_i.html#ggac3bee51f7c9078f794c5ac19522f91eba4bc1252f63147f4a01f7b7ba88afac1d">TIMER_EVENT_CAPTURE_A</a> == p_args-&gt;<a class="code" href="group___t_i_m_e_r___a_p_i.html#a61b9aabfcafc5e362dce56af7ea36bcf">event</a>) || (<a class="code" href="group___t_i_m_e_r___a_p_i.html#ggac3bee51f7c9078f794c5ac19522f91ebab7b635fbf34ede5a3e2f55b5a60ac21b">TIMER_EVENT_CAPTURE_B</a> == p_args-&gt;<a class="code" href="group___t_i_m_e_r___a_p_i.html#a61b9aabfcafc5e362dce56af7ea36bcf">event</a>))</div><div class="line">    {</div><div class="line"></div><div class="line">        <span class="comment">/* (Optional) Get the current period if not known. */</span></div><div class="line">        <a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__info__t">timer_info_t</a> info;</div><div class="line">        (void) <a class="code" href="group___g_p_t.html#gaca62ac33de2c05918b0fc359aeaebd97">R_GPT_InfoGet</a>(&amp;g_timer4_ctrl, &amp;info);</div><div class="line">        uint64_t period = info.<a class="code" href="group___t_i_m_e_r___a_p_i.html#a08b897cfbf2d0cefafe8d3abb1afc747">period_counts</a>;</div><div class="line"></div><div class="line">        <span class="comment">/* The maximum period is one more than the maximum 32-bit number, but will be reflected as 0 in</span></div><div class="line"><span class="comment">         * timer_info_t::period_counts. */</span></div><div class="line">        <span class="keywordflow">if</span> (0U == period)</div><div class="line">        {</div><div class="line">            period = UINT32_MAX + 1U;</div><div class="line">        }</div><div class="line"></div><div class="line"></div><div class="line">        g_captured_time     = (period * g_capture_overflows) + p_args-&gt;<a class="code" href="group___t_i_m_e_r___a_p_i.html#a8abd12cdf1a993cf8054be6ba9d96a6f">capture</a>;</div><div class="line">        g_capture_overflows = 0U;</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keywordflow">if</span> (<a class="code" href="group___t_i_m_e_r___a_p_i.html#ggac3bee51f7c9078f794c5ac19522f91ebae310bef0d640f06765c01b4b91a5b84c">TIMER_EVENT_CYCLE_END</a> == p_args-&gt;<a class="code" href="group___t_i_m_e_r___a_p_i.html#a61b9aabfcafc5e362dce56af7ea36bcf">event</a>)</div><div class="line">    {</div><div class="line">        <span class="comment">/* An overflow occurred during capture. This must be accounted for at the application layer. */</span></div><div class="line">        g_capture_overflows++;</div><div class="line">    }</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> gpt_capture_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer4_ctrl, &amp;g_timer4_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Enable captures. Captured values arrive in the interrupt. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga6e14d15c781e316e640c280b4983be28">R_GPT_Enable</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* (Optional) Disable captures. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga338dd3c38477ee40c90c13f3a4c9ecfd">R_GPT_Disable</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>GPT Period Update Example</h2>
 <p>This an example of updating the period.</p>
 <div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define GPT_EXAMPLE_MSEC_PER_SEC           (1000)</span></div><div class="line"><span class="preprocessor">#define GPT_EXAMPLE_DESIRED_PERIOD_MSEC    (20)</span></div><div class="line"></div><div class="line"><span class="comment">/* This example shows how to calculate a new period value at runtime. */</span></div><div class="line"><span class="keywordtype">void</span> gpt_period_calculation_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer0_ctrl, &amp;g_timer0_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start</a>(&amp;g_timer0_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Get the source clock frequency (in Hz). There are 3 ways to do this in FSP:</span></div><div class="line"><span class="comment">     *  - Use the R_GPT_InfoGet function (it accounts for the divider).</span></div><div class="line"><span class="comment">     *  - Calculate the current P0 clock frequency using R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_P0CLK) and right shift</span></div><div class="line"><span class="comment">     *    by timer_cfg_t::source_div.</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * This example uses the 2nd option (R_FSP_SystemClockHzGet).</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    uint32_t pclkd_freq_hz = <a class="code" href="group___b_s_p___m_c_u.html#ga992632ae2e45c2f962855fe4bbe98a63">R_FSP_SystemClockHzGet</a>(FSP_PRIV_CLOCK_P0CLK) &gt;&gt; g_timer4_cfg.source_div;</div><div class="line"></div><div class="line">    <span class="comment">/* Calculate the desired period based on the current clock. Note that this calculation could overflow if the</span></div><div class="line"><span class="comment">     * desired period is larger than UINT32_MAX / pclkd_freq_hz. A cast to uint64_t is used to prevent this. */</span></div><div class="line">    uint32_t period_counts =</div><div class="line">        (uint32_t) (((uint64_t) pclkd_freq_hz * GPT_EXAMPLE_DESIRED_PERIOD_MSEC) / GPT_EXAMPLE_MSEC_PER_SEC);</div><div class="line"></div><div class="line">    <span class="comment">/* Set the calculated period. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#gafedbfd8bc3f534d06969588ff10a351b">R_GPT_PeriodSet</a>(&amp;g_timer0_ctrl, period_counts);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>GPT Duty Cycle Update Example</h2>
 <p>This an example of updating the duty cycle.</p>
-<div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define GPT_EXAMPLE_DESIRED_DUTY_CYCLE_PERCENT    (25)</span></div><div class="line"><span class="preprocessor">#define GPT_EXAMPLE_MAX_PERCENT                   (100)</span></div><div class="line"></div><div class="line"><span class="comment">/* This example shows how to calculate a new duty cycle value at runtime. */</span></div><div class="line"><span class="keywordtype">void</span> gpt_duty_cycle_calculation_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer4_ctrl, &amp;g_timer4_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Get the current period setting. */</span></div><div class="line">    <a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__info__t">timer_info_t</a> info;</div><div class="line">    (void) <a class="code" href="group___g_p_t.html#gaca62ac33de2c05918b0fc359aeaebd97">R_GPT_InfoGet</a>(&amp;g_timer4_ctrl, &amp;info);</div><div class="line">    uint32_t current_period_counts = info.<a class="code" href="group___t_i_m_e_r___a_p_i.html#a08b897cfbf2d0cefafe8d3abb1afc747">period_counts</a>;</div><div class="line"></div><div class="line">    <span class="comment">/* Calculate the desired duty cycle based on the current period. Note that if the period could be larger than</span></div><div class="line"><span class="comment">     * UINT32_MAX / 100, this calculation could overflow. A cast to uint64_t is used to prevent this. */</span></div><div class="line">    uint32_t duty_cycle_counts =</div><div class="line">        (uint32_t) (((uint64_t) current_period_counts * GPT_EXAMPLE_DESIRED_DUTY_CYCLE_PERCENT) /</div><div class="line">                    GPT_EXAMPLE_MAX_PERCENT);</div><div class="line"></div><div class="line">    <span class="comment">/* Set the calculated duty cycle. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a>(&amp;g_timer4_ctrl, duty_cycle_counts, <a class="code" href="group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60aebd74a7b9507fb082ec4cce60ebe9369">GPT_IO_PIN_GTIOCB</a>);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
+<div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define GPT_EXAMPLE_DESIRED_DUTY_CYCLE_PERCENT    (25)</span></div><div class="line"><span class="preprocessor">#define GPT_EXAMPLE_MAX_PERCENT                   (100)</span></div><div class="line"></div><div class="line"><span class="comment">/* This example shows how to calculate a new duty cycle value at runtime. */</span></div><div class="line"><span class="keywordtype">void</span> gpt_duty_cycle_calculation_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer4_ctrl, &amp;g_timer4_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start</a>(&amp;g_timer4_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Get the current period setting. */</span></div><div class="line">    <a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__info__t">timer_info_t</a> info;</div><div class="line">    (void) <a class="code" href="group___g_p_t.html#gaca62ac33de2c05918b0fc359aeaebd97">R_GPT_InfoGet</a>(&amp;g_timer4_ctrl, &amp;info);</div><div class="line">    uint32_t current_period_counts = info.<a class="code" href="group___t_i_m_e_r___a_p_i.html#a08b897cfbf2d0cefafe8d3abb1afc747">period_counts</a>;</div><div class="line"></div><div class="line">    <span class="comment">/* Calculate the desired duty cycle based on the current period. Note that if the period could be larger than</span></div><div class="line"><span class="comment">     * UINT32_MAX / 100, this calculation could overflow. A cast to uint64_t is used to prevent this. */</span></div><div class="line">    uint32_t duty_cycle_counts =</div><div class="line">        (uint32_t) (((uint64_t) current_period_counts * GPT_EXAMPLE_DESIRED_DUTY_CYCLE_PERCENT) /</div><div class="line">                    GPT_EXAMPLE_MAX_PERCENT);</div><div class="line"></div><div class="line">    <span class="comment">/* Set the calculated duty cycle. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a>(&amp;g_timer4_ctrl, duty_cycle_counts, <a class="code" href="group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60aebd74a7b9507fb082ec4cce60ebe9369">GPT_IO_PIN_GTIOCB</a>);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --><h2>GPT A/D Converter Start Request Example</h2>
+<p>This is an example of using the GPT to start the ADC at a configurable A/D converter compare match value.</p>
+<div class="fragment"><div class="line"></div><div class="line"><span class="comment">/* This example shows how to configure the GPT to generate an A/D start request at an A/D start request compare</span></div><div class="line"><span class="comment"> * match value. */</span></div><div class="line"><span class="keywordtype">void</span> gpt_adc_start_request_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = R_ADC_D_Open(&amp;g_adc0_ctrl, &amp;g_adc0_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Enable channels. */</span></div><div class="line">    err = R_ADC_D_ScanCfg(&amp;g_adc0_ctrl, &amp;g_adc0_channel_cfg);</div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">    (void) R_ADC_D_ScanStart(&amp;g_adc0_ctrl);</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the GPT module. Configure gpt_extended_pwm_cfg_t::adc_trigger to set when the A/D start request</span></div><div class="line"><span class="comment">     * is generated. Set gpt_extended_pwm_cfg_t::adc_a_compare_match to set the desired compare match value. */</span></div><div class="line">    err = <a class="code" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open</a>(&amp;g_timer3_ctrl, &amp;g_timer3_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. A/D converter start request events are generated each time the counter is equal to the</span></div><div class="line"><span class="comment">     * A/D start request compare match value. */</span></div><div class="line">    (void) <a class="code" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start</a>(&amp;g_timer3_ctrl);</div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structgpt__output__pin__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#structgpt__output__pin__t">gpt_output_pin_t</a></td></tr>
 <tr class="separator:structgpt__output__pin__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structgpt__gtior__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#structgpt__gtior__setting__t">gpt_gtior_setting_t</a></td></tr>
+<tr class="separator:structgpt__gtior__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structgpt__instance__ctrl__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#structgpt__instance__ctrl__t">gpt_instance_ctrl_t</a></td></tr>
 <tr class="separator:structgpt__instance__ctrl__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structgpt__extended__pwm__cfg__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#structgpt__extended__pwm__cfg__t">gpt_extended_pwm_cfg_t</a></td></tr>
@@ -560,6 +739,8 @@ Data Structures</h2></td></tr>
 Enumerations</h2></td></tr>
 <tr class="memitem:gaabd4a03d16b1b4254cc44c7779f44c60"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#gaabd4a03d16b1b4254cc44c7779f44c60">gpt_io_pin_t</a> </td></tr>
 <tr class="separator:gaabd4a03d16b1b4254cc44c7779f44c60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8abd050b841fe99c9b641a22c69501c5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga8abd050b841fe99c9b641a22c69501c5">gpt_buffer_force_push</a> </td></tr>
+<tr class="separator:ga8abd050b841fe99c9b641a22c69501c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga454c639e426428470ce78115af5d3648"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga454c639e426428470ce78115af5d3648">gpt_pin_level_t</a> </td></tr>
 <tr class="separator:ga454c639e426428470ce78115af5d3648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa1457c9c1f178fff4dd1558832db196a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#gaa1457c9c1f178fff4dd1558832db196a">gpt_source_t</a> </td></tr>
@@ -584,6 +765,10 @@ Enumerations</h2></td></tr>
 <tr class="separator:ga9928e374919fa53240edaca52412beaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga28d354e417a7a6666e0819387d8e7d8a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga28d354e417a7a6666e0819387d8e7d8a">gpt_buffer_mode_t</a> </td></tr>
 <tr class="separator:ga28d354e417a7a6666e0819387d8e7d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga749be81f99469c5607a684976d9ae374"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga749be81f99469c5607a684976d9ae374">gpt_pwm_output_delay_setting_t</a> </td></tr>
+<tr class="separator:ga749be81f99469c5607a684976d9ae374"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6a1389fe5c3bef2301d294b88263628e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga6a1389fe5c3bef2301d294b88263628e">gpt_pwm_output_delay_edge_t</a> </td></tr>
+<tr class="separator:ga6a1389fe5c3bef2301d294b88263628e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structgpt__output__pin__t" id="structgpt__output__pin__t"></a>
@@ -614,6 +799,21 @@ stop_level</td>
 Select a stop level from <a class="el" href="group___g_p_t.html#ga454c639e426428470ce78115af5d3648">gpt_pin_level_t</a>. </td></tr>
 </table>
 
+</div>
+</div>
+<a name="structgpt__gtior__setting__t" id="structgpt__gtior__setting__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structgpt__gtior__setting__t">&#9670;&nbsp;</a></span>gpt_gtior_setting_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct gpt_gtior_setting_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </p>
+</div>
 </div>
 </div>
 <a name="structgpt__instance__ctrl__t" id="structgpt__instance__ctrl__t"></a>
@@ -760,12 +960,6 @@ gtiocb</td>
 <td class="fielddoc">
 Configuration for GPT I/O pin B. </td></tr>
 <tr><td class="fieldtype">
-<a id="a92c97688b2a90cca95531955c102945b"></a>gpt_shortest_level_t</td>
-<td class="fieldname">
-shortest_pwm_signal</td>
-<td class="fielddoc">
-</td></tr>
-<tr><td class="fieldtype">
 <a id="a3b894424ab45e17d02938de9c211911a"></a><a class="el" href="group___g_p_t.html#gaa1457c9c1f178fff4dd1558832db196a">gpt_source_t</a></td>
 <td class="fieldname">
 start_source</td>
@@ -851,6 +1045,12 @@ Capture B interrupt. </td></tr>
 p_pwm_cfg</td>
 <td class="fielddoc">
 Advanced PWM features, optional. </td></tr>
+<tr><td class="fieldtype">
+<a id="ad8b8b467339a151f016017d175df2f9c"></a><a class="el" href="group___g_p_t.html#structgpt__gtior__setting__t">gpt_gtior_setting_t</a></td>
+<td class="fieldname">
+gtior_setting</td>
+<td class="fielddoc">
+Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </td></tr>
 </table>
 
 </div>
@@ -874,6 +1074,33 @@ Advanced PWM features, optional. </td></tr>
 <tr><td class="fieldname"><a id="ggaabd4a03d16b1b4254cc44c7779f44c60aebd74a7b9507fb082ec4cce60ebe9369"></a>GPT_IO_PIN_GTIOCB&#160;</td><td class="fielddoc"><p>GTIOCB. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggaabd4a03d16b1b4254cc44c7779f44c60a2b44d1e05050c34cc6e8d9ee4093294d"></a>GPT_IO_PIN_GTIOCA_AND_GTIOCB&#160;</td><td class="fielddoc"><p>GTIOCA and GTIOCB. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggaabd4a03d16b1b4254cc44c7779f44c60ac68b7e1ef5c48c55960faacd7eb538b9"></a>GPT_IO_PIN_TROUGH&#160;</td><td class="fielddoc"><p>Used in <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a> when Triangle-wave PWM Mode 3 is selected. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggaabd4a03d16b1b4254cc44c7779f44c60acb3ba96929217eb6bb1ec5b2f1ccf9d4"></a>GPT_IO_PIN_CREST&#160;</td><td class="fielddoc"><p>Used in <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a> when Triangle-wave PWM Mode 3 is selected. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggaabd4a03d16b1b4254cc44c7779f44c60ae3e479af00c84f4ccf6e7376b4b44c8d"></a>GPT_IO_PIN_ONE_SHOT_LEADING_EDGE&#160;</td><td class="fielddoc"><p>Used in <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a> to set GTCCRC and GTCCRE registers when One-Shot Pulse mode is selected. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggaabd4a03d16b1b4254cc44c7779f44c60a59f7576cde98e497d35b98a926732e52"></a>GPT_IO_PIN_ONE_SHOT_TRAILING_EDGE&#160;</td><td class="fielddoc"><p>Used in <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a> to set GTCCRD and GTCCRF registers when One-Shot Pulse mode is selected. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ga8abd050b841fe99c9b641a22c69501c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8abd050b841fe99c9b641a22c69501c5">&#9670;&nbsp;</a></span>gpt_buffer_force_push</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___g_p_t.html#ga8abd050b841fe99c9b641a22c69501c5">gpt_buffer_force_push</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Forced buffer push operation used in One-Sot Pulse mode with <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet()</a>. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga8abd050b841fe99c9b641a22c69501c5a23c94706bd1a34c9f1b9cfffea30f4cc"></a>GPT_BUFFER_FORCE_PUSH&#160;</td><td class="fielddoc"><p>Used in <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet</a> to force push the data from GTCCRn registers to temporary buffer A or B when One-Shot Pulse mode is selected. </p>
 </td></tr>
 </table>
 
@@ -966,13 +1193,13 @@ Advanced PWM features, optional. </td></tr>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5a9b2d993dbb736347b473101f14c1fde6"></a>GPT_CAPTURE_FILTER_NONE&#160;</td><td class="fielddoc"><p>None - no filtering. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5afbdc1a92e9b7d18e91ad7440144b022b"></a>GPT_CAPTURE_FILTER_P0CLK_DIV_1&#160;</td><td class="fielddoc"><p>P0CLK/1 - fast sampling. </p>
+<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5a01e1b277b55e4fafcb0c196099b51b5f"></a>GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_1&#160;</td><td class="fielddoc"><p>CLK/1 - fast sampling. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5aa30751bb9a5224fae95f55fd664c26e9"></a>GPT_CAPTURE_FILTER_P0CLK_DIV_4&#160;</td><td class="fielddoc"><p>P0CLK/4. </p>
+<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5aced01a5e1d1ad4aa3f9235dcc503d655"></a>GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_4&#160;</td><td class="fielddoc"><p>CLK/4. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5a89dfc5c48b1c33a2aec0382baa92d808"></a>GPT_CAPTURE_FILTER_P0CLK_DIV_16&#160;</td><td class="fielddoc"><p>P0CLK/16. </p>
+<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5a1be3c4269df18da7b54a4b884d792c59"></a>GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_16&#160;</td><td class="fielddoc"><p>CLK/16. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5ac7c1be27c3e25a2486b1368df7092e1d"></a>GPT_CAPTURE_FILTER_P0CLK_DIV_64&#160;</td><td class="fielddoc"><p>P0CLK/64 - slow sampling. </p>
+<tr><td class="fieldname"><a id="gga4781e2b42b2ef339318ea0a70b250cd5a70176680620465fca73aeda240eb441a"></a>GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_64&#160;</td><td class="fielddoc"><p>CLK/64 - slow sampling. </p>
 </td></tr>
 </table>
 
@@ -1205,6 +1432,110 @@ Advanced PWM features, optional. </td></tr>
 
 </div>
 </div>
+<a id="ga749be81f99469c5607a684976d9ae374"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga749be81f99469c5607a684976d9ae374">&#9670;&nbsp;</a></span>gpt_pwm_output_delay_setting_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___g_p_t.html#ga749be81f99469c5607a684976d9ae374">gpt_pwm_output_delay_setting_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Delay setting for the PWM Delay Generation Circuit (PDG). </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374ae167098278c50165bf61eec5987d4c53"></a>GPT_PWM_OUTPUT_DELAY_SETTING_0_32&#160;</td><td class="fielddoc"><p>Delay is not applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a61477e753d166ccb25b77eced2e6f325"></a>GPT_PWM_OUTPUT_DELAY_SETTING_1_32&#160;</td><td class="fielddoc"><p>Delay of 1 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a39fed861a0d36f04aa30f3f960e3d2d0"></a>GPT_PWM_OUTPUT_DELAY_SETTING_2_32&#160;</td><td class="fielddoc"><p>Delay of 2 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a1f1aee9567a12196581000383e8d107b"></a>GPT_PWM_OUTPUT_DELAY_SETTING_3_32&#160;</td><td class="fielddoc"><p>Delay of 3 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a8b235f3b68210961a821c11efa5bb205"></a>GPT_PWM_OUTPUT_DELAY_SETTING_4_32&#160;</td><td class="fielddoc"><p>Delay of 4 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374af0aae115f89d76e4f3f48a0d36cf361b"></a>GPT_PWM_OUTPUT_DELAY_SETTING_5_32&#160;</td><td class="fielddoc"><p>Delay of 5 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a5e6950d7178ff3af05f8f4932436b488"></a>GPT_PWM_OUTPUT_DELAY_SETTING_6_32&#160;</td><td class="fielddoc"><p>Delay of 6 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a6984fb835233689f0aaebc39c5f9c000"></a>GPT_PWM_OUTPUT_DELAY_SETTING_7_32&#160;</td><td class="fielddoc"><p>Delay of 7 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374acdb2fab565c1d8a20bdfb3822f326e81"></a>GPT_PWM_OUTPUT_DELAY_SETTING_8_32&#160;</td><td class="fielddoc"><p>Delay of 8 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a0287632773cfa466bfa3016d67f14da5"></a>GPT_PWM_OUTPUT_DELAY_SETTING_9_32&#160;</td><td class="fielddoc"><p>Delay of 9 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a196975439836e309f6244a8c0446f047"></a>GPT_PWM_OUTPUT_DELAY_SETTING_10_32&#160;</td><td class="fielddoc"><p>Delay of 10 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a0198b5305a0a6853fc433ecf75d44f7f"></a>GPT_PWM_OUTPUT_DELAY_SETTING_11_32&#160;</td><td class="fielddoc"><p>Delay of 11 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a1948c35883b0b199c8e6f89a64e53475"></a>GPT_PWM_OUTPUT_DELAY_SETTING_12_32&#160;</td><td class="fielddoc"><p>Delay of 12 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a44d17777c6bee08909a70b95f86dc991"></a>GPT_PWM_OUTPUT_DELAY_SETTING_13_32&#160;</td><td class="fielddoc"><p>Delay of 13 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a061a1822b878e73e25a3f5cc90ea0eea"></a>GPT_PWM_OUTPUT_DELAY_SETTING_14_32&#160;</td><td class="fielddoc"><p>Delay of 14 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a8d827fe46b88273f1a3ecaafe74a6d72"></a>GPT_PWM_OUTPUT_DELAY_SETTING_15_32&#160;</td><td class="fielddoc"><p>Delay of 15 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374ac0195c74dd5aa183fe0ff13f3d037a47"></a>GPT_PWM_OUTPUT_DELAY_SETTING_16_32&#160;</td><td class="fielddoc"><p>Delay of 16 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374abc73975b9e30401bbdbb7c5da506025b"></a>GPT_PWM_OUTPUT_DELAY_SETTING_17_32&#160;</td><td class="fielddoc"><p>Delay of 17 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a95c8ef43442706c12c2ff0d94e1fb4da"></a>GPT_PWM_OUTPUT_DELAY_SETTING_18_32&#160;</td><td class="fielddoc"><p>Delay of 18 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374ac1341d99df3034c6cebc7d6885fc46b8"></a>GPT_PWM_OUTPUT_DELAY_SETTING_19_32&#160;</td><td class="fielddoc"><p>Delay of 19 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374ad781616613593d77ed681403590659e4"></a>GPT_PWM_OUTPUT_DELAY_SETTING_20_32&#160;</td><td class="fielddoc"><p>Delay of 20 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a84dede23a60f4e4b02604d18a7e3c80a"></a>GPT_PWM_OUTPUT_DELAY_SETTING_21_32&#160;</td><td class="fielddoc"><p>Delay of 21 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374aa29b8aeb45e93b8086d68f3ce7d60681"></a>GPT_PWM_OUTPUT_DELAY_SETTING_22_32&#160;</td><td class="fielddoc"><p>Delay of 22 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374afa386802f529b7a1e6440335f29c0803"></a>GPT_PWM_OUTPUT_DELAY_SETTING_23_32&#160;</td><td class="fielddoc"><p>Delay of 23 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a15baac27b4f36979352681a5b5969517"></a>GPT_PWM_OUTPUT_DELAY_SETTING_24_32&#160;</td><td class="fielddoc"><p>Delay of 24 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374ab000f412ff95dd16ff74748a96a305f8"></a>GPT_PWM_OUTPUT_DELAY_SETTING_25_32&#160;</td><td class="fielddoc"><p>Delay of 25 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a03edb9eb3fdef9a37dbc4f44a077db5a"></a>GPT_PWM_OUTPUT_DELAY_SETTING_26_32&#160;</td><td class="fielddoc"><p>Delay of 26 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a046f632a922738bb125dd671e28fc7d8"></a>GPT_PWM_OUTPUT_DELAY_SETTING_27_32&#160;</td><td class="fielddoc"><p>Delay of 27 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374ac9942874a382d4e1f171bcd74db0ac62"></a>GPT_PWM_OUTPUT_DELAY_SETTING_28_32&#160;</td><td class="fielddoc"><p>Delay of 28 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a9a0fa3e6bcc2de24f85ef0b9a1b4d914"></a>GPT_PWM_OUTPUT_DELAY_SETTING_29_32&#160;</td><td class="fielddoc"><p>Delay of 29 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a1aeb241069f6fc33d5b9043bf2870596"></a>GPT_PWM_OUTPUT_DELAY_SETTING_30_32&#160;</td><td class="fielddoc"><p>Delay of 30 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374a8d0ff19f209e9c72f76c20b23a00c7a2"></a>GPT_PWM_OUTPUT_DELAY_SETTING_31_32&#160;</td><td class="fielddoc"><p>Delay of 31 / 32 GTCLK period applied. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga749be81f99469c5607a684976d9ae374af894b19d25eebc010ed5fc6ccea2cb29"></a>GPT_PWM_OUTPUT_DELAY_SETTING_BYPASS&#160;</td><td class="fielddoc"><p>Bypass the PWM Output Delay Circuit. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ga6a1389fe5c3bef2301d294b88263628e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6a1389fe5c3bef2301d294b88263628e">&#9670;&nbsp;</a></span>gpt_pwm_output_delay_edge_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___g_p_t.html#ga6a1389fe5c3bef2301d294b88263628e">gpt_pwm_output_delay_edge_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Select which PWM Output Delay setting to apply. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga6a1389fe5c3bef2301d294b88263628ea51901797e055f1ec3e4dbe96bff03086"></a>GPT_PWM_OUTPUT_DELAY_EDGE_RISING&#160;</td><td class="fielddoc"><p>Configure the PWM Output Delay setting for rising edge. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6a1389fe5c3bef2301d294b88263628eab5c109cf3de710e61c90c3be2d72d9b7"></a>GPT_PWM_OUTPUT_DELAY_EDGE_FALLING&#160;</td><td class="fielddoc"><p>Configure the PWM Output Delay setting for falling edge. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="ga97d0a9c1a8fb6b88d1c12756dd8ce2d2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">&#9670;&nbsp;</a></span>R_GPT_Open()</h2>
@@ -1240,7 +1571,7 @@ Advanced PWM features, optional. </td></tr>
     <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>A required input pointer is NULL or the source divider is invalid. </td></tr>
     <tr><td class="paramname">FSP_ERR_ALREADY_OPEN</td><td>Module is already open. </td></tr>
     <tr><td class="paramname">FSP_ERR_IRQ_BSP_DISABLED</td><td><a class="el" href="group___t_i_m_e_r___a_p_i.html#a9519afc7ea8aec3aaf1eb787b39cc97c" title="Select enumerated value from timer_mode_t. ">timer_cfg_t::mode</a> is <a class="el" href="group___t_i_m_e_r___a_p_i.html#gga6d4cd64aed5c0009ac26803efc9c13b2a140f07675d67258a7ca9a95a9a793e3a" title="Timer stops after period elapses. ">TIMER_MODE_ONE_SHOT</a> or <a class="el" href="group___t_i_m_e_r___a_p_i.html#a7d2f434f07723a53b504751e9e5ac540">timer_cfg_t::p_callback</a> is not NULL, but ISR is not enabled. ISR must be enabled to use one-shot mode or callback. </td></tr>
-    <tr><td class="paramname">FSP_ERR_INVALID_MODE</td><td>Triangle wave PWM is only supported if GPT_CFG_OUTPUT_SUPPORT_ENABLE is 2. </td></tr>
+    <tr><td class="paramname">FSP_ERR_INVALID_MODE</td><td>Triangle wave PWM is only supported if GPT_CFG_OUTPUT_SUPPORT_ENABLE is 2. Selected channel does not support external count sources. External and event count sources not are available in this mode. </td></tr>
     <tr><td class="paramname">FSP_ERR_IP_CHANNEL_NOT_PRESENT</td><td>The channel requested in the p_cfg parameter is not available on this device. </td></tr>
   </table>
   </dd>
@@ -1470,6 +1801,7 @@ Advanced PWM features, optional. </td></tr>
     <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>p_ctrl was NULL or the pin is not one of gpt_io_pin_t </td></tr>
     <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The instance is not opened. </td></tr>
     <tr><td class="paramname">FSP_ERR_INVALID_ARGUMENT</td><td>Duty cycle is larger than period. </td></tr>
+    <tr><td class="paramname">FSP_ERR_INVALID_MODE</td><td>GPT_IO_PIN_TROUGH, and GPT_IO_PIN_CREST settings are invalid in the this mode. </td></tr>
     <tr><td class="paramname">FSP_ERR_UNSUPPORTED</td><td>GPT_CFG_OUTPUT_SUPPORT_ENABLE is 0. </td></tr>
   </table>
   </dd>
@@ -1707,6 +2039,59 @@ Advanced PWM features, optional. </td></tr>
 
 </div>
 </div>
+<a id="gaff2d30ece9bd30b5a9cc2117623834c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaff2d30ece9bd30b5a9cc2117623834c6">&#9670;&nbsp;</a></span>R_GPT_PwmOutputDelaySet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> R_GPT_PwmOutputDelaySet </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const&#160;</td>
+          <td class="paramname"><em>p_ctrl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___g_p_t.html#ga6a1389fe5c3bef2301d294b88263628e">gpt_pwm_output_delay_edge_t</a>&#160;</td>
+          <td class="paramname"><em>edge</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___g_p_t.html#ga749be81f99469c5607a684976d9ae374">gpt_pwm_output_delay_setting_t</a>&#160;</td>
+          <td class="paramname"><em>delay_setting</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t const&#160;</td>
+          <td class="paramname"><em>pin</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Set the Output Delay setting for the PWM output pin.</p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FSP_SUCCESS</td><td>The output delay was set. </td></tr>
+    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>An input parameter was invalid. </td></tr>
+    <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The instance is not opened. </td></tr>
+    <tr><td class="paramname">FSP_ERR_INVALID_CHANNEL</td><td>The channel does not support this feature. </td></tr>
+    <tr><td class="paramname">FSP_ERR_NOT_INITIALIZED</td><td>The PWM Output Delay Circuit has not been initialized. </td></tr>
+    <tr><td class="paramname">FSP_ERR_INVALID_STATE</td><td>The PWM Output Delay setting cannot be updated in the current state. </td></tr>
+    <tr><td class="paramname">FSP_ERR_UNSUPPORTED</td><td>This feature is not supported on this MCU. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga2a09de185d3b7f1c301b33330931bac4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga2a09de185d3b7f1c301b33330931bac4">&#9670;&nbsp;</a></span>R_GPT_CallbackSet()</h2>
 
@@ -1784,13 +2169,40 @@ Advanced PWM features, optional. </td></tr>
 
 </div>
 </div>
+<a id="gada982ef1873ca00147f9692b42aba8f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gada982ef1873ca00147f9692b42aba8f0">&#9670;&nbsp;</a></span>R_GPT_PwmOutputDelayInitialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> R_GPT_PwmOutputDelayInitialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Initialize the PWM Delay Generation Circuit (PDG). This function must be called before calling <a class="el" href="group___g_p_t.html#gaff2d30ece9bd30b5a9cc2117623834c6">R_GPT_PwmOutputDelaySet</a>.</p>
+<dl class="section note"><dt>Note</dt><dd>This function will delay for 20 microseconds.</dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FSP_SUCCESS</td><td>Initialization sequence completed successfully. </td></tr>
+    <tr><td class="paramname">FSP_ERR_INVALID_STATE</td><td>The source clock frequnecy is out of the required range for the PDG. </td></tr>
+    <tr><td class="paramname">FSP_ERR_UNSUPPORTED</td><td>This feature is not supported. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.7-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

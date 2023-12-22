@@ -5,6 +5,11 @@ var group___s_c_i_f___u_a_r_t =
       [ "brr", "group___s_c_i_f___u_a_r_t.html#acc601128ecd5e04fcc306b249a2bb7bf", null ],
       [ "mddr", "group___s_c_i_f___u_a_r_t.html#acbf8ff1fb27039b0240beceeff67d048", null ]
     ] ],
+    [ "sci_uart_rs485_setting_t", "group___s_c_i_f___u_a_r_t.html#structsci__uart__rs485__setting__t", [
+      [ "enable", "group___s_c_i_f___u_a_r_t.html#a7ecf6bb47dcdafcd7e569695d0be405b", null ],
+      [ "polarity", "group___s_c_i_f___u_a_r_t.html#aafcbd1f2c02e2f81d81371bb9e6b895d", null ],
+      [ "de_control_pin", "group___s_c_i_f___u_a_r_t.html#a2e764fad5f11c412720a531a8e1b6815", null ]
+    ] ],
     [ "scif_uart_extended_cfg_t", "group___s_c_i_f___u_a_r_t.html#structscif__uart__extended__cfg__t", [
       [ "bri_ipl", "group___s_c_i_f___u_a_r_t.html#a3fa97958f621b33bee457ec6bc136bed", null ],
       [ "bri_irq", "group___s_c_i_f___u_a_r_t.html#a172e0b3047c07502b68ff88471e787ee", null ],
@@ -14,8 +19,8 @@ var group___s_c_i_f___u_a_r_t =
       [ "rx_fifo_trigger", "group___s_c_i_f___u_a_r_t.html#a1067241f2267052cd8240d136c0cba9c", null ],
       [ "rts_fifo_trigger", "group___s_c_i_f___u_a_r_t.html#a04920b030d567052f3b4efb1f85753e9", null ],
       [ "uart_mode", "group___s_c_i_f___u_a_r_t.html#a1c9c1ba263a956a8224a1156d6bc03a1", null ],
-      [ "driver_enable_pin", "group___s_c_i_f___u_a_r_t.html#aed0a20c432a538f3c20a83c50e76be3b", null ],
-      [ "flow_control", "group___s_c_i_f___u_a_r_t.html#aa761132ebac67c5cbbc3d6a505b97efe", null ]
+      [ "flow_control", "group___s_c_i_f___u_a_r_t.html#aa761132ebac67c5cbbc3d6a505b97efe", null ],
+      [ "rs485_setting", "group___s_c_i_f___u_a_r_t.html#a17bbc99632889e12269013e35f1dcfba", null ]
     ] ],
     [ "scif_clk_src_t", "group___s_c_i_f___u_a_r_t.html#gaa31fbf8041a381d6da9c454be58ad613", [
       [ "SCIF_UART_CLOCK_INT", "group___s_c_i_f___u_a_r_t.html#ggaa31fbf8041a381d6da9c454be58ad613a51c6cc623adda130f372f24e12128e4b", null ],
@@ -35,6 +40,14 @@ var group___s_c_i_f___u_a_r_t =
     [ "scif_uart_noise_cancellation_t", "group___s_c_i_f___u_a_r_t.html#ga94601e39cbf40b77e5e4236385b58704", [
       [ "SCIF_UART_NOISE_CANCELLATION_DISABLE", "group___s_c_i_f___u_a_r_t.html#gga94601e39cbf40b77e5e4236385b58704ad882f64a494b61ff64e551ad3011a5b7", null ],
       [ "SCIF_UART_NOISE_CANCELLATION_ENABLE", "group___s_c_i_f___u_a_r_t.html#gga94601e39cbf40b77e5e4236385b58704ad3f821ad6438fb954b659c75d156d662", null ]
+    ] ],
+    [ "sci_uart_rs485_enable_t", "group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542", [
+      [ "SCI_UART_RS485_DISABLE", "group___s_c_i_f___u_a_r_t.html#gga9522502f434bcaa2bbaf9cb1321ce542aa05bec8fad1420e777b184f55300b484", null ],
+      [ "SCI_UART_RS485_ENABLE", "group___s_c_i_f___u_a_r_t.html#gga9522502f434bcaa2bbaf9cb1321ce542acd3ee665f5225c5bb017bb64d33cf127", null ]
+    ] ],
+    [ "sci_uart_rs485_de_polarity_t", "group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce", [
+      [ "SCI_UART_RS485_DE_POLARITY_HIGH", "group___s_c_i_f___u_a_r_t.html#gga0bd2440ef30f2feca9a2d129989bffcea7cfd9e1ff7eca0657388f7cf9ce708fc", null ],
+      [ "SCI_UART_RS485_DE_POLARITY_LOW", "group___s_c_i_f___u_a_r_t.html#gga0bd2440ef30f2feca9a2d129989bffceac1a061d1cb22d6b336e23185af20e089", null ]
     ] ],
     [ "scif_uart_receive_trigger_t", "group___s_c_i_f___u_a_r_t.html#ga5d3f2e170b79de59f46ae864fc993e95", [
       [ "SCIF_UART_RECEIVE_TRIGGER_ONE", "group___s_c_i_f___u_a_r_t.html#gga5d3f2e170b79de59f46ae864fc993e95ad8eb49bdf41e9867d8a6d0986b9343a6", null ],
@@ -75,5 +88,6 @@ var group___s_c_i_f___u_a_r_t =
     [ "R_SCIF_UART_Close", "group___s_c_i_f___u_a_r_t.html#ga0d573f7ffdec42630a06605b64c00482", null ],
     [ "R_SCIF_UART_Abort", "group___s_c_i_f___u_a_r_t.html#ga540d3842dd9db9c39e36c230583e29b1", null ],
     [ "R_SCIF_UART_BaudCalculate", "group___s_c_i_f___u_a_r_t.html#gad29ba19ecddc66108d794c93f9c1165f", null ],
+    [ "R_SCIF_UART_ReadStop", "group___s_c_i_f___u_a_r_t.html#gaef7c79f4e4ed3370d27f6cc73d744270", null ],
     [ "R_SCIF_UART_CallbackSet", "group___s_c_i_f___u_a_r_t.html#ga6880b7cd58a44c99fe197b1b0a14e737", null ]
 ];

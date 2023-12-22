@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: General Timer (r_gtm)</title>
+<title>RZG Flexible Software Package Documentation: General Timer (r_gtm)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('group___g_t_m.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('group___g_t_m.html','');});
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a> &#124;
@@ -146,20 +214,22 @@ Features</h2>
 <li>Free-running comparison mode</li>
 </ul>
 </li>
+<li>Choice between startup of DMA by compare match and generation of interrupt. (This features of startup of DMA is supported on RZ/G3S which support the DMAC driver.)</li>
 </ul>
 <h2><a class="anchor" id="r-gtm-selecting-a-timer"></a>
 Selecting a Timer</h2>
-<p>RZ MPUs have two timer peripherals: the General PWM Timer (GPT) and the General Timer (GTM). When selecting between them, consider these factors:</p>
+<p>RZ MPUs have three timer peripherals: the General PWM Timer (GPT), the General Timer (GTM) and the Multi-Function Timer Pulse Unit 3 (MTU3). When selecting between them, consider these factors:</p>
 <table class="doxtable">
 <tr>
-<th></th><th>GPT </th><th>GTM  </th></tr>
+<th></th><th>GPT </th><th>GTM </th><th>MTU3  </th></tr>
 <tr>
-<td>Available Channels</td><td>The number of GPT channels is device specific. All currently supported MPUs have at least 6 GPT channels.</td><td>All MPUs have 3 GTM channels. </td></tr>
+<td>Available Channels</td><td>It is available all GPT channels supported on each device.</td><td>It is available the GTM channels supported on each device.</td><td>It is available all MTU3 channels supported on each device. </td></tr>
 <tr>
-<td>Timer Resolution</td><td>All MPUs have 32-bit GPT timer.</td><td>The GTM timers are 32-bit timers. </td></tr>
+<td>Timer Resolution</td><td>All MPUs have 32-bit GPT timer.</td><td>The GTM timers are 32-bit timers.</td><td>All MPUs support 16-bit and 32-bit MTU3 timer. </td></tr>
 <tr>
-<td>Clock Source</td><td>The GPT runs off P0 clock with a configurable divider up to 1024.</td><td>The GTM runs off P0 clock. </td></tr>
+<td>Clock Source</td><td>The GPT runs off P0 clock with a configurable divider up to 1024.</td><td>The GTM runs off P0 clock.</td><td>The MTU3 runs off P0 clock with a configurable divider up to 1024. </td></tr>
 </table>
+<dl class="section note"><dt>Note</dt><dd>GTM channel 0 is not available on RZ/G2L, RZ/G2LC, and RZ/G2UL FSP platforms due to a security state mismatch. Because the drivers on these platforms run in a non-secure state and, these operating are unable to access GTM channel 0 requires secure state access.</dd></dl>
 <h1><a class="anchor" id="r-gtm-configuration"></a>
 Configuration</h1>
 <p><h2>Build Time Configurations for r_gtm</h2>
@@ -178,15 +248,15 @@ Disabled</li>
 </ul>
 </td><td>Default (BSP) </td><td>If selected code for parameter checking is included in the build. </td></tr>
 </table>
- <h2>Configurations for Driver &gt; Timers &gt; Timer Driver on r_gtm</h2>
-This module can be added to the Stacks tab via New Stack &gt; Driver &gt; Timers &gt; Timer Driver on r_gtm.<br />
+ <h2>Configurations for Timers &gt; Timer (r_gtm)</h2>
+This module can be added to the Stacks tab via New Stack &gt; Timers &gt; Timer (r_gtm).<br />
 </p><table class="doxtable">
 <tr>
 <th>Configuration</th><th>Options</th><th>Default</th><th>Description </th></tr>
 <tr>
 <td>General &gt; Name</td><td>Name must be a valid C symbol</td><td>g_timer0 </td><td>Module name. </td></tr>
 <tr>
-<td>General &gt; Channel</td><td>Channel number does not exist</td><td>0 </td><td>Physical hardware channel. </td></tr>
+<td>General &gt; Channel</td><td>MCU Specific Options</td><td></td><td>Physical hardware channel. </td></tr>
 <tr>
 <td>General &gt; Mode</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -198,7 +268,11 @@ One-Shot</li>
 <tr>
 <td>General &gt; Period</td><td>Value must be non-negative</td><td>1 </td><td>Specify the timer period based on the selected unit.<br />
 <br />
-When the unit is set to 'Raw Counts', setting the period to 0x10000 results in the maximum period at the lowest divisor (fastest timer tick). Set the period to 0x10000 for a free running timer, pulse width measurement or pulse period measurement. Setting the period higher will automatically select a higher divider; the period can be set up to 0x80000 when counting from PCLKB or 0x800000 when counting from LOCO/subclock, which will use a divider of 8 or 128 respectively with the maximum period. </td></tr>
+Valid input value range:<br />
+- When 'Raw Counts' is selected in 'Period Unit', set the value to 0x00000001~0x100000000<br />
+- When other item is selected in 'Period Unit', set the value to (1 / count clock) ~ (0x100000000 / count clock)<br />
+<br />
+If the input value is exceeded valid range, the ERROR will be shown in hal_data.c. </td></tr>
 <tr>
 <td>General &gt; Period Unit</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -771,7 +845,7 @@ Stop the timer before calling this function if one-shot output is used.</dd></dl
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

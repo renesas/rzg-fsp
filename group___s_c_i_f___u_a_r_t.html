@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: Serial Communications Interface (SCIF) UART (r_scif_uart)</title>
+<title>RZG Flexible Software Package Documentation: Serial Communications Interface (SCIF) UART (r_scif_uart)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('group___s_c_i_f___u_a_r_t.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('group___s_c_i_f___u_a_r_t.html','');})
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a> &#124;
@@ -117,6 +185,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga540d3842dd9db9c39e36c230583e29b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad29ba19ecddc66108d794c93f9c1165f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#gad29ba19ecddc66108d794c93f9c1165f">R_SCIF_UART_BaudCalculate</a> (<a class="el" href="group___u_a_r_t___a_p_i.html#gad04bd656a84140eaef1e8aa0f86564a8">uart_ctrl_t</a> *const p_api_ctrl, uint32_t baudrate, bool bitrate_modulation, uint32_t baud_rate_error_x_1000, <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t">scif_baud_setting_t</a> *const p_baud_setting)</td></tr>
 <tr class="separator:gad29ba19ecddc66108d794c93f9c1165f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaef7c79f4e4ed3370d27f6cc73d744270"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#gaef7c79f4e4ed3370d27f6cc73d744270">R_SCIF_UART_ReadStop</a> (<a class="el" href="group___u_a_r_t___a_p_i.html#gad04bd656a84140eaef1e8aa0f86564a8">uart_ctrl_t</a> *const p_api_ctrl, uint32_t *remaining_bytes)</td></tr>
+<tr class="separator:gaef7c79f4e4ed3370d27f6cc73d744270"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6880b7cd58a44c99fe197b1b0a14e737"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga6880b7cd58a44c99fe197b1b0a14e737">R_SCIF_UART_CallbackSet</a> (<a class="el" href="group___u_a_r_t___a_p_i.html#gad04bd656a84140eaef1e8aa0f86564a8">uart_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___u_a_r_t___a_p_i.html#structuart__callback__args__t">uart_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___u_a_r_t___a_p_i.html#structuart__callback__args__t">uart_callback_args_t</a> *const p_callback_memory)</td></tr>
 <tr class="separator:ga6880b7cd58a44c99fe197b1b0a14e737"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -155,6 +225,8 @@ Disabled</li>
 </ul>
 </td><td>Default (BSP) </td><td>If selected code for parameter checking is included in the build. </td></tr>
 <tr>
+<td>DMAC Support</td><td>MCU Specific Options</td><td></td><td>Enable DMAC support for the SCIF_UART module. </td></tr>
+<tr>
 <td>RS485 Flow (Driver Enable) Control Support</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
 Enable</li>
@@ -163,15 +235,15 @@ Disable</li>
 </ul>
 </td><td>Disable </td><td>Enable RS485 flow (driver enable) control support using a user provided pin. </td></tr>
 </table>
- <h2>Configurations for Driver &gt; Connectivity &gt; UART Driver on r_scif_uart</h2>
-This module can be added to the Stacks tab via New Stack &gt; Driver &gt; Connectivity &gt; UART Driver on r_scif_uart.<br />
+ <h2>Configurations for Connectivity &gt; UART (r_scif_uart)</h2>
+This module can be added to the Stacks tab via New Stack &gt; Connectivity &gt; UART (r_scif_uart).<br />
 </p><table class="doxtable">
 <tr>
 <th>Configuration</th><th>Options</th><th>Default</th><th>Description </th></tr>
 <tr>
 <td>General &gt; Name</td><td>Name must be a valid C symbol</td><td>g_uart0 </td><td>Module name. </td></tr>
 <tr>
-<td>General &gt; Channel</td><td>Channel number does not exist</td><td>0 </td><td>Select the SCIF channel. </td></tr>
+<td>General &gt; Channel</td><td>Channel number must be a positive integer</td><td>0 </td><td>Select the SCIF channel. </td></tr>
 <tr>
 <td>General &gt; Data Bits</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -223,23 +295,17 @@ RS485 Full Duplex</li>
 </ul>
 </td><td>RS232 </td><td>Select the UART communication mode as either RS232 or RS485. </td></tr>
 <tr>
-<td>Flow Control &gt; RS485 Driver Enable Port</td><td>Refer to the Configuration tool for available options.</td><td>Disabled </td><td>Specify the flow control pin port for the MPU. </td></tr>
-<tr>
-<td>Flow Control &gt; RS485 Driver Enable Pin</td><td><ul style="margin-top:0;margin-bottom:0;">
+<td>Flow Control &gt; RS485 Driver Enable Pin Polarity</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
-Disabled</li>
+Active Low</li>
 <li>
-00</li>
-<li>
-01</li>
-<li>
-02</li>
-<li>
-03</li>
-<li>
-04</li>
+Active High</li>
 </ul>
-</td><td>Disabled </td><td>Specify the flow control pin for the MPU. </td></tr>
+</td><td>Active High </td><td>Enabling baud rate modulation reduces the percent error of the actual baud rate with respect to the requested baud rate. It does this by modulating the number of cycles per clock, so some bits are slightly longer than others. </td></tr>
+<tr>
+<td>Flow Control &gt; RS485 Driver Enable Port</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin port for the MPU. </td></tr>
+<tr>
+<td>Flow Control &gt; RS485 Driver Enable Pin</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin for the MPU. </td></tr>
 <tr>
 <td>Flow Control &gt; RS232C Automatic Flow Control</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -269,7 +335,7 @@ Disable</li>
 </ul>
 </td><td>Disable </td><td>Enable the digital noise filter on RXDn pin. The digital noise filter block in SCIF consists of two-stage flipflop circuits. </td></tr>
 <tr>
-<td>Extra &gt; Receive FIFO Trigger Level</td><td>Refer to the Configuration tool for available options.</td><td>Max </td><td>Set to One to get a callback immediately when each byte is received. Set to Max to get a callback when FIFO is full or after 15 bit times with no data (fewer interrupts). </td></tr>
+<td>Extra &gt; Receive FIFO Trigger Level</td><td>Refer to the RZG Configuration tool for available options.</td><td>Max </td><td>Set to One to get a callback immediately when each byte is received. Set to Max to get a callback when FIFO is full or after 15 bit times with no data (fewer interrupts). </td></tr>
 <tr>
 <td>Extra &gt; Receive FIFO RTS Trigger Level</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -304,14 +370,18 @@ Disable</li>
 </p>
 <h2><a class="anchor" id="r-scif-uart-clock-configuration"></a>
 Clock Configuration</h2>
-<p>The clock for this module is derived from the following peripheral clock for each MPU group:<br />
+<p>The clock for this module is derived from the following peripheral clock for each MCU group:<br />
 </p><table class="doxtable">
 <tr>
-<th>MPU Group</th><th>Peripheral Clock </th></tr>
+<th>MCU Group</th><th>Peripheral Clock </th></tr>
 <tr>
 <td>RZG2L</td><td>P0CLK</td></tr>
 <tr>
 <td>RZG2UL</td><td>P0CLK</td></tr>
+<tr>
+<td>RZG3S</td><td>P0CLK</td></tr>
+<tr>
+<td>RZG3SM1</td><td>P0CLK</td></tr>
 </table>
 </p>
 <p>The clock source for the baud-rate clock generator can be selected from the internal clock, the external clock times 8 or the external clock times 16. The external clock is supplied to the SCK pin.</p>
@@ -336,6 +406,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:structscif__uart__instance__ctrl__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structscif__baud__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t">scif_baud_setting_t</a></td></tr>
 <tr class="separator:structscif__baud__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structsci__uart__rs485__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structsci__uart__rs485__setting__t">sci_uart_rs485_setting_t</a></td></tr>
+<tr class="separator:structsci__uart__rs485__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structscif__uart__extended__cfg__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__uart__extended__cfg__t">scif_uart_extended_cfg_t</a></td></tr>
 <tr class="separator:structscif__uart__extended__cfg__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -349,6 +421,10 @@ Enumerations</h2></td></tr>
 <tr class="separator:ga023aa56b9ce183733d7933bf750fab6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga94601e39cbf40b77e5e4236385b58704"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga94601e39cbf40b77e5e4236385b58704">scif_uart_noise_cancellation_t</a> </td></tr>
 <tr class="separator:ga94601e39cbf40b77e5e4236385b58704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9522502f434bcaa2bbaf9cb1321ce542"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542">sci_uart_rs485_enable_t</a> </td></tr>
+<tr class="separator:ga9522502f434bcaa2bbaf9cb1321ce542"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0bd2440ef30f2feca9a2d129989bffce"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce">sci_uart_rs485_de_polarity_t</a> </td></tr>
+<tr class="separator:ga0bd2440ef30f2feca9a2d129989bffce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5d3f2e170b79de59f46ae864fc993e95"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga5d3f2e170b79de59f46ae864fc993e95">scif_uart_receive_trigger_t</a> </td></tr>
 <tr class="separator:ga5d3f2e170b79de59f46ae864fc993e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaee66fa30e6f9f0efb538ecb91a9ad89"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#gaaee66fa30e6f9f0efb538ecb91a9ad89">scif_uart_rts_trigger_t</a> </td></tr>
@@ -385,9 +461,9 @@ Enumerations</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a97a34067f215020ca71a01ae809880f4"></a>struct <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t_8____unnamed____">scif_baud_setting_t</a></td>
+<a id="a022acba3cd5ed16323a5fdc31db889ee"></a>struct <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t_8semr__baudrate__bits__b">scif_baud_setting_t</a></td>
 <td class="fieldname">
-__unnamed__</td>
+semr_baudrate_bits_b</td>
 <td class="fielddoc">
 </td></tr>
 <tr><td class="fieldtype">
@@ -402,6 +478,42 @@ Bit Rate Register setting. </td></tr>
 mddr</td>
 <td class="fielddoc">
 Modulation Duty Register setting. </td></tr>
+</table>
+
+</div>
+</div>
+<a name="structsci__uart__rs485__setting__t" id="structsci__uart__rs485__setting__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structsci__uart__rs485__setting__t">&#9670;&nbsp;</a></span>sci_uart_rs485_setting_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct sci_uart_rs485_setting_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>Configuration settings for controlling the DE signal for RS-485. </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a7ecf6bb47dcdafcd7e569695d0be405b"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542">sci_uart_rs485_enable_t</a></td>
+<td class="fieldname">
+enable</td>
+<td class="fielddoc">
+Enable the DE signal. </td></tr>
+<tr><td class="fieldtype">
+<a id="aafcbd1f2c02e2f81d81371bb9e6b895d"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce">sci_uart_rs485_de_polarity_t</a></td>
+<td class="fieldname">
+polarity</td>
+<td class="fielddoc">
+DE signal polarity. </td></tr>
+<tr><td class="fieldtype">
+<a id="a2e764fad5f11c412720a531a8e1b6815"></a><a class="el" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80a">bsp_io_port_pin_t</a></td>
+<td class="fieldname">
+de_control_pin</td>
+<td class="fielddoc">
+UART Driver Enable pin. </td></tr>
 </table>
 
 </div>
@@ -469,17 +581,17 @@ uart_mode</td>
 <td class="fielddoc">
 UART communication mode selection. </td></tr>
 <tr><td class="fieldtype">
-<a id="aed0a20c432a538f3c20a83c50e76be3b"></a><a class="el" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80a">bsp_io_port_pin_t</a></td>
-<td class="fieldname">
-driver_enable_pin</td>
-<td class="fielddoc">
-UART Driver Enable pin. </td></tr>
-<tr><td class="fieldtype">
 <a id="aa761132ebac67c5cbbc3d6a505b97efe"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga023aa56b9ce183733d7933bf750fab6f">scif_uart_flow_control_t</a></td>
 <td class="fieldname">
 flow_control</td>
 <td class="fielddoc">
 CTS/RTS function. </td></tr>
+<tr><td class="fieldtype">
+<a id="a17bbc99632889e12269013e35f1dcfba"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#structsci__uart__rs485__setting__t">sci_uart_rs485_setting_t</a></td>
+<td class="fieldname">
+rs485_setting</td>
+<td class="fielddoc">
+RS-485 settings. </td></tr>
 </table>
 
 </div>
@@ -570,6 +682,48 @@ CTS/RTS function. </td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga94601e39cbf40b77e5e4236385b58704ad882f64a494b61ff64e551ad3011a5b7"></a>SCIF_UART_NOISE_CANCELLATION_DISABLE&#160;</td><td class="fielddoc"><p>Disable noise cancellation. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="gga94601e39cbf40b77e5e4236385b58704ad3f821ad6438fb954b659c75d156d662"></a>SCIF_UART_NOISE_CANCELLATION_ENABLE&#160;</td><td class="fielddoc"><p>Enable noise cancellation. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ga9522502f434bcaa2bbaf9cb1321ce542"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9522502f434bcaa2bbaf9cb1321ce542">&#9670;&nbsp;</a></span>sci_uart_rs485_enable_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542">sci_uart_rs485_enable_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>RS-485 Enable/Disable. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga9522502f434bcaa2bbaf9cb1321ce542aa05bec8fad1420e777b184f55300b484"></a>SCI_UART_RS485_DISABLE&#160;</td><td class="fielddoc"><p>RS-485 disabled. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga9522502f434bcaa2bbaf9cb1321ce542acd3ee665f5225c5bb017bb64d33cf127"></a>SCI_UART_RS485_ENABLE&#160;</td><td class="fielddoc"><p>RS-485 enabled. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ga0bd2440ef30f2feca9a2d129989bffce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0bd2440ef30f2feca9a2d129989bffce">&#9670;&nbsp;</a></span>sci_uart_rs485_de_polarity_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce">sci_uart_rs485_de_polarity_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>The polarity of the RS-485 DE signal. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga0bd2440ef30f2feca9a2d129989bffcea7cfd9e1ff7eca0657388f7cf9ce708fc"></a>SCI_UART_RS485_DE_POLARITY_HIGH&#160;</td><td class="fielddoc"><p>The DE signal is high when a write transfer is in progress. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga0bd2440ef30f2feca9a2d129989bffceac1a061d1cb22d6b336e23185af20e089"></a>SCI_UART_RS485_DE_POLARITY_LOW&#160;</td><td class="fielddoc"><p>The DE signal is low when a write transfer is in progress. </p>
 </td></tr>
 </table>
 
@@ -695,7 +849,8 @@ CTS/RTS function. </td></tr>
     <tr><td class="paramname">FSP_SUCCESS</td><td>Channel opened successfully. </td></tr>
     <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>Pointer to UART control block or configuration structure is NULL. </td></tr>
     <tr><td class="paramname">FSP_ERR_IP_CHANNEL_NOT_PRESENT</td><td>The requested channel does not exist on this MPU. </td></tr>
-    <tr><td class="paramname">FSP_ERR_ALREADY_OPEN</td><td>Control block has already been opened or channel is being used by another instance. Call close() then open() to reconfigure.</td></tr>
+    <tr><td class="paramname">FSP_ERR_ALREADY_OPEN</td><td>Control block has already been opened or channel is being used by another instance. Call close() then open() to reconfigure. </td></tr>
+    <tr><td class="paramname">FSP_ERR_INVALID_ARGUMENT</td><td>Setting for RS485 DE Control pin is invalid</td></tr>
   </table>
   </dd>
 </dl>
@@ -1001,6 +1156,45 @@ CTS/RTS function. </td></tr>
 
 </div>
 </div>
+<a id="gaef7c79f4e4ed3370d27f6cc73d744270"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaef7c79f4e4ed3370d27f6cc73d744270">&#9670;&nbsp;</a></span>R_SCIF_UART_ReadStop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> R_SCIF_UART_ReadStop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___u_a_r_t___a_p_i.html#gad04bd656a84140eaef1e8aa0f86564a8">uart_ctrl_t</a> *const&#160;</td>
+          <td class="paramname"><em>p_api_ctrl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t *&#160;</td>
+          <td class="paramname"><em>remaining_bytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Provides API to abort ongoing read. Reception is still enabled after abort(). Any characters received after abort() and before the transfer is reset in the next call to read(), will arrive via the callback function with event UART_EVENT_RX_CHAR. Implements <a class="el" href="group___u_a_r_t___a_p_i.html#acb47c360a2ac4ddd36e53f0a4ad71b92">uart_api_t::readStop</a></p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FSP_SUCCESS</td><td>UART transaction aborted successfully. </td></tr>
+    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>Pointer to UART control block is NULL. </td></tr>
+    <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The control block has not been opened. </td></tr>
+    <tr><td class="paramname">FSP_ERR_UNSUPPORTED</td><td>The requested Abort direction is unsupported.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>See <a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html">Common Error Codes</a> or functions called by this function for other possible return codes. </dd></dl>
+
+</div>
+</div>
 <a id="ga6880b7cd58a44c99fe197b1b0a14e737"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6880b7cd58a44c99fe197b1b0a14e737">&#9670;&nbsp;</a></span>R_SCIF_UART_CallbackSet()</h2>
 
@@ -1057,7 +1251,7 @@ CTS/RTS function. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

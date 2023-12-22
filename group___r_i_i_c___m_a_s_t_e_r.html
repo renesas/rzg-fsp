@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: I2C Master on RIIC (r_riic_master)</title>
+<title>RZG Flexible Software Package Documentation: I2C Master on RIIC (r_riic_master)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('group___r_i_i_c___m_a_s_t_e_r.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('group___r_i_i_c___m_a_s_t_e_r.html',''
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="summary">
 <a href="#func-members">Functions</a> &#124;
@@ -160,6 +228,8 @@ Disabled</li>
 </ul>
 </td><td>Default (BSP) </td><td>If selected code for parameter checking is included in the build. </td></tr>
 <tr>
+<td>DMAC Support</td><td>MCU Specific Options</td><td></td><td>If enabled, DMAC instances will be included in the build for both transmission and reception. </td></tr>
+<tr>
 <td>10-bit slave addressing</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
 Enabled</li>
@@ -168,15 +238,15 @@ Disabled</li>
 </ul>
 </td><td>Disabled </td><td>If enabled, the driver will support 10-bit slave addressing mode along with the default 7-bit slave addressing mode. </td></tr>
 </table>
- <h2>Configurations for Driver &gt; Connectivity &gt; I2C Master Driver on r_riic_master</h2>
-This module can be added to the Stacks tab via New Stack &gt; Driver &gt; Connectivity &gt; I2C Master Driver on r_riic_master.<br />
+ <h2>Configurations for Connectivity &gt; I2C Master (r_riic_master)</h2>
+This module can be added to the Stacks tab via New Stack &gt; Connectivity &gt; I2C Master (r_riic_master).<br />
 </p><table class="doxtable">
 <tr>
 <th>Configuration</th><th>Options</th><th>Default</th><th>Description </th></tr>
 <tr>
 <td>Name</td><td>Name must be a valid C symbol</td><td>g_i2c_master0 </td><td>Module name. </td></tr>
 <tr>
-<td>Channel</td><td>Value must be a non-negative integer</td><td>0 </td><td>Specify the RIIC channel. </td></tr>
+<td>Channel</td><td>Channel number must be a positive integer</td><td>0 </td><td>Specify the RIIC channel. </td></tr>
 <tr>
 <td>Rate</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -217,6 +287,14 @@ Short Mode</li>
 Long Mode</li>
 </ul>
 </td><td>Short Mode </td><td>Select the timeout mode to detect bus hang. </td></tr>
+<tr>
+<td>Timeout during SCL Low</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Enabled</li>
+<li>
+Disabled</li>
+</ul>
+</td><td>Enabled </td><td>Select if the timeout can occur when SCL is held low for a duration longer than what is set in the timeout mode. </td></tr>
 <tr>
 <td>Callback</td><td>Name must be a valid C symbol</td><td>NULL </td><td>A user callback function must be provided. This will be called from the interrupt service routine (ISR) upon RIIC transaction completion reporting the transaction status. </td></tr>
 <tr>
@@ -279,6 +357,8 @@ Data Structures</h2></td></tr>
 Enumerations</h2></td></tr>
 <tr class="memitem:gaf8ecd43a76bfa058281bb8b6b3981d3f"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_i_i_c___m_a_s_t_e_r.html#gaf8ecd43a76bfa058281bb8b6b3981d3f">iic_master_timeout_mode_t</a> </td></tr>
 <tr class="separator:gaf8ecd43a76bfa058281bb8b6b3981d3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9789e54472d093bd5348f202205d28ec"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___r_i_i_c___m_a_s_t_e_r.html#ga9789e54472d093bd5348f202205d28ec">iic_master_timeout_scl_low_t</a> </td></tr>
+<tr class="separator:ga9789e54472d093bd5348f202205d28ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structiic__master__clock__settings__t" id="structiic__master__clock__settings__t"></a>
@@ -353,6 +433,12 @@ timeout_mode</td>
 <td class="fielddoc">
 Timeout Detection Time Select: Long Mode = 0 and Short Mode = 1. </td></tr>
 <tr><td class="fieldtype">
+<a id="a248dede6dc400b36d660ee00bf2b814b"></a><a class="el" href="group___r_i_i_c___m_a_s_t_e_r.html#ga9789e54472d093bd5348f202205d28ec">iic_master_timeout_scl_low_t</a></td>
+<td class="fieldname">
+timeout_scl_low</td>
+<td class="fielddoc">
+Allows timeouts to occur when SCL is held low. </td></tr>
+<tr><td class="fieldtype">
 <a id="aa0e87db942a63d7eb72077bf75f34d87"></a><a class="el" href="group___r_i_i_c___m_a_s_t_e_r.html#structiic__master__clock__settings__t">iic_master_clock_settings_t</a></td>
 <td class="fieldname">
 clock_settings</td>
@@ -415,6 +501,26 @@ Timeout IRQ Number. </td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaf8ecd43a76bfa058281bb8b6b3981d3facc441997b6e18766361457d26227b4bd"></a>IIC_MASTER_TIMEOUT_MODE_LONG&#160;</td><td class="fielddoc"><p>Timeout Detection Time Select: Long Mode -&gt; TMOS = 0. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggaf8ecd43a76bfa058281bb8b6b3981d3fa4afacd0b267f604d06e2b83891c0e577"></a>IIC_MASTER_TIMEOUT_MODE_SHORT&#160;</td><td class="fielddoc"><p>Timeout Detection Time Select: Short Mode -&gt; TMOS = 1. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ga9789e54472d093bd5348f202205d28ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9789e54472d093bd5348f202205d28ec">&#9670;&nbsp;</a></span>iic_master_timeout_scl_low_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___r_i_i_c___m_a_s_t_e_r.html#ga9789e54472d093bd5348f202205d28ec">iic_master_timeout_scl_low_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga9789e54472d093bd5348f202205d28eca0773c9356e560a84576f1d5498234a09"></a>IIC_MASTER_TIMEOUT_SCL_LOW_DISABLED&#160;</td><td class="fielddoc"><p>Timeout detection during SCL low disabled. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga9789e54472d093bd5348f202205d28eca62238f63df0d06f25af5b158bbfb2169"></a>IIC_MASTER_TIMEOUT_SCL_LOW_ENABLED&#160;</td><td class="fielddoc"><p>Timeout detection during SCL low enabled. </p>
 </td></tr>
 </table>
 
@@ -758,7 +864,7 @@ Timeout IRQ Number. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

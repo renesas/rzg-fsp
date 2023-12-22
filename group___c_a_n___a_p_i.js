@@ -1,5 +1,13 @@
 var group___c_a_n___a_p_i =
 [
+    [ "can_info_t", "group___c_a_n___a_p_i.html#structcan__info__t", [
+      [ "status", "group___c_a_n___a_p_i.html#aec9d4439f59b61933c2205e4d3ea9210", null ],
+      [ "rx_mb_status", "group___c_a_n___a_p_i.html#ade07c155f14547df76ac44249e0d0feb", null ],
+      [ "rx_fifo_status", "group___c_a_n___a_p_i.html#a7cd7ac782cdb433247cc0f28f2755f81", null ],
+      [ "error_count_transmit", "group___c_a_n___a_p_i.html#ada0fe3e8eb824d0ebb36332f98e3c771", null ],
+      [ "error_count_receive", "group___c_a_n___a_p_i.html#a59787b23ec15fa38f51d167e10389081", null ],
+      [ "error_code", "group___c_a_n___a_p_i.html#a1ea2aaf80adb9f24fdee9828cae02e05", null ]
+    ] ],
     [ "can_bit_timing_cfg_t", "group___c_a_n___a_p_i.html#structcan__bit__timing__cfg__t", [
       [ "baud_rate_prescaler", "group___c_a_n___a_p_i.html#a33ae62d869abaf989823b7bb1563de41", null ],
       [ "time_segment_1", "group___c_a_n___a_p_i.html#aafe4728b44b6abbb0f5d540e16d0be40", null ],
@@ -9,8 +17,8 @@ var group___c_a_n___a_p_i =
     [ "can_frame_t", "group___c_a_n___a_p_i.html#structcan__frame__t", [
       [ "id", "group___c_a_n___a_p_i.html#a49d4261f37f08f5a11cc3fc12c56cdc3", null ],
       [ "id_mode", "group___c_a_n___a_p_i.html#a4144eba26f77850571fca0498bec60ef", null ],
-      [ "data_length_code", "group___c_a_n___a_p_i.html#af58b9f3fe19ed69e0a635cd271c68404", null ],
       [ "type", "group___c_a_n___a_p_i.html#a79046fddb934fd7ea0d0cc70b8d7f26d", null ],
+      [ "data_length_code", "group___c_a_n___a_p_i.html#af58b9f3fe19ed69e0a635cd271c68404", null ],
       [ "options", "group___c_a_n___a_p_i.html#a27833816de50e1ad5b16b42856653ad8", null ],
       [ "data", "group___c_a_n___a_p_i.html#ad70086e98bfe0871e3f73d1f253138db", null ]
     ] ],
@@ -21,12 +29,6 @@ var group___c_a_n___a_p_i =
       [ "p_context", "group___c_a_n___a_p_i.html#a663ed64c927057ab0ac45d02505dc758", null ],
       [ "frame", "group___c_a_n___a_p_i.html#aa8706fd62e652e6582d3c9eb155fb610", null ]
     ] ],
-    [ "can_mailbox_t", "group___c_a_n___a_p_i.html#structcan__mailbox__t", [
-      [ "mailbox_id", "group___c_a_n___a_p_i.html#aa0c1d24b5896560908adb0ac9761aa28", null ],
-      [ "id_mode", "group___c_a_n___a_p_i.html#a9d3924b6ba4efb4c978a04d0e9a4fbc6", null ],
-      [ "mailbox_type", "group___c_a_n___a_p_i.html#aa6a30551456873fb921b933bd3ddbe23", null ],
-      [ "frame_type", "group___c_a_n___a_p_i.html#af01f0306a9ad2e430154d9d6a4e3404f", null ]
-    ] ],
     [ "can_cfg_t", "group___c_a_n___a_p_i.html#structcan__cfg__t", [
       [ "channel", "group___c_a_n___a_p_i.html#a12f266c39b851a037b4d30ae5661e46b", null ],
       [ "p_bit_timing", "group___c_a_n___a_p_i.html#a751918f74effc746b381a75c971af879", null ],
@@ -35,12 +37,8 @@ var group___c_a_n___a_p_i =
       [ "p_extend", "group___c_a_n___a_p_i.html#a0715ca299b94eea0ef2843b99e0d32e5", null ],
       [ "ipl", "group___c_a_n___a_p_i.html#a31ab501a9df967965b8085592b4d2ba1", null ],
       [ "error_irq", "group___c_a_n___a_p_i.html#ac958a7179da3a9f365a3bf55707fac6d", null ],
-      [ "mailbox_rx_irq", "group___c_a_n___a_p_i.html#a70c47efed0012e4512b7d7eca31e3e58", null ],
-      [ "mailbox_tx_irq", "group___c_a_n___a_p_i.html#afe91f3dd74163cacafbfb96ab2104df0", null ],
-      [ "p_mailbox", "group___c_a_n___a_p_i.html#a564584ef9e48317f93f432a0b86b9af8", null ],
-      [ "id_mode", "group___c_a_n___a_p_i.html#a34bf75f61795800b3df706b240fd7907", null ],
-      [ "mailbox_count", "group___c_a_n___a_p_i.html#a66e92277959e9e01a6ce2105dcdcbae6", null ],
-      [ "message_mode", "group___c_a_n___a_p_i.html#a0cb83f81e41146d1e688f88a69231d38", null ]
+      [ "rx_irq", "group___c_a_n___a_p_i.html#a88ba0583ec46ae65985a733c38975c38", null ],
+      [ "tx_irq", "group___c_a_n___a_p_i.html#ac495ac44fdee552f013eea5ba0e86b06", null ]
     ] ],
     [ "can_api_t", "group___c_a_n___a_p_i.html#structcan__api__t", [
       [ "open", "group___c_a_n___a_p_i.html#a44ef1a1a3726114b30f228c54b0d44ce", null ],
@@ -49,8 +47,7 @@ var group___c_a_n___a_p_i =
       [ "close", "group___c_a_n___a_p_i.html#a32ec8d31d80a709bae881f2e28d36d6c", null ],
       [ "modeTransition", "group___c_a_n___a_p_i.html#afb37a7735c6ac61a151a083b2d25153b", null ],
       [ "infoGet", "group___c_a_n___a_p_i.html#aba27908c89442250d365d4a44304e3c1", null ],
-      [ "callbackSet", "group___c_a_n___a_p_i.html#a0eeb3995e651ce4b77e8860ab50597a9", null ],
-      [ "versionGet", "group___c_a_n___a_p_i.html#aa3a9393d2130549479111743b1750b41", null ]
+      [ "callbackSet", "group___c_a_n___a_p_i.html#a0eeb3995e651ce4b77e8860ab50597a9", null ]
     ] ],
     [ "can_instance_t", "group___c_a_n___a_p_i.html#structcan__instance__t", [
       [ "p_ctrl", "group___c_a_n___a_p_i.html#ae4d4d032f3e4f0688879027286ae4dbe", null ],
@@ -69,7 +66,9 @@ var group___c_a_n___a_p_i =
       [ "CAN_EVENT_TX_ABORTED", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dba973c55ab2a29a1554f488fedf29fea8a", null ],
       [ "CAN_EVENT_RX_COMPLETE", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dbaa0bc5e15cee037a1d102b517ef63e161", null ],
       [ "CAN_EVENT_TX_COMPLETE", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dbac169b4940b7cb76562efd7439fc76949", null ],
-      [ "CAN_EVENT_ERR_GLOBAL", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dba8adaa142ed94841f5f282232ce414333", null ]
+      [ "CAN_EVENT_ERR_GLOBAL", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dba8adaa142ed94841f5f282232ce414333", null ],
+      [ "CAN_EVENT_TX_FIFO_EMPTY", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dba838c3a494516ccd0326bc1dad93e35d8", null ],
+      [ "CAN_EVENT_FIFO_MESSAGE_LOST", "group___c_a_n___a_p_i.html#ggacc2e5bc68e8b707c069ca27f521695dba4b9bfbf96c82d53ce3dd47e9a3237359", null ]
     ] ],
     [ "can_operation_mode_t", "group___c_a_n___a_p_i.html#gac29bd7d00b06d7457ae786471c296ba7", [
       [ "CAN_OPERATION_MODE_NORMAL", "group___c_a_n___a_p_i.html#ggac29bd7d00b06d7457ae786471c296ba7abde5d9e8f5711b6fe8374671c96e6f72", null ],
@@ -88,25 +87,8 @@ var group___c_a_n___a_p_i =
       [ "CAN_ID_MODE_STANDARD", "group___c_a_n___a_p_i.html#ggabc98e244722dcea05b5ce91bdb4c70c8a5d29b837d94d14fb99868c2d0a5220b0", null ],
       [ "CAN_ID_MODE_EXTENDED", "group___c_a_n___a_p_i.html#ggabc98e244722dcea05b5ce91bdb4c70c8abc5a87ed8edf218a6b44e4cceb48c0cb", null ]
     ] ],
-    [ "can_global_id_mode_t", "group___c_a_n___a_p_i.html#gab798132b937282be9589b6ed177ea999", [
-      [ "CAN_GLOBAL_ID_MODE_STANDARD", "group___c_a_n___a_p_i.html#ggab798132b937282be9589b6ed177ea999af93ba7d9a4356ffa8c9b49f26c4f1b3d", null ],
-      [ "CAN_GLOBAL_ID_MODE_EXTENDED", "group___c_a_n___a_p_i.html#ggab798132b937282be9589b6ed177ea999a7dc9d3f494129db1c953915d1b781faa", null ],
-      [ "CAN_GLOBAL_ID_MODE_MIXED", "group___c_a_n___a_p_i.html#ggab798132b937282be9589b6ed177ea999aabdf871d5bbaf279c8dcf743ca64b488", null ]
-    ] ],
     [ "can_frame_type_t", "group___c_a_n___a_p_i.html#gad3ffe1ae0429fcd1053a969d96c47610", [
       [ "CAN_FRAME_TYPE_DATA", "group___c_a_n___a_p_i.html#ggad3ffe1ae0429fcd1053a969d96c47610a1da44b52c2731b02cf02ca55eec08899", null ],
       [ "CAN_FRAME_TYPE_REMOTE", "group___c_a_n___a_p_i.html#ggad3ffe1ae0429fcd1053a969d96c47610a10c7ad0f4e083496ad3a3032fc533920", null ]
-    ] ],
-    [ "can_message_mode_t", "group___c_a_n___a_p_i.html#ga42c6d0b24e77b50c47ec54bafcac7604", [
-      [ "CAN_MESSAGE_MODE_OVERWRITE", "group___c_a_n___a_p_i.html#gga42c6d0b24e77b50c47ec54bafcac7604ad8aab020d2b6d64777a0be580f44ddb4", null ],
-      [ "CAN_MESSAGE_MODE_OVERRUN", "group___c_a_n___a_p_i.html#gga42c6d0b24e77b50c47ec54bafcac7604af25ce6de3b35f5abe47186351372b8b7", null ]
-    ] ],
-    [ "can_clock_source_t", "group___c_a_n___a_p_i.html#ga5bf3c71a3b53b409e9ee682c69189a39", [
-      [ "CAN_CLOCK_SOURCE_PCLKB", "group___c_a_n___a_p_i.html#gga5bf3c71a3b53b409e9ee682c69189a39a7c0cedacb23a57e50692191f61915cbd", null ],
-      [ "CAN_CLOCK_SOURCE_CANMCLK", "group___c_a_n___a_p_i.html#gga5bf3c71a3b53b409e9ee682c69189a39a5c90a69c9ba1a8116b6ec45ff238e117", null ]
-    ] ],
-    [ "can_mailbox_send_receive_t", "group___c_a_n___a_p_i.html#ga99db0880f7c03215e00781d3e57db3a3", [
-      [ "CAN_MAILBOX_RECEIVE", "group___c_a_n___a_p_i.html#gga99db0880f7c03215e00781d3e57db3a3a5f4004ddfe179e388be8bb240527450e", null ],
-      [ "CAN_MAILBOX_TRANSMIT", "group___c_a_n___a_p_i.html#gga99db0880f7c03215e00781d3e57db3a3a1c100296f7b9384c8e09b55fd611242d", null ]
     ] ]
 ];

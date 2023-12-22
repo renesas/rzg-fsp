@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['mhu_5fctrl_5ft',['mhu_ctrl_t',['../group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7',1,'r_mhu_api.h']]],
-  ['mhu_5fns_5fswint_5fget_5fctrl_5ft',['mhu_ns_swint_get_ctrl_t',['../group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1',1,'r_mhu_ns_swint_get_api.h']]],
-  ['mhu_5fns_5fswint_5fset_5fctrl_5ft',['mhu_ns_swint_set_ctrl_t',['../group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#gafb79b34149ed743c1378fc3b74ab3287',1,'r_mhu_ns_swint_set_api.h']]]
+  ['i2c_5fmaster_5fctrl_5ft',['i2c_master_ctrl_t',['../group___i2_c___m_a_s_t_e_r___a_p_i.html#ga87f5194ba16044322815db81dc442138',1,'r_i2c_master_api.h']]],
+  ['ioport_5fctrl_5ft',['ioport_ctrl_t',['../group___i_o_p_o_r_t___a_p_i.html#gafc061c58bb812cb2a8f25222353634cd',1,'r_ioport_api.h']]],
+  ['ioport_5fsize_5ft',['ioport_size_t',['../group___i_o_p_o_r_t___a_p_i.html#gaf5da96a68757260a2cb370fec69f0836',1,'r_ioport_api.h']]]
 ];

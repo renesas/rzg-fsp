@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: Timer Interface</title>
+<title>RZG Flexible Software Package Documentation: Timer Interface</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('group___t_i_m_e_r___a_p_i.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('group___t_i_m_e_r___a_p_i.html','');})
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
@@ -106,7 +174,8 @@ Summary</h1>
 <p>If an instance supports output compare mode, it is provided in the extension configuration timer_on_&lt;instance&gt;_cfg_t defined in r_&lt;instance&gt;.h.</p>
 <p>Implemented by:</p><ul>
 <li><a class="el" href="group___g_p_t.html">General PWM Timer (r_gpt)</a></li>
-<li><a class="el" href="group___g_t_m.html">General Timer (r_gtm)</a> </li>
+<li><a class="el" href="group___g_t_m.html">General Timer (r_gtm)</a></li>
+<li><a class="el" href="group___m_t_u3.html">Multi-Function Timer Pulse Unit 3 (r_mtu3)</a> </li>
 </ul>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -402,6 +471,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Initial configuration. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2">R_GPT_Open()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga329fac4f1af8dee4e45200fd0ce5a9a5">R_GTM_Open()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga0ee0beb7bd1f1773916b0c633454fe0b">R_MTU3_Open()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -428,6 +498,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Start the counter. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863">R_GPT_Start()</a></li>
 <li><a class="el" href="group___g_t_m.html#gae0fe404d6571eb59c9f05f43f55eed25">R_GTM_Start()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga57aa8e231848fe1eb00775bd722418ee">R_MTU3_Start()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -453,6 +524,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Stop the counter. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga1e6af74d7faaf735f5847a34121eff71">R_GPT_Stop()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga89c7ca62fbb288cd5f44e5c773c699cf">R_GTM_Stop()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga396b95f942eed8fd222c67e5bfd22800">R_MTU3_Stop()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -478,6 +550,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Reset the counter to the initial value. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga5eb494add3d40775dbc48c5498e15a3a">R_GPT_Reset()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga406683b70b461dec28c6a707eab2993d">R_GTM_Reset()</a></li>
+<li><a class="el" href="group___m_t_u3.html#gab23024474f1c7bb662f4f9dfc091d85c">R_MTU3_Reset()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -503,6 +576,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Enables input capture. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga6e14d15c781e316e640c280b4983be28">R_GPT_Enable()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga853124c4bd7f079cb4040694fa13c22c">R_GTM_Enable()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga7be983a26523a21e6eec4ed02b3d0902">R_MTU3_Enable()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -528,6 +602,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Disables input capture. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga338dd3c38477ee40c90c13f3a4c9ecfd">R_GPT_Disable()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga25c4fd1a5cbb556a97d22f7c5d4e7df5">R_GTM_Disable()</a></li>
+<li><a class="el" href="group___m_t_u3.html#gab8b9c7b84a459fabd5449e83db526ee1">R_MTU3_Disable()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -554,6 +629,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#gafedbfd8bc3f534d06969588ff10a351b">R_GPT_PeriodSet()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga4368d6d5d2ae11cdb0f18cf8bdc75e24">R_GTM_PeriodSet()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga0d64e832230506418738a816a38489e4">R_MTU3_PeriodSet()</a></li>
 </ul>
 </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Timer expiration may or may not generate a CPU interrupt based on how the timer is configured in <a class="el" href="group___t_i_m_e_r___a_p_i.html#af49a90087a53c8019d642a3f7abaa8ad">timer_api_t::open</a>. </dd></dl>
@@ -582,6 +658,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga98e91cf35dfcff3ed975ee2b07bdd379">R_GTM_DutyCycleSet()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga5e4eda78ae4a5cb31e85eb682d6fe248">R_MTU3_DutyCycleSet()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -609,6 +686,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Stores timer information in p_info. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#gaca62ac33de2c05918b0fc359aeaebd97">R_GPT_InfoGet()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga553dfdd88e36aaf3c58088a5a7774156">R_GTM_InfoGet()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga0c1fcecad7205ef9928305c960c7e494">R_MTU3_InfoGet()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -635,6 +713,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Get the current counter value and timer state and store it in p_status. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#gaa6234faf45320a83382d7ea1923a2c49">R_GPT_StatusGet()</a></li>
 <li><a class="el" href="group___g_t_m.html#gaa95357cd0d4d8c43f7a2523d4c3b24f7">R_GTM_StatusGet()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga8e02f073acf66a66ef6e525c8b57454e">R_MTU3_StatusGet()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -661,6 +740,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Specify callback function and optional context pointer and working memory pointer. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga2a09de185d3b7f1c301b33330931bac4">R_GPT_CallbackSet()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga0213edecdcc056ecf3353c3b59a85bd9">R_GTM_CallbackSet()</a></li>
+<li><a class="el" href="group___m_t_u3.html#ga4ec0ad4f10536b74374b75f2ca46f527">R_MTU3_CallbackSet()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -689,6 +769,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <p>Allows driver to be reconfigured and may reduce power consumption. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#ga2fc5d6a737a00948802e2bb77fbe8d8c">R_GPT_Close()</a></li>
 <li><a class="el" href="group___g_t_m.html#ga95721f8cb1f66dd8556d03b94abc40ed">R_GTM_Close()</a></li>
+<li><a class="el" href="group___m_t_u3.html#gace590734aa53fc0116c411decc0142d2">R_MTU3_Close()</a></li>
 </ul>
 </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -753,7 +834,8 @@ Pointer to the API structure for this instance. </td></tr>
 </div><div class="memdoc">
 <p>Timer control block. Allocate an instance specific control block to pass into the timer API calls. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
 <li><a class="el" href="group___g_p_t.html#structgpt__instance__ctrl__t">gpt_instance_ctrl_t</a></li>
-<li><a class="el" href="group___g_t_m.html#structgtm__instance__ctrl__t">gtm_instance_ctrl_t</a> </li>
+<li><a class="el" href="group___g_t_m.html#structgtm__instance__ctrl__t">gtm_instance_ctrl_t</a></li>
+<li><a class="el" href="group___m_t_u3.html#structmtu3__instance__ctrl__t">mtu3_instance_ctrl_t</a> </li>
 </ul>
 </dd></dl>
 
@@ -782,6 +864,18 @@ Pointer to the API structure for this instance. </td></tr>
 <tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91ebab7b635fbf34ede5a3e2f55b5a60ac21b"></a>TIMER_EVENT_CAPTURE_B&#160;</td><td class="fielddoc"><p>A capture has occurred on signal B. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91eba83cb2de8ac629fcd95525e94b94089f0"></a>TIMER_EVENT_TROUGH&#160;</td><td class="fielddoc"><p>Timer trough event (counter is 0, triangle-wave PWM only. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91eba5935edbb3d0b6d8b6f74a8402e758adf"></a>TIMER_EVENT_OUTPUT_COMPARE_0&#160;</td><td class="fielddoc"><p>An output has occurred on signal 0. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91eba1618c4f47f889499fe72ef5a3c2cf4eb"></a>TIMER_EVENT_OUTPUT_COMPARE_1&#160;</td><td class="fielddoc"><p>An output has occurred on signal 1. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91eba83346d837d9c89b9b1bed8c9a0078660"></a>TIMER_EVENT_DEAD_TIME&#160;</td><td class="fielddoc"><p>Dead time event. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91ebadc420bfc9860b5d461f10e557f9bb043"></a>TIMER_EVENT_CAPTURE_U&#160;</td><td class="fielddoc"><p>A capture has occurred on signal U. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91eba25cd94f46448cd5938f32c6a25438091"></a>TIMER_EVENT_CAPTURE_V&#160;</td><td class="fielddoc"><p>A capture has occurred on signal V. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac3bee51f7c9078f794c5ac19522f91eba58d231c0801a39b29b761e77dbdae2cf"></a>TIMER_EVENT_CAPTURE_W&#160;</td><td class="fielddoc"><p>A capture has occurred on signal W. </p>
 </td></tr>
 </table>
 
@@ -848,9 +942,13 @@ Pointer to the API structure for this instance. </td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="gga6d4cd64aed5c0009ac26803efc9c13b2aca44e952a6930f39ac05393522392eac"></a>TIMER_MODE_PWM&#160;</td><td class="fielddoc"><p>Timer generates saw-wave PWM output. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="gga6d4cd64aed5c0009ac26803efc9c13b2afe99f13968cabc479896dfd0bc67fb6a"></a>TIMER_MODE_ONE_SHOT_PULSE&#160;</td><td class="fielddoc"><p>Saw-wave one-shot pulse mode (fixed buffer operation). </p>
+</td></tr>
 <tr><td class="fieldname"><a id="gga6d4cd64aed5c0009ac26803efc9c13b2a6a3c462f9e9cc1b26ab68f38efd79b14"></a>TIMER_MODE_TRIANGLE_WAVE_SYMMETRIC_PWM&#160;</td><td class="fielddoc"><p>Timer generates symmetric triangle-wave PWM output. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="gga6d4cd64aed5c0009ac26803efc9c13b2a204001ad413e9ad0db08a66d004a555a"></a>TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM&#160;</td><td class="fielddoc"><p>Timer generates asymmetric triangle-wave PWM output. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6d4cd64aed5c0009ac26803efc9c13b2aa2eb9fa5372856039d5d53dfbbbe6040"></a>TIMER_MODE_TRIANGLE_WAVE_ASYMMETRIC_PWM_MODE3&#160;</td><td class="fielddoc"><p>Timer generates Asymmetric Triangle-wave PWM output. In PWM mode 3, the duty cycle does not need to be updated at each tough/crest interrupt. Instead, the trough and crest duty cycle values can be set once and only need to be updated when the application needs to change the duty cycle. </p>
 </td></tr>
 </table>
 
@@ -908,6 +1006,8 @@ Pointer to the API structure for this instance. </td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="gga820b425b44d7b551afd1797ecca7a5ada6680e947eb6455f9d0ee007645ea707d"></a>TIMER_SOURCE_DIV_256&#160;</td><td class="fielddoc"><p>Timer clock source divided by 256. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="gga820b425b44d7b551afd1797ecca7a5ada2bcc6bb5346907da7e45b74449588132"></a>TIMER_SOURCE_DIV_512&#160;</td><td class="fielddoc"><p>Timer clock source divided by 512. </p>
+</td></tr>
 <tr><td class="fieldname"><a id="gga820b425b44d7b551afd1797ecca7a5adaee99148dc7c32f0764c7cb3b3e45ca30"></a>TIMER_SOURCE_DIV_1024&#160;</td><td class="fielddoc"><p>Timer clock source divided by 1024. </p>
 </td></tr>
 </table>
@@ -920,7 +1020,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

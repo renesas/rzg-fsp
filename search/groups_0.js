@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['bsp_20i_2fo_20access',['BSP I/O access',['../group___b_s_p___i_o.html',1,'']]],
-  ['bsp',['BSP',['../group___r_e_n_e_s_a_s___c_o_m_m_o_n.html',1,'']]]
+  ['adc',['ADC',['../group___a_d_c.html',1,'']]],
+  ['adc_20interface',['ADC Interface',['../group___a_d_c___a_p_i.html',1,'']]],
+  ['analog_20to_20digital_20converter_20_28r_5fadc_5fc_29',['Analog to Digital Converter (r_adc_c)',['../group___a_d_c___c.html',1,'']]]
 ];

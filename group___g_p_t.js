@@ -4,6 +4,7 @@ var group___g_p_t =
       [ "output_enabled", "group___g_p_t.html#a5f0b69cc2d3cfe89baefcf348563df21", null ],
       [ "stop_level", "group___g_p_t.html#a5805853871548d015520f71f3ab00e93", null ]
     ] ],
+    [ "gpt_gtior_setting_t", "group___g_p_t.html#structgpt__gtior__setting__t", null ],
     [ "gpt_instance_ctrl_t", "group___g_p_t.html#structgpt__instance__ctrl__t", null ],
     [ "gpt_extended_pwm_cfg_t", "group___g_p_t.html#structgpt__extended__pwm__cfg__t", [
       [ "trough_ipl", "group___g_p_t.html#ad908895a31952a884009f3a63fdac8d0", null ],
@@ -35,12 +36,20 @@ var group___g_p_t =
       [ "capture_b_ipl", "group___g_p_t.html#aae4ebebdd346531add1c9ce3bee52106", null ],
       [ "capture_a_irq", "group___g_p_t.html#a630c77adb426ddddb5eac8b974fd7c85", null ],
       [ "capture_b_irq", "group___g_p_t.html#a22eb63abdf43064c9c83d81287c67c88", null ],
-      [ "p_pwm_cfg", "group___g_p_t.html#a55e5f85f57b77fd7ee5a1de7ff39da27", null ]
+      [ "p_pwm_cfg", "group___g_p_t.html#a55e5f85f57b77fd7ee5a1de7ff39da27", null ],
+      [ "gtior_setting", "group___g_p_t.html#ad8b8b467339a151f016017d175df2f9c", null ]
     ] ],
     [ "gpt_io_pin_t", "group___g_p_t.html#gaabd4a03d16b1b4254cc44c7779f44c60", [
       [ "GPT_IO_PIN_GTIOCA", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60aec2d2c471241869efb57a9a48a5d0eda", null ],
       [ "GPT_IO_PIN_GTIOCB", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60aebd74a7b9507fb082ec4cce60ebe9369", null ],
-      [ "GPT_IO_PIN_GTIOCA_AND_GTIOCB", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60a2b44d1e05050c34cc6e8d9ee4093294d", null ]
+      [ "GPT_IO_PIN_GTIOCA_AND_GTIOCB", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60a2b44d1e05050c34cc6e8d9ee4093294d", null ],
+      [ "GPT_IO_PIN_TROUGH", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60ac68b7e1ef5c48c55960faacd7eb538b9", null ],
+      [ "GPT_IO_PIN_CREST", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60acb3ba96929217eb6bb1ec5b2f1ccf9d4", null ],
+      [ "GPT_IO_PIN_ONE_SHOT_LEADING_EDGE", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60ae3e479af00c84f4ccf6e7376b4b44c8d", null ],
+      [ "GPT_IO_PIN_ONE_SHOT_TRAILING_EDGE", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60a59f7576cde98e497d35b98a926732e52", null ]
+    ] ],
+    [ "gpt_buffer_force_push", "group___g_p_t.html#ga8abd050b841fe99c9b641a22c69501c5", [
+      [ "GPT_BUFFER_FORCE_PUSH", "group___g_p_t.html#gga8abd050b841fe99c9b641a22c69501c5a23c94706bd1a34c9f1b9cfffea30f4cc", null ]
     ] ],
     [ "gpt_pin_level_t", "group___g_p_t.html#ga454c639e426428470ce78115af5d3648", [
       [ "GPT_PIN_LEVEL_LOW", "group___g_p_t.html#gga454c639e426428470ce78115af5d3648a3270f1165e7a86c5b12eecb9501390f4", null ],
@@ -67,10 +76,10 @@ var group___g_p_t =
     ] ],
     [ "gpt_capture_filter_t", "group___g_p_t.html#ga4781e2b42b2ef339318ea0a70b250cd5", [
       [ "GPT_CAPTURE_FILTER_NONE", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5a9b2d993dbb736347b473101f14c1fde6", null ],
-      [ "GPT_CAPTURE_FILTER_P0CLK_DIV_1", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5afbdc1a92e9b7d18e91ad7440144b022b", null ],
-      [ "GPT_CAPTURE_FILTER_P0CLK_DIV_4", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5aa30751bb9a5224fae95f55fd664c26e9", null ],
-      [ "GPT_CAPTURE_FILTER_P0CLK_DIV_16", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5a89dfc5c48b1c33a2aec0382baa92d808", null ],
-      [ "GPT_CAPTURE_FILTER_P0CLK_DIV_64", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5ac7c1be27c3e25a2486b1368df7092e1d", null ]
+      [ "GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_1", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5a01e1b277b55e4fafcb0c196099b51b5f", null ],
+      [ "GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_4", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5aced01a5e1d1ad4aa3f9235dcc503d655", null ],
+      [ "GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_16", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5a1be3c4269df18da7b54a4b884d792c59", null ],
+      [ "GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_64", "group___g_p_t.html#gga4781e2b42b2ef339318ea0a70b250cd5a70176680620465fca73aeda240eb441a", null ]
     ] ],
     [ "gpt_adc_trigger_t", "group___g_p_t.html#ga6dfe4ddfb53ba52c674039fd20b6c2b6", [
       [ "GPT_ADC_TRIGGER_NONE", "group___g_p_t.html#gga6dfe4ddfb53ba52c674039fd20b6c2b6a2818f2fff3a64fd3086a7230dabd7a14", null ],
@@ -127,6 +136,45 @@ var group___g_p_t =
       [ "GPT_BUFFER_MODE_SINGLE", "group___g_p_t.html#gga28d354e417a7a6666e0819387d8e7d8aa55d1a551ce5c866c2917374f34c9dad1", null ],
       [ "GPT_BUFFER_MODE_DOUBLE", "group___g_p_t.html#gga28d354e417a7a6666e0819387d8e7d8aaa04f95e24c83e681190e0553b33ef108", null ]
     ] ],
+    [ "gpt_pwm_output_delay_setting_t", "group___g_p_t.html#ga749be81f99469c5607a684976d9ae374", [
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_0_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ae167098278c50165bf61eec5987d4c53", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_1_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a61477e753d166ccb25b77eced2e6f325", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_2_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a39fed861a0d36f04aa30f3f960e3d2d0", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_3_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a1f1aee9567a12196581000383e8d107b", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_4_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a8b235f3b68210961a821c11efa5bb205", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_5_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374af0aae115f89d76e4f3f48a0d36cf361b", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_6_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a5e6950d7178ff3af05f8f4932436b488", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_7_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a6984fb835233689f0aaebc39c5f9c000", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_8_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374acdb2fab565c1d8a20bdfb3822f326e81", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_9_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a0287632773cfa466bfa3016d67f14da5", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_10_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a196975439836e309f6244a8c0446f047", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_11_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a0198b5305a0a6853fc433ecf75d44f7f", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_12_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a1948c35883b0b199c8e6f89a64e53475", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_13_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a44d17777c6bee08909a70b95f86dc991", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_14_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a061a1822b878e73e25a3f5cc90ea0eea", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_15_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a8d827fe46b88273f1a3ecaafe74a6d72", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_16_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ac0195c74dd5aa183fe0ff13f3d037a47", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_17_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374abc73975b9e30401bbdbb7c5da506025b", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_18_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a95c8ef43442706c12c2ff0d94e1fb4da", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_19_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ac1341d99df3034c6cebc7d6885fc46b8", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_20_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ad781616613593d77ed681403590659e4", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_21_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a84dede23a60f4e4b02604d18a7e3c80a", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_22_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374aa29b8aeb45e93b8086d68f3ce7d60681", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_23_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374afa386802f529b7a1e6440335f29c0803", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_24_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a15baac27b4f36979352681a5b5969517", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_25_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ab000f412ff95dd16ff74748a96a305f8", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_26_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a03edb9eb3fdef9a37dbc4f44a077db5a", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_27_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a046f632a922738bb125dd671e28fc7d8", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_28_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ac9942874a382d4e1f171bcd74db0ac62", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_29_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a9a0fa3e6bcc2de24f85ef0b9a1b4d914", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_30_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a1aeb241069f6fc33d5b9043bf2870596", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_31_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374a8d0ff19f209e9c72f76c20b23a00c7a2", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_SETTING_BYPASS", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374af894b19d25eebc010ed5fc6ccea2cb29", null ]
+    ] ],
+    [ "gpt_pwm_output_delay_edge_t", "group___g_p_t.html#ga6a1389fe5c3bef2301d294b88263628e", [
+      [ "GPT_PWM_OUTPUT_DELAY_EDGE_RISING", "group___g_p_t.html#gga6a1389fe5c3bef2301d294b88263628ea51901797e055f1ec3e4dbe96bff03086", null ],
+      [ "GPT_PWM_OUTPUT_DELAY_EDGE_FALLING", "group___g_p_t.html#gga6a1389fe5c3bef2301d294b88263628eab5c109cf3de710e61c90c3be2d72d9b7", null ]
+    ] ],
     [ "R_GPT_Open", "group___g_p_t.html#ga97d0a9c1a8fb6b88d1c12756dd8ce2d2", null ],
     [ "R_GPT_Stop", "group___g_p_t.html#ga1e6af74d7faaf735f5847a34121eff71", null ],
     [ "R_GPT_Start", "group___g_p_t.html#ga2769f9fda49613246bc84dba41aa4863", null ],
@@ -141,6 +189,8 @@ var group___g_p_t =
     [ "R_GPT_OutputEnable", "group___g_p_t.html#ga0e6638508ec1d5441713195c877bb7a7", null ],
     [ "R_GPT_OutputDisable", "group___g_p_t.html#gae204e5d6c9305923e98724005dcdf03d", null ],
     [ "R_GPT_AdcTriggerSet", "group___g_p_t.html#ga311c91c55f20338f7082fa4369e7c80f", null ],
+    [ "R_GPT_PwmOutputDelaySet", "group___g_p_t.html#gaff2d30ece9bd30b5a9cc2117623834c6", null ],
     [ "R_GPT_CallbackSet", "group___g_p_t.html#ga2a09de185d3b7f1c301b33330931bac4", null ],
-    [ "R_GPT_Close", "group___g_p_t.html#ga2fc5d6a737a00948802e2bb77fbe8d8c", null ]
+    [ "R_GPT_Close", "group___g_p_t.html#ga2fc5d6a737a00948802e2bb77fbe8d8c", null ],
+    [ "R_GPT_PwmOutputDelayInitialize", "group___g_p_t.html#gada982ef1873ca00147f9692b42aba8f0", null ]
 ];

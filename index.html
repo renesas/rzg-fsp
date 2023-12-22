@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: Introduction</title>
+<title>RZG Flexible Software Package Documentation: Introduction</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('index.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('index.html','');});
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="headertitle">
 <div class="title">Introduction </div>  </div>
@@ -110,19 +178,19 @@ $(document).ready(function(){initNavTree('index.html','');});
 </div>
 <div class="textblock"><h1><a class="anchor" id="introduction-overview"></a>
 Overview</h1>
-<p>This manual describes how to use the Renesas Flexible Software Package (FSP) for writing applications for the RZ microprocessors.</p>
+<p>This manual describes how to use the Renesas Flexible Software Package (FSP) for writing applications for the RA microcontroller series.</p>
 <h1><a class="anchor" id="how-to-read"></a>
 Using this Manual</h1>
 <p>This manual provides a wide variety of information, so it can be helpful to know where to start. Here is a short description of each main section and how they can be used.</p>
-<p><a class="el" href="_s_t_a_r_t__d_e_v.html">Starting Development</a> - Provides a step by step guide on how to use e2 studio and FSP to develop a project for RZ MPUs. This is a good place to start to get up to speed quickly and efficiently.</p>
+<p><a class="el" href="_s_t_a_r_t__d_e_v.html">Starting Development</a> - Provides a step by step guide on how to use e2 studio and FSP to develop a project for RA MCUs. This is a good place to start to get up to speed quickly and efficiently.</p>
 <p><a class="el" href="_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html">FSP Architecture</a> - Provides useful background material on key FSP concepts such as Modules, Stacks, and API standards. Reference this section to extend or refresh your knowledge of FSP concepts.</p>
-<p><a href="modules.html">API Reference</a> - Provides detailed information on each module and interface including features, API functions, configuration settings, usage notes, function prototypes and code examples. Board Support Package (BSP) related API functions are also included.</p>
+<p><b><a href="modules.html">API Reference</a></b> - Provides detailed information on each module and interface including features, API functions, configuration settings, usage notes, function prototypes and code examples. Board Support Package (BSP) related API functions are also included.</p>
 <h1><a class="anchor" id="documentation-standard"></a>
 Documentation Standard</h1>
 <p>Each <a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> section user guide outlines the following:</p>
 <ul>
 <li>Features: A bullet list of high level features provided by the module.</li>
-<li>Configuration: A description of module specific configurations available in the RZ Configuration editor.</li>
+<li>Configuration: A description of module specific configurations available in the RA Configuration editor.</li>
 <li>Usage Notes: Module specific documentation and limitations.</li>
 <li>Examples: Example code provided to help the user get started.</li>
 <li>API Reference: Usage notes for each API in the module, including the function prototype and hyperlinks to the interface documentation for parameter definitions.</li>
@@ -147,20 +215,20 @@ Ease of Use</h2>
 <p>FSP provides uniform and intuitive APIs that are well documented. Each module is supported with detailed user documentation including example code.</p>
 <h2><a class="anchor" id="scalability"></a>
 Scalability</h2>
-<p>FSP modules can be used on any MPU in the RZ microprocessors, provided the MPU has any peripherals required by the module.</p>
+<p>FSP modules can be used on any MCU in the RA family, provided the MCU has any peripherals required by the module.</p>
 <h2><a class="anchor" id="build-time-configurations"></a>
 Build Time Configurations</h2>
 <p>FSP modules also have build time configurations that can be used to optimize the size of the module for the feature set required by the application.</p>
 <h2><a class="anchor" id="e2-studio-ide"></a>
 e2 studio IDE</h2>
-<p>FSP provides a host of efficiency enhancing tools for developing projects targeting the Renesas RZ microprocessors. The e2 studio IDE provides a familiar development cockpit from which the key steps of project creation, module selection and configuration, code development, code generation, and debugging are all managed. </p>
+<p>FSP provides a host of efficiency enhancing tools for developing projects targeting the Renesas RA series of MCU devices. The e2 studio IDE provides a familiar development cockpit from which the key steps of project creation, module selection and configuration, code development, code generation, and debugging are all managed. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.7-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

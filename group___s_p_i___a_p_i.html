@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZ/G Flexible Software Package Documentation: SPI Interface</title>
+<title>RZG Flexible Software Package Documentation: SPI Interface</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -19,6 +19,10 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+    <script type="text/javascript" src="search/lunr.js"></script>
+    <link href="search/lunrsearch.css" rel="stylesheet" type="text/css">
+    <script src="search/lunr_index.js"></script>
+    <script src="search/lunrclient.js"></script>
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
@@ -32,24 +36,24 @@
  <tr style="height: 56px;">
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
-   <div id="projectname">RZ/G Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v1.2.0</span>
+   <div id="projectname">RZG Flexible Software Package Documentation
+   &#160;<span id="projectnumber">Release v2.0.0</span>
    </div>
   </td>
-   <td>        <div id="MSearchBox" class="MSearchBoxInactive">
-        <span class="left">
+   <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
+ 
+    <form id="lunrSearchForm" name="lunrSearchForm">
+      <span class="left" >
           <img id="MSearchSelect" src="search/mag_sel.png"
-               onmouseover="return searchBox.OnSearchSelectShow()"
-               onmouseout="return searchBox.OnSearchSelectHide()"
                alt=""/>
-          <input type="text" id="MSearchField" value="Search" accesskey="S"
-               onfocus="searchBox.OnSearchFieldFocus(true)" 
-               onblur="searchBox.OnSearchFieldFocus(false)" 
-               onkeyup="searchBox.OnSearchFieldChange(event)"/>
-          </span><span class="right">
-            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
-          </span>
-        </div>
+         <input class="search-input" id="MSearchField" name="q" placeholder="Search" type="text"> 
+      </span>
+      <span class="right">
+          &nbsp; 
+      </span>
+        <!--<input type="submit" value="Search">-->
+    </form>
+</div>
 </td>
  </tr>
  </tbody>
@@ -74,6 +78,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <script type="text/javascript">
 $(document).ready(function(){initNavTree('group___s_p_i___a_p_i.html','');});
 </script>
+
+<script src="search/mark.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { 
+    var options = {         // allows highlighting across element boundaries.
+      "acrossElements": true
+    };
+    var bodyText = $("div.contents").text(); // try contents instead of body. 
+    // If using body: Problem may be that text inside <script> tags is included in .text() - but not in cheerio?
+    // If using div.contents - works 
+    var fullURL = $(location).attr('href');
+    var splitURL = fullURL.split("?");  // Get param string: content after "?" in URL
+    if (splitURL.length > 1) {          // If any content after "?"
+      var paramStr = splitURL[1];
+      var params = paramStr.split("&"); // Split params on "&"
+      for (i = 0; i < params.length; i++) {
+        var paramPair = params[i].split("=");
+        if (paramPair[0] == "pos") {     // If any param starts "pos", get the content after "="
+          posStr = paramPair[1];
+          var splitPos = posStr.split(",");
+          var termArray = [];
+        // termArray will have the search terms
+            for (i=0; i < splitPos.length; i += 2) {
+            start = splitPos[i];
+            len = splitPos[i+1]; // Needs error detection! Vulnerable if non-even # of pos entries
+            term = bodyText.substr(start,len);
+            if (termArray.includes(term) == false) {     // List all unique terms
+                termArray.push(bodyText.substr(start,len)); 
+            }
+          } 
+    //      console.log(termArray);
+          var context = document.querySelector("div.contents");
+          var instance = new Mark(context);
+          for(i=0;i<termArray.length; i+=1) {
+            instance.mark(termArray[i],options);  // Use Mark.js to mark all terms in termArray
+            }    
+          var firstMark = document.querySelector("mark");
+          firstMark.scrollIntoView(true);
+          //      console.log($("mark").first().text()); // Trying to scroll to first Mark element. 
+        }
+            }
+    }
+  });
+</script>
+
+<link href="fsp_customdoxygen.css" rel="stylesheet" type="text/css" />
+
 <div id="doc-content">
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
@@ -89,6 +140,23 @@ $(document).ready(function(){initNavTree('group___s_p_i___a_p_i.html','');});
 </iframe>
 </div>
 
+
+<!-- Lunr search results -->
+<div id="lunrResultBox" style="
+        position: fixed;
+        border: 1px solid black;
+        background-color: WhiteSmoke;  
+        padding: 10px;
+        width: 500px;
+        height: 500px;
+        top: 30;
+        right: 0;
+        overflow: auto;
+        display: none">
+    <button onclick="closeLunrResults()" style="float: right;">X</button>
+    <div class="resultCount" id="resultCount"></div>
+    <div id="searchResults"></div>
+</div>
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
@@ -547,11 +615,63 @@ Pointer to the API structure for this instance. </td></tr>
 </div><div class="memdoc">
 <p>Data bit width </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdad6fa8af050db98465c43fd25fb8e8090"></a>SPI_BIT_WIDTH_8_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 8 bits byte. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda6a007a4d6a949aeb0ce52aa4f31d3b88"></a>SPI_BIT_WIDTH_4_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 4 bits (byte) </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda62f8d41fec9f532ac41463037534e582"></a>SPI_BIT_WIDTH_16_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 16 bits word. </p>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda3cca9398fbfe913a5c52cd7359864be6"></a>SPI_BIT_WIDTH_5_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 5 bits (byte) </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaf69633d9ed10c0d07cea1ded1b562aed"></a>SPI_BIT_WIDTH_32_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 32 bits long word. </p>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdae5193130db6bdfdf9bb780abf606beb1"></a>SPI_BIT_WIDTH_6_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 6 bits (byte) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdae54951e7d79149bda93b99f18ea2e7a0"></a>SPI_BIT_WIDTH_7_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 7 bits (byte) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdad6fa8af050db98465c43fd25fb8e8090"></a>SPI_BIT_WIDTH_8_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 8 bits (byte) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaf0519b353e4cfb4440088212f4aca8cc"></a>SPI_BIT_WIDTH_9_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 9 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaf1aefd864f4f60e49990d4fad936ce21"></a>SPI_BIT_WIDTH_10_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 10 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda88f58430f3fecf9a39ec42943e0bb733"></a>SPI_BIT_WIDTH_11_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 11 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda1a4f404e28d648b608c5711b5552090b"></a>SPI_BIT_WIDTH_12_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 12 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda75ce94ca33921b755ff60ae3cf781d2a"></a>SPI_BIT_WIDTH_13_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 13 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda8de43c8612ae97eaf447c95718e7f461"></a>SPI_BIT_WIDTH_14_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 14 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda05c6f46ea4bb0182d526a6bf451d68e1"></a>SPI_BIT_WIDTH_15_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 15 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda62f8d41fec9f532ac41463037534e582"></a>SPI_BIT_WIDTH_16_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 16 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaaf752ab8e386cd474ee33d83df10ad88"></a>SPI_BIT_WIDTH_17_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 17 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda0f15c66b4564dce0f4811d754186ad12"></a>SPI_BIT_WIDTH_18_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 18 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaf8e4023bcac026b1d1930114105da401"></a>SPI_BIT_WIDTH_19_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 19 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaa0e0e171fd2f36e3fa41cfb960842396"></a>SPI_BIT_WIDTH_20_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 20 bits (longword) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdad0a9bce1bfca6895716ee32d198f949d"></a>SPI_BIT_WIDTH_21_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 21 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda2b1e938b3bb827bcacb1a6d74f4c60f7"></a>SPI_BIT_WIDTH_22_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 22 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda303f3f218214fd2a69e4fc2511974024"></a>SPI_BIT_WIDTH_23_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 23 bits (longword) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda5696f5183bed267a4d0023bdc19bb357"></a>SPI_BIT_WIDTH_24_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 24 bits (longword) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda6d44c4678bc27af2e39a8a22e78e6cf0"></a>SPI_BIT_WIDTH_25_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 25 bits (longword) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda56b072a3333dd1637f9b1488f7fb208b"></a>SPI_BIT_WIDTH_26_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 26 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda8df31a66c303df4aba56807aae14c4c9"></a>SPI_BIT_WIDTH_27_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 27 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda11d6d5a759ae229607060f7cf6d8102d"></a>SPI_BIT_WIDTH_28_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 28 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda09bb056981764315ea1d3f979f453129"></a>SPI_BIT_WIDTH_29_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 29 bits (word) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fda0b55867d8d019e07982c011e04f1f4ac"></a>SPI_BIT_WIDTH_30_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 30 bits (longword) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdabe79ca891b6f1b7b60317f5425a6b9cf"></a>SPI_BIT_WIDTH_31_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 31 bits (longword) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga6ba4a8eef274a5b227fc2ab6ee61f8fdaf69633d9ed10c0d07cea1ded1b562aed"></a>SPI_BIT_WIDTH_32_BITS&#160;</td><td class="fielddoc"><p>Data bit width is 32 bits (longword) </p>
 </td></tr>
 </table>
 
@@ -701,7 +821,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">RZ/G FSP Release v1.2.0 API Reference Copyright © (2022) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v2.0.0 User's Manual Copyright © (2023) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

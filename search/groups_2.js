@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['external_20irq_20interface',['External IRQ Interface',['../group___e_x_t_e_r_n_a_l___i_r_q___a_p_i.html',1,'']]],
-  ['external_20irq_20_28r_5fintc_5firq_29',['External IRQ (r_intc_irq)',['../group___i_n_t_c___i_r_q.html',1,'']]]
+  ['can_20interface',['CAN Interface',['../group___c_a_n___a_p_i.html',1,'']]],
+  ['controller_20area_20network_20_2d_20flexible_20data_20_28r_5fcanfd_29',['Controller Area Network - Flexible Data (r_canfd)',['../group___c_a_n_f_d.html',1,'']]],
+  ['common_20error_20codes',['Common Error Codes',['../group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html',1,'']]]
 ];

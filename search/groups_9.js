@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['rzg2l',['RZG2L',['../group___b_s_p___m_c_u___r_z_g2_l.html',1,'']]],
-  ['rzg2ul',['RZG2UL',['../group___b_s_p___m_c_u___r_z_g2_u_l.html',1,'']]],
-  ['renesas_20serial_20peripheral_20interface_20_28r_5frspi_29',['Renesas Serial Peripheral Interface (r_rspi)',['../group___r_s_p_i.html',1,'']]]
+  ['port_20output_20enable_20for_20gpt_20_28r_5fpoeg_29',['Port Output Enable for GPT (r_poeg)',['../group___p_o_e_g.html',1,'']]],
+  ['poeg_20interface',['POEG Interface',['../group___p_o_e_g___a_p_i.html',1,'']]]
 ];

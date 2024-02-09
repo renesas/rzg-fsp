@@ -14,5 +14,9 @@ var group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s =
     [ "Timer Interface", "group___t_i_m_e_r___a_p_i.html", "group___t_i_m_e_r___a_p_i" ],
     [ "Transfer Interface", "group___t_r_a_n_s_f_e_r___a_p_i.html", "group___t_r_a_n_s_f_e_r___a_p_i" ],
     [ "UART Interface", "group___u_a_r_t___a_p_i.html", "group___u_a_r_t___a_p_i" ],
-    [ "WDT Interface", "group___w_d_t___a_p_i.html", "group___w_d_t___a_p_i" ]
+    [ "WDT Interface", "group___w_d_t___a_p_i.html", "group___w_d_t___a_p_i" ],
+    [ "Communicatons Middleware Interface", "group___r_m___c_o_m_m_s___a_p_i.html", "group___r_m___c_o_m_m_s___a_p_i" ],
+    [ "HS300X Middleware Interface", "group___r_m___h_s300_x___a_p_i.html", "group___r_m___h_s300_x___a_p_i" ],
+    [ "HS400X Middleware Interface", "group___r_m___h_s400_x___a_p_i.html", "group___r_m___h_s400_x___a_p_i" ],
+    [ "ZMOD4XXX Middleware Interface", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html", "group___r_m___z_m_o_d4_x_x_x___a_p_i" ]
 ];

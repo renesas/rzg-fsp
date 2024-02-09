@@ -7,6 +7,7 @@ var searchData=
   ['bit_5fwidth',['bit_width',['../group___r_s_p_i.html#a4ed0f4d1ff28b7be854d963b057035d7',1,'rspi_instance_ctrl_t']]],
   ['block_5fcount_5fmax',['block_count_max',['../group___t_r_a_n_s_f_e_r___a_p_i.html#ab480a287279e160d73f60173605485ca',1,'transfer_properties_t']]],
   ['block_5fcount_5fremaining',['block_count_remaining',['../group___t_r_a_n_s_f_e_r___a_p_i.html#aaa2d7970aa8501e9d3929c7bdf05d357',1,'transfer_properties_t']]],
+  ['blocking',['blocking',['../group___r_m___h_s300_x.html#a77ac61db4e87b179e4c59aa1f152ce02',1,'rm_hs300x_programmnig_mode_params_t']]],
   ['brdv',['brdv',['../group___r_s_p_i.html#a2f8227792623b013057699e8e4edec1e',1,'rspi_rspck_div_setting_t']]],
   ['brh_5fvalue',['brh_value',['../group___r_i_i_c___m_a_s_t_e_r.html#a020f8656c45afc7d90378c7ef26a6955',1,'iic_master_clock_settings_t']]],
   ['bri_5fipl',['bri_ipl',['../group___s_c_i_f___u_a_r_t.html#a3fa97958f621b33bee457ec6bc136bed',1,'scif_uart_extended_cfg_t']]],
@@ -293,6 +294,7 @@ var searchData=
   ['bsp_5fxspi_5fvoltage_5f25',['BSP_XSPI_VOLTAGE_25',['../group___b_s_p___i_o.html#ggaca40cd8c80dc5bf04d65d3d5db9e3d7ca37e1061cff55bbab7d5ddae4071322dd',1,'bsp_io.h']]],
   ['bsp_5fxspi_5fvoltage_5f33',['BSP_XSPI_VOLTAGE_33',['../group___b_s_p___i_o.html#ggaca40cd8c80dc5bf04d65d3d5db9e3d7ca731b6ae8493cc93ec326574439aa983d',1,'bsp_io.h']]],
   ['bsp_5fxspi_5fvoltage_5ft',['bsp_xspi_voltage_t',['../group___b_s_p___i_o.html#gaca40cd8c80dc5bf04d65d3d5db9e3d7c',1,'bsp_io.h']]],
+  ['buf',['buf',['../group___r_m___h_s300_x.html#a486df3e0ed2af6c8c038e1357572da53',1,'rm_hs300x_instance_ctrl_t::buf()'],['../group___r_m___z_m_o_d4_x_x_x.html#a0a1702cc41dc3a4c35e5c81f95b55295',1,'rm_zmod4xxx_instance_ctrl_t::buf()']]],
   ['buffer_5finit_5fvalue',['buffer_init_value',['../group___i_o_p_o_r_t.html#a8cacbb5efbafad8505bd0140ece21b08',1,'ioport_event_group_input_t']]],
   ['buffer_5fmode',['buffer_mode',['../group___a_d_c___c.html#a8ccf8c0714c173bc9e9d536df5df56f9',1,'adc_c_extended_cfg_t']]],
   ['bsp',['BSP',['../group___r_e_n_e_s_a_s___c_o_m_m_o_n.html',1,'']]]

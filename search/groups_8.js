@@ -1,13 +1,10 @@
 var searchData=
 [
-  ['mpu_20board_20support_20package',['MPU Board Support Package',['../group___b_s_p___m_c_u.html',1,'']]],
-  ['mhu_20interface_20_28for_20secure_20and_20non_20secure_20channels_29',['MHU Interface (for secure and non secure channels)',['../group___m_h_u___a_p_i.html',1,'']]],
-  ['message_20handling_20unit_20for_20non_20secure_20channels_20_28r_5fmhu_5fns_29',['Message Handling Unit for non secure channels (r_mhu_ns)',['../group___m_h_u___n_s.html',1,'']]],
-  ['message_20handling_20unit_20for_20non_2dsecure_20software_20interrupt_20receive_20_28r_5fmhu_5fns_5fswint_5fget_29',['Message Handling Unit for non-secure software interrupt receive (r_mhu_ns_swint_get)',['../group___m_h_u___n_s___s_w_i_n_t___g_e_t.html',1,'']]],
-  ['mhu_20interface_20_28software_20interrupt_20get_29',['MHU Interface (Software Interrupt Get)',['../group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html',1,'']]],
-  ['message_20handling_20unit_20for_20non_2dsecure_20software_20interrupt_20generation_20_28r_5fmhu_5fns_5fswint_5fset_29',['Message Handling Unit for non-secure software interrupt generation (r_mhu_ns_swint_set)',['../group___m_h_u___n_s___s_w_i_n_t___s_e_t.html',1,'']]],
-  ['mhu_20interface_20_28software_20interrupt_20set_29',['MHU Interface (Software Interrupt Set)',['../group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html',1,'']]],
-  ['message_20handling_20unit_20for_20secure_20channels_20_28r_5fmhu_5fs_29',['Message Handling Unit for secure channels (r_mhu_s)',['../group___m_h_u___s.html',1,'']]],
-  ['multi_2dfunction_20timer_20pulse_20unit_203_20_28r_5fmtu3_29',['Multi-Function Timer Pulse Unit 3 (r_mtu3)',['../group___m_t_u3.html',1,'']]],
-  ['modules',['Modules',['../group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html',1,'']]]
+  ['i2c_20master_20interface',['I2C Master Interface',['../group___i2_c___m_a_s_t_e_r___a_p_i.html',1,'']]],
+  ['i_2fo_20ports_20_28r_5fioport_29',['I/O Ports (r_ioport)',['../group___i_o_p_o_r_t.html',1,'']]],
+  ['i_2fo_20port_20interface',['I/O Port Interface',['../group___i_o_p_o_r_t___a_p_i.html',1,'']]],
+  ['input',['Input',['../group___r_e_n_e_s_a_s___i_n_p_u_t___m_o_d_u_l_e_s.html',1,'']]],
+  ['interfaces',['Interfaces',['../group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html',1,'']]],
+  ['i2c_20master_20on_20riic_20_28r_5friic_5fmaster_29',['I2C Master on RIIC (r_riic_master)',['../group___r_i_i_c___m_a_s_t_e_r.html',1,'']]],
+  ['i2c_20communication_20device_20_28rm_5fcomms_5fi2c_29',['I2C Communication Device (rm_comms_i2c)',['../group___r_m___c_o_m_m_s___i2_c.html',1,'']]]
 ];

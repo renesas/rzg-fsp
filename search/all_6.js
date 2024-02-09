@@ -1,8 +1,10 @@
 var searchData=
 [
+  ['fast_5faqi',['fast_aqi',['../group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a84160c2d9ba22577f86b7bbdb3521845',1,'rm_zmod4xxx_oaq_2nd_data_t']]],
   ['filter_5fenable',['filter_enable',['../group___e_x_t_e_r_n_a_l___i_r_q___a_p_i.html#aa77181dcffe927e006c2ed112c1a62ad',1,'external_irq_cfg_t']]],
   ['flow_5fcontrol',['flow_control',['../group___s_c_i_f___u_a_r_t.html#aa761132ebac67c5cbbc3d6a505b97efe',1,'scif_uart_extended_cfg_t']]],
   ['frame',['frame',['../group___c_a_n___a_p_i.html#aa8706fd62e652e6582d3c9eb155fb610',1,'can_callback_args_t']]],
+  ['frequency',['frequency',['../group___r_m___h_s400_x___a_p_i.html#a4a9e3392df8193428e1907f2e4a315b9',1,'rm_hs400x_cfg_t']]],
   ['fsp_20architecture',['FSP Architecture',['../_f_s_p__a_r_c_h_i_t_e_c_t_u_r_e.html',1,'']]],
   ['fsp_5fassert',['FSP_ASSERT',['../group___b_s_p___m_c_u.html#gaa4fa8ae9390afa996af2dabee6552732',1,'bsp_common.h']]],
   ['fsp_5fcpp_5fheader',['FSP_CPP_HEADER',['../group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#ga91dbefc93c284cc4ae3960bc1b371bb8',1,'fsp_common_api.h']]],

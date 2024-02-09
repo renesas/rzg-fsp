@@ -18,63 +18,43 @@
  * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
  **********************************************************************************************************************/
 
-#ifndef FSP_VERSION_H
-#define FSP_VERSION_H
-
-/***********************************************************************************************************************
- * Includes
- **********************************************************************************************************************/
-
-/* Includes board and MCU related header files. */
-#include "bsp_api.h"
-
-/*******************************************************************************************************************//**
- * @addtogroup RENESAS_COMMON
- * @{
- **********************************************************************************************************************/
+/**********************************************************************************************************************
+ * Includes   <System Includes> , "Project Includes"
+ *********************************************************************************************************************/
+#include "rm_hs400x.h"
 
 /**********************************************************************************************************************
  * Macro definitions
- **********************************************************************************************************************/
-
-/** FSP pack major version. */
-#define FSP_VERSION_MAJOR (2U)
-
-/** FSP pack minor version. */
-#define FSP_VERSION_MINOR (0U)
-
-/** FSP pack patch version. */
-#define FSP_VERSION_PATCH (1U)
-
-/** FSP pack version build number (currently unused). */
-#define FSP_VERSION_BUILD           (0U)
-
-/** Public FSP version name. */
-#define FSP_VERSION_STRING          ("2.0.1")
-
-/** Unique FSP version ID. */
-#define FSP_VERSION_BUILD_STRING    ("Built with RZ/G Flexible Software Package version 2.0.1")
+ *********************************************************************************************************************/
 
 /**********************************************************************************************************************
- * Typedef definitions
+ * Local Typedef definitions
+ *********************************************************************************************************************/
+
+/**********************************************************************************************************************
+ * Exported global variables
+ *********************************************************************************************************************/
+fsp_err_t rm_hs400x_delay_ms(rm_hs400x_ctrl_t * const p_ctrl, uint32_t const delay_ms);
+
+/**********************************************************************************************************************
+ * Private (static) variables and functions
+ *********************************************************************************************************************/
+
+/***********************************************************************************************************************
+ * Functions
  **********************************************************************************************************************/
 
-/** FSP Pack version structure */
-typedef union st_fsp_pack_version
+/*******************************************************************************************************************//**
+ * @brief Delay some microseconds.
+ *
+ * @retval FSP_SUCCESS              successfully configured.
+ **********************************************************************************************************************/
+fsp_err_t rm_hs400x_delay_ms (rm_hs400x_ctrl_t * const p_ctrl, uint32_t const delay_ms)
 {
-    /** Version id */
-    uint32_t version_id;
+    FSP_PARAMETER_NOT_USED(p_ctrl);
 
-    /** Code version parameters, little endian order. */
-    struct
-    {
-        uint8_t build;                 ///< Build version of FSP Pack
-        uint8_t patch;                 ///< Patch version of FSP Pack
-        uint8_t minor;                 ///< Minor version of FSP Pack
-        uint8_t major;                 ///< Major version of FSP Pack
-    };
-} fsp_pack_version_t;
+    /* Software delay */
+    R_BSP_SoftwareDelay(delay_ms, BSP_DELAY_UNITS_MILLISECONDS);
 
-/** @} */
-
-#endif
+    return FSP_SUCCESS;
+}

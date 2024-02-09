@@ -31,13 +31,13 @@
 #define ADC_C_OPEN                               (0x41444343U)
 
 /* A/D converter stabilization wait time. */
-#define ADC_C_STABILIZATION_DELAY_US                  (1U)
-#define ADC_C_FRQ_DIV_RATIO                           (4U)
-#define ADC_C_IDLE_TIME                               (0U)
-#define ADC_C_PRV_ADM0_CLEAR_ADCE                     (~R_ADC_C_ADM0_ADCE_Msk)
-#define ADC_C_DATA_SIZE_BUFFER_MODE_4                 (4U)
-#define ADC_C_INTERRUPT_CHANNEL_BUFFER_MODE_4         (0x8U)
-#define ADC_C_4_BUFFER_CHANNEL_MASK                   (0xFU)
+#define ADC_C_STABILIZATION_DELAY_US             (1U)
+#define ADC_C_FRQ_DIV_RATIO                      (4U)
+#define ADC_C_IDLE_TIME                          (0U)
+#define ADC_C_PRV_ADM0_CLEAR_ADCE                (~R_ADC_C_ADM0_ADCE_Msk)
+#define ADC_C_DATA_SIZE_BUFFER_MODE_4            (4U)
+#define ADC_C_INTERRUPT_CHANNEL_BUFFER_MODE_4    (0x8U)
+#define ADC_C_4_BUFFER_CHANNEL_MASK              (0xFU)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -85,7 +85,7 @@ const adc_api_t g_adc_on_adc =
 };
 
 /*******************************************************************************************************************//**
- * @addtogroup ADC
+ * @addtogroup ADC_C
  * @{
  **********************************************************************************************************************/
 
@@ -357,7 +357,6 @@ fsp_err_t R_ADC_C_Read (adc_ctrl_t * p_ctrl, adc_channel_t const reg_id, uint16_
     /* Verify that the channel is valid for this MCU */
     uint32_t requested_channel_mask = (1U << (uint32_t) reg_id);
     FSP_ASSERT(0 != (requested_channel_mask & BSP_FEATURE_ADC_C_VALID_CHANNEL_MASK));
-
 #endif
 
     /* Read the data from the requested ADC conversion register and return it */
@@ -493,8 +492,8 @@ fsp_err_t R_ADC_C_InfoGet (adc_ctrl_t * p_ctrl, adc_info_t * p_adc_info)
     /* Read into memory. */
     p_adc_info->calibration_data1 = R_TSU->OTPTSUTRIM0_REG_b.OTPTSUTRIM0;
     p_adc_info->calibration_data2 = R_TSU->OTPTSUTRIM1_REG_b.OTPTSUTRIM1;
-
 #else
+
     /* Set Temp Sensor calibration data to invalid value */
     p_adc_info->calibration_data1 = UINT32_MAX;
     p_adc_info->calibration_data2 = UINT32_MAX;
@@ -535,7 +534,7 @@ fsp_err_t R_ADC_C_Close (adc_ctrl_t * p_ctrl)
     /* Clear the interrupt cause flag and trigger detection flag.  */
     uint32_t adsts = (uint32_t) (1 << R_ADC_C_ADSTS_TRGS_Pos);
     adsts |= (uint32_t) (BSP_FEATURE_ADC_C_VALID_CHANNEL_MASK << R_ADC_C_ADSTS_INTST_Pos);
-    p_instance_ctrl->p_reg->ADSTS   = adsts;
+    p_instance_ctrl->p_reg->ADSTS = adsts;
 
     R_BSP_MODULE_STOP(FSP_IP_ADC, 0);
 
@@ -548,7 +547,6 @@ fsp_err_t R_ADC_C_Close (adc_ctrl_t * p_ctrl)
 
         /* Stop the TSU. */
         R_BSP_MODULE_STOP(FSP_IP_TSU, 0);
-
 #endif
     }
 
@@ -586,7 +584,7 @@ fsp_err_t R_ADC_C_OffsetSet (adc_ctrl_t * const p_ctrl, adc_channel_t const reg_
 }
 
 /*******************************************************************************************************************//**
- * @} (end addtogroup ADC)
+ * @} (end addtogroup ADC_C)
  **********************************************************************************************************************/
 
 /***********************************************************************************************************************
@@ -606,9 +604,7 @@ static void r_adc_c_open_sub (adc_c_instance_ctrl_t * const p_instance_ctrl, adc
     /* Determine the value for ADM0, ADM1, ADM3, ADIVC, ADFIL.:
      * The value to set in ADCSR to start a scan is stored in the control structure.
      * ADM0.ADCE is set in R_ADC_ScanStart.
-     */
-
-    /* Sets the trigger mode. */
+     *//* Sets the trigger mode. */
     uint32_t adm1 = (uint32_t) (p_cfg_extend->trigger_mode << R_ADC_C_ADM1_TRG_Pos);
 
     /* When using hardware trigger mode, set the hardware trigger signal parameter. */
@@ -661,6 +657,7 @@ static void r_adc_c_open_sub (adc_c_instance_ctrl_t * const p_instance_ctrl, adc
     if (ADC_C_FILTER_STAGE_SETTING_DISABLE != p_cfg_extend->external_trigger_filter)
     {
         adfil = (uint32_t) (1 << R_ADC_C_ADFIL_FILONOFF_Pos);
+
         /* Set the number of stages of the AD external trigger pin filter. */
         adfil |= (uint32_t) ((p_cfg_extend->external_trigger_filter - 1) << R_ADC_C_ADFIL_FILNUM_Pos);
     }
@@ -692,7 +689,7 @@ static void r_adc_c_open_sub (adc_c_instance_ctrl_t * const p_instance_ctrl, adc
     /* Clear the interrupt cause flag and trigger detection flag.  */
     uint32_t adsts = (uint32_t) (1 << R_ADC_C_ADSTS_TRGS_Pos);
     adsts |= (uint32_t) (BSP_FEATURE_ADC_C_VALID_CHANNEL_MASK << R_ADC_C_ADSTS_INTST_Pos);
-    p_instance_ctrl->p_reg->ADSTS   = adsts;
+    p_instance_ctrl->p_reg->ADSTS = adsts;
 
     /* Set the predetermined values for ADM1, ADM3, ADINT, ADIVC, and ADFIL.
      * ADM0.ADCE are set as configured in R_ADC_ScanStart. */
@@ -705,7 +702,7 @@ static void r_adc_c_open_sub (adc_c_instance_ctrl_t * const p_instance_ctrl, adc
 
     /* Change from power-saving mode to normal mode. */
     adm0 |= (uint32_t) (1 << R_ADC_C_ADM0_PWDWNB_Pos);
-    p_instance_ctrl->p_reg->ADM0    = adm0;
+    p_instance_ctrl->p_reg->ADM0 = adm0;
 
     /* Secure the A/D converter stabilization wait time. */
     R_BSP_SoftwareDelay(ADC_C_STABILIZATION_DELAY_US, BSP_DELAY_UNITS_MICROSECONDS);
@@ -753,7 +750,7 @@ static void r_adc_c_scan_cfg (adc_c_instance_ctrl_t * const     p_instance_ctrl,
     }
 
     /* Set mask for channels. */
-    p_instance_ctrl->p_reg->ADM2 = (uint32_t)(p_channel_cfg->scan_mask & (uint32_t)R_ADC_C_ADM2_CHSEL_Msk);
+    p_instance_ctrl->p_reg->ADM2 = (uint32_t) (p_channel_cfg->scan_mask & (uint32_t) R_ADC_C_ADM2_CHSEL_Msk);
 
     /* Disables the A/D conversion channel select error interrupt. */
     uint32_t adint = (uint32_t) (0 << R_ADC_C_ADINT_CSEEN_Pos);
@@ -958,7 +955,7 @@ void adc_c_scan_end_isr (void)
 
     /* Clear the interrupt cause flag.  */
     adsts |= (uint32_t) (R_ADC_C_ADSTS_INTST_Msk << R_ADC_C_ADSTS_INTST_Pos);
-    p_instance_ctrl->p_reg->ADSTS   = adsts;
+    p_instance_ctrl->p_reg->ADSTS = adsts;
 
     /* Dummy read the ADSTS bit. */
     volatile uint32_t dummy = p_instance_ctrl->p_reg->ADSTS;

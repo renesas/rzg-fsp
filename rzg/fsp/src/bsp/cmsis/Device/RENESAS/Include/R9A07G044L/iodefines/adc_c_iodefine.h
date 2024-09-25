@@ -1,22 +1,8 @@
-/***********************************************************************************************************************
- * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
- *
- * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
- * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
- * Renesas products are sold pursuant to Renesas terms and conditions of sale.  Purchasers are solely responsible for
- * the selection and use of Renesas products and Renesas assumes no liability.  No license, express or implied, to any
- * intellectual property right is granted by Renesas.  This software is protected under all applicable laws, including
- * copyright laws. Renesas reserves the right to change or discontinue this software and/or this documentation.
- * THE SOFTWARE AND DOCUMENTATION IS DELIVERED TO YOU "AS IS," AND RENESAS MAKES NO REPRESENTATIONS OR WARRANTIES, AND
- * TO THE FULLEST EXTENT PERMISSIBLE UNDER APPLICABLE LAW, DISCLAIMS ALL WARRANTIES, WHETHER EXPLICITLY OR IMPLICITLY,
- * INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT, WITH RESPECT TO THE
- * SOFTWARE OR DOCUMENTATION.  RENESAS SHALL HAVE NO LIABILITY ARISING OUT OF ANY SECURITY VULNERABILITY OR BREACH.
- * TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL RENESAS BE LIABLE TO YOU IN CONNECTION WITH THE SOFTWARE OR
- * DOCUMENTATION (OR ANY PERSON OR ENTITY CLAIMING RIGHTS DERIVED FROM YOU) FOR ANY LOSS, DAMAGES, OR CLAIMS WHATSOEVER,
- * INCLUDING, WITHOUT LIMITATION, ANY DIRECT, CONSEQUENTIAL, SPECIAL, INDIRECT, PUNITIVE, OR INCIDENTAL DAMAGES; ANY
- * LOST PROFITS, OTHER ECONOMIC DAMAGE, PROPERTY DAMAGE, OR PERSONAL INJURY; AND EVEN IF RENESAS HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
- **********************************************************************************************************************/
+/*
+* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+*
+* SPDX-License-Identifier: BSD-3-Clause
+*/
 
 /**********************************************************************************************************************
  * File Name    : adc_c_iodefine.h
@@ -72,8 +58,8 @@ typedef struct
         __IOM uint32_t ADM2;
         struct
         {
-            __IOM uint32_t CHSEL : 9;
-            uint32_t             : 23;
+            __IOM uint32_t CHSEL : 8;
+            uint32_t             : 24;
         } ADM2_b;
     };
     union
@@ -81,8 +67,7 @@ typedef struct
         __IOM uint32_t ADM3;
         struct
         {
-            __IOM uint32_t ADSMP : 8;
-            uint32_t             : 8;
+            __IOM uint32_t ADSMP : 16;
             __IOM uint32_t ADCMP : 8;
             __IOM uint32_t ADIL  : 8;
         } ADM3_b;
@@ -93,8 +78,8 @@ typedef struct
         __IOM uint32_t ADINT;
         struct
         {
-            __IOM uint32_t INTEN : 12;
-            uint32_t             : 4;
+            __IOM uint32_t INTEN : 8;
+            uint32_t             : 8;
             __IOM uint32_t CSEEN : 1;
             uint32_t             : 14;
             __IM uint32_t INTS   : 1;
@@ -105,8 +90,8 @@ typedef struct
         __IOM uint32_t ADSTS;
         struct
         {
-            __IOM uint32_t INTST : 9;
-            uint32_t             : 7;
+            __IOM uint32_t INTST : 8;
+            uint32_t             : 8;
             __IOM uint32_t CSEST : 1;
             uint32_t             : 14;
             __IOM uint32_t TRGS  : 1;

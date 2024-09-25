@@ -1,22 +1,8 @@
-/***********************************************************************************************************************
- * Copyright [2020-2022] Renesas Electronics Corporation and/or its affiliates.  All Rights Reserved.
- *
- * This software and documentation are supplied by Renesas Electronics Corporation and/or its affiliates and may only
- * be used with products of Renesas Electronics Corp. and its affiliates ("Renesas").  No other uses are authorized.
- * Renesas products are sold pursuant to Renesas terms and conditions of sale.  Purchasers are solely responsible for
- * the selection and use of Renesas products and Renesas assumes no liability.  No license, express or implied, to any
- * intellectual property right is granted by Renesas.  This software is protected under all applicable laws, including
- * copyright laws. Renesas reserves the right to change or discontinue this software and/or this documentation.
- * THE SOFTWARE AND DOCUMENTATION IS DELIVERED TO YOU "AS IS," AND RENESAS MAKES NO REPRESENTATIONS OR WARRANTIES, AND
- * TO THE FULLEST EXTENT PERMISSIBLE UNDER APPLICABLE LAW, DISCLAIMS ALL WARRANTIES, WHETHER EXPLICITLY OR IMPLICITLY,
- * INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT, WITH RESPECT TO THE
- * SOFTWARE OR DOCUMENTATION.  RENESAS SHALL HAVE NO LIABILITY ARISING OUT OF ANY SECURITY VULNERABILITY OR BREACH.
- * TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT WILL RENESAS BE LIABLE TO YOU IN CONNECTION WITH THE SOFTWARE OR
- * DOCUMENTATION (OR ANY PERSON OR ENTITY CLAIMING RIGHTS DERIVED FROM YOU) FOR ANY LOSS, DAMAGES, OR CLAIMS WHATSOEVER,
- * INCLUDING, WITHOUT LIMITATION, ANY DIRECT, CONSEQUENTIAL, SPECIAL, INDIRECT, PUNITIVE, OR INCIDENTAL DAMAGES; ANY
- * LOST PROFITS, OTHER ECONOMIC DAMAGE, PROPERTY DAMAGE, OR PERSONAL INJURY; AND EVEN IF RENESAS HAS BEEN ADVISED OF THE
- * POSSIBILITY OF SUCH LOSS, DAMAGES, CLAIMS OR COSTS.
- **********************************************************************************************************************/
+/*
+* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+*
+* SPDX-License-Identifier: BSD-3-Clause
+*/
 
 /***********************************************************************************************************************
  * Includes
@@ -28,43 +14,43 @@
  * Macro definitions
  **********************************************************************************************************************/
 
-#define CANFD_OPEN                         (0x52434644U) // "RCFD" in ASCII
+#define CANFD_OPEN                       (0x52434644U) // "RCFD" in ASCII
 
-#define CANFD_BAUD_RATE_PRESCALER_MIN      (1U)
-#define CANFD_BAUD_RATE_PRESCALER_MAX      (1024U)
+#define CANFD_BAUD_RATE_PRESCALER_MIN    (1U)
+#define CANFD_BAUD_RATE_PRESCALER_MAX    (1024U)
 
-#define CANFD_PRV_CTR_MODE_MASK            (R_CANFD_CFDGCTR_GSLPR_Msk + R_CANFD_CFDGCTR_GMDC_Msk)
-#define CANFD_PRV_CTR_RESET_BIT            (1U)
-#define CANFD_PRV_STANDARD_ID_MAX          (0x7FFU)
+#define CANFD_PRV_CTR_MODE_MASK          (R_CANFD_CFDGCTR_GSLPR_Msk + R_CANFD_CFDGCTR_GMDC_Msk)
+#define CANFD_PRV_CTR_RESET_BIT          (1U)
+#define CANFD_PRV_STANDARD_ID_MAX        (0x7FFU)
 
 #if BSP_FEATURE_CANFD_LITE
- #define R_CANFD_CFDRM_RM_TYPE             R_CANFD_CFDRM_RM_Type
+ #define R_CANFD_CFDRM_RM_TYPE           R_CANFD_CFDRM_RM_Type
 
  #define CANFD_PRV_RXMB_PTR(buffer)    ((volatile R_CANFD_CFDRM_RM_TYPE *) &p_reg->CFDRM[buffer >> 3].RM[buffer & 7U])
- #define CANFD_PRV_RX_FIFO_MAX             (2U)
- #define CANFD_PRV_CFDTMIEC_LENGTH         (1)
- #define CANFD_PRV_RMID_POSITION           (R_CANFD_CFDRM_RM_ID_RMID_Pos)
- #define CANFD_PRV_RMID_MASK               (R_CANFD_CFDRM_RM_ID_RMID_Msk)
- #define CANFD_PRV_RMRTR_POSITION          (R_CANFD_CFDRM_RM_ID_RMRTR_Pos)
- #define CANFD_PRV_RMRTR_MASK              (R_CANFD_CFDRM_RM_ID_RMRTR_Msk)
- #define CANFD_PRV_RMIDE_POSITION          (R_CANFD_CFDRM_RM_ID_RMIDE_Pos)
- #define CANFD_PRV_RMIDE_MASK              (R_CANFD_CFDRM_RM_ID_RMIDE_Msk)
- #define CANFD_PRV_RMDLC_POSITION          (R_CANFD_CFDRM_RM_PTR_RMDLC_Pos)
- #define CANFD_PRV_RMDLC_MASK              (R_CANFD_CFDRM_RM_PTR_RMDLC_Msk)
+ #define CANFD_PRV_RX_FIFO_MAX           (2U)
+ #define CANFD_PRV_CFDTMIEC_LENGTH       (1)
+ #define CANFD_PRV_RMID_POSITION         (R_CANFD_CFDRM_RM_ID_RMID_Pos)
+ #define CANFD_PRV_RMID_MASK             (R_CANFD_CFDRM_RM_ID_RMID_Msk)
+ #define CANFD_PRV_RMRTR_POSITION        (R_CANFD_CFDRM_RM_ID_RMRTR_Pos)
+ #define CANFD_PRV_RMRTR_MASK            (R_CANFD_CFDRM_RM_ID_RMRTR_Msk)
+ #define CANFD_PRV_RMIDE_POSITION        (R_CANFD_CFDRM_RM_ID_RMIDE_Pos)
+ #define CANFD_PRV_RMIDE_MASK            (R_CANFD_CFDRM_RM_ID_RMIDE_Msk)
+ #define CANFD_PRV_RMDLC_POSITION        (R_CANFD_CFDRM_RM_PTR_RMDLC_Pos)
+ #define CANFD_PRV_RMDLC_MASK            (R_CANFD_CFDRM_RM_PTR_RMDLC_Msk)
 #else
- #define R_CANFD_CFDRM_RM_TYPE             R_CANFD_CFDRM_Type
+ #define R_CANFD_CFDRM_RM_TYPE           R_CANFD_CFDRM_Type
 
  #define CANFD_PRV_RXMB_PTR(buffer)    (&p_reg->CFDRM[buffer])
- #define CANFD_PRV_RX_FIFO_MAX             (8U)
- #define CANFD_PRV_CFDTMIEC_LENGTH         (2)
- #define CANFD_PRV_RMID_POSITION           (R_CANFD_CFDRM_ID_RMID_Pos)
- #define CANFD_PRV_RMID_MASK               (R_CANFD_CFDRM_ID_RMID_Msk)
- #define CANFD_PRV_RMRTR_POSITION          (R_CANFD_CFDRM_ID_RMRTR_Pos)
- #define CANFD_PRV_RMRTR_MASK              (R_CANFD_CFDRM_ID_RMRTR_Msk)
- #define CANFD_PRV_RMIDE_POSITION          (R_CANFD_CFDRM_ID_RMIDE_Pos)
- #define CANFD_PRV_RMIDE_MASK              (R_CANFD_CFDRM_ID_RMIDE_Msk)
- #define CANFD_PRV_RMDLC_POSITION          (R_CANFD_CFDRM_PTR_RMDLC_Pos)
- #define CANFD_PRV_RMDLC_MASK              (R_CANFD_CFDRM_PTR_RMDLC_Msk)
+ #define CANFD_PRV_RX_FIFO_MAX           (8U)
+ #define CANFD_PRV_CFDTMIEC_LENGTH       (2)
+ #define CANFD_PRV_RMID_POSITION         (R_CANFD_CFDRM_ID_RMID_Pos)
+ #define CANFD_PRV_RMID_MASK             (R_CANFD_CFDRM_ID_RMID_Msk)
+ #define CANFD_PRV_RMRTR_POSITION        (R_CANFD_CFDRM_ID_RMRTR_Pos)
+ #define CANFD_PRV_RMRTR_MASK            (R_CANFD_CFDRM_ID_RMRTR_Msk)
+ #define CANFD_PRV_RMIDE_POSITION        (R_CANFD_CFDRM_ID_RMIDE_Pos)
+ #define CANFD_PRV_RMIDE_MASK            (R_CANFD_CFDRM_ID_RMIDE_Msk)
+ #define CANFD_PRV_RMDLC_POSITION        (R_CANFD_CFDRM_PTR_RMDLC_Pos)
+ #define CANFD_PRV_RMDLC_MASK            (R_CANFD_CFDRM_PTR_RMDLC_Msk)
 #endif
 
 #if BSP_FEATURE_CANFD_NUM_INSTANCES > 1
@@ -267,7 +253,6 @@ fsp_err_t R_CANFD_Open (can_ctrl_t * const p_api_ctrl, can_cfg_t const * const p
 
         /* Cancel Channel Sleep and wait for transition to Channel Reset */
         r_canfd_mode_transition(p_ctrl, CAN_OPERATION_MODE_RESET);
-
 #endif
 
         /* Configure global TX priority, DLC check/replace functions, external/internal clock select and payload
@@ -280,7 +265,7 @@ fsp_err_t R_CANFD_Open (can_ctrl_t * const p_api_ctrl, can_cfg_t const * const p
 #else
  #if BSP_FEATURE_CANFD_HAS_RSCANFD
         p_reg->CFDGAFLCFG0 = (CANFD_CFG_AFL_CH0_RULE_NUM << R_CANFD_CFDGAFLCFG0_RNC0_Pos) |
-                            (CANFD_CFG_AFL_CH1_RULE_NUM << R_CANFD_CFDGAFLCFG0_RNC1_Pos);
+                             (CANFD_CFG_AFL_CH1_RULE_NUM << R_CANFD_CFDGAFLCFG0_RNC1_Pos);
  #else
         p_reg->CFDGAFLCFG0 = (CANFD_CFG_AFL_CH0_RULE_NUM << R_CANFD_CFDGAFLCFG0_RNC0_Pos) |
                              CANFD_CFG_AFL_CH1_RULE_NUM;
@@ -374,6 +359,7 @@ fsp_err_t R_CANFD_Open (can_ctrl_t * const p_api_ctrl, can_cfg_t const * const p
 
         p_afl++;
 #else
+
         /* Get pointer to current AFL rule and set it to the rule pointed to by p_afl */
         volatile R_CANFD_CFDGAFL_Type * cfdgafl = &p_reg->CFDGAFL[afl_entry & 0xF];
         *cfdgafl = *p_afl++;
@@ -418,9 +404,9 @@ fsp_err_t R_CANFD_Open (can_ctrl_t * const p_api_ctrl, can_cfg_t const * const p
 
     /* Configure transceiver delay compensation; allow user to set ESI bit manually */
     p_reg->CFDC2[interlaced_channel].FDCFG =
-#if BSP_FEATURE_CANFD_HAS_RSCANFD
+ #if BSP_FEATURE_CANFD_HAS_RSCANFD
         (uint32_t) (p_extend->txmb_merge_mode_enable << R_CANFD_CFDC2_FDCFG_TMME_Pos) |
-#endif
+ #endif
         (tdco << R_CANFD_CFDC2_FDCFG_TDCO_Pos) |
         (uint32_t) (p_extend->delay_compensation << R_CANFD_CFDC2_FDCFG_TDCE_Pos) |
         R_CANFD_CFDC2_FDCFG_ESIC_Msk | 1U;
@@ -428,8 +414,7 @@ fsp_err_t R_CANFD_Open (can_ctrl_t * const p_api_ctrl, can_cfg_t const * const p
 
     /* Write TX message buffer interrupt enable bits */
 #if BSP_FEATURE_CANFD_HAS_RSCANFD
-    memcpy((void *) &p_reg->CFDTMIEC[interlaced_channel],
-           &p_extend->txmb_txi_enable, sizeof(uint16_t));
+    memcpy((void *) &p_reg->CFDTMIEC[interlaced_channel], &p_extend->txmb_txi_enable, sizeof(uint16_t));
 #else
     memcpy((void *) &p_reg->CFDTMIEC[interlaced_channel * CANFD_PRV_CFDTMIEC_LENGTH],
            &p_extend->txmb_txi_enable,
@@ -573,9 +558,15 @@ fsp_err_t R_CANFD_Write (can_ctrl_t * const p_api_ctrl, uint32_t buffer, can_fra
     FSP_ERROR_RETURN(p_ctrl->open == CANFD_OPEN, FSP_ERR_NOT_OPEN);
 
  #if !BSP_FEATURE_CANFD_LITE
+  #if BSP_FEATURE_CANFD_HAS_RSCANFD
 
-    /* CANFD channels have 16 TX message buffers each (0-7, 32-39) */
+    /* CANFD channels have 16 TX message buffers each (0-15) */
+    FSP_ERROR_RETURN((buffer <= 15U), FSP_ERR_INVALID_ARGUMENT);
+  #else
+
+    /* CANFD channels have 32 TX message buffers each (0-15, 32-47) */
     FSP_ERROR_RETURN((buffer <= 15U) || (buffer - 32U <= 15U), FSP_ERR_INVALID_ARGUMENT);
+  #endif
  #else
 
     /* CANFD Lite has 4 TX message buffers */
@@ -1278,6 +1269,7 @@ void canfd_channel_tx_isr (void)
             cfdtm_sts  = (volatile uint16_t *) &p_ctrl->p_reg->CFDTMTASTS[interlaced_channel];
             args.event = CAN_EVENT_TX_ABORTED;
         }
+
 #else
         uint32_t            txmb;
         volatile uint32_t * cfdtm_sts;
@@ -1295,7 +1287,6 @@ void canfd_channel_tx_isr (void)
             cfdtm_sts  = (volatile uint32_t *) &p_ctrl->p_reg->CFDTMTASTS[interlaced_channel];
             args.event = CAN_EVENT_TX_ABORTED;
         }
-
         interlaced_channel >>= 1;
 #endif
 

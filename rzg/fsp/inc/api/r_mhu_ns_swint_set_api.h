@@ -8,7 +8,7 @@
 #define R_MHU_NS_SWINT_SET_API_H
 
 /*******************************************************************************************************************//**
- * @ingroup RENESAS_INTERFACES
+ * @ingroup RENESAS_SYSTEM_INTERFACES
  * @defgroup MHU_NS_SWINT_SET_API MHU Interface (Software Interrupt Set)
  * @brief Interface for Message Handling Unit (Software Interrupt Set)
  *
@@ -17,8 +17,6 @@
  * The Message Handling Unit (Software Interrupt Set) interface supports:
  *        - Generate software interrupt via MHU.
  *
- * Implemented by:
- * - @ref MHU_NS_SWINT_SET
  *
  * @{
  **********************************************************************************************************************/
@@ -60,8 +58,6 @@ typedef struct st_mhu_ns_swint_set_cfg
 } mhu_ns_swint_set_cfg_t;
 
 /** MHU control block.  Allocate an instance specific control block to pass into the MHU API calls.
- * @par Implemented as
- * - mhu_ns_swint_set_instance_ctrl_t
  */
 typedef void mhu_ns_swint_set_ctrl_t;
 
@@ -69,8 +65,6 @@ typedef void mhu_ns_swint_set_ctrl_t;
 typedef struct st_mhu_ns_swint_set_api
 {
     /** Opens the MHU driver and initializes the hardware.
-     * @par Implemented as
-     * - @ref R_MHU_NS_SWINT_SET_Open()
      *
      * @param[in] p_ctrl    Pointer to control block. Must be declared by user. Elements are set here.
      * @param[in] p_cfg     Pointer to configuration structure.
@@ -78,16 +72,12 @@ typedef struct st_mhu_ns_swint_set_api
     fsp_err_t (* open)(mhu_ns_swint_set_ctrl_t * const p_ctrl, mhu_ns_swint_set_cfg_t const * const p_cfg);
 
     /** Performs a send operation on an MHU device.
-     * @par Implemented as
-     * - @ref R_MHU_NS_SWINT_SET_InterruptSet()
      *
      * @param[in] p_ctrl    Pointer to control block set in mhu_ns_swint_set_api_t::open call.
      */
     fsp_err_t (* interruptSet)(mhu_ns_swint_set_ctrl_t * const p_ctrl);
 
     /** Closes the driver and releases the MHU device.
-     * @par Implemented as
-     * - @ref R_MHU_NS_SWINT_SET_Close()
      *
      * @param[in] p_ctrl    Pointer to control block set in mhu_ns_swint_set_api_t::open call.
      */
@@ -103,7 +93,7 @@ typedef struct st_mhu_ns_swint_set_instance
 } mhu_ns_swint_set_instance_t;
 
 /******************************************************************************************************************//**
- * @} (end addtogroup MHU_NS_SWINT_SET_API)
+ * @} (end defgroup MHU_NS_SWINT_SET_API)
  *********************************************************************************************************************/
 
 /* Common macro for FSP header files. There is also a corresponding FSP_HEADER macro at the top of this file. */

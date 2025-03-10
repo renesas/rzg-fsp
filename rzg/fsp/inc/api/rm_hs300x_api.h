@@ -5,15 +5,13 @@
 */
 
 /*******************************************************************************************************************//**
- * @ingroup RENESAS_INTERFACES
+ * @ingroup RENESAS_SENSOR_INTERFACES
  * @defgroup RM_HS300X_API HS300X Middleware Interface
  * @brief Interface for HS300X Middleware functions.
  *
  * @section RM_HS300X_API_Summary Summary
  * The HS300X interface provides HS300X functionality.
  *
- * The HS300X interface can be implemented by:
- * - @ref RM_HS300X
  *
  * @{
  **********************************************************************************************************************/
@@ -114,8 +112,6 @@ typedef struct st_rm_hs300x_cfg
 } rm_hs300x_cfg_t;
 
 /** HS300X control block.  Allocate an instance specific control block to pass into the HS300X API calls.
- * @par Implemented as
- * - rm_hs300x_instance_ctrl_t
  */
 typedef void rm_hs300x_ctrl_t;
 
@@ -123,8 +119,6 @@ typedef void rm_hs300x_ctrl_t;
 typedef struct st_rm_hs300x_api
 {
     /** Open sensor.
-     * @par Implemented as
-     * - @ref RM_HS300X_Open()
      *
      * @param[in]  p_ctrl       Pointer to control structure.
      * @param[in]  p_cfg        Pointer to configuration structure.
@@ -132,16 +126,12 @@ typedef struct st_rm_hs300x_api
     fsp_err_t (* open)(rm_hs300x_ctrl_t * const p_ctrl, rm_hs300x_cfg_t const * const p_cfg);
 
     /** Start a measurement.
-     * @par Implemented as
-     * - @ref RM_HS300X_MeasurementStart()
      *
      * @param[in]  p_ctrl   Pointer to control structure.
      */
     fsp_err_t (* measurementStart)(rm_hs300x_ctrl_t * const p_ctrl);
 
     /** Read ADC data from HS300X.
-     * @par Implemented as
-     * - @ref RM_HS300X_Read()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      * @param[in]  p_raw_data       Pointer to raw data structure.
@@ -149,8 +139,6 @@ typedef struct st_rm_hs300x_api
     fsp_err_t (* read)(rm_hs300x_ctrl_t * const p_ctrl, rm_hs300x_raw_data_t * const p_raw_data);
 
     /** Calculate humidity and temperature values from ADC data.
-     * @par Implemented as
-     * - @ref RM_HS300X_DataCalculate()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      * @param[in]  p_raw_data       Pointer to raw data.
@@ -160,16 +148,12 @@ typedef struct st_rm_hs300x_api
                                 rm_hs300x_data_t * const p_hs300x_data);
 
     /** Enter the programming mode.
-     * @par Implemented as
-     * - @ref RM_HS300X_ProgrammingModeEnter()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      */
     fsp_err_t (* programmingModeEnter)(rm_hs300x_ctrl_t * const p_ctrl);
 
     /** Change the sensor resolution.
-     * @par Implemented as
-     * - @ref RM_HS300X_ResolutionChange()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      * @param[in]  data_type        Data type of HS300X.
@@ -179,8 +163,6 @@ typedef struct st_rm_hs300x_api
                                    rm_hs300x_resolution_t const resolution);
 
     /** Get the sensor ID.
-     * @par Implemented as
-     * - @ref RM_HS300X_SensorIdGet()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      * @param[in]  p_sensor_id      Pointer to sensor ID of HS300X.
@@ -188,16 +170,12 @@ typedef struct st_rm_hs300x_api
     fsp_err_t (* sensorIdGet)(rm_hs300x_ctrl_t * const p_ctrl, uint32_t * const p_sensor_id);
 
     /** Exit the programming mode.
-     * @par Implemented as
-     * - @ref RM_HS300X_ProgrammingModeExit()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      */
     fsp_err_t (* programmingModeExit)(rm_hs300x_ctrl_t * const p_ctrl);
 
     /** Close HS300X.
-     * @par Implemented as
-     * - @ref RM_HS300X_Close()
      *
      * @param[in]  p_ctrl       Pointer to control structure.
      */
@@ -231,5 +209,5 @@ FSP_FOOTER
 #endif                                 /* RM_HS300X_API_H_*/
 
 /*******************************************************************************************************************//**
- * @} (end addtogroup RM_HS300X_API)
+ * @} (end defgroup RM_HS300X_API)
  **********************************************************************************************************************/

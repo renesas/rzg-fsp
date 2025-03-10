@@ -31,6 +31,7 @@
 #include "bsp_dmac.h"
 #include "bsp_slave_address.h"
 #include "bsp_reset.h"
+#include "bsp_wdt.h"
 
 /**********************************************************************************************************************
  * Macro definitions

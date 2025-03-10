@@ -198,8 +198,8 @@ static void     r_mtu3_call_callback(mtu3_instance_ctrl_t * p_ctrl, timer_event_
  * ISR prototypes
  **********************************************************************************************************************/
 void mtu3_counter_overflow_isr(void);
-void mtu3_capture_a_isr(void);
-void mtu3_capture_b_isr(void);
+void mtu3_capture_compare_a_isr(void);
+void mtu3_capture_compare_b_isr(void);
 
 /***********************************************************************************************************************
  * Private global variables
@@ -415,18 +415,19 @@ static const uint8_t mtu3_tstr_val[BSP_FEATURE_MTU3_MAX_CHANNELS] =
 /* MTU3 implementation of timer interface  */
 const timer_api_t g_timer_on_mtu3 =
 {
-    .open         = R_MTU3_Open,
-    .stop         = R_MTU3_Stop,
-    .start        = R_MTU3_Start,
-    .reset        = R_MTU3_Reset,
-    .enable       = R_MTU3_Enable,
-    .disable      = R_MTU3_Disable,
-    .periodSet    = R_MTU3_PeriodSet,
-    .dutyCycleSet = R_MTU3_DutyCycleSet,
-    .infoGet      = R_MTU3_InfoGet,
-    .statusGet    = R_MTU3_StatusGet,
-    .callbackSet  = R_MTU3_CallbackSet,
-    .close        = R_MTU3_Close,
+    .open            = R_MTU3_Open,
+    .stop            = R_MTU3_Stop,
+    .start           = R_MTU3_Start,
+    .reset           = R_MTU3_Reset,
+    .enable          = R_MTU3_Enable,
+    .disable         = R_MTU3_Disable,
+    .periodSet       = R_MTU3_PeriodSet,
+    .dutyCycleSet    = R_MTU3_DutyCycleSet,
+    .compareMatchSet = R_MTU3_CompareMatchSet,
+    .infoGet         = R_MTU3_InfoGet,
+    .statusGet       = R_MTU3_StatusGet,
+    .callbackSet     = R_MTU3_CallbackSet,
+    .close           = R_MTU3_Close
 };
 
 /*******************************************************************************************************************//**
@@ -826,6 +827,144 @@ fsp_err_t R_MTU3_DutyCycleSet (timer_ctrl_t * const p_ctrl, uint32_t const duty_
 
     FSP_RETURN(FSP_ERR_UNSUPPORTED);
 #endif
+}
+
+/*******************************************************************************************************************//**
+ * Set value for compare match feature. Implements @ref timer_api_t::compareMatchSet.
+ *
+ * @note This API should be used when timer is stop counting. And shall not be used along with PWM operation.
+ *
+ * Example:
+ * @snippet r_mtu3_example.c R_MTU3_CompareMatchSet
+ *
+ * @retval FSP_SUCCESS              Set the compare match value successfully.
+ * @retval FSP_ERR_ASSERTION        p_ctrl was NULL.
+ * @retval FSP_ERR_NOT_OPEN         The instance is not opened.
+ **********************************************************************************************************************/
+fsp_err_t R_MTU3_CompareMatchSet (timer_ctrl_t * const        p_ctrl,
+                                  uint32_t const              compare_match_value,
+                                  timer_compare_match_t const match_channel)
+{
+    mtu3_instance_ctrl_t * p_instance_ctrl = (mtu3_instance_ctrl_t *) p_ctrl;
+
+#if MTU3_CFG_PARAM_CHECKING_ENABLE
+    FSP_ASSERT(NULL != p_instance_ctrl);
+    FSP_ASSERT(0U != compare_match_value);
+    FSP_ASSERT(compare_match_value <= MTU3_MAX_COUNT);
+    FSP_ERROR_RETURN(MTU3_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
+#endif
+
+    /* Update compare match register. The actual period is one cycle longer than the register value.
+     * Reference section "Note on Cycle Setting" */
+    uint32_t new_compare_match_value = compare_match_value - 1U;
+
+    /* If the counter is not counting, update compare match register. */
+    if (0U == mtu3_get_tstr(p_instance_ctrl))
+    {
+        if (MTU3_CHANNEL_8 == p_instance_ctrl->p_cfg->channel)
+        {
+            if (TIMER_COMPARE_MATCH_A == match_channel)
+            {
+                *(uint32_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgra_ofs_addr[p_instance_ctrl->p_cfg->channel]) = new_compare_match_value;
+                *(uint32_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel]) = new_compare_match_value;
+            }
+
+            if (TIMER_COMPARE_MATCH_B == match_channel)
+            {
+                *(uint32_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgra_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_LONG) = new_compare_match_value;
+                *(uint32_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_LONG) = new_compare_match_value;
+            }
+            else
+            {
+                /* Do nothing. */
+            }
+        }
+        else
+        {
+            if (TIMER_COMPARE_MATCH_A == match_channel)
+            {
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgra_ofs_addr[p_instance_ctrl->p_cfg->channel]) = (uint16_t) new_compare_match_value;
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel]) = (uint16_t) new_compare_match_value;
+            }
+
+            if (TIMER_COMPARE_MATCH_B == match_channel)
+            {
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgra_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_WORD) = (uint16_t) new_compare_match_value;
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_WORD) = (uint16_t) new_compare_match_value;
+            }
+            else
+            {
+                /* Do nothing. */
+            }
+        }
+    }
+    /* If the counter is counting, update buffer register counter. */
+    else
+    {
+        if (MTU3_CHANNEL_8 == p_instance_ctrl->p_cfg->channel)
+        {
+            if (TIMER_COMPARE_MATCH_A == match_channel)
+            {
+                *(uint32_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel]) = new_compare_match_value;
+            }
+            else if (TIMER_COMPARE_MATCH_B == match_channel)
+            {
+                *(uint32_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_LONG) = new_compare_match_value;
+            }
+            else
+            {
+                /* Do nothing. */
+            }
+        }
+        else if ((MTU3_CHANNEL_1 == p_instance_ctrl->p_cfg->channel) ||
+                 (MTU3_CHANNEL_2 == p_instance_ctrl->p_cfg->channel))
+        {
+            /* MTU1 and 2 without TGRC and TGRD should write TGRA and TGRB */
+            if (TIMER_COMPARE_MATCH_A == match_channel)
+            {
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgra_ofs_addr[p_instance_ctrl->p_cfg->channel]) = (uint16_t) new_compare_match_value;
+            }
+            else if (TIMER_COMPARE_MATCH_B == match_channel)
+            {
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgra_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_WORD) = (uint16_t) new_compare_match_value;
+            }
+            else
+            {
+                /* Do nothing. */
+            }
+        }
+        else
+        {
+            if (TIMER_COMPARE_MATCH_A == match_channel)
+            {
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg +
+                               tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel]) = (uint16_t) new_compare_match_value;
+            }
+            else if (TIMER_COMPARE_MATCH_B == match_channel)
+            {
+                *(uint16_t *) ((uint8_t *) p_instance_ctrl->p_reg + tgrc_ofs_addr[p_instance_ctrl->p_cfg->channel] +
+                               MTU3_TGRB_D_OFFSET_WORD) = (uint16_t) new_compare_match_value;
+            }
+            else
+            {
+                /* Do nothing. */
+            }
+        }
+    }
+
+    return FSP_SUCCESS;
 }
 
 /*******************************************************************************************************************//**
@@ -1655,7 +1794,7 @@ static void r_mtu3_call_callback (mtu3_instance_ctrl_t * p_ctrl, timer_event_t e
  *
  * @param[in]  event  Which input capture event occurred
  **********************************************************************************************************************/
-static void r_mtu3_capture_common_isr (mtu3_prv_capture_event_t event)
+static void r_mtu3_ccmp_common_isr (mtu3_prv_capture_event_t event)
 {
     /* Save context if RTOS is used */
     FSP_CONTEXT_SAVE
@@ -1743,9 +1882,9 @@ void mtu3_counter_overflow_isr (void)
  *
  * Calls callback if one was provided in the open function.
  **********************************************************************************************************************/
-void mtu3_capture_a_isr (void)
+void mtu3_capture_compare_a_isr (void)
 {
-    r_mtu3_capture_common_isr(MTU3_PRV_CAPTURE_EVENT_A);
+    r_mtu3_ccmp_common_isr(MTU3_PRV_CAPTURE_EVENT_A);
 }
 
 /*******************************************************************************************************************//**
@@ -1753,7 +1892,7 @@ void mtu3_capture_a_isr (void)
  *
  * Calls callback if one was provided in the open function.
  **********************************************************************************************************************/
-void mtu3_capture_b_isr (void)
+void mtu3_capture_compare_b_isr (void)
 {
-    r_mtu3_capture_common_isr(MTU3_PRV_CAPTURE_EVENT_B);
+    r_mtu3_ccmp_common_isr(MTU3_PRV_CAPTURE_EVENT_B);
 }

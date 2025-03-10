@@ -7,7 +7,7 @@
 /**********************************************************************************************************************
  * File Name    : systems.c
  * Version      : 1.00
- * Description  : Initialize the MCU and the runtime environment for Secure.
+ * Description  : Initialize the MPU and the runtime environment for Secure.
  *********************************************************************************************************************/
 
 /*******************************************************************************************************************//**
@@ -37,27 +37,6 @@
 #elif defined(__GNUC__)
  #define BSP_PRV_SECURE_STACK_LIMIT    ((uint32_t) &__S_StackLimit)
  #define BSP_PRV_SECURE_STACK_TOP      ((uint32_t) &__S_StackTop)
-#endif
-
-/***********************************************************************************************************************
- * NVIC CM33 Reset
- *
- * @param
- **********************************************************************************************************************/
-#define R_BSP_NVIC_CM33_RESET()     {SCB->AIRCR = (uint32_t) ((0x5FAUL << SCB_AIRCR_VECTKEY_Pos) |    \
-                                                              (SCB->AIRCR & SCB_AIRCR_PRIGROUP_Msk) | \
-                                                              SCB_AIRCR_SYSRESETREQ_Msk);             \
-}
-
-/***********************************************************************************************************************
- * Wait CM33 Reset
- *
- * @param
- **********************************************************************************************************************/
-#ifndef R_BSP_WAIT_CM33_RESET
- #define R_BSP_WAIT_CM33_RESET()    {while ((R_SYSC->SYS_LP_CM33CTL0 & R_SYSC_SYS_LP_CM33CTL0_SYSRESETREQ_Msk) == 0U) \
-                                     { /* wait */};                                                                   \
-}
 #endif
 
 /***********************************************************************************************************************
@@ -117,7 +96,7 @@ void SystemInit_S (void)
     /* Set the main stack pointer to BSP_PRV_SECURE_STACK_TOP */
     __set_MSP(BSP_PRV_SECURE_STACK_TOP);
 
-    /* Use CM33 stack monitor. */
+    /* Use Cortex-M33 stack monitor. */
     __set_MSPLIM(BSP_PRV_SECURE_STACK_LIMIT);
 
     /* Initialize security features. */
@@ -162,14 +141,7 @@ static void warm_reset_sub (void)
     /* Set Secure vector address to SYSC */
     R_BSP_SECURE_VECTOR_SET((uint32_t) &__Secure_Vectors);
 
-    /* CM33 reset */
-    R_BSP_NVIC_CM33_RESET();
-
-    /* Wait CM33 reset */
-    R_BSP_WAIT_CM33_RESET();
-
-    /* Disable IM33 */
-    R_BSP_IM33_DISABLE();
+    R_BSP_CM33_WARMRESET();
 
     __asm volatile ("wfi");
 

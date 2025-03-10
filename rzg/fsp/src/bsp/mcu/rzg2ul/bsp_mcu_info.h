@@ -29,6 +29,7 @@
 #include "bsp_feature.h"
 #include "bsp_slave_address.h"
 #include "bsp_reset.h"
+#include "bsp_dmac.h"
 
 /**********************************************************************************************************************
  * Macro definitions

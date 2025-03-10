@@ -63,6 +63,7 @@ void dmac_b_err_isr(void);
 static fsp_err_t r_dmac_b_prv_enable(dmac_b_instance_ctrl_t * p_ctrl);
 static void      r_dmac_b_prv_disable(dmac_b_instance_ctrl_t * p_ctrl);
 static void      r_dmac_b_config_transfer_info(dmac_b_instance_ctrl_t * p_ctrl, transfer_info_t * p_info);
+static void      r_dmac_b_call_callback(dmac_b_instance_ctrl_t * p_ctrl, transfer_event_t event);
 
 #if DMAC_B_CFG_PARAM_CHECKING_ENABLE
 static fsp_err_t r_dmac_b_open_parameter_checking(dmac_b_instance_ctrl_t * const p_ctrl,
@@ -98,6 +99,9 @@ static const uint32_t volatile * p_dmac_b_base_address[BSP_FEATURE_DMAC_MAX_UNIT
  * Global Variables
  **********************************************************************************************************************/
 
+/** Channel control struct array */
+static dmac_b_instance_ctrl_t * gp_ctrl[BSP_FEATURE_DMAC_MAX_UNIT * BSP_FEATURE_DMAC_MAX_CHANNEL] = {NULL};
+
 /** DMAC implementation of transfer API. */
 const transfer_api_t g_transfer_on_dmac_b =
 {
@@ -111,6 +115,7 @@ const transfer_api_t g_transfer_on_dmac_b =
     .disable       = R_DMAC_B_Disable,
     .close         = R_DMAC_B_Close,
     .reload        = R_DMAC_B_Reload,
+    .callbackSet   = R_DMAC_B_CallbackSet
 };
 
 /*******************************************************************************************************************//**
@@ -141,6 +146,11 @@ fsp_err_t R_DMAC_B_Open (transfer_ctrl_t * const p_api_ctrl, transfer_cfg_t cons
     p_ctrl->p_cfg = p_cfg;
     p_ctrl->p_reg = (R_DMAC_B0_Type *) p_dmac_b_base_address[p_extend->unit];
 
+    /* Set callback and context pointers, if configured */
+    p_ctrl->p_callback        = p_extend->p_callback;
+    p_ctrl->p_context         = p_extend->p_context;
+    p_ctrl->p_callback_memory = NULL;
+
     /* Supply clock to DMAC module. */
     R_BSP_MODULE_START(FSP_IP_DMAC, p_extend->unit);
 
@@ -149,6 +159,9 @@ fsp_err_t R_DMAC_B_Open (transfer_ctrl_t * const p_api_ctrl, transfer_cfg_t cons
 
     /* Mark driver as open by initializing "DMAC" in its ASCII equivalent.*/
     p_ctrl->open = DMAC_B_ID;
+
+    /* Track ctrl struct */
+    gp_ctrl[(p_extend->unit) * BSP_FEATURE_DMAC_MAX_CHANNEL + (p_extend->channel)] = p_ctrl;
 
     return FSP_SUCCESS;
 }
@@ -377,14 +390,14 @@ fsp_err_t R_DMAC_B_Close (transfer_ctrl_t * const p_api_ctrl)
     uint8_t channel = DMAC_B_PRV_CHANNEL(p_extend->channel);
 
     /* Disable DMAC transfers on this channel. */
-    R_BSP_DMAC_ACTIVATION_SOURCE_DISABLE(p_extend->unit, p_extend->channel);
+    R_BSP_DMAC_ACTIVATION_SOURCE_DISABLE(p_ctrl->p_reg, p_extend->unit, p_extend->channel);
 
     p_ctrl->p_reg->GRP[group].CH[channel].CHCTRL = R_DMAC_B0_GRP_CH_CHCTRL_CLREN_Msk;
     FSP_HARDWARE_REGISTER_WAIT(p_ctrl->p_reg->GRP[group].CH[channel].CHSTAT_b.TACT, 0);
 
     p_ctrl->p_reg->GRP[group].CH[channel].CHCTRL = R_DMAC_B0_GRP_CH_CHCTRL_SWRST_Msk;
 
-    if (NULL != p_extend->p_callback)
+    if (p_extend->dmac_int_irq >= 0)
     {
         R_BSP_IrqDisable(p_extend->dmac_int_irq);
         R_FSP_IsrContextSet(p_extend->dmac_int_irq, NULL);
@@ -492,6 +505,35 @@ fsp_err_t R_DMAC_B_Reload (transfer_ctrl_t * const p_api_ctrl,
 }
 
 /*******************************************************************************************************************//**
+ * Updates the user callback with the option to provide memory for the callback argument structure.
+ * Implements @ref transfer_api_t::callbackSet.
+ *
+ * @retval  FSP_SUCCESS                  Callback updated successfully.
+ * @retval  FSP_ERR_ASSERTION            A required pointer is NULL.
+ * @retval  FSP_ERR_NOT_OPEN             The control block has not been opened.
+ **********************************************************************************************************************/
+fsp_err_t R_DMAC_B_CallbackSet (transfer_ctrl_t * const        p_api_ctrl,
+                                void (                       * p_callback)(dmac_b_callback_args_t *),
+                                void const * const             p_context,
+                                dmac_b_callback_args_t * const p_callback_memory)
+{
+    dmac_b_instance_ctrl_t * p_ctrl = (dmac_b_instance_ctrl_t *) p_api_ctrl;
+
+#if DMAC_CFG_PARAM_CHECKING_ENABLE
+    FSP_ASSERT(p_instance_ctrl);
+    FSP_ASSERT(p_callback);
+    FSP_ERROR_RETURN(DMAC_B_ID == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
+#endif
+
+    /* Store callback, context and callback memory */
+    p_ctrl->p_callback        = p_callback;
+    p_ctrl->p_context         = p_context;
+    p_ctrl->p_callback_memory = p_callback_memory;
+
+    return FSP_SUCCESS;
+}
+
+/*******************************************************************************************************************//**
  * @} (end addtogroup DMAC_B)
  **********************************************************************************************************************/
 
@@ -519,18 +561,21 @@ static fsp_err_t r_dmac_b_prv_enable (dmac_b_instance_ctrl_t * p_ctrl)
     uint8_t group   = DMAC_B_PRV_GROUP(p_extend->channel);
     uint8_t channel = DMAC_B_PRV_CHANNEL(p_extend->channel);
 
-    if (DMAC_TRIGGER_EVENT_SOFTWARE_TRIGGER != p_extend->activation_source)
-    {
-        FSP_CRITICAL_SECTION_DEFINE;
-        FSP_CRITICAL_SECTION_ENTER;
+    FSP_CRITICAL_SECTION_DEFINE;
+    FSP_CRITICAL_SECTION_ENTER;
 
-        /* DMAC trigger source set. */
-        R_BSP_DMAC_ACTIVATION_SOURCE_ENABLE(p_extend->unit, p_extend->channel, p_extend->activation_source);
+    /* DMAC trigger source set. */
+    R_BSP_DMAC_ACTIVATION_SOURCE_ENABLE(p_ctrl->p_reg, p_extend->unit, p_extend->channel, p_extend->activation_source);
 
-        FSP_CRITICAL_SECTION_EXIT;
-    }
+    /* External DMAC REQ trigger set. */
+    R_BSP_DMAC_DREQ_DETECT_METHOD_SELECT(p_ctrl->p_reg,
+                                         p_extend->channel,
+                                         p_extend->external_detection_mode,
+                                         p_extend->dreq_input_pin);
 
-    if ((NULL != p_extend->p_callback) || (DMAC_TRIGGER_EVENT_SOFTWARE_TRIGGER == p_extend->activation_source))
+    FSP_CRITICAL_SECTION_EXIT;
+
+    if (p_extend->dmac_int_irq >= 0)
     {
         /* Enable transfer end interrupt requests. */
         p_ctrl->p_reg->GRP[group].CH[channel].CHCFG &= ~((uint32_t) R_DMAC_B0_GRP_CH_CHCFG_DEM_Msk);
@@ -539,10 +584,7 @@ static fsp_err_t r_dmac_b_prv_enable (dmac_b_instance_ctrl_t * p_ctrl)
         R_BSP_IrqCfgEnable(p_extend->dmac_int_irq, p_extend->dmac_int_ipl, p_ctrl);
 
         /* Set detect type of DMAC end interrupt */
-        if (p_extend->dmac_int_irq >= 0)
-        {
-            R_BSP_DMAC_B_TRANSFER_END_DETECT_METHOD_SELECT(p_extend->unit, p_extend->channel, 1);
-        }
+        R_BSP_DMAC_B_TRANSFER_END_DETECT_METHOD_SELECT(p_extend->unit, p_extend->channel, 1);
     }
     else
     {
@@ -581,7 +623,7 @@ static void r_dmac_b_prv_disable (dmac_b_instance_ctrl_t * p_ctrl)
     p_ctrl->p_reg->GRP[group].CH[channel].CHCTRL = R_DMAC_B0_GRP_CH_CHCTRL_SWRST_Msk;
 
     /* Disable DMAC transfers on this channel. */
-    R_BSP_DMAC_ACTIVATION_SOURCE_DISABLE(p_extend->unit, p_extend->channel);
+    R_BSP_DMAC_ACTIVATION_SOURCE_DISABLE(p_ctrl->p_reg, p_extend->unit, p_extend->channel);
 
     /* Set DMA transfer end interrupt mask */
     p_ctrl->p_reg->GRP[group].CH[channel].CHCFG |= R_DMAC_B0_GRP_CH_CHCFG_DEM_Msk;
@@ -624,7 +666,8 @@ static void r_dmac_b_config_transfer_info (dmac_b_instance_ctrl_t * p_ctrl, tran
     chcfg = ((p_extend->channel % 8 & DMAC_B_PRV_CHCFG_SEL_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_SEL_Pos) |
             ((p_extend->activation_request_source_select & DMAC_B_PRV_CHCFG_REQD_VALUE_MASK) <<
              R_DMAC_B0_GRP_CH_CHCFG_REQD_Pos) |
-            ((p_extend->internal_detection_mode & DMAC_B_PRV_CHCFG_DETECT_MODE_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_LOEN_Pos) |
+            ((p_extend->internal_detection_mode & DMAC_B_PRV_CHCFG_DETECT_MODE_VALUE_MASK) <<
+             R_DMAC_B0_GRP_CH_CHCFG_LOEN_Pos) |
             ((p_extend->ack_mode & DMAC_B_PRV_CHCFG_AM_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_AM_Pos) |
             ((p_info->src_size & DMAC_B_PRV_CHCFG_SDS_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_SDS_Pos) |
             ((p_info->dest_size & DMAC_B_PRV_CHCFG_DDS_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_DDS_Pos) |
@@ -632,7 +675,11 @@ static void r_dmac_b_config_transfer_info (dmac_b_instance_ctrl_t * p_ctrl, tran
             ((p_info->dest_addr_mode & DMAC_B_PRV_CHCFG_DAD_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_DAD_Pos) |
             ((p_info->mode & DMAC_B_PRV_CHCFG_TM_VALUE_MASK) << R_DMAC_B0_GRP_CH_CHCFG_TM_Pos);
 
-    R_BSP_DMAC_DREQ_DETECT_METHOD_SELECT(p_extend->external_detection_mode, p_extend->activation_source);
+    /* Set the output destination of the DMAACK signal. */
+    R_BSP_DMAC_DACK_OUTPUT_PIN_SET(p_extend->unit, p_extend->channel, p_extend->ack_output_pin);
+
+    /* Set the output destination of the DMATEND signal. */
+    R_BSP_DMAC_TEND_OUTPUT_PIN_SET(p_extend->unit, p_extend->channel, p_extend->tend_output_pin);
 
     if (DMAC_B_CONTINUOUS_SETTING_TRANSFER_ONCE != p_extend->continuous_setting)
     {
@@ -807,6 +854,41 @@ static fsp_err_t r_dmac_b_enable_parameter_checking (dmac_b_instance_ctrl_t * co
 #endif
 
 /*******************************************************************************************************************//**
+ * Calls user callback.
+ *
+ * @param[in]     p_ctrl     Pointer to DMAC instance control block
+ * @param[in]     event      Event code
+ **********************************************************************************************************************/
+static void r_dmac_b_call_callback (dmac_b_instance_ctrl_t * p_ctrl, transfer_event_t event)
+{
+    dmac_b_callback_args_t args;
+
+    /* Store callback arguments in memory provided by user if available. */
+    dmac_b_callback_args_t * p_args = p_ctrl->p_callback_memory;
+    if (NULL == p_args)
+    {
+        /* Store on stack */
+        p_args = &args;
+    }
+    else
+    {
+        /* Save current arguments on the stack in case this is a nested interrupt. */
+        args = *p_args;
+    }
+
+    p_args->event     = event;
+    p_args->p_context = p_ctrl->p_context;
+
+    p_ctrl->p_callback(p_args);
+
+    if (NULL != p_ctrl->p_callback_memory)
+    {
+        /* Restore callback memory in case this is a nested interrupt. */
+        *p_ctrl->p_callback_memory = args;
+    }
+}
+
+/*******************************************************************************************************************//**
  * DMAC ISR
  **********************************************************************************************************************/
 void dmac_b_int_isr (void)
@@ -826,12 +908,12 @@ void dmac_b_int_isr (void)
         /* Activation source disabled */
         if (1 != p_ctrl->p_reg->GRP[group].CH[channel].CHSTAT_b.EN)
         {
-            R_BSP_DMAC_ACTIVATION_SOURCE_DISABLE(p_extend->unit, p_extend->channel);
+            R_BSP_DMAC_ACTIVATION_SOURCE_DISABLE(p_ctrl->p_reg, p_extend->unit, p_extend->channel);
         }
     }
 
     /* Clear the DREQ request status. */
-    R_BSP_DMAC_DREQ_STATUS_CLEAR(p_extend->activation_source);
+    R_BSP_DMAC_DREQ_STATUS_CLEAR(p_extend->dreq_input_pin);
 
     /* Clear interrupt condition. */
     p_ctrl->p_reg->GRP[group].CH[channel].CHCTRL = R_DMAC_B0_GRP_CH_CHCTRL_CLREND_Msk;
@@ -841,12 +923,9 @@ void dmac_b_int_isr (void)
     FSP_PARAMETER_NOT_USED(dummy);
 
     /* Call user callback */
-    if (NULL != p_extend->p_callback)
+    if (NULL != p_ctrl->p_callback)
     {
-        dmac_b_callback_args_t args;
-        args.p_context = p_extend->p_context;
-        args.event     = DMAC_B_EVENT_TRANSFER_END;
-        p_extend->p_callback(&args);
+        r_dmac_b_call_callback(p_ctrl, TRANSFER_EVENT_TRANSFER_END);
     }
 
     /* Restore context if RTOS is used */
@@ -861,21 +940,51 @@ void dmac_b_err_isr (void)
     /* Save context if RTOS is used */
     FSP_CONTEXT_SAVE
 
+    /* Get the DMAC unit where the error occurred from the argument id. */
     IRQn_Type                irq      = R_FSP_CurrentIrqGet();
     dmac_b_instance_ctrl_t * p_ctrl   = (dmac_b_instance_ctrl_t *) R_FSP_IsrContextGet(irq);
     dmac_b_extended_cfg_t  * p_extend = (dmac_b_extended_cfg_t *) p_ctrl->p_cfg->p_extend;
 
-    uint8_t group   = DMAC_B_PRV_GROUP(p_extend->channel);
-    uint8_t channel = DMAC_B_PRV_CHANNEL(p_extend->channel);
+    uint8_t unit = p_extend->unit;
 
-    /* Clear the error bit and software reset. */
-    p_ctrl->p_reg->GRP[group].CH[channel].CHCTRL_b.SWRST = 1;
+    /* Get the channel error information DSTAT_ER. */
+    R_DMAC_B0_Type * p_base_reg      = (R_DMAC_B0_Type *) p_dmac_b_base_address[unit];
+    uint32_t         dstat_err_upper = p_base_reg->GRP[1].DSTAT_ER;
+    uint32_t         dstat_err_lower = p_base_reg->GRP[0].DSTAT_ER;
+    uint32_t         dstat_err_mask  = (dstat_err_upper << 8) | dstat_err_lower;
 
-    /* Call user callback */
-    dmac_b_callback_args_t args;
-    args.p_context = p_extend->p_context;
-    args.event     = DMAC_B_EVENT_TRANSFER_ERROR;
-    p_extend->p_callback(&args);
+    uint32_t dmac_error_channel = 0;
+
+    /* After going through the event scan, the interrupt handler ends */
+    while (dstat_err_mask)
+    {
+        /* Scan and search for error factors one by one */
+        uint32_t next_err = __CLZ(__RBIT(dstat_err_mask));
+        dstat_err_mask    >>= next_err;
+        dmac_error_channel += next_err;
+
+        uint8_t group   = (uint8_t) DMAC_B_PRV_GROUP(dmac_error_channel);
+        uint8_t channel = (uint8_t) DMAC_B_PRV_CHANNEL(dmac_error_channel);
+
+        p_ctrl = gp_ctrl[unit * BSP_FEATURE_DMAC_MAX_CHANNEL + dmac_error_channel];
+
+        /* Call user registered callback */
+        if (NULL != p_ctrl)
+        {
+            /* Clear the error bit and software reset. */
+            p_ctrl->p_reg->GRP[group].CH[channel].CHCTRL_b.SWRST = 1;
+
+            /* Invoke the callback function if it is set. */
+            if (NULL != p_ctrl->p_callback)
+            {
+                /* Call user callback */
+                r_dmac_b_call_callback(p_ctrl, TRANSFER_EVENT_TRANSFER_ERROR);
+            }
+        }
+
+        /* Clear the scanned flags one by one */
+        dstat_err_mask &= ~(1UL);
+    }
 
     /* Restore context if RTOS is used */
     FSP_CONTEXT_RESTORE

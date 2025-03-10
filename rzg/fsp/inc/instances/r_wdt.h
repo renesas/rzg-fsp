@@ -44,10 +44,14 @@ typedef struct st_wdt_instance_ctrl
 /** WDT configuration extension. This extension is required. */
 typedef struct st_wdt_extended_cfg
 {
-    uint8_t   channel;                 // WDT channel
-    uint16_t  wdt_timeout;             // Timeout value until the counter overflows.
-    uint8_t   overflow_ipl;            // WDT Overflow interrupt priority.
-    IRQn_Type overflow_irq;            // WDT Overflow interrupt ID.
+    uint8_t   channel;                  // WDT channel
+    uint16_t  wdt_timeout;              // Timeout value until the counter timeouts.
+    bool      wdt_counting_enable;      // Enable or disable WDT counting.
+    bool      system_reset_enable;      // Enable or disable system reset.
+    bool      wdt_pin_assertion_enable; // Enable or disable WDT pin assertion.
+    bool      cold_reset_enable;        // Enable or disable cold reset.
+    uint8_t   timeout_ipl;              // WDT timeout interrupt priority.
+    IRQn_Type timeout_irq;              // WDT timeout interrupt ID.
 } wdt_extended_cfg_t;
 
 /**********************************************************************************************************************

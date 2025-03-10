@@ -54,6 +54,8 @@ typedef enum e_gpt_pin_level
     GPT_PIN_LEVEL_HIGH = 1,            ///< Pin level high
 } gpt_pin_level_t;
 
+#ifndef BSP_OVERRIDE_GPT_SOURCE_T
+
 /** Sources can be used to start the timer, stop the timer, count up, or count down. These enumerations represent
  * a bitmask. Multiple sources can be ORed together. */
 typedef enum e_gpt_source
@@ -79,10 +81,10 @@ typedef enum e_gpt_source
     /** Action performed on GTETRGC falling edge. **/
     GPT_SOURCE_GTETRGC_FALLING = (1U << 5),
 
-    /** Action performed on GTETRGB rising edge. **/
+    /** Action performed on GTETRGD rising edge. **/
     GPT_SOURCE_GTETRGD_RISING = (1U << 6),
 
-    /** Action performed on GTETRGB falling edge. **/
+    /** Action performed on GTETRGD falling edge. **/
     GPT_SOURCE_GTETRGD_FALLING = (1U << 7),
 
     /** Action performed when GTIOCA input rises while GTIOCB is low. **/
@@ -108,7 +110,33 @@ typedef enum e_gpt_source
 
     /** Action performed when GTIOCB input falls while GTIOCA is high. **/
     GPT_SOURCE_GTIOCB_FALLING_WHILE_GTIOCA_HIGH = (1U << 15),
+
+    /** Action performed on ELC GPTA event. **/
+    GPT_SOURCE_GPT_A = (1U << 16),
+
+    /** Action performed on ELC GPTB event. **/
+    GPT_SOURCE_GPT_B = (1U << 17),
+
+    /** Action performed on ELC GPTC event. **/
+    GPT_SOURCE_GPT_C = (1U << 18),
+
+    /** Action performed on ELC GPTD event. **/
+    GPT_SOURCE_GPT_D = (1U << 19),
+
+    /** Action performed on ELC GPTE event. **/
+    GPT_SOURCE_GPT_E = (1U << 20),
+
+    /** Action performed on ELC GPTF event. **/
+    GPT_SOURCE_GPT_F = (1U << 21),
+
+    /** Action performed on ELC GPTG event. **/
+    GPT_SOURCE_GPT_G = (1U << 22),
+
+    /** Action performed on ELC GPTH event. **/
+    GPT_SOURCE_GPT_H = (1U << 23),
 } gpt_source_t;
+
+#endif
 
 /** Configurations for output pins. */
 typedef struct s_gpt_output_pin
@@ -153,11 +181,11 @@ typedef struct s_gpt_gtior_setting
 /** Input capture signal noise filter (debounce) setting. Only available for input signals GTIOCxA and GTIOCxB.
  *   The noise filter samples the external signal at intervals of the P0CLK divided by one of the values.
  *   When 3 consecutive samples are at the same level (high or low), then that level is passed on as
- *   the observed state of the signal. See "Noise Filter Function" in the hardware manual, GPT section.
+ *   the observed state of the signal. See "Noise Filter Function" in the user's manual, GPT section.
  */
 typedef enum e_gpt_capture_filter
 {
-    GPT_CAPTURE_FILTER_NONE         = 0U, ///< None - no filtering
+    GPT_CAPTURE_FILTER_NONE                = 0U, ///< None - no filtering
     GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_1  = 1U, ///< CLK/1 - fast sampling
     GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_4  = 3U, ///< CLK/4
     GPT_CAPTURE_FILTER_CLOCK_SOURCE_DIV_16 = 5U, ///< CLK/16
@@ -246,13 +274,6 @@ typedef enum e_gpt_interrupt_skip_adc
     GPT_INTERRUPT_SKIP_ADC_B       = 4U, ///< Skip ADC B events
     GPT_INTERRUPT_SKIP_ADC_A_AND_B = 5U, ///< Skip ADC A and B events
 } gpt_interrupt_skip_adc_t;
-
-/** Buffering mode */
-typedef enum e_gpt_buffer_mode
-{
-    GPT_BUFFER_MODE_SINGLE = 1,        ///< Single-buffer mode
-    GPT_BUFFER_MODE_DOUBLE = 2         ///< Double-buffer mode
-} gpt_buffer_mode_t;
 
 /** Delay setting for the PWM Delay Generation Circuit (PDG). */
 typedef enum e_gpt_pwm_output_delay_setting
@@ -359,8 +380,14 @@ typedef struct st_gpt_extended_cfg
 
     uint8_t   capture_a_ipl;                      ///< Capture A interrupt priority
     uint8_t   capture_b_ipl;                      ///< Capture B interrupt priority
+    uint8_t   dead_time_ipl;                      ///< Dead time error interrupt priority
     IRQn_Type capture_a_irq;                      ///< Capture A interrupt
     IRQn_Type capture_b_irq;                      ///< Capture B interrupt
+    IRQn_Type dead_time_irq;                      ///< Dead time error interrupt
+
+    uint32_t compare_match_value[2];              ///< Storing compare match value for channels
+    uint8_t  compare_match_status;                ///< Storing the compare match register status
+
     gpt_extended_pwm_cfg_t const * p_pwm_cfg;     ///< Advanced PWM features, optional
     gpt_gtior_setting_t            gtior_setting; ///< Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins.
 } gpt_extended_cfg_t;
@@ -403,7 +430,10 @@ fsp_err_t R_GPT_CallbackSet(timer_ctrl_t * const          p_api_ctrl,
                             void const * const            p_context,
                             timer_callback_args_t * const p_callback_memory);
 fsp_err_t R_GPT_Close(timer_ctrl_t * const p_ctrl);
-fsp_err_t R_GPT_PwmOutputDelayInitialize();
+fsp_err_t R_GPT_PwmOutputDelayInitialize(void);
+fsp_err_t R_GPT_CompareMatchSet(timer_ctrl_t * const        p_ctrl,
+                                uint32_t const              compare_match_value,
+                                timer_compare_match_t const match_channel);
 
 /*******************************************************************************************************************//**
  * @} (end defgroup GPT)

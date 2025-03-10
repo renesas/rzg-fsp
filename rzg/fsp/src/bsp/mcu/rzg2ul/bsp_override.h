@@ -29,9 +29,14 @@
 #define BSP_OVERRIDE_BSP_ACCESS_CONTROL
 #define BSP_OVERRIDE_BSP_PIN_T
 #define BSP_OVERRIDE_BSP_PORT_T
+#define BSP_OVERRIDE_CANFD_TX_BUFFER_T
+#define BSP_OVERRIDE_CANFD_TX_MB_T
 #define BSP_OVERRIDE_DMAC_B_EXTERNAL_DETECTION_T
 #define BSP_OVERRIDE_FSP_PRIV_CLOCK_T
+#define BSP_OVERRIDE_FSP_PRIV_CLOCK_DIVIDER_T
+#define BSP_OVERRIDE_FSP_PRIV_CLOCK_SELECTOR_T
 #define BSP_OVERRIDE_TRANSFER_ADDR_MODE_T
+#define BSP_OVERRIDE_TRANSFER_CALLBACK_ARGS_T
 #define BSP_OVERRIDE_TRANSFER_INFO_T
 #define BSP_OVERRIDE_TRANSFER_MODE_T
 #define BSP_OVERRIDE_TRANSFER_SIZE_T
@@ -162,6 +167,57 @@
 #define BSP_ACCESS_CONTROL_POS_ACCCNT_GPREG        (R_SYSC_SYS_SLVACCCTL14_GPREG_SL_Pos)
 #define BSP_ACCESS_CONTROL_REG_ACCCNT_IPCONT       (R_SYSC->SYS_SLVACCCTL16)
 #define BSP_ACCESS_CONTROL_POS_ACCCNT_IPCONT       (R_SYSC_SYS_SLVACCCTL16_IPCONT_SL_Pos)
+
+/***********************************************************************************************************************
+ * Definition of macros to clear state flag of INTC IRQ
+ **********************************************************************************************************************/
+#define BSP_INTC_IRQ_CLR_STATE_FLAG(channel)                                    \
+    do                                                                          \
+    {                                                                           \
+        /* Dummy read the ISCR before clearing the ISTAT bit. */                \
+        volatile uint32_t iscr = BSP_FEATURE_INTC_BASE_ADDR->ISCR;              \
+        FSP_PARAMETER_NOT_USED(iscr);                                           \
+        /* Clear the ISTAT bit. */                                              \
+        BSP_FEATURE_INTC_BASE_ADDR->ISCR = ~(INTC_IRQ_CLR_REG_MASK << channel); \
+        /* Dummy read the ISCR to prevent the interrupt cause that have been cleared from being accidentally accepted. \
+         * Reference section "Clear Timing of Interrupt Cause" of the user's manual. */ \
+        iscr = BSP_FEATURE_INTC_BASE_ADDR->ISCR;                                        \
+        FSP_PARAMETER_NOT_USED(iscr);                                                   \
+    } while (0);
+
+/***********************************************************************************************************************
+ * Definition of macros to clear state flag of INTC NMI
+ **********************************************************************************************************************/
+#define BSP_INTC_NMI_CLR_STATE_FLAG()                              \
+    do                                                             \
+    {                                                              \
+        /* Dummy read the NSCR before clearing the NSTAT bit. */   \
+        volatile uint32_t nscr = BSP_FEATURE_INTC_BASE_ADDR->NSCR; \
+        FSP_PARAMETER_NOT_USED(nscr);                              \
+        /* Clear the NSTAT bit. */                                 \
+        BSP_FEATURE_INTC_BASE_ADDR->NSCR_b.NSTAT = 0;              \
+        /* Dummy read the NSCR to prevent the interrupt cause that have been cleared from being accidentally accepted. \
+         * Reference section "Clear Timing of Interrupt Cause" of the user's manual. */ \
+        nscr = BSP_FEATURE_INTC_BASE_ADDR->NSCR;                                        \
+        FSP_PARAMETER_NOT_USED(nscr);                                                   \
+    } while (0);
+
+/***********************************************************************************************************************
+ * Definition of macros to clear state flag of INTC TINT
+ **********************************************************************************************************************/
+#define BSP_INTC_TINT_CLR_STATE_FLAG(channel)                                    \
+    do                                                                           \
+    {                                                                            \
+        /* Dummy read the TSCR before clearing the TSTAT bit. */                 \
+        volatile uint32_t tscr = BSP_FEATURE_INTC_BASE_ADDR->TSCR;               \
+        FSP_PARAMETER_NOT_USED(tscr);                                            \
+        /* Clear the TSTAT bit. */                                               \
+        BSP_FEATURE_INTC_BASE_ADDR->TSCR = ~(INTC_TINT_CLR_REG_MASK << channel); \
+        /* Dummy read the TSCR to prevent the interrupt cause that should have been cleared from being accidentally \
+         * accepted again. Reference section "Clear Timing of Interrupt Cause" of the user's manual. */ \
+        tscr = BSP_FEATURE_INTC_BASE_ADDR->TSCR;                                                        \
+        FSP_PARAMETER_NOT_USED(tscr);                                                                   \
+    } while (0);
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -352,10 +408,10 @@ typedef enum e_bsp_io_port_pin_t
  * DMAC_B External Detection Overrides
  *==============================================*/
 
- /** Detection method of the external DMA request signal. See RZ/T2M hardware manual Table 14.19 DMA Transfer Request Detection Operation Setting Table. */
+/** Detection method of the external DMA request signal. */
 typedef enum e_dmac_b_external_detection
 {
-    DMAC_B_EXTERNAL_DETECTION_NO_DETECTION = 0,   ///< Not using hardware detection.
+    DMAC_B_EXTERNAL_DETECTION_NO_DETECTION = 0, ///< Not using hardware detection.
 } dmac_b_external_detection_t;
 
 /** access control. */
@@ -447,9 +503,41 @@ typedef enum e_fsp_priv_clock
     FSP_PRIV_CLOCK_NUM,
 } fsp_priv_clock_t;
 
+/* Private enum used in R_BSP_ClockDividerSet. */
+typedef enum e_fsp_priv_clock_divider
+{
+    FSP_PRIV_CLOCK_DIVIDER_DIV_PLL1 = 0,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_PLL2_A,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_PLL3_A,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_PLL3_B,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_PLL3_C,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_PLL3_CLK200FIX,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_DSI_A,
+    FSP_PRIV_CLOCK_DIVIDER_DIV_DSI_B,
+    FSP_PRIV_CLOCK_DIVIDER_NUM,
+} fsp_priv_clock_divider_t;
+
+/* Private enum used in R_BSP_ClockSelectorSet. */
+typedef enum e_fsp_priv_clock_selector
+{
+    FSP_PRIV_CLOCK_SELECTOR_SEL_SDHI0 = 0,
+    FSP_PRIV_CLOCK_SELECTOR_SEL_SDHI1,
+    FSP_PRIV_CLOCK_SELECTOR_SEL_PLL3_3,
+    FSP_PRIV_CLOCK_SELECTOR_SEL_PLL4,
+    FSP_PRIV_CLOCK_SELECTOR_SEL_PLL6_2,
+    FSP_PRIV_CLOCK_SELECTOR_NUM,
+} fsp_priv_clock_selector_t;
+
 /*==============================================
  * Transfer API Overrides
  *==============================================*/
+
+/** Events that can trigger a callback function. */
+typedef enum e_transfer_event
+{
+    TRANSFER_EVENT_TRANSFER_END   = 0, ///< Transfer has completed.
+    TRANSFER_EVENT_TRANSFER_ERROR = 1, ///< Transfer error has occurred.
+} transfer_event_t;
 
 /** Transfer mode describes what will happen when a transfer request occurs. */
 typedef enum e_transfer_mode
@@ -483,6 +571,13 @@ typedef enum e_transfer_addr_mode
     /** Address pointer remains fixed after each transfer. */
     TRANSFER_ADDR_MODE_FIXED = 1
 } transfer_addr_mode_t;
+
+/** Callback function parameter data. */
+typedef struct st_transfer_callback_args_t
+{
+    transfer_event_t event;            ///< Event code
+    void const     * p_context;        ///< Placeholder for user data. Set in transfer_api_t::open function in ::transfer_cfg_t.
+} transfer_callback_args_t;
 
 typedef struct st_transfer_info
 {
@@ -529,6 +624,61 @@ typedef struct st_adc_info
     uint32_t              calibration_data1; ///< Temperature sensor calibration data1
     uint32_t              calibration_data2; ///< Temperature sensor calibration data2
 } adc_info_t;
+
+/*==============================================
+ * CANFD Overrides
+ *==============================================*/
+
+/** CANFD Transmit Buffer (MB + CFIFO) */
+typedef enum e_canfd_tx_buffer
+{
+    CANFD_TX_BUFFER_0 = 0,
+    CANFD_TX_BUFFER_1 = 1,
+    CANFD_TX_BUFFER_2 = 2,
+    CANFD_TX_BUFFER_3 = 3,
+#if !BSP_FEATURE_CANFD_LITE
+    CANFD_TX_BUFFER_4  = 4,
+    CANFD_TX_BUFFER_5  = 5,
+    CANFD_TX_BUFFER_6  = 6,
+    CANFD_TX_BUFFER_7  = 7,
+    CANFD_TX_BUFFER_8  = 8,
+    CANFD_TX_BUFFER_9  = 9,
+    CANFD_TX_BUFFER_10 = 10,
+    CANFD_TX_BUFFER_11 = 11,
+    CANFD_TX_BUFFER_12 = 12,
+    CANFD_TX_BUFFER_13 = 13,
+    CANFD_TX_BUFFER_14 = 14,
+    CANFD_TX_BUFFER_15 = 15,
+#endif
+    CANFD_TX_BUFFER_FIFO_COMMON_0 = 16,
+#if !BSP_FEATURE_CANFD_LITE
+    CANFD_TX_BUFFER_FIFO_COMMON_1 = 17,
+    CANFD_TX_BUFFER_FIFO_COMMON_2 = 18,
+#endif
+} canfd_tx_buffer_t;
+
+/** CANFD Transmit Message Buffer (TX MB) */
+typedef enum e_canfd_tx_mb
+{
+    CANFD_TX_MB_0 = 0,
+    CANFD_TX_MB_1 = 1,
+    CANFD_TX_MB_2 = 2,
+    CANFD_TX_MB_3 = 3,
+#if !BSP_FEATURE_CANFD_LITE
+    CANFD_TX_MB_4  = 4,
+    CANFD_TX_MB_5  = 5,
+    CANFD_TX_MB_6  = 6,
+    CANFD_TX_MB_7  = 7,
+    CANFD_TX_MB_8  = 8,
+    CANFD_TX_MB_9  = 9,
+    CANFD_TX_MB_10 = 10,
+    CANFD_TX_MB_11 = 11,
+    CANFD_TX_MB_12 = 12,
+    CANFD_TX_MB_13 = 13,
+    CANFD_TX_MB_14 = 14,
+    CANFD_TX_MB_15 = 15,
+#endif
+} canfd_tx_mb_t;
 
 /***********************************************************************************************************************
  * Exported global variables

@@ -10,10 +10,6 @@
 #include "r_rspi.h"
 #include "r_rspi_cfg.h"
 
-#if RSPI_CFG_DMAC_ENABLE
- #include "r_dmac_b.h"
-#endif
-
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
@@ -651,7 +647,7 @@ static void r_rspi_nvic_config (rspi_instance_ctrl_t * p_ctrl)
  * @param[in]  p_ctrl          pointer to control structure.
  *
  * Note: For 8-Bit wide data frames, the devices require the SPBYT bit to enable byte level access to the
- * data register. Although this register is not documented in some MCU hardware manuals, it does seem to be available
+ * data register. Although this register is not documented in some user's manual, it does seem to be available
  * on all of them.
  **********************************************************************************************************************/
 static void r_rspi_bit_width_config (rspi_instance_ctrl_t * p_ctrl)

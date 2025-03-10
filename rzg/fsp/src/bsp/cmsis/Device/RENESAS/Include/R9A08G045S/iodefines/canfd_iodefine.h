@@ -687,7 +687,7 @@ typedef struct                         /*!< (@ 0x400B0000) R_CANFD Structure    
 
     union
     {
-        __IOM uint32_t CFDGAFLCFG0;    /*!< (@ 0x0000009C) Global Acceptance Filter List Configuration Register 0     */
+        __IOM uint32_t CFDGAFLCFG[1];    /*!< (@ 0x0000009C) Global Acceptance Filter List Configuration Register 0     */
 
         struct
         {
@@ -695,7 +695,7 @@ typedef struct                         /*!< (@ 0x400B0000) R_CANFD Structure    
             uint32_t            : 7;
             __IOM uint32_t RNC0 : 9;   /*!< [24..16] Rule Number for Channel 0                                        */
             uint32_t            : 7;
-        } CFDGAFLCFG0_b;
+        } CFDGAFLCFG_b[1];
     };
     __IM uint8_t RESERVED1[12];
 

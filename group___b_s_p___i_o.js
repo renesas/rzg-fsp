@@ -268,8 +268,7 @@ var group___b_s_p___i_o =
     ] ],
     [ "bsp_bypass_oscillator_t", "group___b_s_p___i_o.html#ga78e68e2247154764cd7d387d3b191095", [
       [ "BSP_BYPASS_OSCILLATOR_RTC", "group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a32152264d3d4ea0b5e8f3e4bb36346a8", null ],
-      [ "BSP_BYPASS_OSCILLATOR_AUDIO", "group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a4e41231154d741945cb439385369bdf3", null ],
-      [ "BSP_BYPASS_OSCILLATOR_EMCLK", "group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a9305c0e423f1fbafdd0e0e19e08bdbae", null ]
+      [ "BSP_BYPASS_OSCILLATOR_AUDIO", "group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a4e41231154d741945cb439385369bdf3", null ]
     ] ],
     [ "bsp_bypass_mode_t", "group___b_s_p___i_o.html#ga65987c1da1d49f85463de102d5d24c2e", [
       [ "BSP_BYPASS_MODE_CRYSTAL_OSC", "group___b_s_p___i_o.html#gga65987c1da1d49f85463de102d5d24c2eafc7271d2760ab1dcd2e368e2eb7f9a7a", null ],

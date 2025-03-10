@@ -160,5 +160,6 @@ var group___m_t_u3 =
     [ "R_MTU3_Disable", "group___m_t_u3.html#gab8b9c7b84a459fabd5449e83db526ee1", null ],
     [ "R_MTU3_AdcTriggerSet", "group___m_t_u3.html#ga3e16434800b5d897208039f3398acf84", null ],
     [ "R_MTU3_CallbackSet", "group___m_t_u3.html#ga4ec0ad4f10536b74374b75f2ca46f527", null ],
-    [ "R_MTU3_Close", "group___m_t_u3.html#gace590734aa53fc0116c411decc0142d2", null ]
+    [ "R_MTU3_Close", "group___m_t_u3.html#gace590734aa53fc0116c411decc0142d2", null ],
+    [ "R_MTU3_CompareMatchSet", "group___m_t_u3.html#ga919743a366cdd773ad49ece6bb029baf", null ]
 ];

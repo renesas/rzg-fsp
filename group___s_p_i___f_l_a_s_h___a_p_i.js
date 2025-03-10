@@ -6,7 +6,6 @@ var group___s_p_i___f_l_a_s_h___a_p_i =
     ] ],
     [ "spi_flash_direct_transfer_t", "group___s_p_i___f_l_a_s_h___a_p_i.html#structspi__flash__direct__transfer__t", [
       [ "address", "group___s_p_i___f_l_a_s_h___a_p_i.html#a5120cdb55dcd4ce8da04eb8baa69254d", null ],
-      [ "data", "group___s_p_i___f_l_a_s_h___a_p_i.html#a52ae9ed9880e98f7a02107c2b31b673b", null ],
       [ "command", "group___s_p_i___f_l_a_s_h___a_p_i.html#ab20fca5fa35e25becd87abc7539a4246", null ],
       [ "dummy_cycles", "group___s_p_i___f_l_a_s_h___a_p_i.html#ad4a653cf90fd97dc9d0a5f8fce3c3795", null ],
       [ "command_length", "group___s_p_i___f_l_a_s_h___a_p_i.html#a521505cf1d98e638aef0e72ca5eb6463", null ],
@@ -36,19 +35,19 @@ var group___s_p_i___f_l_a_s_h___a_p_i =
       [ "write_in_progress", "group___s_p_i___f_l_a_s_h___a_p_i.html#ae20d4bed523ca4e802f5da6fdec4ca43", null ]
     ] ],
     [ "spi_flash_api_t", "group___s_p_i___f_l_a_s_h___a_p_i.html#structspi__flash__api__t", [
-      [ "open", "group___s_p_i___f_l_a_s_h___a_p_i.html#a6b8a1ae0eed7bca555c94959c1314ae3", null ],
-      [ "directWrite", "group___s_p_i___f_l_a_s_h___a_p_i.html#a31a1d575f3d8876154d4e217caebf110", null ],
-      [ "directRead", "group___s_p_i___f_l_a_s_h___a_p_i.html#a3366fdcb333cb6950ff38bb35618c401", null ],
-      [ "directTransfer", "group___s_p_i___f_l_a_s_h___a_p_i.html#a21da248768dd75281ea7b29f2d243afd", null ],
-      [ "spiProtocolSet", "group___s_p_i___f_l_a_s_h___a_p_i.html#a3328711e7e70c8379f4373d2861d785a", null ],
-      [ "write", "group___s_p_i___f_l_a_s_h___a_p_i.html#a61e667a9ae9af76c5f8fd9f1973c6838", null ],
-      [ "erase", "group___s_p_i___f_l_a_s_h___a_p_i.html#a0f241a48dd8f386e19a6e0fe44e8a2d9", null ],
-      [ "statusGet", "group___s_p_i___f_l_a_s_h___a_p_i.html#a1eea2761178ddd8ca7ef3aacd5c80507", null ],
-      [ "xipEnter", "group___s_p_i___f_l_a_s_h___a_p_i.html#ab5c6cc5c82e73038ddcef82a906b966f", null ],
-      [ "xipExit", "group___s_p_i___f_l_a_s_h___a_p_i.html#a3a7c2aae058a733f879ae294c63ce2c6", null ],
-      [ "bankSet", "group___s_p_i___f_l_a_s_h___a_p_i.html#a14581133205383b71df54a65439c0dcf", null ],
-      [ "autoCalibrate", "group___s_p_i___f_l_a_s_h___a_p_i.html#ad04434e2c049da61d3389355d5961f31", null ],
-      [ "close", "group___s_p_i___f_l_a_s_h___a_p_i.html#a16810f14e3fff6ed04f36eca44353785", null ]
+      [ "open", "group___s_p_i___f_l_a_s_h___a_p_i.html#a75a4468493abb92f6bf484ed93718f6f", null ],
+      [ "directWrite", "group___s_p_i___f_l_a_s_h___a_p_i.html#aebfa0317034f04f53b6b788da0debe80", null ],
+      [ "directRead", "group___s_p_i___f_l_a_s_h___a_p_i.html#a4b3bfefb3b1ff0580fe1cce97b81c56f", null ],
+      [ "directTransfer", "group___s_p_i___f_l_a_s_h___a_p_i.html#a875857cdb3d6ebf0971115737b9e2989", null ],
+      [ "spiProtocolSet", "group___s_p_i___f_l_a_s_h___a_p_i.html#a423e63cd15ce3984410c2f5cdf717e35", null ],
+      [ "write", "group___s_p_i___f_l_a_s_h___a_p_i.html#a35480fe077054fff8bd41c67dbce88fb", null ],
+      [ "erase", "group___s_p_i___f_l_a_s_h___a_p_i.html#a4fb48ee9af80243cf7f8f966b4c6c56e", null ],
+      [ "statusGet", "group___s_p_i___f_l_a_s_h___a_p_i.html#a36600006109effd5c9d47283a7760ce6", null ],
+      [ "xipEnter", "group___s_p_i___f_l_a_s_h___a_p_i.html#a48a9a0db1f5bcb24acc9cc1cea14f0ab", null ],
+      [ "xipExit", "group___s_p_i___f_l_a_s_h___a_p_i.html#a00317079cf31b5311592d0845caa4d8a", null ],
+      [ "bankSet", "group___s_p_i___f_l_a_s_h___a_p_i.html#ae581e587fb514ab784257d07a77d6b32", null ],
+      [ "autoCalibrate", "group___s_p_i___f_l_a_s_h___a_p_i.html#ac78c55ffe2b7d99681612ce796a384c5", null ],
+      [ "close", "group___s_p_i___f_l_a_s_h___a_p_i.html#a28bdae798428b85222739a0b9fd43a15", null ]
     ] ],
     [ "spi_flash_instance_t", "group___s_p_i___f_l_a_s_h___a_p_i.html#structspi__flash__instance__t", [
       [ "p_ctrl", "group___s_p_i___f_l_a_s_h___a_p_i.html#ab7cca7ee8e821effe8d7e8902e6a7514", null ],

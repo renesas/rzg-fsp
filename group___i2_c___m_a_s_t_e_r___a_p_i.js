@@ -29,8 +29,8 @@ var group___i2_c___m_a_s_t_e_r___a_p_i =
       [ "write", "group___i2_c___m_a_s_t_e_r___a_p_i.html#ab2ca2f7ee7e55628bcdd9e3492d7dfd2", null ],
       [ "abort", "group___i2_c___m_a_s_t_e_r___a_p_i.html#a0a0800aaa24f36b2eac8b315a0c5437e", null ],
       [ "slaveAddressSet", "group___i2_c___m_a_s_t_e_r___a_p_i.html#a6e1d2e41f4dc058c06c1f5aae0c7bce5", null ],
-      [ "callbackSet", "group___i2_c___m_a_s_t_e_r___a_p_i.html#a1a0c2ac15d2c2eb6a50baed682498620", null ],
-      [ "statusGet", "group___i2_c___m_a_s_t_e_r___a_p_i.html#a518c35fc22e49d6969fb6e15aa1e09cd", null ],
+      [ "callbackSet", "group___i2_c___m_a_s_t_e_r___a_p_i.html#aab666b9c130b25efdc4b354e62e91c40", null ],
+      [ "statusGet", "group___i2_c___m_a_s_t_e_r___a_p_i.html#a165fd3df3df2c5dacbfd5c75b9685181", null ],
       [ "close", "group___i2_c___m_a_s_t_e_r___a_p_i.html#a7d093cf28da6a99e56dbeb7b82ad3f5f", null ]
     ] ],
     [ "i2c_master_instance_t", "group___i2_c___m_a_s_t_e_r___a_p_i.html#structi2c__master__instance__t", [
@@ -51,6 +51,8 @@ var group___i2_c___m_a_s_t_e_r___a_p_i =
     [ "i2c_master_event_t", "group___i2_c___m_a_s_t_e_r___a_p_i.html#ga515f0c8b583f8851ce4d6474168769af", [
       [ "I2C_MASTER_EVENT_ABORTED", "group___i2_c___m_a_s_t_e_r___a_p_i.html#gga515f0c8b583f8851ce4d6474168769afa22226fd293eb8a7f80e4a80ca8699a4d", null ],
       [ "I2C_MASTER_EVENT_RX_COMPLETE", "group___i2_c___m_a_s_t_e_r___a_p_i.html#gga515f0c8b583f8851ce4d6474168769afa1b3d50a1a4fbf045307febd9eca1521a", null ],
-      [ "I2C_MASTER_EVENT_TX_COMPLETE", "group___i2_c___m_a_s_t_e_r___a_p_i.html#gga515f0c8b583f8851ce4d6474168769afa9273437457da4f6369e937d257c0211b", null ]
+      [ "I2C_MASTER_EVENT_TX_COMPLETE", "group___i2_c___m_a_s_t_e_r___a_p_i.html#gga515f0c8b583f8851ce4d6474168769afa9273437457da4f6369e937d257c0211b", null ],
+      [ "I2C_MASTER_EVENT_START", "group___i2_c___m_a_s_t_e_r___a_p_i.html#gga515f0c8b583f8851ce4d6474168769afab71cabec8399cca4d24b60cfda735a42", null ],
+      [ "I2C_MASTER_EVENT_BYTE_ACK", "group___i2_c___m_a_s_t_e_r___a_p_i.html#gga515f0c8b583f8851ce4d6474168769afac0fac7695efc6eab872cb17a88c3c93e", null ]
     ] ]
 ];

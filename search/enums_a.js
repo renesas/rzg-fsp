@@ -16,5 +16,17 @@ var searchData=
   ['rspi_5frx_5ftrigger_5flevel_5ft',['rspi_rx_trigger_level_t',['../group___r_s_p_i.html#ga431fc619396f9d5cf2f1c495c2ed59ca',1,'r_rspi.h']]],
   ['rspi_5fssl_5flevel_5fkeep_5ft',['rspi_ssl_level_keep_t',['../group___r_s_p_i.html#gaae19ba80f9290f4ad12e794cf1bac9f2',1,'r_rspi.h']]],
   ['rspi_5fssl_5fpolarity_5ft',['rspi_ssl_polarity_t',['../group___r_s_p_i.html#ga2342f44b16c4072b5e9302c4f05b4f94',1,'r_rspi.h']]],
-  ['rspi_5ftx_5ftrigger_5flevel_5ft',['rspi_tx_trigger_level_t',['../group___r_s_p_i.html#ga8e48fdc14874a5cba28661ae549203ab',1,'r_rspi.h']]]
+  ['rspi_5ftx_5ftrigger_5flevel_5ft',['rspi_tx_trigger_level_t',['../group___r_s_p_i.html#ga8e48fdc14874a5cba28661ae549203ab',1,'r_rspi.h']]],
+  ['rtc_5falarm_5fchannel_5ft',['rtc_alarm_channel_t',['../group___r_t_c___a_p_i.html#ga023e9e2043784cf17e3d3bf056ce14f1',1,'r_rtc_api.h']]],
+  ['rtc_5fclock_5fbypass_5fmode_5ft',['rtc_clock_bypass_mode_t',['../group___r_t_c.html#ga17801e1ecb103e17bf1fd092c6a48461',1,'r_rtc.h']]],
+  ['rtc_5fclock_5fsource_5ft',['rtc_clock_source_t',['../group___r_t_c___a_p_i.html#gad8eef26a825fa4a0c5a417f8be08ccc6',1,'r_rtc_api.h']]],
+  ['rtc_5ferror_5fadjustment_5fmode_5ft',['rtc_error_adjustment_mode_t',['../group___r_t_c___a_p_i.html#ga4cbfe07cf288ae153c30b4fef99163e7',1,'r_rtc_api.h']]],
+  ['rtc_5ferror_5fadjustment_5fperiod_5ft',['rtc_error_adjustment_period_t',['../group___r_t_c___a_p_i.html#gaa9758f6f29579df6e9f5c64ff486c097',1,'r_rtc_api.h']]],
+  ['rtc_5ferror_5fadjustment_5ft',['rtc_error_adjustment_t',['../group___r_t_c___a_p_i.html#ga704067eae956dc872d24edf9b85b397f',1,'r_rtc_api.h']]],
+  ['rtc_5fevent_5ft',['rtc_event_t',['../group___r_t_c___a_p_i.html#gad2e192ed9a33b6c005c2c19ccbd6a21b',1,'r_rtc_api.h']]],
+  ['rtc_5fperiodic_5firq_5fselect_5ft',['rtc_periodic_irq_select_t',['../group___r_t_c___a_p_i.html#gacbf0a3d09430a65ca1b3179819183f01',1,'r_rtc_api.h']]],
+  ['rtc_5fstatus_5ft',['rtc_status_t',['../group___r_t_c___a_p_i.html#gab1079685ed8a9d30f32062b3bfedd041',1,'r_rtc_api.h']]],
+  ['rtc_5ftime_5fcapture_5fmode_5ft',['rtc_time_capture_mode_t',['../group___r_t_c___a_p_i.html#ga1055e04d46ad556c31bfb4a62daf3cfd',1,'r_rtc_api.h']]],
+  ['rtc_5ftime_5fcapture_5fnoise_5ffilter_5ft',['rtc_time_capture_noise_filter_t',['../group___r_t_c___a_p_i.html#gaeaa54438f4298dee64468529c104b6a7',1,'r_rtc_api.h']]],
+  ['rtc_5ftime_5fcapture_5fsource_5ft',['rtc_time_capture_source_t',['../group___r_t_c___a_p_i.html#ga60a231559f89a160d0849ae222518eca',1,'r_rtc_api.h']]]
 ];

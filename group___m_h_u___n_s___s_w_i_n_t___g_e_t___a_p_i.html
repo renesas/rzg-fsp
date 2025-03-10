@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('group___m_h_u___n_s___s_w_i_n_t___g_e_
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
-<div class="title">MHU Interface (Software Interrupt Get)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a></div></div>  </div>
+<div class="title">MHU Interface (Software Interrupt Get)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___s_y_s_t_e_m___i_n_t_e_r_f_a_c_e_s.html">System</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -170,10 +170,7 @@ $(document).ready(function(){initNavTree('group___m_h_u___n_s___s_w_i_n_t___g_e_
 <h1><a class="anchor" id="MHU_NS_SWINT_GET_API_SUMMARY"></a>
 Summary</h1>
 <p>The Message Handling Unit (Software Interrupt Get) interface provides a common API for MHU HAL drivers. The Message Handling Unit (Software Interrupt Get) interface supports:</p><ul>
-<li>Receive interrupt when the software interrupt is set by Cortex-A55.</li>
-</ul>
-<p>Implemented by:</p><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t.html">Message Handling Unit for non-secure software interrupt receive (r_mhu_ns_swint_get)</a> </li>
+<li>Receive interrupt when the software interrupt is set. </li>
 </ul>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -324,8 +321,8 @@ IRQn_Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr><td colspan="2"><h3>Data Fields</h3></td></tr>
 <tr class="memitem:a94dc2c05c8c387042d23a95b08a2f760"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a94dc2c05c8c387042d23a95b08a2f760">open</a> )(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1">mhu_ns_swint_get_ctrl_t</a> *const p_ctrl, <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__cfg__t">mhu_ns_swint_get_cfg_t</a> const *const p_cfg)</td></tr>
 <tr class="separator:a94dc2c05c8c387042d23a95b08a2f760"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afca2a6032121c770e1bd8a07db1c062a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#afca2a6032121c770e1bd8a07db1c062a">callbackSet</a> )(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1">mhu_ns_swint_get_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *const p_callback_memory)</td></tr>
-<tr class="separator:afca2a6032121c770e1bd8a07db1c062a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6d265fb94f76b4e03482e71e5eceadc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#aa6d265fb94f76b4e03482e71e5eceadc">callbackSet</a> )(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1">mhu_ns_swint_get_ctrl_t</a> *const p_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *const p_callback_memory)</td></tr>
+<tr class="separator:aa6d265fb94f76b4e03482e71e5eceadc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af92e9fdbc56bd0c806ef58a4b69e86db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#af92e9fdbc56bd0c806ef58a4b69e86db">close</a> )(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1">mhu_ns_swint_get_ctrl_t</a> *const p_ctrl)</td></tr>
 <tr class="separator:af92e9fdbc56bd0c806ef58a4b69e86db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -341,10 +338,7 @@ IRQn_Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Opens the MHU driver and initializes the hardware. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t.html#ga3015e5dbd9204be24c79c0a69510e7ee">R_MHU_NS_SWINT_GET_Open()</a></li>
-</ul>
-</dd></dl>
+<p>Opens the MHU driver and initializes the hardware.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block. Must be declared by user. Elements are set here. </td></tr>
@@ -355,21 +349,18 @@ IRQn_Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 
 </div>
 </div>
-<a id="afca2a6032121c770e1bd8a07db1c062a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afca2a6032121c770e1bd8a07db1c062a">&#9670;&nbsp;</a></span>callbackSet</h2>
+<a id="aa6d265fb94f76b4e03482e71e5eceadc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6d265fb94f76b4e03482e71e5eceadc">&#9670;&nbsp;</a></span>callbackSet</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  mhu_ns_swint_get_api_t::callbackSet) (<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1">mhu_ns_swint_get_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *const p_callback_memory)</td>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  mhu_ns_swint_get_api_t::callbackSet) (<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ga22364d066f195eb04e841c0e1d4147f1">mhu_ns_swint_get_ctrl_t</a> *const p_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__callback__args__t">mhu_ns_swint_get_callback_args_t</a> *const p_callback_memory)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Specify callback function and optional context pointer and working memory pointer. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t.html#ga81d3b1a8847d43fbd10ee226377bb309">R_MHU_NS_SWINT_GET_CallbackSet()</a></li>
-</ul>
-</dd></dl>
+<p>Specify callback function and optional context pointer and working memory pointer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Control block set in <a class="el" href="group___t_i_m_e_r___a_p_i.html#af49a90087a53c8019d642a3f7abaa8ad">timer_api_t::open</a> call for this timer. </td></tr>
@@ -393,10 +384,7 @@ IRQn_Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Closes the driver and releases the MHU device. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t.html#gaaf04bfeb26451f6fc7da14fe1825e705">R_MHU_NS_SWINT_GET_Close()</a></li>
-</ul>
-</dd></dl>
+<p>Closes the driver and releases the MHU device.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block set in <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a94dc2c05c8c387042d23a95b08a2f760">mhu_ns_swint_get_api_t::open</a> call. </td></tr>
@@ -457,10 +445,7 @@ Pointer to the API structure for this instance. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MHU control block. Allocate an instance specific control block to pass into the MHU API calls. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___g_e_t.html#structmhu__ns__swint__get__instance__ctrl__t">mhu_ns_swint_get_instance_ctrl_t</a> </li>
-</ul>
-</dd></dl>
+<p>MHU control block. Allocate an instance specific control block to pass into the MHU API calls. </p>
 
 </div>
 </div>
@@ -470,7 +455,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

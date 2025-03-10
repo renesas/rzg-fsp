@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('group___m_h_u___a_p_i.html','');});
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
-<div class="title">MHU Interface (for secure and non secure channels)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a></div></div>  </div>
+<div class="title">MHU Interface (for secure and non secure channels)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___s_y_s_t_e_m___i_n_t_e_r_f_a_c_e_s.html">System</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -171,12 +171,8 @@ $(document).ready(function(){initNavTree('group___m_h_u___a_p_i.html','');});
 <h1><a class="anchor" id="MHU_API_SUMMARY"></a>
 Summary</h1>
 <p>The Message Handling Unit interface provides a common API for MHU HAL drivers. The Message Handling Unit interface supports:</p><ul>
-<li>Message communication between Cortex-A55 and Cortex-M33.</li>
-<li>32-bit data can be communicated between CPUs via shared memory.</li>
-</ul>
-<p>Implemented by:</p><ul>
-<li><a class="el" href="group___m_h_u___s.html">Message Handling Unit for secure channels (r_mhu_s)</a></li>
-<li><a class="el" href="group___m_h_u___n_s.html">Message Handling Unit for non secure channels (r_mhu_ns)</a> </li>
+<li>Message communication between two cores.</li>
+<li>32-bit data can be communicated between CPUs via shared memory. </li>
 </ul>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -344,8 +340,8 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <tr class="separator:ac3886717d220de2c7861063acceee859"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6d608ef42020cdccb89d9d0bd7a28b0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___a_p_i.html#af6d608ef42020cdccb89d9d0bd7a28b0">msgSend</a> )(<a class="el" href="group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7">mhu_ctrl_t</a> *const p_ctrl, uint32_t const msg)</td></tr>
 <tr class="separator:af6d608ef42020cdccb89d9d0bd7a28b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71110c354941eb9204f6af5969ce7132"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___a_p_i.html#a71110c354941eb9204f6af5969ce7132">callbackSet</a> )(<a class="el" href="group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7">mhu_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *const p_callback_memory)</td></tr>
-<tr class="separator:a71110c354941eb9204f6af5969ce7132"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ddecf19d6d0e278424651b4fcc745bb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___a_p_i.html#a9ddecf19d6d0e278424651b4fcc745bb">callbackSet</a> )(<a class="el" href="group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7">mhu_ctrl_t</a> *const p_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *const p_callback_memory)</td></tr>
+<tr class="separator:a9ddecf19d6d0e278424651b4fcc745bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a435b9195d22768cde4eda0f37246a84f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___m_h_u___a_p_i.html#a435b9195d22768cde4eda0f37246a84f">close</a> )(<a class="el" href="group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7">mhu_ctrl_t</a> *const p_ctrl)</td></tr>
 <tr class="separator:a435b9195d22768cde4eda0f37246a84f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -361,11 +357,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Opens the MHU driver and initializes the hardware. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___s.html#gad777d9161d5147e0eb546d107cf64259">R_MHU_S_Open()</a></li>
-<li><a class="el" href="group___m_h_u___n_s.html#ga38a24972860d1453ec85d28970d3eca4">R_MHU_NS_Open()</a></li>
-</ul>
-</dd></dl>
+<p>Opens the MHU driver and initializes the hardware.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block. Must be declared by user. Elements are set here. </td></tr>
@@ -387,11 +379,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Performs a send operation on an MHU device. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___s.html#gace961f8d144fe82cf739f96762a681a3">R_MHU_S_MsgSend()</a></li>
-<li><a class="el" href="group___m_h_u___n_s.html#gae5992c9313b0a0de777234abca176aaf">R_MHU_NS_MsgSend()</a></li>
-</ul>
-</dd></dl>
+<p>Performs a send operation on an MHU device.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block set in <a class="el" href="group___m_h_u___a_p_i.html#ac3886717d220de2c7861063acceee859">mhu_api_t::open</a> call. </td></tr>
@@ -402,22 +390,18 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 
 </div>
 </div>
-<a id="a71110c354941eb9204f6af5969ce7132"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71110c354941eb9204f6af5969ce7132">&#9670;&nbsp;</a></span>callbackSet</h2>
+<a id="a9ddecf19d6d0e278424651b4fcc745bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ddecf19d6d0e278424651b4fcc745bb">&#9670;&nbsp;</a></span>callbackSet</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  mhu_api_t::callbackSet) (<a class="el" href="group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7">mhu_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *const p_callback_memory)</td>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  mhu_api_t::callbackSet) (<a class="el" href="group___m_h_u___a_p_i.html#gab4529354e4994392568d5ebd6aabfcd7">mhu_ctrl_t</a> *const p_ctrl, void(*p_callback)(<a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___m_h_u___a_p_i.html#structmhu__callback__args__t">mhu_callback_args_t</a> *const p_callback_memory)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Specify callback function and optional context pointer and working memory pointer. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___s.html#ga7b8e03e44542ae70f5b20e37e058fdd6">R_MHU_S_CallbackSet()</a></li>
-<li><a class="el" href="group___m_h_u___n_s.html#ga13943d092624696482858ac43db16ac5">R_MHU_NS_CallbackSet()</a></li>
-</ul>
-</dd></dl>
+<p>Specify callback function and optional context pointer and working memory pointer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Control block set in <a class="el" href="group___m_h_u___a_p_i.html#ac3886717d220de2c7861063acceee859">mhu_api_t::open</a> call for this channel. </td></tr>
@@ -441,11 +425,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Closes the driver and releases the MHU device. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___s.html#gaaaee4d1fe5df68815f36021a1daefe46">R_MHU_S_Close()</a></li>
-<li><a class="el" href="group___m_h_u___n_s.html#ga40504624dee60aaebfb8710b91483930">R_MHU_NS_Close()</a></li>
-</ul>
-</dd></dl>
+<p>Closes the driver and releases the MHU device.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block set in <a class="el" href="group___m_h_u___a_p_i.html#ac3886717d220de2c7861063acceee859">mhu_api_t::open</a> call. </td></tr>
@@ -506,10 +486,7 @@ Pointer to the API structure for this instance. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MHU control block. Allocate an instance specific control block to pass into the MHU API calls. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li>mhu_instance_ctrl_t </li>
-</ul>
-</dd></dl>
+<p>MHU control block. Allocate an instance specific control block to pass into the MHU API calls. </p>
 
 </div>
 </div>
@@ -540,7 +517,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

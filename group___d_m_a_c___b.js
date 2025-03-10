@@ -1,9 +1,5 @@
 var group___d_m_a_c___b =
 [
-    [ "dmac_b_callback_args_t", "group___d_m_a_c___b.html#structdmac__b__callback__args__t", [
-      [ "event", "group___d_m_a_c___b.html#aafb07b9e0d848a6f8e56de3b8a378522", null ],
-      [ "p_context", "group___d_m_a_c___b.html#a3c0c11bbddaa1a47bf8b03b68de9f865", null ]
-    ] ],
     [ "dmac_b_register_set_setting_t", "group___d_m_a_c___b.html#structdmac__b__register__set__setting__t", [
       [ "p_src", "group___d_m_a_c___b.html#a543a2e4f1901f1c745ae7f1eb0eff1a5", null ],
       [ "p_dest", "group___d_m_a_c___b.html#a7413254141ea747d2f333335c5c07aff", null ],
@@ -17,6 +13,9 @@ var group___d_m_a_c___b =
       [ "dmac_int_ipl", "group___d_m_a_c___b.html#ad9ca631bfb2e8c33238e11cc75b0ebc3", null ],
       [ "activation_source", "group___d_m_a_c___b.html#a14515bc1b8a66a78c2fdc035fde0e2fa", null ],
       [ "ack_mode", "group___d_m_a_c___b.html#a7d92e1d7d0c259a61117cfae07481967", null ],
+      [ "dreq_input_pin", "group___d_m_a_c___b.html#aecc0eaf1b1c77687ef8d3a7cab485112", null ],
+      [ "ack_output_pin", "group___d_m_a_c___b.html#ae5d6ef616f8c71b5511e8f0d21399585", null ],
+      [ "tend_output_pin", "group___d_m_a_c___b.html#a4948302219c9409176bcc0ca3a2484d8", null ],
       [ "external_detection_mode", "group___d_m_a_c___b.html#a84613315363012283b6c3abdfd89faff", null ],
       [ "internal_detection_mode", "group___d_m_a_c___b.html#a3c6118081755b89a56d716b3278d2f02", null ],
       [ "activation_request_source_select", "group___d_m_a_c___b.html#a6f25480c361b6c3dd254878c06d4171c", null ],
@@ -34,10 +33,6 @@ var group___d_m_a_c___b =
     ] ],
     [ "DMAC_B_MAX_NORMAL_TRANSFER_LENGTH", "group___d_m_a_c___b.html#gad36329d847d5154489a049a3c91300ce", null ],
     [ "DMAC_B_MAX_BLOCK_TRANSFER_LENGTH", "group___d_m_a_c___b.html#gaa8077eb6959e1d019b7cf7a105fea64c", null ],
-    [ "dmac_b_event_t", "group___d_m_a_c___b.html#ga1ea3acbac3625e15f0b656d9b220cc8a", [
-      [ "DMAC_B_EVENT_TRANSFER_END", "group___d_m_a_c___b.html#gga1ea3acbac3625e15f0b656d9b220cc8aac41c065b08dd64341516cdc406f0a43a", null ],
-      [ "DMAC_B_EVENT_TRANSFER_ERROR", "group___d_m_a_c___b.html#gga1ea3acbac3625e15f0b656d9b220cc8aa63dd08ef2be01ac99472a7b9d39fabc0", null ]
-    ] ],
     [ "dmac_b_transfer_size_t", "group___d_m_a_c___b.html#ga77c350dbc52956dc8b1ce4987e721e05", [
       [ "DMAC_B_TRANSFER_SIZE_1_BYTE", "group___d_m_a_c___b.html#gga77c350dbc52956dc8b1ce4987e721e05a721e23f79b32c72da736ec54d5421bec", null ],
       [ "DMAC_B_TRANSFER_SIZE_2_BYTE", "group___d_m_a_c___b.html#gga77c350dbc52956dc8b1ce4987e721e05a4c2cfb773f20e835d60f56c0a629c8cf", null ],
@@ -94,5 +89,6 @@ var group___d_m_a_c___b =
     [ "R_DMAC_B_Disable", "group___d_m_a_c___b.html#gaae171cb7c85d650ef946358a06f25f19", null ],
     [ "R_DMAC_B_InfoGet", "group___d_m_a_c___b.html#ga7edc253186828189c91ba0b183733c1b", null ],
     [ "R_DMAC_B_Close", "group___d_m_a_c___b.html#ga632bf5ab4aab7000686ef9f18a613362", null ],
-    [ "R_DMAC_B_Reload", "group___d_m_a_c___b.html#gadb30ad1a9a46b41838123869c5d9d5b7", null ]
+    [ "R_DMAC_B_Reload", "group___d_m_a_c___b.html#gadb30ad1a9a46b41838123869c5d9d5b7", null ],
+    [ "R_DMAC_B_CallbackSet", "group___d_m_a_c___b.html#ga5adf8ce25e12252d7c511acf45870815", null ]
 ];

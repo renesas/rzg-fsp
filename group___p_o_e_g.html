@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -190,7 +190,7 @@ Overview</h1>
 Features</h2>
 <p>The POEG module has the following features:</p><ul>
 <li>Supports disabling GPT output pins based on GTETRG input pin level.</li>
-<li>Supports disabling GPT output pins when GTIOC pins are the same level (configurable in the <a class="el" href="group___g_p_t.html">General PWM Timer (r_gpt)</a> driver).</li>
+<li>Supports disabling GPT output pins when GTIOC pins are the same level (configurable in the <a class="el" href="group___g_p_t.html">Timer, General PWM (r_gpt)</a> driver).</li>
 <li>Supports disabling GPT output pins by software API.</li>
 <li>Supports notifying the application when GPT output pins are disabled by POEG.</li>
 <li>Supports resetting POEG status.</li>
@@ -214,8 +214,7 @@ Disabled</li>
 </td><td>Default (BSP) </td><td>If selected code for parameter checking is included in the build. </td></tr>
 </table>
  <h2>Configurations for Timers &gt; Port Output Enable for GPT (r_poeg)</h2>
-This module can be added to the Stacks tab via New Stack &gt; Timers &gt; Port Output Enable for GPT (r_poeg).<br />
-</p><table class="doxtable">
+<table class="doxtable">
 <tr>
 <th>Configuration</th><th>Options</th><th>Default</th><th>Description </th></tr>
 <tr>
@@ -237,13 +236,13 @@ Active Low</li>
 <li>
 Disabled</li>
 <li>
-P0CLK / 1</li>
+Clock source / 1</li>
 <li>
-P0CLK / 8</li>
+Clock source / 8</li>
 <li>
-P0CLK / 32</li>
+Clock source / 32</li>
 <li>
-P0CLK / 128</li>
+Clock source / 128</li>
 </ul>
 </td><td>Disabled </td><td>Configure the noise filter for the GTETRG pin. Only applicable if GTETRG pin is selected under Trigger. </td></tr>
 <tr>
@@ -412,7 +411,7 @@ Data Structures</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Updates the user callback with the option to provide memory for the callback argument structure. Implements <a class="el" href="group___p_o_e_g___a_p_i.html#a7d01f09a832b9940b264b0cf10a3863c">poeg_api_t::callbackSet</a>.</p>
+<p>Updates the user callback with the option to provide memory for the callback argument structure. Implements <a class="el" href="group___p_o_e_g___a_p_i.html#a77b8a93a87cb6e37bd2f3213223b949b">poeg_api_t::callbackSet</a>.</p>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">FSP_SUCCESS</td><td>Callback updated successfully. </td></tr>
@@ -471,9 +470,10 @@ Data Structures</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>Status flags are only reset if the original POEG trigger is resolved. Check the status using <a class="el" href="group___p_o_e_g.html#gacc13125edbed3049ff434195ed6dc66e">R_POEG_StatusGet</a> after calling this function to verify the status is cleared.</dd></dl>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
-    <tr><td class="paramname">FSP_SUCCESS</td><td>Function attempted to clear status flags. </td></tr>
+    <tr><td class="paramname">FSP_SUCCESS</td><td>Function clear status flags successfully. </td></tr>
     <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>p_ctrl was NULL. </td></tr>
     <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The instance is not opened. </td></tr>
+    <tr><td class="paramname">FSP_ERR_NOT_INITIALIZED</td><td>The GPT status flags was not clear before the attempt to clear IOCF flag. </td></tr>
   </table>
   </dd>
 </dl>
@@ -514,7 +514,7 @@ Data Structures</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

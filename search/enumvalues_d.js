@@ -17,6 +17,7 @@ var searchData=
   ['uart_5fparity_5feven',['UART_PARITY_EVEN',['../group___u_a_r_t___a_p_i.html#gga6bcc37e31dd40c204b4ac6f6189e8878ad908a637b1dd23f93b149dd2d8bdfdb8',1,'r_uart_api.h']]],
   ['uart_5fparity_5fodd',['UART_PARITY_ODD',['../group___u_a_r_t___a_p_i.html#gga6bcc37e31dd40c204b4ac6f6189e8878ad90cc425f5ba447773a44a75be6593e2',1,'r_uart_api.h']]],
   ['uart_5fparity_5foff',['UART_PARITY_OFF',['../group___u_a_r_t___a_p_i.html#gga6bcc37e31dd40c204b4ac6f6189e8878acdbc0c60cf74e4febad92afc44b88641',1,'r_uart_api.h']]],
+  ['uart_5fparity_5fzero',['UART_PARITY_ZERO',['../group___u_a_r_t___a_p_i.html#gga6bcc37e31dd40c204b4ac6f6189e8878aa59d216d22b58e7d95e093c8e7ca1c84',1,'r_uart_api.h']]],
   ['uart_5fstop_5fbits_5f1',['UART_STOP_BITS_1',['../group___u_a_r_t___a_p_i.html#gga6da57a73bbdbf830b845d4116f8341d7a44b3bfbe90aebe2b23227f5c011f41cc',1,'r_uart_api.h']]],
   ['uart_5fstop_5fbits_5f2',['UART_STOP_BITS_2',['../group___u_a_r_t___a_p_i.html#gga6da57a73bbdbf830b845d4116f8341d7a00c73c92b3d624bc86cfa63636dd99b3',1,'r_uart_api.h']]]
 ];

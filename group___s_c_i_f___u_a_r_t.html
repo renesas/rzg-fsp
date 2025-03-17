@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZG Flexible Software Package Documentation: Serial Communications Interface (SCIF) UART (r_scif_uart)</title>
+<title>RZG Flexible Software Package Documentation: UART (r_scif_uart)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('group___s_c_i_f___u_a_r_t.html','');})
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
-<div class="title">Serial Communications Interface (SCIF) UART (r_scif_uart)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___c_o_n_n_e_c_t_i_v_i_t_y___m_o_d_u_l_e_s.html">Connectivity</a></div></div>  </div>
+<div class="title">UART (r_scif_uart)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___c_o_n_n_e_c_t_i_v_i_t_y___m_o_d_u_l_e_s.html">Connectivity</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -229,11 +229,11 @@ Disabled</li>
 <tr>
 <td>RS485 Flow (Driver Enable) Control Support</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
-Enable</li>
+Enabled</li>
 <li>
-Disable</li>
+Disabled</li>
 </ul>
-</td><td>Disable </td><td>Enable RS485 flow (driver enable) control support using a user provided pin. </td></tr>
+</td><td>Disabled </td><td>Enable RS485 flow (driver enable) control support using a user provided pin. </td></tr>
 </table>
  <h2>Configurations for Connectivity &gt; UART (r_scif_uart)</h2>
 This module can be added to the Stacks tab via New Stack &gt; Connectivity &gt; UART (r_scif_uart).<br />
@@ -283,7 +283,7 @@ Enabled</li>
 <tr>
 <td>Baud &gt; Max Error (%)</td><td>Must be a valid non negative integer with a maximum configurable value of 100</td><td>5 </td><td>Maximum percent error allowed during baud calculation. This is used by the algorithm to determine whether or not to consider using less accurate alternative register settings.<br />
 <br />
-NOTE: The baud calculation does not show an error in the tool if this percent error was not achieved. The calculated percent error is recorded in a comment in the generated baud_setting_t structure. </td></tr>
+NOTE: The baud calculation does not show an error in the tool if this percent error was not achieved. The calculated percent error is recorded in a comment in the generated <a class="el" href="group___s_c_i___u_a_r_t.html#structbaud__setting__t">baud_setting_t</a> structure. </td></tr>
 <tr>
 <td>Flow Control &gt; UART Communication Mode</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -307,55 +307,21 @@ Active High</li>
 <tr>
 <td>Flow Control &gt; RS485 Driver Enable Pin</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin for the MPU. </td></tr>
 <tr>
-<td>Flow Control &gt; RS232C Automatic Flow Control</td><td><ul style="margin-top:0;margin-bottom:0;">
+<td>Flow Control &gt; RS232C Automatic Flow Control</td><td>MCU Specific Options</td><td></td><td>Enable RS232C automatic flow control. </td></tr>
+<tr>
+<td>Extra &gt; Clock Source</td><td>MCU Specific Options</td><td></td><td>Selection of the clock source to be used in the baud-rate clock generator. When internal clock is used the baud rate can be output on the SCK pin. </td></tr>
+<tr>
+<td>Extra &gt; Noise Filter</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
 Enabled</li>
 <li>
 Disabled</li>
 </ul>
-</td><td>Disabled </td><td>Enable RS232C automatic flow control. </td></tr>
-<tr>
-<td>Extra &gt; Clock Source</td><td><ul style="margin-top:0;margin-bottom:0;">
-<li>
-Internal Clock</li>
-<li>
-Internal Clock With Output on SCK</li>
-<li>
-External Clock 8x baud rate</li>
-<li>
-External Clock 16x baud rate</li>
-</ul>
-</td><td>Internal Clock </td><td>Selection of the clock source to be used in the baud-rate clock generator. When internal clock is used the baud rate can be output on the SCK pin. </td></tr>
-<tr>
-<td>Extra &gt; Noise Filter</td><td><ul style="margin-top:0;margin-bottom:0;">
-<li>
-Enable</li>
-<li>
-Disable</li>
-</ul>
-</td><td>Disable </td><td>Enable the digital noise filter on RXDn pin. The digital noise filter block in SCIF consists of two-stage flipflop circuits. </td></tr>
+</td><td>Disabled </td><td>Enable the digital noise filter on RXDn pin. The digital noise filter block in SCIF consists of two-stage flipflop circuits. </td></tr>
 <tr>
 <td>Extra &gt; Receive FIFO Trigger Level</td><td>Refer to the RZG Configuration tool for available options.</td><td>Max </td><td>Set to One to get a callback immediately when each byte is received. Set to Max to get a callback when FIFO is full or after 15 bit times with no data (fewer interrupts). </td></tr>
 <tr>
-<td>Extra &gt; Receive FIFO RTS Trigger Level</td><td><ul style="margin-top:0;margin-bottom:0;">
-<li>
-1</li>
-<li>
-4</li>
-<li>
-6</li>
-<li>
-8</li>
-<li>
-10</li>
-<li>
-12</li>
-<li>
-14</li>
-<li>
-15</li>
-</ul>
-</td><td>14 </td><td>Trigger level for negative the RTS </td></tr>
+<td>Extra &gt; Receive FIFO RTS Trigger Level</td><td>MCU Specific Options</td><td></td><td>Trigger level for negative the RTS </td></tr>
 <tr>
 <td>Interrupts &gt; Callback</td><td>Name must be a valid C symbol</td><td>NULL </td><td>A user callback function can be provided. If this callback function is provided, it will be called from the interrupt service routine (ISR). </td></tr>
 <tr>
@@ -379,6 +345,8 @@ Clock Configuration</h2>
 <tr>
 <td>RZG2UL</td><td>P0CLK</td></tr>
 <tr>
+<td>RZG3E</td><td>P1CLK</td></tr>
+<tr>
 <td>RZG3S</td><td>P0CLK</td></tr>
 </table>
 </p>
@@ -396,16 +364,16 @@ Limitations</h2>
 <h1><a class="anchor" id="r-scif-uart-examples"></a>
 Examples</h1>
 <h2>SCIF UART Example</h2>
-<div class="fragment"><div class="line">uint8_t  g_dest[TRANSFER_LENGTH];</div><div class="line">uint8_t  g_src[TRANSFER_LENGTH];</div><div class="line">uint8_t  g_out_of_band_received[TRANSFER_LENGTH];</div><div class="line">uint32_t g_transfer_complete = 0;</div><div class="line">uint32_t g_receive_complete  = 0;</div><div class="line">uint32_t g_out_of_band_index = 0;</div><div class="line"><span class="keywordtype">void</span> r_scif_uart_basic_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <span class="comment">/* Initialize p_src to known data */</span></div><div class="line">    <span class="keywordflow">for</span> (uint32_t i = 0; i &lt; TRANSFER_LENGTH; i++)</div><div class="line">    {</div><div class="line">        g_src[i] = (uint8_t) (<span class="charliteral">&#39;A&#39;</span> + (i % 26));</div><div class="line">    }</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Open the transfer instance with initial configuration. */</span></div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga2a791c5e359c3fe2d85339fc3f915bc3">R_SCIF_UART_Open</a>(&amp;g_uart_ctrl, &amp;g_uart0_cfg);</div><div class="line"></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga07a261385112a6909e86c441411e2e53">R_SCIF_UART_Read</a>(&amp;g_uart_ctrl, g_dest, TRANSFER_LENGTH);</div><div class="line"></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga42409976902f41a6c92890ca8d9eb28a">R_SCIF_UART_Write</a>(&amp;g_uart_ctrl, g_src, TRANSFER_LENGTH);</div><div class="line"></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="keywordflow">while</span> (!g_transfer_complete)</div><div class="line">    {</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keywordflow">while</span> (!g_receive_complete)</div><div class="line">    {</div><div class="line">    }</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> example_callback (<a class="code" href="group___u_a_r_t___a_p_i.html#structuart__callback__args__t">uart_callback_args_t</a> * p_args)</div><div class="line">{</div><div class="line">    <span class="comment">/* Handle the UART event */</span></div><div class="line">    <span class="keywordflow">switch</span> (p_args-&gt;<a class="code" href="group___u_a_r_t___a_p_i.html#a558f63e26549462cf3a893ed73fd26ad">event</a>)</div><div class="line">    {</div><div class="line">        <span class="comment">/* Received a character */</span></div><div class="line">        <span class="keywordflow">case</span> <a class="code" href="group___u_a_r_t___a_p_i.html#ggaf739f04f788018b4b59fb7ad75da0a8da794925d1c74f16bde84152508e66a6bd">UART_EVENT_RX_CHAR</a>:</div><div class="line">        {</div><div class="line">            <span class="comment">/* Only put the next character in the receive buffer if there is space for it */</span></div><div class="line">            <span class="keywordflow">if</span> (<span class="keyword">sizeof</span>(g_out_of_band_received) &gt; g_out_of_band_index)</div><div class="line">            {</div><div class="line">                <span class="comment">/* Write either the next one or two bytes depending on the receive data size */</span></div><div class="line">                <span class="keywordflow">if</span> (<a class="code" href="group___u_a_r_t___a_p_i.html#ggadc68b8fd9ded3990f84129df23fee798ad768185f3773e2d5953b28f3345561db">UART_DATA_BITS_8</a> &gt;= g_uart_cfg.data_bits)</div><div class="line">                {</div><div class="line">                    g_out_of_band_received[g_out_of_band_index++] = (uint8_t) p_args-&gt;<a class="code" href="group___u_a_r_t___a_p_i.html#a828d44762a5e4d11aead4d811a1c5c70">data</a>;</div><div class="line">                }</div><div class="line">                <span class="keywordflow">else</span></div><div class="line">                {</div><div class="line">                    uint16_t * p_dest = (uint16_t *) &amp;g_out_of_band_received[g_out_of_band_index];</div><div class="line">                    *p_dest              = (uint16_t) p_args-&gt;<a class="code" href="group___u_a_r_t___a_p_i.html#a828d44762a5e4d11aead4d811a1c5c70">data</a>;</div><div class="line">                    g_out_of_band_index += 2;</div><div class="line">                }</div><div class="line">            }</div><div class="line"></div><div class="line">            <span class="keywordflow">break</span>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="comment">/* Receive complete */</span></div><div class="line">        <span class="keywordflow">case</span> <a class="code" href="group___u_a_r_t___a_p_i.html#ggaf739f04f788018b4b59fb7ad75da0a8dabe2b1428416bd300ee15a2608df30837">UART_EVENT_RX_COMPLETE</a>:</div><div class="line">        {</div><div class="line">            g_receive_complete = 1;</div><div class="line">            <span class="keywordflow">break</span>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="comment">/* Transmit complete */</span></div><div class="line">        <span class="keywordflow">case</span> <a class="code" href="group___u_a_r_t___a_p_i.html#ggaf739f04f788018b4b59fb7ad75da0a8da56867c1db03ea3ee2c704604ac94b767">UART_EVENT_TX_COMPLETE</a>:</div><div class="line">        {</div><div class="line">            g_transfer_complete = 1;</div><div class="line">            <span class="keywordflow">break</span>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="keywordflow">default</span>:</div><div class="line">        {</div><div class="line">        }</div><div class="line">    }</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>SCIF UART Baud Set Example</h2>
-<div class="fragment"><div class="line"><span class="preprocessor">#define SCIF_UART_BAUDRATE_19200              (19200)</span></div><div class="line"><span class="preprocessor">#define SCIF_UART_BAUDRATE_ERROR_PERCENT_5    (5000)</span></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> r_scif_uart_baud_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    baud_setting_t baud_setting;</div><div class="line">    uint32_t       baud_rate                 = SCIF_UART_BAUDRATE_19200;</div><div class="line">    <span class="keywordtype">bool</span>           enable_bitrate_modulation = <span class="keyword">false</span>;</div><div class="line">    uint32_t       error_rate_x_1000         = SCIF_UART_BAUDRATE_ERROR_PERCENT_5;</div><div class="line"></div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#gad29ba19ecddc66108d794c93f9c1165f">R_SCIF_UART_BaudCalculate</a>(baud_rate, enable_bitrate_modulation, error_rate_x_1000, &amp;baud_setting);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga6ed81db7a7e6f618870e1479734c5860">R_SCIF_UART_BaudSet</a>(&amp;g_uart_ctrl, (<span class="keywordtype">void</span> *) &amp;baud_setting);</div><div class="line">    handle_error(err);</div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
+<div class="fragment"><div class="line">uint8_t  g_dest[TRANSFER_LENGTH];</div><div class="line">uint8_t  g_src[TRANSFER_LENGTH];</div><div class="line">uint8_t  g_out_of_band_received[TRANSFER_LENGTH];</div><div class="line">uint32_t g_transfer_complete = 0;</div><div class="line">uint32_t g_receive_complete  = 0;</div><div class="line">uint32_t g_out_of_band_index = 0;</div><div class="line"><span class="keywordtype">void</span> r_scif_uart_basic_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <span class="comment">/* Initialize p_src to known data */</span></div><div class="line">    <span class="keywordflow">for</span> (uint32_t i = 0; i &lt; TRANSFER_LENGTH; i++)</div><div class="line">    {</div><div class="line">        g_src[i] = (uint8_t) (<span class="charliteral">&#39;A&#39;</span> + (i % 26));</div><div class="line">    }</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Open the transfer instance with initial configuration. */</span></div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga2a791c5e359c3fe2d85339fc3f915bc3">R_SCIF_UART_Open</a>(&amp;g_uart_ctrl, &amp;g_uart_cfg);</div><div class="line"></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga07a261385112a6909e86c441411e2e53">R_SCIF_UART_Read</a>(&amp;g_uart_ctrl, g_dest, TRANSFER_LENGTH);</div><div class="line"></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga42409976902f41a6c92890ca8d9eb28a">R_SCIF_UART_Write</a>(&amp;g_uart_ctrl, g_src, TRANSFER_LENGTH);</div><div class="line"></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="keywordflow">while</span> (!g_transfer_complete)</div><div class="line">    {</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="keywordflow">while</span> (!g_receive_complete)</div><div class="line">    {</div><div class="line">    }</div><div class="line">}</div><div class="line"></div><div class="line"><span class="keywordtype">void</span> example_callback (<a class="code" href="group___u_a_r_t___a_p_i.html#structuart__callback__args__t">uart_callback_args_t</a> * p_args)</div><div class="line">{</div><div class="line">    <span class="comment">/* Handle the UART event */</span></div><div class="line">    <span class="keywordflow">switch</span> (p_args-&gt;<a class="code" href="group___u_a_r_t___a_p_i.html#a558f63e26549462cf3a893ed73fd26ad">event</a>)</div><div class="line">    {</div><div class="line">        <span class="comment">/* Received a character */</span></div><div class="line">        <span class="keywordflow">case</span> <a class="code" href="group___u_a_r_t___a_p_i.html#ggaf739f04f788018b4b59fb7ad75da0a8da794925d1c74f16bde84152508e66a6bd">UART_EVENT_RX_CHAR</a>:</div><div class="line">        {</div><div class="line">            <span class="comment">/* Only put the next character in the receive buffer if there is space for it */</span></div><div class="line">            <span class="keywordflow">if</span> (<span class="keyword">sizeof</span>(g_out_of_band_received) &gt; g_out_of_band_index)</div><div class="line">            {</div><div class="line">                <span class="comment">/* Write either the next one or two bytes depending on the receive data size */</span></div><div class="line">                <span class="keywordflow">if</span> (<a class="code" href="group___u_a_r_t___a_p_i.html#ggadc68b8fd9ded3990f84129df23fee798ad768185f3773e2d5953b28f3345561db">UART_DATA_BITS_8</a> &gt;= g_uart_cfg.data_bits)</div><div class="line">                {</div><div class="line">                    g_out_of_band_received[g_out_of_band_index++] = (uint8_t) p_args-&gt;<a class="code" href="group___u_a_r_t___a_p_i.html#a828d44762a5e4d11aead4d811a1c5c70">data</a>;</div><div class="line">                }</div><div class="line">                <span class="keywordflow">else</span></div><div class="line">                {</div><div class="line">                    uint16_t * p_dest = (uint16_t *) &amp;g_out_of_band_received[g_out_of_band_index];</div><div class="line">                    *p_dest              = (uint16_t) p_args-&gt;<a class="code" href="group___u_a_r_t___a_p_i.html#a828d44762a5e4d11aead4d811a1c5c70">data</a>;</div><div class="line">                    g_out_of_band_index += 2;</div><div class="line">                }</div><div class="line">            }</div><div class="line"></div><div class="line">            <span class="keywordflow">break</span>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="comment">/* Receive complete */</span></div><div class="line">        <span class="keywordflow">case</span> <a class="code" href="group___u_a_r_t___a_p_i.html#ggaf739f04f788018b4b59fb7ad75da0a8dabe2b1428416bd300ee15a2608df30837">UART_EVENT_RX_COMPLETE</a>:</div><div class="line">        {</div><div class="line">            g_receive_complete = 1;</div><div class="line">            <span class="keywordflow">break</span>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="comment">/* Transmit complete */</span></div><div class="line">        <span class="keywordflow">case</span> <a class="code" href="group___u_a_r_t___a_p_i.html#ggaf739f04f788018b4b59fb7ad75da0a8da56867c1db03ea3ee2c704604ac94b767">UART_EVENT_TX_COMPLETE</a>:</div><div class="line">        {</div><div class="line">            g_transfer_complete = 1;</div><div class="line">            <span class="keywordflow">break</span>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="keywordflow">default</span>:</div><div class="line">        {</div><div class="line">        }</div><div class="line">    }</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>SCIF UART Baud Set Example</h2>
+<div class="fragment"><div class="line"><span class="preprocessor">#define SCIF_UART_BAUDRATE_19200              (19200)</span></div><div class="line"><span class="preprocessor">#define SCIF_UART_BAUDRATE_ERROR_PERCENT_5    (5000)</span></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> r_scif_uart_baud_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t">scif_baud_setting_t</a> baud_setting;</div><div class="line">    uint32_t            baud_rate                 = SCIF_UART_BAUDRATE_19200;</div><div class="line">    <span class="keywordtype">bool</span>                enable_bitrate_modulation = <span class="keyword">false</span>;</div><div class="line">    uint32_t            error_rate_x_1000         = SCIF_UART_BAUDRATE_ERROR_PERCENT_5;</div><div class="line"></div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#gad29ba19ecddc66108d794c93f9c1165f">R_SCIF_UART_BaudCalculate</a>(&amp;g_uart_ctrl,</div><div class="line">                                              baud_rate,</div><div class="line">                                              enable_bitrate_modulation,</div><div class="line">                                              error_rate_x_1000,</div><div class="line">                                              &amp;baud_setting);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line"></div><div class="line">    err = <a class="code" href="group___s_c_i_f___u_a_r_t.html#ga6ed81db7a7e6f618870e1479734c5860">R_SCIF_UART_BaudSet</a>(&amp;g_uart_ctrl, (<span class="keywordtype">void</span> *) &amp;baud_setting);</div><div class="line">    handle_error(err);</div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structscif__uart__instance__ctrl__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__uart__instance__ctrl__t">scif_uart_instance_ctrl_t</a></td></tr>
 <tr class="separator:structscif__uart__instance__ctrl__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structscif__baud__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t">scif_baud_setting_t</a></td></tr>
 <tr class="separator:structscif__baud__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:structsci__uart__rs485__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structsci__uart__rs485__setting__t">sci_uart_rs485_setting_t</a></td></tr>
-<tr class="separator:structsci__uart__rs485__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structscif__uart__rs485__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__uart__rs485__setting__t">scif_uart_rs485_setting_t</a></td></tr>
+<tr class="separator:structscif__uart__rs485__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structscif__uart__extended__cfg__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__uart__extended__cfg__t">scif_uart_extended_cfg_t</a></td></tr>
 <tr class="separator:structscif__uart__extended__cfg__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -419,12 +387,12 @@ Enumerations</h2></td></tr>
 <tr class="separator:ga023aa56b9ce183733d7933bf750fab6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga94601e39cbf40b77e5e4236385b58704"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga94601e39cbf40b77e5e4236385b58704">scif_uart_noise_cancellation_t</a> </td></tr>
 <tr class="separator:ga94601e39cbf40b77e5e4236385b58704"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9522502f434bcaa2bbaf9cb1321ce542"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542">sci_uart_rs485_enable_t</a> </td></tr>
-<tr class="separator:ga9522502f434bcaa2bbaf9cb1321ce542"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0bd2440ef30f2feca9a2d129989bffce"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce">sci_uart_rs485_de_polarity_t</a> </td></tr>
-<tr class="separator:ga0bd2440ef30f2feca9a2d129989bffce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5d3f2e170b79de59f46ae864fc993e95"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga5d3f2e170b79de59f46ae864fc993e95">scif_uart_receive_trigger_t</a> </td></tr>
-<tr class="separator:ga5d3f2e170b79de59f46ae864fc993e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga36efdf7f56d322b9c824d65adf27ecd8"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga36efdf7f56d322b9c824d65adf27ecd8">scif_uart_rs485_enable_t</a> </td></tr>
+<tr class="separator:ga36efdf7f56d322b9c824d65adf27ecd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga35ae53403c6836d8df6dac29cb777601"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga35ae53403c6836d8df6dac29cb777601">scif_uart_rs485_de_polarity_t</a> </td></tr>
+<tr class="separator:ga35ae53403c6836d8df6dac29cb777601"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0930f62cc69514b8b34db1bf63ba32db"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0930f62cc69514b8b34db1bf63ba32db">scif_uart_rx_fifo_trigger_t</a> </td></tr>
+<tr class="separator:ga0930f62cc69514b8b34db1bf63ba32db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaaee66fa30e6f9f0efb538ecb91a9ad89"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___s_c_i_f___u_a_r_t.html#gaaee66fa30e6f9f0efb538ecb91a9ad89">scif_uart_rts_trigger_t</a> </td></tr>
 <tr class="separator:gaaee66fa30e6f9f0efb538ecb91a9ad89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -459,7 +427,7 @@ Enumerations</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a022acba3cd5ed16323a5fdc31db889ee"></a>struct <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t_8semr__baudrate__bits__b">scif_baud_setting_t</a></td>
+<a id="ad2e400874b07aecf922dbc2db6b7cf42"></a>struct <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t_8semr__baudrate__bits__b">scif_baud_setting_t</a></td>
 <td class="fieldname">
 semr_baudrate_bits_b</td>
 <td class="fielddoc">
@@ -480,14 +448,14 @@ Modulation Duty Register setting. </td></tr>
 
 </div>
 </div>
-<a name="structsci__uart__rs485__setting__t" id="structsci__uart__rs485__setting__t"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structsci__uart__rs485__setting__t">&#9670;&nbsp;</a></span>sci_uart_rs485_setting_t</h2>
+<a name="structscif__uart__rs485__setting__t" id="structscif__uart__rs485__setting__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structscif__uart__rs485__setting__t">&#9670;&nbsp;</a></span>scif_uart_rs485_setting_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct sci_uart_rs485_setting_t</td>
+          <td class="memname">struct scif_uart_rs485_setting_t</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -495,19 +463,19 @@ Modulation Duty Register setting. </td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="a7ecf6bb47dcdafcd7e569695d0be405b"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542">sci_uart_rs485_enable_t</a></td>
+<a id="ad088ee8dce129bc78bd96e3e40d927f5"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga36efdf7f56d322b9c824d65adf27ecd8">scif_uart_rs485_enable_t</a></td>
 <td class="fieldname">
 enable</td>
 <td class="fielddoc">
 Enable the DE signal. </td></tr>
 <tr><td class="fieldtype">
-<a id="aafcbd1f2c02e2f81d81371bb9e6b895d"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce">sci_uart_rs485_de_polarity_t</a></td>
+<a id="a73a859100fc2bd20b1f1b31968bee503"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga35ae53403c6836d8df6dac29cb777601">scif_uart_rs485_de_polarity_t</a></td>
 <td class="fieldname">
 polarity</td>
 <td class="fielddoc">
 DE signal polarity. </td></tr>
 <tr><td class="fieldtype">
-<a id="a2e764fad5f11c412720a531a8e1b6815"></a><a class="el" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80a">bsp_io_port_pin_t</a></td>
+<a id="a1b1e595b8278ca6f88f2d188c47c8e17"></a><a class="el" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80a">bsp_io_port_pin_t</a></td>
 <td class="fieldname">
 de_control_pin</td>
 <td class="fielddoc">
@@ -561,7 +529,7 @@ p_baud_setting</td>
 <td class="fielddoc">
 Register settings for a desired baud rate. </td></tr>
 <tr><td class="fieldtype">
-<a id="a1067241f2267052cd8240d136c0cba9c"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga5d3f2e170b79de59f46ae864fc993e95">scif_uart_receive_trigger_t</a></td>
+<a id="a020009f285e0fe3e38b632ca567a1f30"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0930f62cc69514b8b34db1bf63ba32db">scif_uart_rx_fifo_trigger_t</a></td>
 <td class="fieldname">
 rx_fifo_trigger</td>
 <td class="fielddoc">
@@ -585,7 +553,7 @@ flow_control</td>
 <td class="fielddoc">
 CTS/RTS function. </td></tr>
 <tr><td class="fieldtype">
-<a id="a17bbc99632889e12269013e35f1dcfba"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#structsci__uart__rs485__setting__t">sci_uart_rs485_setting_t</a></td>
+<a id="a9d0430a7c0d4a64847561b30630869cc"></a><a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__uart__rs485__setting__t">scif_uart_rs485_setting_t</a></td>
 <td class="fieldname">
 rs485_setting</td>
 <td class="fielddoc">
@@ -685,98 +653,98 @@ RS-485 settings. </td></tr>
 
 </div>
 </div>
-<a id="ga9522502f434bcaa2bbaf9cb1321ce542"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9522502f434bcaa2bbaf9cb1321ce542">&#9670;&nbsp;</a></span>sci_uart_rs485_enable_t</h2>
+<a id="ga36efdf7f56d322b9c824d65adf27ecd8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga36efdf7f56d322b9c824d65adf27ecd8">&#9670;&nbsp;</a></span>scif_uart_rs485_enable_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga9522502f434bcaa2bbaf9cb1321ce542">sci_uart_rs485_enable_t</a></td>
+          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga36efdf7f56d322b9c824d65adf27ecd8">scif_uart_rs485_enable_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>RS-485 Enable/Disable. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga9522502f434bcaa2bbaf9cb1321ce542aa05bec8fad1420e777b184f55300b484"></a>SCI_UART_RS485_DISABLE&#160;</td><td class="fielddoc"><p>RS-485 disabled. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga36efdf7f56d322b9c824d65adf27ecd8a878472b3e01a998aa46e7fd08a3430b0"></a>SCIF_UART_RS485_DISABLE&#160;</td><td class="fielddoc"><p>RS-485 disabled. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga9522502f434bcaa2bbaf9cb1321ce542acd3ee665f5225c5bb017bb64d33cf127"></a>SCI_UART_RS485_ENABLE&#160;</td><td class="fielddoc"><p>RS-485 enabled. </p>
+<tr><td class="fieldname"><a id="gga36efdf7f56d322b9c824d65adf27ecd8a4077f5523fab5dbfd460d1501552e7ff"></a>SCIF_UART_RS485_ENABLE&#160;</td><td class="fielddoc"><p>RS-485 enabled. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="ga0bd2440ef30f2feca9a2d129989bffce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0bd2440ef30f2feca9a2d129989bffce">&#9670;&nbsp;</a></span>sci_uart_rs485_de_polarity_t</h2>
+<a id="ga35ae53403c6836d8df6dac29cb777601"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga35ae53403c6836d8df6dac29cb777601">&#9670;&nbsp;</a></span>scif_uart_rs485_de_polarity_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0bd2440ef30f2feca9a2d129989bffce">sci_uart_rs485_de_polarity_t</a></td>
+          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga35ae53403c6836d8df6dac29cb777601">scif_uart_rs485_de_polarity_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>The polarity of the RS-485 DE signal. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga0bd2440ef30f2feca9a2d129989bffcea7cfd9e1ff7eca0657388f7cf9ce708fc"></a>SCI_UART_RS485_DE_POLARITY_HIGH&#160;</td><td class="fielddoc"><p>The DE signal is high when a write transfer is in progress. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga35ae53403c6836d8df6dac29cb777601afb277d8a829722ad1f13592b64a8dda9"></a>SCIF_UART_RS485_DE_POLARITY_HIGH&#160;</td><td class="fielddoc"><p>The DE signal is high when a write transfer is in progress. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga0bd2440ef30f2feca9a2d129989bffceac1a061d1cb22d6b336e23185af20e089"></a>SCI_UART_RS485_DE_POLARITY_LOW&#160;</td><td class="fielddoc"><p>The DE signal is low when a write transfer is in progress. </p>
+<tr><td class="fieldname"><a id="gga35ae53403c6836d8df6dac29cb777601aa58037f09ec32ba8ce75eee2f371c0b4"></a>SCIF_UART_RS485_DE_POLARITY_LOW&#160;</td><td class="fielddoc"><p>The DE signal is low when a write transfer is in progress. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="ga5d3f2e170b79de59f46ae864fc993e95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5d3f2e170b79de59f46ae864fc993e95">&#9670;&nbsp;</a></span>scif_uart_receive_trigger_t</h2>
+<a id="ga0930f62cc69514b8b34db1bf63ba32db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0930f62cc69514b8b34db1bf63ba32db">&#9670;&nbsp;</a></span>scif_uart_rx_fifo_trigger_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga5d3f2e170b79de59f46ae864fc993e95">scif_uart_receive_trigger_t</a></td>
+          <td class="memname">enum <a class="el" href="group___s_c_i_f___u_a_r_t.html#ga0930f62cc69514b8b34db1bf63ba32db">scif_uart_rx_fifo_trigger_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Receive FIFO trigger configuration. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ad8eb49bdf41e9867d8a6d0986b9343a6"></a>SCIF_UART_RECEIVE_TRIGGER_ONE&#160;</td><td class="fielddoc"><p>Interrupt at least one byte is in FIFO. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba1c928e6973fa285ef947809c3be3eaf9"></a>SCIF_UART_RX_FIFO_TRIGGER_ONE&#160;</td><td class="fielddoc"><p>Interrupt at least one byte is in FIFO. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ab85d375110c92593e11c02c28acf75a0"></a>SCIF_UART_RECEIVE_TRIGGER_QUARTER&#160;</td><td class="fielddoc"><p>Interrupt at least quarter of FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba91a663246f4c57f2885cb21291e26640"></a>SCIF_UART_RX_FIFO_TRIGGER_QUARTER&#160;</td><td class="fielddoc"><p>Interrupt at least quarter of FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95adf5efc0954d8d3ee2e132940e8010e16"></a>SCIF_UART_RECEIVE_TRIGGER_HALF&#160;</td><td class="fielddoc"><p>Interrupt at least half of FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbaf53e151960d2ec05ecdd10251254fdbb"></a>SCIF_UART_RX_FIFO_TRIGGER_HALF&#160;</td><td class="fielddoc"><p>Interrupt at least half of FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a8c61ea1a1f8a53bd2ef81a135ce6fb65"></a>SCIF_UART_RECEIVE_TRIGGER_MAX&#160;</td><td class="fielddoc"><p>Interrupt at almost full in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba6867cddb6377c683168b9f05826080db"></a>SCIF_UART_RX_FIFO_TRIGGER_MAX&#160;</td><td class="fielddoc"><p>Interrupt at almost full in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a2b6427033846f866ffd254b632b07a9b"></a>SCIF_UART_RECEIVE_TRIGGER_1&#160;</td><td class="fielddoc"><p>Interrupt at least 1 byte is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbac4f6ea8ebc06e6681ac44189de8cb091"></a>SCIF_UART_RX_FIFO_TRIGGER_1&#160;</td><td class="fielddoc"><p>Interrupt at least 1 byte is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95af3ba973f1fdbd89fb035e63925eba079"></a>SCIF_UART_RECEIVE_TRIGGER_2&#160;</td><td class="fielddoc"><p>Interrupt at least 2 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba19b1d5bfbed0c88cd47fc5deeede5830"></a>SCIF_UART_RX_FIFO_TRIGGER_2&#160;</td><td class="fielddoc"><p>Interrupt at least 2 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ac1a24c19641762ce694726ef9da404e1"></a>SCIF_UART_RECEIVE_TRIGGER_3&#160;</td><td class="fielddoc"><p>Interrupt at least 3 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbac9f379cf7b3602901d7a7951900720b6"></a>SCIF_UART_RX_FIFO_TRIGGER_3&#160;</td><td class="fielddoc"><p>Interrupt at least 3 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a94ab8d8849528a45bd87bc014ff2352a"></a>SCIF_UART_RECEIVE_TRIGGER_4&#160;</td><td class="fielddoc"><p>Interrupt at least 4 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba4c49fe77a7eb6ebd3844049fe13f1db3"></a>SCIF_UART_RX_FIFO_TRIGGER_4&#160;</td><td class="fielddoc"><p>Interrupt at least 4 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ac644a3e7327d3998cf0e300c6fa38b4e"></a>SCIF_UART_RECEIVE_TRIGGER_5&#160;</td><td class="fielddoc"><p>Interrupt at least 5 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba88080512883e01dd070705129360928b"></a>SCIF_UART_RX_FIFO_TRIGGER_5&#160;</td><td class="fielddoc"><p>Interrupt at least 5 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ae81d37bcbe15cf0adbee5556a96ce7f3"></a>SCIF_UART_RECEIVE_TRIGGER_6&#160;</td><td class="fielddoc"><p>Interrupt at least 6 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbab8db130c91e06312e1ed2dbbf64d4e8b"></a>SCIF_UART_RX_FIFO_TRIGGER_6&#160;</td><td class="fielddoc"><p>Interrupt at least 6 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a6532d2cfae53c35e93bf72db2e17e954"></a>SCIF_UART_RECEIVE_TRIGGER_7&#160;</td><td class="fielddoc"><p>Interrupt at least 7 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba4691deee4fafd57c446f6175b34d9197"></a>SCIF_UART_RX_FIFO_TRIGGER_7&#160;</td><td class="fielddoc"><p>Interrupt at least 7 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a479ec5b31c57f9fae8c4d6a7aac71b50"></a>SCIF_UART_RECEIVE_TRIGGER_8&#160;</td><td class="fielddoc"><p>Interrupt at least 8 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbaad29dff634ae75c41c864920b6c2905e"></a>SCIF_UART_RX_FIFO_TRIGGER_8&#160;</td><td class="fielddoc"><p>Interrupt at least 8 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a8ecbc830c93a7b39eef1409cf89bc98a"></a>SCIF_UART_RECEIVE_TRIGGER_9&#160;</td><td class="fielddoc"><p>Interrupt at least 9 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbadf30ed241c4f85d524da7119075c19e9"></a>SCIF_UART_RX_FIFO_TRIGGER_9&#160;</td><td class="fielddoc"><p>Interrupt at least 9 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ae9eba978351e7f07759323c1e3d2e3e5"></a>SCIF_UART_RECEIVE_TRIGGER_10&#160;</td><td class="fielddoc"><p>Interrupt at least 10 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbaa318a3a44156deda78ad012bd2b8fc0c"></a>SCIF_UART_RX_FIFO_TRIGGER_10&#160;</td><td class="fielddoc"><p>Interrupt at least 10 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a2488b7b352248b736ad778549ba64f3f"></a>SCIF_UART_RECEIVE_TRIGGER_11&#160;</td><td class="fielddoc"><p>Interrupt at least 11 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba656dea4a24c63f80118dd7122ca1a745"></a>SCIF_UART_RX_FIFO_TRIGGER_11&#160;</td><td class="fielddoc"><p>Interrupt at least 11 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a849bd498e980ed5291b9fade846d748f"></a>SCIF_UART_RECEIVE_TRIGGER_12&#160;</td><td class="fielddoc"><p>Interrupt at least 12 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba19b8cb6fec7c4809a40230f72b108366"></a>SCIF_UART_RX_FIFO_TRIGGER_12&#160;</td><td class="fielddoc"><p>Interrupt at least 12 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a020affbf40082d7c07ab5fa8a0fe802e"></a>SCIF_UART_RECEIVE_TRIGGER_13&#160;</td><td class="fielddoc"><p>Interrupt at least 13 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba7c9ad8185b435feac996371be51e0ee7"></a>SCIF_UART_RX_FIFO_TRIGGER_13&#160;</td><td class="fielddoc"><p>Interrupt at least 13 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95a19329bac313a91e73554cf5571941a7e"></a>SCIF_UART_RECEIVE_TRIGGER_14&#160;</td><td class="fielddoc"><p>Interrupt at least 14 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dba209eb8920fd179b11dcf6b61478f9350"></a>SCIF_UART_RX_FIFO_TRIGGER_14&#160;</td><td class="fielddoc"><p>Interrupt at least 14 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga5d3f2e170b79de59f46ae864fc993e95ae66c9b5ef3fc1aac931dd80766cdfe3c"></a>SCIF_UART_RECEIVE_TRIGGER_15&#160;</td><td class="fielddoc"><p>Interrupt at least 15 bytes is in FIFO or 15ETU past from last receive. </p>
+<tr><td class="fieldname"><a id="gga0930f62cc69514b8b34db1bf63ba32dbab9e3e0889abb90ee00c5bf15e2f66bbe"></a>SCIF_UART_RX_FIFO_TRIGGER_15&#160;</td><td class="fielddoc"><p>Interrupt at least 15 bytes is in FIFO or 15ETU past from last receive. </p>
 </td></tr>
 </table>
 
@@ -810,6 +778,8 @@ RS-485 settings. </td></tr>
 <tr><td class="fieldname"><a id="ggaaee66fa30e6f9f0efb538ecb91a9ad89afd80607e5a941b03255635196a53a004"></a>SCIF_UART_RTS_TRIGGER_14&#160;</td><td class="fielddoc"><p>RTS trigger level = 14. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggaaee66fa30e6f9f0efb538ecb91a9ad89a72f3e438f603dd31866ee7002856934a"></a>SCIF_UART_RTS_TRIGGER_15&#160;</td><td class="fielddoc"><p>RTS trigger level = 15. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggaaee66fa30e6f9f0efb538ecb91a9ad89a6568db3143c7183716313ed5b5825713"></a>SCIF_UART_RTS_TRIGGER_DISABLE&#160;</td><td class="fielddoc"><p>Disable RTS trigger. </p>
 </td></tr>
 </table>
 
@@ -1230,7 +1200,7 @@ RS-485 settings. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Updates the user callback and has option of providing memory for callback structure. Implements <a class="el" href="group___u_a_r_t___a_p_i.html#a51b74df27fb26e85700d9524cdfc7c01">uart_api_t::callbackSet</a></p>
+<p>Updates the user callback and has option of providing memory for callback structure. Implements <a class="el" href="group___u_a_r_t___a_p_i.html#acfd849190deedb8f9c35bed54dccc111">uart_api_t::callbackSet</a></p>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">FSP_SUCCESS</td><td>Callback updated successfully. </td></tr>
@@ -1249,7 +1219,7 @@ RS-485 settings. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

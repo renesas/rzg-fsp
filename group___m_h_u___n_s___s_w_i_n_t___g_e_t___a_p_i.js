@@ -13,7 +13,7 @@ var group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i =
     ] ],
     [ "mhu_ns_swint_get_api_t", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__api__t", [
       [ "open", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a94dc2c05c8c387042d23a95b08a2f760", null ],
-      [ "callbackSet", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#afca2a6032121c770e1bd8a07db1c062a", null ],
+      [ "callbackSet", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#aa6d265fb94f76b4e03482e71e5eceadc", null ],
       [ "close", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#af92e9fdbc56bd0c806ef58a4b69e86db", null ]
     ] ],
     [ "mhu_ns_swint_get_instance_t", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__instance__t", [

@@ -17,7 +17,9 @@ var group___r_m___z_m_o_d4_x_x_x___a_p_i =
       [ "iaq", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a6de91ae7e87c6ad5197ceff295b7fdf3", null ],
       [ "tvoc", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a6dc721959ed25ffaade04a78ba4c1ba6", null ],
       [ "etoh", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a92ce32ead1c82ad9b1c355827fe027a9", null ],
-      [ "eco2", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a6457c0270c680c86d593bbd286c425dc", null ]
+      [ "eco2", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a6457c0270c680c86d593bbd286c425dc", null ],
+      [ "sample_id", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a301975673d086d61f79953b78f17ffd8", null ],
+      [ "rel_iaq", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a644a799721cb181736a85b2fb1d48a0c", null ]
     ] ],
     [ "rm_zmod4xxx_odor_data_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__odor__data__t", [
       [ "control_signal", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#aa95d3545e0fcfe3070532d2b1e4923b0", null ],
@@ -34,6 +36,7 @@ var group___r_m___z_m_o_d4_x_x_x___a_p_i =
     ] ],
     [ "rm_zmod4xxx_oaq_2nd_data_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__oaq__2nd__data__t", [
       [ "rmox", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a32901d3e447bf2fc0642b3c54be98d9a", null ],
+      [ "temperature", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a180a69369d3f3683839ec1eb816a05a0", null ],
       [ "ozone_concentration", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a492587fbeb536fcd7994596a6f2c4176", null ],
       [ "fast_aqi", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a84160c2d9ba22577f86b7bbdb3521845", null ],
       [ "epa_aqi", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#aeb49c4d0925d19ef93f1b7836acbcaf1", null ]
@@ -41,6 +44,28 @@ var group___r_m___z_m_o_d4_x_x_x___a_p_i =
     [ "rm_zmod4xxx_raq_data_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__raq__data__t", [
       [ "control_signal", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#abe7c7a383889bcc45958fb2f24afe497", null ],
       [ "raq", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#aafd6e3d578d566d09fcae0b3b0c81851", null ]
+    ] ],
+    [ "rm_zmod4xxx_rel_iaq_data_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__rel__iaq__data__t", [
+      [ "rmox", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a2a2af49951c717d0bee09a68c5d7ff3e", null ],
+      [ "rhtr", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a63b1b13bb3b9fc4f9391c11995d896ec", null ],
+      [ "rel_iaq", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a766bfaf9da841e46226f7daff727ba52", null ]
+    ] ],
+    [ "rm_zmod4xxx_pbaq_data_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__pbaq__data__t", [
+      [ "rmox", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a29b261371c083057349366a8a79159a3", null ],
+      [ "log_rcda", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a84714eb40a19ee482d532bfd7c937f2d", null ],
+      [ "rhtr", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a8131af7e04832c883b3a2758d460e5d1", null ],
+      [ "temperature", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a4e9292675723948829cbd6fc61957511", null ],
+      [ "tvoc", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a20cacee1933b041699cb0ddc40cffeb2", null ],
+      [ "etoh", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a5bcd90e4eb1d705a71453a5c35229719", null ],
+      [ "sample_id", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a5b4b384231c7e7aa9d782c94abd2e1f3", null ]
+    ] ],
+    [ "rm_zmod4xxx_no2_o3_data_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__no2__o3__data__t", [
+      [ "rmox", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a6d11fbea1e18b24730b88ac06af769d4", null ],
+      [ "temperature", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a87c0eec4c3cd74617550d0fc4c978513", null ],
+      [ "ozone_concentration", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ae448813453a0b9ffa2e52aa670384e01", null ],
+      [ "no2_concentration", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a9e3471dc95eec68df543078297796f6b", null ],
+      [ "fast_aqi", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a81c1b1c279e49c3c12d25c030090f6b2", null ],
+      [ "epa_aqi", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a7bf817e48e12da59867cdd0ac0073820", null ]
     ] ],
     [ "rm_zmod4xxx_cfg_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__cfg__t", [
       [ "p_comms_instance", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a8cce7b013ebccc3b0b0aed0e9436e922", null ],
@@ -51,21 +76,24 @@ var group___r_m___z_m_o_d4_x_x_x___a_p_i =
       [ "p_irq_callback", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a2ef43c9ece4e53557648b8a77ec406f5", null ]
     ] ],
     [ "rm_zmod4xxx_api_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__api__t", [
-      [ "open", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a5ba1799ed3669a41fd7f0f436706367b", null ],
-      [ "measurementStart", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#af9e1e5ff4fd276f7d7bfeb341854b0c2", null ],
-      [ "measurementStop", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a5cf69c31fc52e26757bedf1ec76581f3", null ],
-      [ "statusCheck", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a27c6d482aef38fe699598bd294eae220", null ],
-      [ "read", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a8f0e582715db0dc1589f314944c2a41a", null ],
-      [ "iaq1stGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a6e96d0abcbc4a4479d92d6e8e8d410de", null ],
-      [ "iaq2ndGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#af1ff5841c01173a03ff6ccb7bd731ddc", null ],
-      [ "odorDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#aed55023e17ab93d307606c0d880df721", null ],
-      [ "sulfurOdorDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#af2123328d6c1ced0cc62d9c98f5a8a7a", null ],
-      [ "oaq1stGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ad56aa9708d3f48a92253eeda652edede", null ],
-      [ "oaq2ndGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ad1d9b01a5d84a3a4a06dfd714f485911", null ],
-      [ "raqDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#aa05768468433346424e7c695a0e0a4ed", null ],
-      [ "temperatureAndHumiditySet", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a504a4e2266dc1ae46f27b752ade032e9", null ],
-      [ "deviceErrorCheck", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a032f14a6414a147c3e05a28064d97069", null ],
-      [ "close", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a37597974b2ae3e5ba15c57fce44b2c83", null ]
+      [ "open", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a9839a07b96c79990f08d8720890e8da8", null ],
+      [ "measurementStart", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a47041454b1b699ca178a5156c6a79aac", null ],
+      [ "measurementStop", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#abcdce084970e22641ee7151ae45ecee7", null ],
+      [ "statusCheck", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#aa00282b7e3e0551c96618e19b7b1ee4b", null ],
+      [ "read", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a25a326294be7c8d65f6918ba532fb09f", null ],
+      [ "iaq1stGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a84760f27fa7ca93259cf43597772c781", null ],
+      [ "iaq2ndGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a88ffe068c172b8719782357b16cbe937", null ],
+      [ "odorDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a92c5b2fd0fba637202780d8423b170dc", null ],
+      [ "sulfurOdorDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#af8d15ec491a454d5d120f21aa41e8f9f", null ],
+      [ "oaq1stGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a49bdc7ca88b2859fd18b3d33890d32bd", null ],
+      [ "oaq2ndGenDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ae56592403602103a28a5d1e13d6dec03", null ],
+      [ "raqDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a557c09febce20b7bd5e1e7418d760f9a", null ],
+      [ "relIaqDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a417eb9005c2cabc805e5176bd409b838", null ],
+      [ "pbaqDataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a32c2fe41b4db79301c8a1b294809a25d", null ],
+      [ "no2O3DataCalculate", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#af901e053d4de7823c96984f1832d9968", null ],
+      [ "temperatureAndHumiditySet", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a1240e62119dd4d148dd4ec393e234447", null ],
+      [ "deviceErrorCheck", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a96bea17094f7a5933ab13d77d7d86699", null ],
+      [ "close", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a8858935263e54d095b16b998cebcf40d", null ]
     ] ],
     [ "rm_zmod4xxx_instance_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#structrm__zmod4xxx__instance__t", [
       [ "p_ctrl", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a5ce0b0a7d1b59a0ad9088449e884cbb4", null ],
@@ -75,7 +103,8 @@ var group___r_m___z_m_o_d4_x_x_x___a_p_i =
     [ "rm_zmod4xxx_ctrl_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ga65db663ec670e25cc0294f22f96abb5c", null ],
     [ "rm_zmod4xxx_event_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#gadd54ca8592a0f7cb81913d2250e89060", [
       [ "RM_ZMOD4XXX_EVENT_DEV_ERR_POWER_ON_RESET", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ggadd54ca8592a0f7cb81913d2250e89060a55d1b247ecb594b099b15e120ae6b6a4", null ],
-      [ "RM_ZMOD4XXX_EVENT_DEV_ERR_ACCESS_CONFLICT", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ggadd54ca8592a0f7cb81913d2250e89060aa55c18d81d34427bcfd2f631e6b2a3a4", null ]
+      [ "RM_ZMOD4XXX_EVENT_DEV_ERR_ACCESS_CONFLICT", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ggadd54ca8592a0f7cb81913d2250e89060aa55c18d81d34427bcfd2f631e6b2a3a4", null ],
+      [ "RM_ZMOD4XXX_EVENT_DEV_ERR_DAMAGE", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ggadd54ca8592a0f7cb81913d2250e89060a1d714f6dc93f40773c087a51e3ff609c", null ]
     ] ],
     [ "rm_zmod4xxx_sulfur_odor_t", "group___r_m___z_m_o_d4_x_x_x___a_p_i.html#ga47f50ad1a54e470fb44b443351c39beb", null ]
 ];

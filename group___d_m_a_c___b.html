@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZG Flexible Software Package Documentation: Direct Memory Access Controller (r_dmac_b)</title>
+<title>RZG Flexible Software Package Documentation: Transfer (r_dmac_b)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -164,7 +164,7 @@ $(document).ready(function(){initNavTree('group___d_m_a_c___b.html','');});
 <a href="#define-members">Macros</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
-<div class="title">Direct Memory Access Controller (r_dmac_b)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___t_r_a_n_s_f_e_r___m_o_d_u_l_e_s.html">Transfer</a></div></div>  </div>
+<div class="title">Transfer (r_dmac_b)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___t_r_a_n_s_f_e_r___m_o_d_u_l_e_s.html">Transfer</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -190,6 +190,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga632bf5ab4aab7000686ef9f18a613362"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadb30ad1a9a46b41838123869c5d9d5b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#gadb30ad1a9a46b41838123869c5d9d5b7">R_DMAC_B_Reload</a> (<a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#ga665f80fc984ccf7585606be8eeccbb98">transfer_ctrl_t</a> *const p_api_ctrl, void const *p_src, void *p_dest, uint32_t const num_transfers)</td></tr>
 <tr class="separator:gadb30ad1a9a46b41838123869c5d9d5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5adf8ce25e12252d7c511acf45870815"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#ga5adf8ce25e12252d7c511acf45870815">R_DMAC_B_CallbackSet</a> (<a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#ga665f80fc984ccf7585606be8eeccbb98">transfer_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">dmac_b_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">dmac_b_callback_args_t</a> *const p_callback_memory)</td></tr>
+<tr class="separator:ga5adf8ce25e12252d7c511acf45870815"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Driver for the DMAC peripheral on RZ MPUs. This module implements the <a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html">Transfer Interface</a>. </p>
@@ -296,19 +298,19 @@ Block</li>
 <tr>
 <td>Destination Address Mode</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
-Fixed</li>
-<li>
 Incremented</li>
+<li>
+Fixed</li>
 </ul>
-</td><td>Fixed </td><td>Select the address mode for the destination. </td></tr>
+</td><td>Incremented </td><td>Select the address mode for the destination. </td></tr>
 <tr>
 <td>Source Address Mode</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
-Fixed</li>
-<li>
 Incremented</li>
+<li>
+Fixed</li>
 </ul>
-</td><td>Fixed </td><td>Select the address mode for the source. </td></tr>
+</td><td>Incremented </td><td>Select the address mode for the source. </td></tr>
 <tr>
 <td>Activation Source</td><td>MCU Specific Options</td><td></td><td>Select the DMAC transfer start event. </td></tr>
 <tr>
@@ -321,6 +323,12 @@ Requested by a transfer destination module</li>
 </td><td>Requested by a transfer source module </td><td>DMA Activation Request Source Select. </td></tr>
 <tr>
 <td>DACK Output mode</td><td>MCU Specific Options</td><td></td><td>Select DACK output mode. </td></tr>
+<tr>
+<td>External DREQ Input Pin Select</td><td>MCU Specific Options</td><td></td><td>Select DREQ input signal. </td></tr>
+<tr>
+<td>External DACK Output Pin Select</td><td>MCU Specific Options</td><td></td><td>Select DACK output signal. </td></tr>
+<tr>
+<td>External TEND Output Pin Select</td><td>MCU Specific Options</td><td></td><td>Select TEND output signal. </td></tr>
 <tr>
 <td>External DREQ Detection Mode</td><td>MCU Specific Options</td><td></td><td>External DREQ detection mode select.(This cannot be set on devices that do not have an external DREQ terminal) </td></tr>
 <tr>
@@ -390,8 +398,6 @@ Examples</h1>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> dmac_minimal_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line"></div><div class="line">    <span class="comment">/* Open the transfer instance with initial configuration. */</span></div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = <a class="code" href="group___d_m_a_c___b.html#gac246f431e5d9b090d51fa82e1cf4c525">R_DMAC_B_Open</a>(&amp;g_transfer_ctrl, &amp;g_transfer_cfg);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Enable the DMAC to handle incoming transfer requests. */</span></div><div class="line">    err = <a class="code" href="group___d_m_a_c___b.html#gad7d2d7ade93dc5fdb468f3ca4eb23904">R_DMAC_B_Enable</a>(&amp;g_transfer_ctrl);</div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
-<tr class="memitem:structdmac__b__callback__args__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#structdmac__b__callback__args__t">dmac_b_callback_args_t</a></td></tr>
-<tr class="separator:structdmac__b__callback__args__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structdmac__b__register__set__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#structdmac__b__register__set__setting__t">dmac_b_register_set_setting_t</a></td></tr>
 <tr class="separator:structdmac__b__register__set__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structdmac__b__instance__ctrl__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#structdmac__b__instance__ctrl__t">dmac_b_instance_ctrl_t</a></td></tr>
@@ -410,8 +416,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:ga1ea3acbac3625e15f0b656d9b220cc8a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#ga1ea3acbac3625e15f0b656d9b220cc8a">dmac_b_event_t</a> </td></tr>
-<tr class="separator:ga1ea3acbac3625e15f0b656d9b220cc8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga77c350dbc52956dc8b1ce4987e721e05"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#ga77c350dbc52956dc8b1ce4987e721e05">dmac_b_transfer_size_t</a> </td></tr>
 <tr class="separator:ga77c350dbc52956dc8b1ce4987e721e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga46c5c66fc820831bb56b5f6554f2890e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#ga46c5c66fc820831bb56b5f6554f2890e">dmac_b_ack_mode_t</a> </td></tr>
@@ -430,36 +434,6 @@ Enumerations</h2></td></tr>
 <tr class="separator:ga94e377366e55d6e30cf97102474a5320"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
-<a name="structdmac__b__callback__args__t" id="structdmac__b__callback__args__t"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#structdmac__b__callback__args__t">&#9670;&nbsp;</a></span>dmac_b_callback_args_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">struct dmac_b_callback_args_t</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<div class="textblock"><p>Callback function parameter data. </p>
-</div><table class="fieldtable">
-<tr><th colspan="3">Data Fields</th></tr>
-<tr><td class="fieldtype">
-<a id="aafb07b9e0d848a6f8e56de3b8a378522"></a><a class="el" href="group___d_m_a_c___b.html#ga1ea3acbac3625e15f0b656d9b220cc8a">dmac_b_event_t</a></td>
-<td class="fieldname">
-event</td>
-<td class="fielddoc">
-Event code. </td></tr>
-<tr><td class="fieldtype">
-<a id="a3c0c11bbddaa1a47bf8b03b68de9f865"></a>void const  *</td>
-<td class="fieldname">
-p_context</td>
-<td class="fielddoc">
-Placeholder for user data. Set in r_transfer_t::open function in <a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__cfg__t">transfer_cfg_t</a>. </td></tr>
-</table>
-
-</div>
-</div>
 <a name="structdmac__b__register__set__setting__t" id="structdmac__b__register__set__setting__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structdmac__b__register__set__setting__t">&#9670;&nbsp;</a></span>dmac_b_register_set_setting_t</h2>
 
@@ -547,6 +521,18 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="g
 <a class="el" href="group___d_m_a_c___b.html#ga46c5c66fc820831bb56b5f6554f2890e">dmac_b_ack_mode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a7d92e1d7d0c259a61117cfae07481967">ack_mode</a></td></tr>
 <tr class="memdesc:a7d92e1d7d0c259a61117cfae07481967"><td class="mdescLeft">&#160;</td><td class="mdescRight">DACK output mode. <br /></td></tr>
 <tr class="separator:a7d92e1d7d0c259a61117cfae07481967"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecc0eaf1b1c77687ef8d3a7cab485112"><td class="memItemLeft" align="right" valign="top"><a id="aecc0eaf1b1c77687ef8d3a7cab485112"></a>
+dmac_b_external_input_pin_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#aecc0eaf1b1c77687ef8d3a7cab485112">dreq_input_pin</a></td></tr>
+<tr class="memdesc:aecc0eaf1b1c77687ef8d3a7cab485112"><td class="mdescLeft">&#160;</td><td class="mdescRight">DREQ input pin name. <br /></td></tr>
+<tr class="separator:aecc0eaf1b1c77687ef8d3a7cab485112"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5d6ef616f8c71b5511e8f0d21399585"><td class="memItemLeft" align="right" valign="top"><a id="ae5d6ef616f8c71b5511e8f0d21399585"></a>
+dmac_b_external_output_pin_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#ae5d6ef616f8c71b5511e8f0d21399585">ack_output_pin</a></td></tr>
+<tr class="memdesc:ae5d6ef616f8c71b5511e8f0d21399585"><td class="mdescLeft">&#160;</td><td class="mdescRight">DACK output pin name. <br /></td></tr>
+<tr class="separator:ae5d6ef616f8c71b5511e8f0d21399585"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4948302219c9409176bcc0ca3a2484d8"><td class="memItemLeft" align="right" valign="top"><a id="a4948302219c9409176bcc0ca3a2484d8"></a>
+dmac_b_external_output_pin_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a4948302219c9409176bcc0ca3a2484d8">tend_output_pin</a></td></tr>
+<tr class="memdesc:a4948302219c9409176bcc0ca3a2484d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TEND output pin name. <br /></td></tr>
+<tr class="separator:a4948302219c9409176bcc0ca3a2484d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84613315363012283b6c3abdfd89faff"><td class="memItemLeft" align="right" valign="top"><a id="a84613315363012283b6c3abdfd89faff"></a>
 <a class="el" href="group___d_m_a_c___b.html#ga14518809e8fbb9e21fdef462b5a6355b">dmac_b_external_detection_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a84613315363012283b6c3abdfd89faff">external_detection_mode</a></td></tr>
 <tr class="memdesc:a84613315363012283b6c3abdfd89faff"><td class="mdescLeft">&#160;</td><td class="mdescRight">DMAC request detection method for external pin. <br /></td></tr>
@@ -575,7 +561,7 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <a class="el" href="group___d_m_a_c___b.html#gab359dcd5cfb24ecd20655106c9397d63">dmac_b_channel_scheduling_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a33a766bacb611723bb0bdfec3758e1f4">channel_scheduling</a></td></tr>
 <tr class="memdesc:a33a766bacb611723bb0bdfec3758e1f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">DMA channel scheduling. <br /></td></tr>
 <tr class="separator:a33a766bacb611723bb0bdfec3758e1f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a128e8c1345cc9470629fcb55871311a5"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a128e8c1345cc9470629fcb55871311a5">p_callback</a> )(<a class="el" href="group___d_m_a_c___b.html#structdmac__b__callback__args__t">dmac_b_callback_args_t</a> *cb_data)</td></tr>
+<tr class="memitem:a128e8c1345cc9470629fcb55871311a5"><td class="memItemLeft" align="right" valign="top">void(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a128e8c1345cc9470629fcb55871311a5">p_callback</a> )(<a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">dmac_b_callback_args_t</a> *cb_data)</td></tr>
 <tr class="separator:a128e8c1345cc9470629fcb55871311a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a810513506f2aa216b17f288ab8ef8bb5"><td class="memItemLeft" align="right" valign="top">void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___d_m_a_c___b.html#a810513506f2aa216b17f288ab8ef8bb5">p_context</a></td></tr>
 <tr class="separator:a810513506f2aa216b17f288ab8ef8bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -603,7 +589,7 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void(*  dmac_b_extended_cfg_t::p_callback) (<a class="el" href="group___d_m_a_c___b.html#structdmac__b__callback__args__t">dmac_b_callback_args_t</a> *cb_data)</td>
+          <td class="memname">void(*  dmac_b_extended_cfg_t::p_callback) (<a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">dmac_b_callback_args_t</a> *cb_data)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -622,7 +608,7 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Placeholder for user data. Passed to the user p_callback in <a class="el" href="group___d_m_a_c___b.html#structdmac__b__callback__args__t">dmac_b_callback_args_t</a>. </p>
+<p>Placeholder for user data. Passed to the user p_callback in <a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">transfer_callback_args_t</a>. </p>
 
 </div>
 </div>
@@ -700,27 +686,6 @@ p_next1_register_setting</td>
 </div>
 </div>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ga1ea3acbac3625e15f0b656d9b220cc8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1ea3acbac3625e15f0b656d9b220cc8a">&#9670;&nbsp;</a></span>dmac_b_event_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group___d_m_a_c___b.html#ga1ea3acbac3625e15f0b656d9b220cc8a">dmac_b_event_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Events that can trigger a callback function. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga1ea3acbac3625e15f0b656d9b220cc8aac41c065b08dd64341516cdc406f0a43a"></a>DMAC_B_EVENT_TRANSFER_END&#160;</td><td class="fielddoc"><p>DMA transfer has completed. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga1ea3acbac3625e15f0b656d9b220cc8aa63dd08ef2be01ac99472a7b9d39fabc0"></a>DMAC_B_EVENT_TRANSFER_ERROR&#160;</td><td class="fielddoc"><p>A bus error occurred during DMA transfer. </p>
-</td></tr>
-</table>
-
-</div>
-</div>
 <a id="ga77c350dbc52956dc8b1ce4987e721e05"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga77c350dbc52956dc8b1ce4987e721e05">&#9670;&nbsp;</a></span>dmac_b_transfer_size_t</h2>
 
@@ -1275,13 +1240,62 @@ p_next1_register_setting</td>
 
 </div>
 </div>
+<a id="ga5adf8ce25e12252d7c511acf45870815"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5adf8ce25e12252d7c511acf45870815">&#9670;&nbsp;</a></span>R_DMAC_B_CallbackSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> R_DMAC_B_CallbackSet </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#ga665f80fc984ccf7585606be8eeccbb98">transfer_ctrl_t</a> *const&#160;</td>
+          <td class="paramname"><em>p_api_ctrl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)(<a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">dmac_b_callback_args_t</a> *)&#160;</td>
+          <td class="paramname"><em>p_callback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void const *const&#160;</td>
+          <td class="paramname"><em>p_context</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#structtransfer__callback__args__t">dmac_b_callback_args_t</a> *const&#160;</td>
+          <td class="paramname"><em>p_callback_memory</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Updates the user callback with the option to provide memory for the callback argument structure. Implements <a class="el" href="group___t_r_a_n_s_f_e_r___a_p_i.html#aec396dcd365f215cabfa1097e2a963de">transfer_api_t::callbackSet</a>.</p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FSP_SUCCESS</td><td>Callback updated successfully. </td></tr>
+    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>A required pointer is NULL. </td></tr>
+    <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The control block has not been opened. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- HTML footer for doxygen 1.8.7-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

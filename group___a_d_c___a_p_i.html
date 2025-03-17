@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -163,15 +163,14 @@ $(document).ready(function(){initNavTree('group___a_d_c___a_p_i.html','');});
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
-<div class="title">ADC Interface<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a></div></div>  </div>
+<div class="title">ADC Interface<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___a_n_a_l_o_g___i_n_t_e_r_f_a_c_e_s.html">Analog</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Interface for A/D Converters. </p>
 <h1><a class="anchor" id="ADC_API_SUMMARY"></a>
 Summary</h1>
-<p>The ADC interface provides standard ADC functionality including one-shot mode (single scan), continuous scan and group scan. It also allows configuration of hardware and software triggers for starting scans. After each conversion an interrupt can be triggered, and if a callback function is provided, the call back is invoked with the appropriate event information.</p>
-<p>Implemented by: <a class="el" href="group___a_d_c___c.html">Analog to Digital Converter (r_adc_c)</a> </p>
+<p>The ADC interface provides standard ADC functionality including one-shot mode (single scan), continuous scan and group scan. It also allows configuration of hardware and software triggers for starting scans. After each conversion an interrupt can be triggered, and if a callback function is provided, the call back is invoked with the appropriate event information. </p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
@@ -276,13 +275,13 @@ Placeholder for user data. </td></tr>
 <td class="fieldname">
 channel</td>
 <td class="fielddoc">
-Channel of conversion result. Only valid for r_adc ADC_EVENT_CONVERSION_COMPLETE. </td></tr>
+Channel of conversion result. </td></tr>
 <tr><td class="fieldtype">
 <a id="a50ca40e036fb0058265aca9e500911c0"></a>uint64_t</td>
 <td class="fieldname">
 channel_mask</td>
 <td class="fielddoc">
-Channel mask for conversion result. Only valid for r_adc_b. </td></tr>
+Channel mask for conversion result. Only valid for r_adc_b and r_sdadc_b. </td></tr>
 <tr><td class="fieldtype">
 <a id="a2e4f7b7ce1a5858b39f7a85ad16ab655"></a><a class="el" href="group___a_d_c___a_p_i.html#gaee17c30275c1c9376cc485a62ea121eb">adc_group_mask_t</a></td>
 <td class="fieldname">
@@ -326,13 +325,13 @@ transfer_size</td>
 <td class="fielddoc">
 The size of each transfer. </td></tr>
 <tr><td class="fieldtype">
-<a id="a391a11955d9d3b8d84ca87bbfe72df86"></a>elc_peripheral_t</td>
+<a id="a391a11955d9d3b8d84ca87bbfe72df86"></a><a class="el" href="group___e_l_c___a_p_i.html#gaa5bf5e18ceb8cf51ac6dce985f9230a7">elc_peripheral_t</a></td>
 <td class="fieldname">
 elc_peripheral</td>
 <td class="fielddoc">
 Name of the peripheral in the ELC list. </td></tr>
 <tr><td class="fieldtype">
-<a id="a06d242e573821f38b3a7543dd9eb5548"></a>elc_event_t</td>
+<a id="a06d242e573821f38b3a7543dd9eb5548"></a><a class="el" href="group___b_s_p___m_c_u___r_z_g3_e.html#gaebe723200f2a7f181f08324128b9d7b5">elc_event_t</a></td>
 <td class="fieldname">
 elc_event</td>
 <td class="fielddoc">
@@ -485,8 +484,8 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 <tr class="separator:a1020d90e58d3bf86cee2f46a62e62fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a305b2c2466cd88fdddf6134db542dc7e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c___a_p_i.html#a305b2c2466cd88fdddf6134db542dc7e">offsetSet</a> )(<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_ctrl, <a class="el" href="group___a_d_c___a_p_i.html#gaafc4060027875f8fe46242b0656d7814">adc_channel_t</a> const reg_id, int32_t const offset)</td></tr>
 <tr class="separator:a305b2c2466cd88fdddf6134db542dc7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d081aba32f84d62e7d48389b1d10b3e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c___a_p_i.html#a8d081aba32f84d62e7d48389b1d10b3e">callbackSet</a> )(<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *const p_callback_memory)</td></tr>
-<tr class="separator:a8d081aba32f84d62e7d48389b1d10b3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cd8e8911dcf8c4c617fe62f185b4363"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c___a_p_i.html#a2cd8e8911dcf8c4c617fe62f185b4363">callbackSet</a> )(<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_ctrl, void(*p_callback)(<a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *const p_callback_memory)</td></tr>
+<tr class="separator:a2cd8e8911dcf8c4c617fe62f185b4363"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83cce8ff1af572c11ef31442f2679124"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c___a_p_i.html#a83cce8ff1af572c11ef31442f2679124">close</a> )(<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_ctrl)</td></tr>
 <tr class="separator:a83cce8ff1af572c11ef31442f2679124"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc68017ee284386b5d13c027bc10bf87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___a_d_c___a_p_i.html#acc68017ee284386b5d13c027bc10bf87">infoGet</a> )(<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_ctrl, <a class="el" href="group___a_d_c___a_p_i.html#structadc__info__t">adc_info_t</a> *const p_adc_info)</td></tr>
@@ -504,10 +503,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Initialize ADC Unit; apply power, set the operational mode, trigger sources, interrupt priority, and configurations common to all channels and sensors. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga52f7eee41184b0a91cfa9e73b1833122">R_ADC_C_Open()</a></li>
-</ul>
-</dd></dl>
+<p>Initialize ADC Unit; apply power, set the operational mode, trigger sources, interrupt priority, and configurations common to all channels and sensors.</p>
 <dl class="section pre"><dt>Precondition</dt><dd>Configure peripheral clocks, ADC pins and IRQs prior to calling this function. </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -530,10 +526,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Configure the scan including the channels, groups, and scan triggers to be used for the unit that was initialized in the open call. Some configurations are not supported for all implementations. See implementation for details. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga5f0ecdfeeb82907f1d20e68284fe8861">R_ADC_C_ScanCfg()</a></li>
-</ul>
-</dd></dl>
+<p>Configure the scan including the channels, groups, and scan triggers to be used for the unit that was initialized in the open call. Some configurations are not supported for all implementations. See implementation for details.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -555,10 +548,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Start the scan (in case of a software trigger), or enable the hardware trigger. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga11e9ba160e344dc72ab9e862f7ce70db">R_ADC_C_ScanStart()</a></li>
-</ul>
-</dd></dl>
+<p>Start the scan (in case of a software trigger), or enable the hardware trigger.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -579,10 +569,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Start the scan group (in case of a software trigger), or enable the hardware trigger. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga2a5b64c160eb0b849ea5043bde9188cb">R_ADC_C_ScanGroupStart()</a></li>
-</ul>
-</dd></dl>
+<p>Start the scan group (in case of a software trigger), or enable the hardware trigger.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -604,10 +591,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Stop the ADC scan (in case of a software trigger), or disable the hardware trigger. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#gad2ba1ea2171aafa77a4ea3de325ad11c">R_ADC_C_ScanStop()</a></li>
-</ul>
-</dd></dl>
+<p>Stop the ADC scan (in case of a software trigger), or disable the hardware trigger.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -628,10 +612,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Check scan status. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga1d98d3b28202140cc37796dd60fde5e3">R_ADC_C_StatusGet()</a></li>
-</ul>
-</dd></dl>
+<p>Check scan status.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -653,10 +634,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Read ADC conversion result. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga0971485949f985d827aeaa69feff4f5a">R_ADC_C_Read()</a></li>
-</ul>
-</dd></dl>
+<p>Read ADC conversion result.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -679,10 +657,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Read ADC conversion result into a 32-bit word. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#gad95fbc1b2b5d7ced0f332c6cab3be5a0">R_ADC_C_Read32()</a></li>
-</ul>
-</dd></dl>
+<p>Read ADC conversion result into a 32-bit word.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -705,10 +680,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Calibrate ADC or associated PGA (programmable gain amplifier). The driver may require implementation specific arguments to the p_extend input. Not supported for all implementations. See implementation for details. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga5cbf5113221d2cdbf11f36eb8b7ea21a">R_ADC_C_Calibrate()</a></li>
-</ul>
-</dd></dl>
+<p>Calibrate ADC or associated PGA (programmable gain amplifier). The driver may require implementation specific arguments to the p_extend input. Not supported for all implementations. See implementation for details.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -730,10 +702,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set offset for input PGA configured for differential input. Not supported for all implementations. See implementation for details. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga1a6bcd25e5366666a3f25062e4b9d615">R_ADC_C_OffsetSet()</a></li>
-</ul>
-</dd></dl>
+<p>Set offset for input PGA configured for differential input. Not supported for all implementations. See implementation for details.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -745,21 +714,18 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
 
 </div>
 </div>
-<a id="a8d081aba32f84d62e7d48389b1d10b3e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d081aba32f84d62e7d48389b1d10b3e">&#9670;&nbsp;</a></span>callbackSet</h2>
+<a id="a2cd8e8911dcf8c4c617fe62f185b4363"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cd8e8911dcf8c4c617fe62f185b4363">&#9670;&nbsp;</a></span>callbackSet</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  adc_api_t::callbackSet) (<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *const p_callback_memory)</td>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  adc_api_t::callbackSet) (<a class="el" href="group___a_d_c___a_p_i.html#gaff9488cd90102a90e5c5cbd45394d426">adc_ctrl_t</a> *const p_ctrl, void(*p_callback)(<a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___a_d_c___a_p_i.html#structadc__callback__args__t">adc_callback_args_t</a> *const p_callback_memory)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Specify callback function and optional context pointer and working memory pointer. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga1644c43f8469049a20a1c183682b2eda">R_ADC_C_CallbackSet()</a></li>
-</ul>
-</dd></dl>
+<p>Specify callback function and optional context pointer and working memory pointer.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to the ADC control block. </td></tr>
@@ -783,10 +749,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Close the specified ADC unit by ending any scan in progress, disabling interrupts, and removing power to the specified A/D unit. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga51e75a0613a836dda17e8dff336fa5b9">R_ADC_C_Close()</a></li>
-</ul>
-</dd></dl>
+<p>Close the specified ADC unit by ending any scan in progress, disabling interrupts, and removing power to the specified A/D unit.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -807,10 +770,7 @@ void const  *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" h
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Return the ADC data register address of the first (lowest number) channel and the total number of bytes to be read in order for the DTC/DMAC to read the conversion results of all configured channels. Return the temperature sensor calibration and slope data. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___a_d_c___c.html#ga71b8dbb9de7e428dbdc0bdd56c2331a4">R_ADC_C_InfoGet()</a></li>
-</ul>
-</dd></dl>
+<p>Return the ADC data register address of the first (lowest number) channel and the total number of bytes to be read in order for the DTC/DMAC to read the conversion results of all configured channels. Return the temperature sensor calibration and slope data.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control handle structure </td></tr>
@@ -1018,6 +978,8 @@ Pointer to the API structure for this instance. </td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ggae2177d6e5bf43e3749cc60f835456847ab32572630797968579adeed03f19bcd3"></a>ADC_EVENT_WINDOW_COMPARE_B&#160;</td><td class="fielddoc"><p>Window B comparison condition met. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="ggae2177d6e5bf43e3749cc60f835456847a7cfc303adbef8d07936d89275852ded3"></a>ADC_EVENT_ZERO_CROSS_DETECTION&#160;</td><td class="fielddoc"><p>Zero-cross detection interrupt. </p>
+</td></tr>
 </table>
 
 </div>
@@ -1208,7 +1170,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

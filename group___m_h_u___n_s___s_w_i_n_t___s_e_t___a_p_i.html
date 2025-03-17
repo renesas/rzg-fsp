@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -162,7 +162,7 @@ $(document).ready(function(){initNavTree('group___m_h_u___n_s___s_w_i_n_t___s_e_
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
-<div class="title">MHU Interface (Software Interrupt Set)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a></div></div>  </div>
+<div class="title">MHU Interface (Software Interrupt Set)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___i_n_t_e_r_f_a_c_e_s.html">Interfaces</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___s_y_s_t_e_m___i_n_t_e_r_f_a_c_e_s.html">System</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -170,10 +170,7 @@ $(document).ready(function(){initNavTree('group___m_h_u___n_s___s_w_i_n_t___s_e_
 <h1><a class="anchor" id="MHU_NS_SWINT_SET_API_SUMMARY"></a>
 Summary</h1>
 <p>The Message Handling Unit (Software Interrupt Set) interface provides a common API for MHU HAL drivers. The Message Handling Unit (Software Interrupt Set) interface supports:</p><ul>
-<li>Generate software interrupt via MHU.</li>
-</ul>
-<p>Implemented by:</p><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t.html">Message Handling Unit for non-secure software interrupt generation (r_mhu_ns_swint_set)</a> </li>
+<li>Generate software interrupt via MHU. </li>
 </ul>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -289,10 +286,7 @@ p_context</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Opens the MHU driver and initializes the hardware. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t.html#gaa38f2de3d81a051565c900098d904543">R_MHU_NS_SWINT_SET_Open()</a></li>
-</ul>
-</dd></dl>
+<p>Opens the MHU driver and initializes the hardware.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block. Must be declared by user. Elements are set here. </td></tr>
@@ -314,10 +308,7 @@ p_context</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Performs a send operation on an MHU device. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t.html#ga192b92d34e30e2170c6fa7002589db8e">R_MHU_NS_SWINT_SET_InterruptSet()</a></li>
-</ul>
-</dd></dl>
+<p>Performs a send operation on an MHU device.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block set in <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#a451a6c711c6a8ea92bd71bcc0ee418b8">mhu_ns_swint_set_api_t::open</a> call. </td></tr>
@@ -338,10 +329,7 @@ p_context</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Closes the driver and releases the MHU device. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t.html#gaccf0e3ebba04709c5fa1818c6b9bff31">R_MHU_NS_SWINT_SET_Close()</a></li>
-</ul>
-</dd></dl>
+<p>Closes the driver and releases the MHU device.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Pointer to control block set in <a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#a451a6c711c6a8ea92bd71bcc0ee418b8">mhu_ns_swint_set_api_t::open</a> call. </td></tr>
@@ -402,10 +390,7 @@ Pointer to the API structure for this instance. </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>MHU control block. Allocate an instance specific control block to pass into the MHU API calls. </p><dl class="section user"><dt>Implemented as</dt><dd><ul>
-<li><a class="el" href="group___m_h_u___n_s___s_w_i_n_t___s_e_t.html#structmhu__ns__swint__set__instance__ctrl__t">mhu_ns_swint_set_instance_ctrl_t</a> </li>
-</ul>
-</dd></dl>
+<p>MHU control block. Allocate an instance specific control block to pass into the MHU API calls. </p>
 
 </div>
 </div>
@@ -415,7 +400,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

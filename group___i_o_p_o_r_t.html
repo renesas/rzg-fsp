@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZG Flexible Software Package Documentation: I/O Ports (r_ioport)</title>
+<title>RZG Flexible Software Package Documentation: I/O Port (r_ioport)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('group___i_o_p_o_r_t.html','');});
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
-<div class="title">I/O Ports (r_ioport)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___s_y_s_t_e_m___m_o_d_u_l_e_s.html">System</a></div></div>  </div>
+<div class="title">I/O Port (r_ioport)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___s_y_s_t_e_m___m_o_d_u_l_e_s.html">System</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -245,9 +245,121 @@ This module can be added to the Stacks tab via New Stack &gt; System &gt; I/O Po
 <tr>
 <th>Configuration</th><th>Options</th><th>Default</th><th>Description </th></tr>
 <tr>
-<td>Name</td><td>Name must be a valid C symbol</td><td>g_ioport </td><td>Module name. </td></tr>
+<td>General &gt; Name</td><td>Name must be a valid C symbol</td><td>g_ioport </td><td>Module name. </td></tr>
 <tr>
-<td>Pin Configuration Name</td><td>Name must be a valid C symbol</td><td>g_bsp_pin_cfg </td><td>Name for pin configuration structure </td></tr>
+<td>General &gt; Pin Configuration Name</td><td>Name must be a valid C symbol</td><td>g_bsp_pin_cfg </td><td>Name for pin configuration structure </td></tr>
+<tr>
+<td>ELC Output Port Group 1 &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Output port group 1 </td></tr>
+<tr>
+<td>ELC Output Port Group 1 &gt; Port Selection</td><td>MCU Specific Options</td><td></td><td>Select multiple port number that specify in Ouput port group 1 </td></tr>
+<tr>
+<td>ELC Output Port Group 1 &gt; Output Operation</td><td>MCU Specific Options</td><td></td><td>Select output operation for Output port group 1. When select toggle output, the target Port m Mode register should be set to 11b: Output (Output data is input to input buffer) </td></tr>
+<tr>
+<td>ELC Output Port Group 2 &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Output port group 2 </td></tr>
+<tr>
+<td>ELC Output Port Group 2 &gt; Port Selection</td><td>MCU Specific Options</td><td></td><td>Select multiple port number that specify in Ouput port group 2 </td></tr>
+<tr>
+<td>ELC Output Port Group 2 &gt; Output Operation</td><td>MCU Specific Options</td><td></td><td>Select output operation for Output port group 2. When select toggle output, the target Port m Mode register should be set to 11b: Output (Output data is input to input buffer) </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P60</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P60 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P61</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P61 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P62</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P62 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P63</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P63 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P64</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P64 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P65</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P65 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P66</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P66 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Initial Value &gt; P67</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P67 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Input port group 1 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Event Link Control</td><td>MCU Specific Options</td><td></td><td>Set input port group 1 enablement </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Port Selection</td><td>MCU Specific Options</td><td></td><td>Select multiple port number that specify in Input port group 1 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Edge Detection</td><td>MCU Specific Options</td><td></td><td>Select edge detection that will trigger Input port group 1 </td></tr>
+<tr>
+<td>ELC Input Port Group 1 &gt; Buffer Overwrite</td><td>MCU Specific Options</td><td></td><td>Set whether preventing overwriting ELC Port Buffer Register before reading it </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P80</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P80 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P81</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P81 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P82</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P82 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P83</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P83 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P84</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P84 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P85</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P85 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P86</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P86 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Initial Value &gt; P87</td><td>MCU Specific Options</td><td></td><td>Set initial input state for P87 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Input port group 2 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Event Link Control</td><td>MCU Specific Options</td><td></td><td>Set input port group 2 enablement </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Port Selection</td><td>MCU Specific Options</td><td></td><td>Select multiple port number that specify in Input port group 2 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Edge Detection</td><td>MCU Specific Options</td><td></td><td>Select edge detection that will trigger Input port group 2 </td></tr>
+<tr>
+<td>ELC Input Port Group 2 &gt; Buffer Overwrite</td><td>MCU Specific Options</td><td></td><td>Set whether preventing overwriting ELC Port Buffer Register before reading it </td></tr>
+<tr>
+<td>ELC Single Port 0 &gt; Common &gt; Event Link Control</td><td>MCU Specific Options</td><td></td><td>Set single port 0 enablement </td></tr>
+<tr>
+<td>ELC Single Port 0 &gt; Common &gt; Event Direction</td><td>MCU Specific Options</td><td></td><td>Select event direction for Single port 0 </td></tr>
+<tr>
+<td>ELC Single Port 0 &gt; Common &gt; Port selection</td><td>MCU Specific Options</td><td></td><td>Select port number for Single port 0 </td></tr>
+<tr>
+<td>ELC Single Port 0 &gt; Output Direction Setting &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Single output port 0 </td></tr>
+<tr>
+<td>ELC Single Port 0 &gt; Output Direction Setting &gt; Output Operation</td><td>MCU Specific Options</td><td></td><td>Select output operation for Single output port 0. When select toggle output, the target Port m Mode register should be set to 11b: Output (Output data is input to input buffer) </td></tr>
+<tr>
+<td>ELC Single Port 0 &gt; Input Direction Setting &gt; Edge Detection</td><td>MCU Specific Options</td><td></td><td>Select edge detection that will trigger Single input port 0 </td></tr>
+<tr>
+<td>ELC Single Port 1 &gt; Common &gt; Event Link Control</td><td>MCU Specific Options</td><td></td><td>Set single port 1 enablement </td></tr>
+<tr>
+<td>ELC Single Port 1 &gt; Common &gt; Event Direction</td><td>MCU Specific Options</td><td></td><td>Select event direction for Single port 1 </td></tr>
+<tr>
+<td>ELC Single Port 1 &gt; Common &gt; Port selection</td><td>MCU Specific Options</td><td></td><td>Select port number for Single port 1 </td></tr>
+<tr>
+<td>ELC Single Port 1 &gt; Output Direction Setting &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Single output port 1 </td></tr>
+<tr>
+<td>ELC Single Port 1 &gt; Output Direction Setting &gt; Output Operation</td><td>MCU Specific Options</td><td></td><td>Select output operation for Single output port 1. When select toggle output, the target Port m Mode register should be set to 11b: Output (Output data is input to input buffer) </td></tr>
+<tr>
+<td>ELC Single Port 1 &gt; Input Direction Setting &gt; Edge Detection</td><td>MCU Specific Options</td><td></td><td>Select edge detection that will trigger Single input port 1 </td></tr>
+<tr>
+<td>ELC Single Port 2 &gt; Common &gt; Event Link Control</td><td>MCU Specific Options</td><td></td><td>Set single port 2 enablement </td></tr>
+<tr>
+<td>ELC Single Port 2 &gt; Common &gt; Event Direction</td><td>MCU Specific Options</td><td></td><td>Select event direction for Single port 2 </td></tr>
+<tr>
+<td>ELC Single Port 2 &gt; Common &gt; Port selection</td><td>MCU Specific Options</td><td></td><td>Select port number for Single port 2 </td></tr>
+<tr>
+<td>ELC Single Port 2 &gt; Output Direction Setting &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Single output port 2 </td></tr>
+<tr>
+<td>ELC Single Port 2 &gt; Output Direction Setting &gt; Output Operation</td><td>MCU Specific Options</td><td></td><td>Select output operation for Single output port 2. When select toggle output, the target Port m Mode register should be set to 11b: Output (Output data is input to input buffer) </td></tr>
+<tr>
+<td>ELC Single Port 2 &gt; Input Direction Setting &gt; Edge Detection</td><td>MCU Specific Options</td><td></td><td>Select edge detection that will trigger Single input port 2 </td></tr>
+<tr>
+<td>ELC Single Port 3 &gt; Common &gt; Event Link Control</td><td>MCU Specific Options</td><td></td><td>Set single port 3 enablement </td></tr>
+<tr>
+<td>ELC Single Port 3 &gt; Common &gt; Event Direction</td><td>MCU Specific Options</td><td></td><td>Select event direction for Single port 3 </td></tr>
+<tr>
+<td>ELC Single Port 3 &gt; Common &gt; Port selection</td><td>MCU Specific Options</td><td></td><td>Select port number for Single port 3 </td></tr>
+<tr>
+<td>ELC Single Port 3 &gt; Output Direction Setting &gt; Trigger Source</td><td>MCU Specific Options</td><td></td><td>ELC source that will trigger Single output port 3 </td></tr>
+<tr>
+<td>ELC Single Port 3 &gt; Output Direction Setting &gt; Output Operation</td><td>MCU Specific Options</td><td></td><td>Select output operation for Single output port 3. When select toggle output, the target Port m Mode register should be set to 11b: Output (Output data is input to input buffer) </td></tr>
+<tr>
+<td>ELC Single Port 3 &gt; Input Direction Setting &gt; Edge Detection</td><td>MCU Specific Options</td><td></td><td>Select edge detection that will trigger Single input port 3 </td></tr>
 </table>
 </p>
 <h2><a class="anchor" id="r-ioport-clock-configuration"></a>
@@ -261,9 +373,9 @@ Pin Configuration</h2>
 Examples</h1>
 <h2>Basic Example</h2>
 <p>This is a basic example of minimal use of the IOPORT in an application.</p>
-<div class="fragment"><div class="line"></div><div class="line"><span class="keywordtype">void</span> basic_example ()</div><div class="line">{</div><div class="line">    <a class="code" href="group___b_s_p___i_o.html#gab4ef0cc3fce421d48310f23c614aadc0">bsp_io_level_t</a> readLevel;</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>      err;</div><div class="line"></div><div class="line">    <span class="comment">/* Initialize the IOPORT module and configure the pins</span></div><div class="line"><span class="comment">     * Note: The default pin configuration name in the RZ Configuraton tool is g_bsp_pin_cfg */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga24938047dccc62c4426ff543489454de">R_IOPORT_Open</a>(&amp;g_ioport_ctrl, &amp;g_bsp_pin_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Call R_IOPORT_PinsCfg if the configuration was not part of initial configurations made in open */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga3daa7097b08c7f623a741e2e481cf89f">R_IOPORT_PinsCfg</a>(&amp;g_ioport_ctrl, &amp;g_runtime_pin_cfg);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Set Pin 00 of Port 41 to High */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga1b17ca2e38acde207881e7e4ba2a7e28">R_IOPORT_PinWrite</a>(&amp;g_ioport_ctrl, <a class="code" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80aab20b0a224aa92ffab0e0405e33c7e61c">BSP_IO_PORT_41_PIN_00</a>, <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0acf9a28559b5a18ed9b8af4c2a7df10ef">BSP_IO_LEVEL_HIGH</a>);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Read Pin 00 of Port 41 */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#gadb3ad72c9add6d73eb896c58c36f34ee">R_IOPORT_PinRead</a>(&amp;g_ioport_ctrl, <a class="code" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80aab20b0a224aa92ffab0e0405e33c7e61c">BSP_IO_PORT_41_PIN_00</a>, &amp;readLevel);</div><div class="line">    handle_error(err);</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>Blinky Example</h2>
+<div class="fragment"><div class="line"></div><div class="line"><span class="keywordtype">void</span> basic_example ()</div><div class="line">{</div><div class="line">    <a class="code" href="group___b_s_p___i_o.html#gab4ef0cc3fce421d48310f23c614aadc0">bsp_io_level_t</a> readLevel;</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>      err;</div><div class="line"></div><div class="line">    <span class="comment">/* Initialize the IOPORT module and configure the pins</span></div><div class="line"><span class="comment">     * Note: The default pin configuration name in the RZ Configuraton tool is g_bsp_pin_cfg */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga24938047dccc62c4426ff543489454de">R_IOPORT_Open</a>(&amp;g_ioport_ctrl, &amp;g_bsp_pin_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Call R_IOPORT_PinsCfg if the configuration was not part of initial configurations made in open */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga3daa7097b08c7f623a741e2e481cf89f">R_IOPORT_PinsCfg</a>(&amp;g_ioport_ctrl, &amp;g_runtime_pin_cfg);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Set OUTPUT_PIN to High */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga1b17ca2e38acde207881e7e4ba2a7e28">R_IOPORT_PinWrite</a>(&amp;g_ioport_ctrl, OUTPUT_PIN, <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0acf9a28559b5a18ed9b8af4c2a7df10ef">BSP_IO_LEVEL_HIGH</a>);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Read OUTPUT_PIN */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#gadb3ad72c9add6d73eb896c58c36f34ee">R_IOPORT_PinRead</a>(&amp;g_ioport_ctrl, OUTPUT_PIN, &amp;readLevel);</div><div class="line">    handle_error(err);</div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>Blinky Example</h2>
 <p>This example uses IOPORT to configure and toggle a pin to blink an LED.</p>
-<div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define DELAY_TIME    (100)</span></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> blinky_example ()</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err;</div><div class="line"></div><div class="line">    <span class="comment">/* Initialize the IOPORT module and configure the pins */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga24938047dccc62c4426ff543489454de">R_IOPORT_Open</a>(&amp;g_ioport_ctrl, &amp;g_bsp_pin_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Configure Pin as output</span></div><div class="line"><span class="comment">     * Call the R_IOPORT_PinCfg if the configuration was not part of initial configurations made in open */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#gab518fc544fe2b59722e30bd0a28ef430">R_IOPORT_PinCfg</a>(&amp;g_ioport_ctrl, <a class="code" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80aab20b0a224aa92ffab0e0405e33c7e61c">BSP_IO_PORT_41_PIN_00</a>, <a class="code" href="group___b_s_p___i_o.html#gga45a10c059c82e2062c0b72fa801dd78bab665c3052bb5373b7821ab8898ee859b">BSP_IO_DIRECTION_OUTPUT</a>);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <a class="code" href="group___b_s_p___i_o.html#gab4ef0cc3fce421d48310f23c614aadc0">bsp_io_level_t</a> level = <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0abb31064742440cdbdd638330a1cf7a9f">BSP_IO_LEVEL_LOW</a>;</div><div class="line">    <span class="keywordflow">while</span> (1)</div><div class="line">    {</div><div class="line">        <span class="comment">/* Determine the next state of the LEDs */</span></div><div class="line">        <span class="keywordflow">if</span> (<a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0abb31064742440cdbdd638330a1cf7a9f">BSP_IO_LEVEL_LOW</a> == level)</div><div class="line">        {</div><div class="line">            level = <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0acf9a28559b5a18ed9b8af4c2a7df10ef">BSP_IO_LEVEL_HIGH</a>;</div><div class="line">        }</div><div class="line">        <span class="keywordflow">else</span></div><div class="line">        {</div><div class="line">            level = <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0abb31064742440cdbdd638330a1cf7a9f">BSP_IO_LEVEL_LOW</a>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="comment">/* Update LED of PMOD board connected to PMOD0 of RZ/G2L SMARC board */</span></div><div class="line">        err = <a class="code" href="group___i_o_p_o_r_t.html#ga1b17ca2e38acde207881e7e4ba2a7e28">R_IOPORT_PinWrite</a>(&amp;g_ioport_ctrl, <a class="code" href="group___b_s_p___i_o.html#ga0adbfd4b7db319886d667acb4804d80aab20b0a224aa92ffab0e0405e33c7e61c">BSP_IO_PORT_41_PIN_00</a>, level);</div><div class="line">        handle_error(err);</div><div class="line"></div><div class="line">        <span class="comment">/* Delay */</span></div><div class="line">        <a class="code" href="group___b_s_p___m_c_u.html#gaf3219448adfd1531cf69f68697ab184b">R_BSP_SoftwareDelay</a>(DELAY_TIME, <a class="code" href="group___b_s_p___m_c_u.html#ggafd98e2a6f080d6a52a3ef72e3d731b2ba59fcc4e8d51046d4a1bd63c87ac64913">BSP_DELAY_UNITS_MILLISECONDS</a>);</div><div class="line">    }</div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
+<div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define DELAY_TIME    (100)</span></div><div class="line"></div><div class="line"><span class="keywordtype">void</span> blinky_example ()</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err;</div><div class="line"></div><div class="line">    <span class="comment">/* Initialize the IOPORT module and configure the pins */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#ga24938047dccc62c4426ff543489454de">R_IOPORT_Open</a>(&amp;g_ioport_ctrl, &amp;g_bsp_pin_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <span class="comment">/* Configure Pin as output</span></div><div class="line"><span class="comment">     * Call the R_IOPORT_PinCfg if the configuration was not part of initial configurations made in open */</span></div><div class="line">    err = <a class="code" href="group___i_o_p_o_r_t.html#gab518fc544fe2b59722e30bd0a28ef430">R_IOPORT_PinCfg</a>(&amp;g_ioport_ctrl, OUTPUT_PIN, <a class="code" href="group___b_s_p___i_o.html#gga45a10c059c82e2062c0b72fa801dd78bab665c3052bb5373b7821ab8898ee859b">BSP_IO_DIRECTION_OUTPUT</a>);</div><div class="line">    handle_error(err);</div><div class="line"></div><div class="line">    <a class="code" href="group___b_s_p___i_o.html#gab4ef0cc3fce421d48310f23c614aadc0">bsp_io_level_t</a> level = <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0abb31064742440cdbdd638330a1cf7a9f">BSP_IO_LEVEL_LOW</a>;</div><div class="line">    <span class="keywordflow">while</span> (1)</div><div class="line">    {</div><div class="line">        <span class="comment">/* Determine the next state of the LEDs */</span></div><div class="line">        <span class="keywordflow">if</span> (<a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0abb31064742440cdbdd638330a1cf7a9f">BSP_IO_LEVEL_LOW</a> == level)</div><div class="line">        {</div><div class="line">            level = <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0acf9a28559b5a18ed9b8af4c2a7df10ef">BSP_IO_LEVEL_HIGH</a>;</div><div class="line">        }</div><div class="line">        <span class="keywordflow">else</span></div><div class="line">        {</div><div class="line">            level = <a class="code" href="group___b_s_p___i_o.html#ggab4ef0cc3fce421d48310f23c614aadc0abb31064742440cdbdd638330a1cf7a9f">BSP_IO_LEVEL_LOW</a>;</div><div class="line">        }</div><div class="line"></div><div class="line">        <span class="comment">/* Update LED of PMOD board connected to PMOD0 of RZG SMARC board */</span></div><div class="line">        err = <a class="code" href="group___i_o_p_o_r_t.html#ga1b17ca2e38acde207881e7e4ba2a7e28">R_IOPORT_PinWrite</a>(&amp;g_ioport_ctrl, OUTPUT_PIN, level);</div><div class="line">        handle_error(err);</div><div class="line"></div><div class="line">        <span class="comment">/* Delay */</span></div><div class="line">        <a class="code" href="group___b_s_p___m_c_u.html#gaf3219448adfd1531cf69f68697ab184b">R_BSP_SoftwareDelay</a>(DELAY_TIME, <a class="code" href="group___b_s_p___m_c_u.html#ggafd98e2a6f080d6a52a3ef72e3d731b2ba59fcc4e8d51046d4a1bd63c87ac64913">BSP_DELAY_UNITS_MILLISECONDS</a>);</div><div class="line">    }</div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structioport__instance__ctrl__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i_o_p_o_r_t.html#structioport__instance__ctrl__t">ioport_instance_ctrl_t</a></td></tr>
@@ -295,6 +407,10 @@ Enumerations</h2></td></tr>
 <tr class="separator:ga4f8bf2319abee01387ae77ca7e85fb0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad182b542c7455ca61b70f0eeae3a380d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i_o_p_o_r_t.html#gad182b542c7455ca61b70f0eeae3a380d">ioport_event_initial_buffer_value_t</a> </td></tr>
 <tr class="separator:gad182b542c7455ca61b70f0eeae3a380d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga460f424ee2c2c60d463bbdd45f9a2d4b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i_o_p_o_r_t.html#ga460f424ee2c2c60d463bbdd45f9a2d4b">ioport_noise_filter_irq_port_offset_t</a> </td></tr>
+<tr class="separator:ga460f424ee2c2c60d463bbdd45f9a2d4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaa22d49ec43030ad6ed6bb18ed402f8d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___i_o_p_o_r_t.html#gaaa22d49ec43030ad6ed6bb18ed402f8d">ioport_noise_filter_dreq_port_offset_t</a> </td></tr>
+<tr class="separator:gaaa22d49ec43030ad6ed6bb18ed402f8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/><h2 class="groupheader">Data Structure Documentation</h2>
 <a name="structioport__instance__ctrl__t" id="structioport__instance__ctrl__t"></a>
@@ -554,73 +670,141 @@ Pointer to single input port configuration. </td></tr>
 </div><div class="memdoc">
 <p>Options to configure pin functions </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a627d716bdff4fe54f3cbf9f2a5b87bf9"></a>IOPORT_CFG_PORT_DIRECTION_HIZ&#160;</td><td class="fielddoc"><p>Sets the pin direction to Hi-Z (default) </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a627d716bdff4fe54f3cbf9f2a5b87bf9"></a>IOPORT_CFG_PORT_DIRECTION_HIZ&#160;</td><td class="fielddoc"><p>Sets the pin direction to Hi-Z (default) </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a8d597c18cc5d24abc1b70f2526f2b6cb"></a>IOPORT_CFG_PORT_DIRECTION_INPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to input. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a8d597c18cc5d24abc1b70f2526f2b6cb"></a>IOPORT_CFG_PORT_DIRECTION_INPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to input. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574ab4d8c12714fab80d21b5b5a636f3cf97"></a>IOPORT_CFG_PORT_DIRECTION_OUTPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to output (input disable) </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ab4d8c12714fab80d21b5b5a636f3cf97"></a>IOPORT_CFG_PORT_DIRECTION_OUTPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to output (input disable) </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a3a85f3deec88b01065fd3478ba691860"></a>IOPORT_CFG_PORT_DIRECTION_OUTPUT_INPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to output (input enable) </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a3a85f3deec88b01065fd3478ba691860"></a>IOPORT_CFG_PORT_DIRECTION_OUTPUT_INPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to output (input enable) </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a1913e3b0734a4be613eb2fba8ec888c5"></a>IOPORT_CFG_PORT_OUTPUT_LOW&#160;</td><td class="fielddoc"><p>Sets the pin level to low. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a1913e3b0734a4be613eb2fba8ec888c5"></a>IOPORT_CFG_PORT_OUTPUT_LOW&#160;</td><td class="fielddoc"><p>Sets the pin level to low. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a4b93b19150d018ab8ba5ef74e2852499"></a>IOPORT_CFG_PORT_OUTPUT_HIGH&#160;</td><td class="fielddoc"><p>Sets the pin level to high. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a4b93b19150d018ab8ba5ef74e2852499"></a>IOPORT_CFG_PORT_OUTPUT_HIGH&#160;</td><td class="fielddoc"><p>Sets the pin level to high. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a3945f91ccb0beb4f87613fa0d9884965"></a>IOPORT_CFG_PULLUP_PULLDOWN_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's internal pull-up and pull-down. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a3945f91ccb0beb4f87613fa0d9884965"></a>IOPORT_CFG_PULLUP_PULLDOWN_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's internal pull-up and pull-down. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a925954d59fa1101a4784a0d64a64d133"></a>IOPORT_CFG_PULLUP_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's internal pull-up. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a925954d59fa1101a4784a0d64a64d133"></a>IOPORT_CFG_PULLUP_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's internal pull-up. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a97baa43b94e675e2a4ae7a90dd4a94c6"></a>IOPORT_CFG_PULLDOWN_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's internal pull-down. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a97baa43b94e675e2a4ae7a90dd4a94c6"></a>IOPORT_CFG_PULLDOWN_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's internal pull-down. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a6d26833fed98c1306a3f41882c24c66d"></a>IOPORT_CFG_NOD_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's N-ch open-drain. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a6d26833fed98c1306a3f41882c24c66d"></a>IOPORT_CFG_NOD_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's N-ch open-drain. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a8c15fce9c42b94e63e3bd4bacc36df55"></a>IOPORT_CFG_NOD_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's N-ch open-drain. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a8c15fce9c42b94e63e3bd4bacc36df55"></a>IOPORT_CFG_NOD_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's N-ch open-drain. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574abaa22c1510b13b07ab320d289584266b"></a>IOPORT_CFG_SCHMITT_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's Schmitt-trigger input. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574abaa22c1510b13b07ab320d289584266b"></a>IOPORT_CFG_SCHMITT_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's Schmitt-trigger input. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a73cdc97104d6368ec1b37ed3ee39ec2d"></a>IOPORT_CFG_SCHMITT_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's Schmitt-trigger input. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a73cdc97104d6368ec1b37ed3ee39ec2d"></a>IOPORT_CFG_SCHMITT_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's Schmitt-trigger input. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a4f3c70e0bd324aecc0fed994903b63b0"></a>IOPORT_CFG_DRIVE_B00&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'00. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a4f3c70e0bd324aecc0fed994903b63b0"></a>IOPORT_CFG_DRIVE_B00&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'00. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574af4952693675255ac32a0813a1100e038"></a>IOPORT_CFG_DRIVE_B01&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'01. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574af4952693675255ac32a0813a1100e038"></a>IOPORT_CFG_DRIVE_B01&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'01. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574ac882c17c38a2a20dfd0b5e1dd3eaeaf4"></a>IOPORT_CFG_DRIVE_B10&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'10. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ac882c17c38a2a20dfd0b5e1dd3eaeaf4"></a>IOPORT_CFG_DRIVE_B10&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'10. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a0c5a07dad389d25a576c734a391ec148"></a>IOPORT_CFG_DRIVE_B11&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'11. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a0c5a07dad389d25a576c734a391ec148"></a>IOPORT_CFG_DRIVE_B11&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'11. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574ac78c3e06c1adb07cd707118f321ef94e"></a>IOPORT_CFG_TINT_DISABLE&#160;</td><td class="fielddoc"><p>Disable IRQ functionality for a pin. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ac78c3e06c1adb07cd707118f321ef94e"></a>IOPORT_CFG_TINT_DISABLE&#160;</td><td class="fielddoc"><p>Disable IRQ functionality for a pin. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a3691c62fc89eb3e7df1eae9064206c4e"></a>IOPORT_CFG_TINT_ENABLE&#160;</td><td class="fielddoc"><p>Sets pin as an IRQ pin. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a3691c62fc89eb3e7df1eae9064206c4e"></a>IOPORT_CFG_TINT_ENABLE&#160;</td><td class="fielddoc"><p>Sets pin as an IRQ pin. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a9c17101eaef4bf0fd2beb880a29317a8"></a>IOPORT_CFG_SLEW_RATE_SLOW&#160;</td><td class="fielddoc"><p>Sets the pin slew-rate to slow. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a9c17101eaef4bf0fd2beb880a29317a8"></a>IOPORT_CFG_SLEW_RATE_SLOW&#160;</td><td class="fielddoc"><p>Sets the pin slew-rate to slow. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574accc921bf1d788c6f10b0225b65144f00"></a>IOPORT_CFG_SLEW_RATE_FAST&#160;</td><td class="fielddoc"><p>Sets the pin slew-rate to fast. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574accc921bf1d788c6f10b0225b65144f00"></a>IOPORT_CFG_SLEW_RATE_FAST&#160;</td><td class="fielddoc"><p>Sets the pin slew-rate to fast. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a968aea46146f3db05b2f9d2e1c29650f"></a>IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_DISABLE&#160;</td><td class="fielddoc"><p>Disable input the pin of special purpose port. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a968aea46146f3db05b2f9d2e1c29650f"></a>IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_DISABLE&#160;</td><td class="fielddoc"><p>Disable input the pin of special purpose port. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a10595587e1c5984cecf3578625c05040"></a>IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_ENABLE&#160;</td><td class="fielddoc"><p>Sets the pin of special purpose port to input. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a10595587e1c5984cecf3578625c05040"></a>IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_ENABLE&#160;</td><td class="fielddoc"><p>Sets the pin of special purpose port to input. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a23f3f6712eefca788aa61da4976fd565"></a>IOPORT_CFG_NOISE_FILTER_OFF&#160;</td><td class="fielddoc"><p>Noise filter disable. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a23f3f6712eefca788aa61da4976fd565"></a>IOPORT_CFG_NOISE_FILTER_OFF&#160;</td><td class="fielddoc"><p>Noise filter disable. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a816a25b17c72bca7e267d47eb7f45dbc"></a>IOPORT_CFG_NOISE_FILTER_ON&#160;</td><td class="fielddoc"><p>Noise filter enable. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a816a25b17c72bca7e267d47eb7f45dbc"></a>IOPORT_CFG_NOISE_FILTER_ON&#160;</td><td class="fielddoc"><p>Noise filter enable. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a9a30d0a8eb346f1c1951396c0559ef64"></a>IOPORT_CFG_NOISE_FILTER_NUM_4STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 4-stage filter. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a9a30d0a8eb346f1c1951396c0559ef64"></a>IOPORT_CFG_NOISE_FILTER_NUM_4STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 4-stage filter. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574ab7e5fcab2fd99046fcedb85c34070e2c"></a>IOPORT_CFG_NOISE_FILTER_NUM_8STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 8-stage filter. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ab7e5fcab2fd99046fcedb85c34070e2c"></a>IOPORT_CFG_NOISE_FILTER_NUM_8STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 8-stage filter. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574af0dbea168d9df29c6a4180e202370f22"></a>IOPORT_CFG_NOISE_FILTER_NUM_12STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 12-stage filter. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574af0dbea168d9df29c6a4180e202370f22"></a>IOPORT_CFG_NOISE_FILTER_NUM_12STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 12-stage filter. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574ace057086d321233881c1f335b6764bc2"></a>IOPORT_CFG_NOISE_FILTER_NUM_16STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 16-stage filter. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ace057086d321233881c1f335b6764bc2"></a>IOPORT_CFG_NOISE_FILTER_NUM_16STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 16-stage filter. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a06cd1c84c6f44e8d7a932962f605e649"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B00&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'00. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a06cd1c84c6f44e8d7a932962f605e649"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B00&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'00. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a57ddc25ef284420d97a12a7eca0a0a9b"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B01&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'01. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a57ddc25ef284420d97a12a7eca0a0a9b"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B01&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'01. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a189170b389c1f0430c626bd367b47bf7"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B10&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'10. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a189170b389c1f0430c626bd367b47bf7"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B10&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'10. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a4e5c1c29a153030dbaeae8b7d6643d48"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B11&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'11. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a4e5c1c29a153030dbaeae8b7d6643d48"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B11&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'11. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac617eebcb7c2c1e45fa8e04fc473e574a2066555437a19b9e6e721fb494c8f5c3"></a>IOPORT_CFG_PERIPHERAL_PIN&#160;</td><td class="fielddoc"><p>Enables pin to operate as a peripheral pin. </p>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a2066555437a19b9e6e721fb494c8f5c3"></a>IOPORT_CFG_PERIPHERAL_PIN&#160;</td><td class="fielddoc"><p>Enables pin to operate as a peripheral pin. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a627d716bdff4fe54f3cbf9f2a5b87bf9"></a>IOPORT_CFG_PORT_DIRECTION_HIZ&#160;</td><td class="fielddoc"><p>Sets the pin direction to Hi-Z (default) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a8d597c18cc5d24abc1b70f2526f2b6cb"></a>IOPORT_CFG_PORT_DIRECTION_INPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to input. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ab4d8c12714fab80d21b5b5a636f3cf97"></a>IOPORT_CFG_PORT_DIRECTION_OUTPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to output (input disable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a3a85f3deec88b01065fd3478ba691860"></a>IOPORT_CFG_PORT_DIRECTION_OUTPUT_INPUT&#160;</td><td class="fielddoc"><p>Sets the pin direction to output (input enable) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a1913e3b0734a4be613eb2fba8ec888c5"></a>IOPORT_CFG_PORT_OUTPUT_LOW&#160;</td><td class="fielddoc"><p>Sets the pin level to low. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a4b93b19150d018ab8ba5ef74e2852499"></a>IOPORT_CFG_PORT_OUTPUT_HIGH&#160;</td><td class="fielddoc"><p>Sets the pin level to high. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a3945f91ccb0beb4f87613fa0d9884965"></a>IOPORT_CFG_PULLUP_PULLDOWN_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's internal pull-up and pull-down. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a925954d59fa1101a4784a0d64a64d133"></a>IOPORT_CFG_PULLUP_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's internal pull-up. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a97baa43b94e675e2a4ae7a90dd4a94c6"></a>IOPORT_CFG_PULLDOWN_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's internal pull-down. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a6d26833fed98c1306a3f41882c24c66d"></a>IOPORT_CFG_NOD_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's N-ch open-drain. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a8c15fce9c42b94e63e3bd4bacc36df55"></a>IOPORT_CFG_NOD_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's N-ch open-drain. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574abaa22c1510b13b07ab320d289584266b"></a>IOPORT_CFG_SCHMITT_DISABLE&#160;</td><td class="fielddoc"><p>Disable the pin's Schmitt-trigger input. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a73cdc97104d6368ec1b37ed3ee39ec2d"></a>IOPORT_CFG_SCHMITT_ENABLE&#160;</td><td class="fielddoc"><p>Enables the pin's Schmitt-trigger input. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a4f3c70e0bd324aecc0fed994903b63b0"></a>IOPORT_CFG_DRIVE_B00&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'00. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574af4952693675255ac32a0813a1100e038"></a>IOPORT_CFG_DRIVE_B01&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'01. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ac882c17c38a2a20dfd0b5e1dd3eaeaf4"></a>IOPORT_CFG_DRIVE_B10&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'10. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a0c5a07dad389d25a576c734a391ec148"></a>IOPORT_CFG_DRIVE_B11&#160;</td><td class="fielddoc"><p>Sets the IOLH register value to b'11. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ac78c3e06c1adb07cd707118f321ef94e"></a>IOPORT_CFG_TINT_DISABLE&#160;</td><td class="fielddoc"><p>Disable IRQ functionality for a pin. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a3691c62fc89eb3e7df1eae9064206c4e"></a>IOPORT_CFG_TINT_ENABLE&#160;</td><td class="fielddoc"><p>Sets pin as an IRQ pin. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a9c17101eaef4bf0fd2beb880a29317a8"></a>IOPORT_CFG_SLEW_RATE_SLOW&#160;</td><td class="fielddoc"><p>Sets the pin slew-rate to slow. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574accc921bf1d788c6f10b0225b65144f00"></a>IOPORT_CFG_SLEW_RATE_FAST&#160;</td><td class="fielddoc"><p>Sets the pin slew-rate to fast. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a968aea46146f3db05b2f9d2e1c29650f"></a>IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_DISABLE&#160;</td><td class="fielddoc"><p>Disable input the pin of special purpose port. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a10595587e1c5984cecf3578625c05040"></a>IOPORT_CFG_SPECIAL_PURPOSE_PORT_INPUT_ENABLE&#160;</td><td class="fielddoc"><p>Sets the pin of special purpose port to input. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a23f3f6712eefca788aa61da4976fd565"></a>IOPORT_CFG_NOISE_FILTER_OFF&#160;</td><td class="fielddoc"><p>Noise filter disable. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a816a25b17c72bca7e267d47eb7f45dbc"></a>IOPORT_CFG_NOISE_FILTER_ON&#160;</td><td class="fielddoc"><p>Noise filter enable. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a9a30d0a8eb346f1c1951396c0559ef64"></a>IOPORT_CFG_NOISE_FILTER_NUM_4STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 4-stage filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ab7e5fcab2fd99046fcedb85c34070e2c"></a>IOPORT_CFG_NOISE_FILTER_NUM_8STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 8-stage filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574af0dbea168d9df29c6a4180e202370f22"></a>IOPORT_CFG_NOISE_FILTER_NUM_12STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 12-stage filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574ace057086d321233881c1f335b6764bc2"></a>IOPORT_CFG_NOISE_FILTER_NUM_16STAGE&#160;</td><td class="fielddoc"><p>Sets the pin noise filter to 16-stage filter. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a06cd1c84c6f44e8d7a932962f605e649"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B00&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'00. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a57ddc25ef284420d97a12a7eca0a0a9b"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B01&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'01. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a189170b389c1f0430c626bd367b47bf7"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B10&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'10. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a4e5c1c29a153030dbaeae8b7d6643d48"></a>IOPORT_CFG_NOISE_FILTER_DIVIDED_B11&#160;</td><td class="fielddoc"><p>Sets the FILCLKSEL register value to b'11. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gac617eebcb7c2c1e45fa8e04fc473e574a2066555437a19b9e6e721fb494c8f5c3"></a>IOPORT_CFG_PERIPHERAL_PIN&#160;</td><td class="fielddoc"><p>Enables pin to operate as a peripheral pin. </p>
 </td></tr>
 </table>
 
@@ -769,6 +953,36 @@ Pointer to single input port configuration. </td></tr>
 <tr><td class="fieldname"><a id="ggad182b542c7455ca61b70f0eeae3a380da1225085ace99cb7e29b0edf93c641964"></a>IOPORT_EVENT_INITIAL_BUFFER_VALUE_HIGH&#160;</td><td class="fielddoc"><p>Set high to initial value of buffer register for input port group. </p>
 </td></tr>
 </table>
+
+</div>
+</div>
+<a id="ga460f424ee2c2c60d463bbdd45f9a2d4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga460f424ee2c2c60d463bbdd45f9a2d4b">&#9670;&nbsp;</a></span>ioport_noise_filter_irq_port_offset_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___i_o_p_o_r_t.html#ga460f424ee2c2c60d463bbdd45f9a2d4b">ioport_noise_filter_irq_port_offset_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Superset of offset for all IRQ functions. </p>
+
+</div>
+</div>
+<a id="gaaa22d49ec43030ad6ed6bb18ed402f8d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaaa22d49ec43030ad6ed6bb18ed402f8d">&#9670;&nbsp;</a></span>ioport_noise_filter_dreq_port_offset_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___i_o_p_o_r_t.html#gaaa22d49ec43030ad6ed6bb18ed402f8d">ioport_noise_filter_dreq_port_offset_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Superset of offset for all DREQ functions. </p>
 
 </div>
 </div>
@@ -1091,8 +1305,8 @@ Pointer to single input port configuration. </td></tr>
   <table class="retval">
     <tr><td class="paramname">FSP_SUCCESS</td><td>Pin written to </td></tr>
     <tr><td class="paramname">FSP_ERR_INVALID_ARGUMENT</td><td>The pin and/or level not valid </td></tr>
-    <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The module has not been opene </td></tr>
-    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>NULL pointerd</td></tr>
+    <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The module has not been opened </td></tr>
+    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>NULL pointer</td></tr>
   </table>
   </dd>
 </dl>
@@ -1342,7 +1556,7 @@ Pointer to single input port configuration. </td></tr>
     <tr><td class="paramname">FSP_SUCCESS</td><td>Port written to </td></tr>
     <tr><td class="paramname">FSP_ERR_INVALID_ARGUMENT</td><td>The port and/or mask not valid </td></tr>
     <tr><td class="paramname">FSP_ERR_NOT_OPEN</td><td>The module has not been opened </td></tr>
-    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>NULL pointerd</td></tr>
+    <tr><td class="paramname">FSP_ERR_ASSERTION</td><td>NULL pointer</td></tr>
   </table>
   </dd>
 </dl>
@@ -1356,7 +1570,7 @@ Pointer to single input port configuration. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

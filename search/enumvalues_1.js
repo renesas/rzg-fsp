@@ -8,7 +8,6 @@ var searchData=
   ['bsp_5fbypass_5fmode_5fexternal_5fclk',['BSP_BYPASS_MODE_EXTERNAL_CLK',['../group___b_s_p___i_o.html#gga65987c1da1d49f85463de102d5d24c2eaf8967b77658e57030b8e3b5611049e09',1,'bsp_io.h']]],
   ['bsp_5fbypass_5fmode_5fpower_5fdown',['BSP_BYPASS_MODE_POWER_DOWN',['../group___b_s_p___i_o.html#gga65987c1da1d49f85463de102d5d24c2ea018ff64d40ae82d9f9014b637ba79869',1,'bsp_io.h']]],
   ['bsp_5fbypass_5foscillator_5faudio',['BSP_BYPASS_OSCILLATOR_AUDIO',['../group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a4e41231154d741945cb439385369bdf3',1,'bsp_io.h']]],
-  ['bsp_5fbypass_5foscillator_5femclk',['BSP_BYPASS_OSCILLATOR_EMCLK',['../group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a9305c0e423f1fbafdd0e0e19e08bdbae',1,'bsp_io.h']]],
   ['bsp_5fbypass_5foscillator_5frtc',['BSP_BYPASS_OSCILLATOR_RTC',['../group___b_s_p___i_o.html#gga78e68e2247154764cd7d387d3b191095a32152264d3d4ea0b5e8f3e4bb36346a8',1,'bsp_io.h']]],
   ['bsp_5fdelay_5funits_5fmicroseconds',['BSP_DELAY_UNITS_MICROSECONDS',['../group___b_s_p___m_c_u.html#ggafd98e2a6f080d6a52a3ef72e3d731b2baa0312618f2508347a9a815b5887c12ae',1,'bsp_delay.h']]],
   ['bsp_5fdelay_5funits_5fmilliseconds',['BSP_DELAY_UNITS_MILLISECONDS',['../group___b_s_p___m_c_u.html#ggafd98e2a6f080d6a52a3ef72e3d731b2ba59fcc4e8d51046d4a1bd63c87ac64913',1,'bsp_delay.h']]],

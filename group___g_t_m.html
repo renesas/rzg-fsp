@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.13"/>
-<title>RZG Flexible Software Package Documentation: General Timer (r_gtm)</title>
+<title>RZG Flexible Software Package Documentation: Timer, GTM (r_gtm)</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v2.1.0</span>
+   &#160;<span id="projectnumber">Release v3.0.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -163,7 +163,7 @@ $(document).ready(function(){initNavTree('group___g_t_m.html','');});
 <a href="#nested-classes">Data Structures</a> &#124;
 <a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
-<div class="title">General Timer (r_gtm)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___t_i_m_e_r_s___m_o_d_u_l_e_s.html">Timers</a></div></div>  </div>
+<div class="title">Timer, GTM (r_gtm)<div class="ingroups"><a class="el" href="group___r_e_n_e_s_a_s___m_o_d_u_l_e_s.html">Modules</a> &raquo; <a class="el" href="group___r_e_n_e_s_a_s___t_i_m_e_r_s___m_o_d_u_l_e_s.html">Timers</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
@@ -191,6 +191,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga89c7ca62fbb288cd5f44e5c773c699cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga329fac4f1af8dee4e45200fd0ce5a9a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_t_m.html#ga329fac4f1af8dee4e45200fd0ce5a9a5">R_GTM_Open</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_ctrl, <a class="el" href="group___t_i_m_e_r___a_p_i.html#structtimer__cfg__t">timer_cfg_t</a> const *const p_cfg)</td></tr>
 <tr class="separator:ga329fac4f1af8dee4e45200fd0ce5a9a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4cfb37b2ba2dfedecaf9bf45a9f93fa8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_t_m.html#ga4cfb37b2ba2dfedecaf9bf45a9f93fa8">R_GTM_CompareMatchSet</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_ctrl, uint32_t const compare_match_value, <a class="el" href="group___t_i_m_e_r___a_p_i.html#gaf5f22f5e34fe6ea640fd6a1c7e864cd9">timer_compare_match_t</a> const match_channel)</td></tr>
+<tr class="separator:ga4cfb37b2ba2dfedecaf9bf45a9f93fa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0213edecdcc056ecf3353c3b59a85bd9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_t_m.html#ga0213edecdcc056ecf3353c3b59a85bd9">R_GTM_CallbackSet</a> (<a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const p_api_ctrl, void(*p_callback)(<a class="el" href="group___t_i_m_e_r___a_p_i.html#structtimer__callback__args__t">timer_callback_args_t</a> *), void const *const p_context, <a class="el" href="group___t_i_m_e_r___a_p_i.html#structtimer__callback__args__t">timer_callback_args_t</a> *const p_callback_memory)</td></tr>
 <tr class="separator:ga0213edecdcc056ecf3353c3b59a85bd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -292,7 +294,7 @@ Kilohertz</li>
 </ul>
 </td><td>Milliseconds </td><td>Unit of the period specified above </td></tr>
 <tr>
-<td>General &gt; Count Source</td><td>P0CLK</td><td>P0CLK </td><td>GTM counter clock source. NOTE: The divisor is calculated automatically based on the selected period. See agt_count_source_t documentation for details. </td></tr>
+<td>General &gt; Count Source</td><td>MCU Specific Options</td><td></td><td>GTM counter clock source. </td></tr>
 <tr>
 <td>Interrupts &gt; Callback</td><td>Name must be a valid C symbol</td><td>NULL </td><td>A user callback function. If this callback function is provided, it is called from the interrupt service routine (ISR) each time the timer period elapses. </td></tr>
 <tr>
@@ -347,7 +349,7 @@ Examples</h1>
 <p>To use the GTM as a free running counter, select Free-Running Comparison Mode.</p>
 <div class="fragment"><div class="line"></div><div class="line"><span class="keywordtype">void</span> gtm_counter_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_t_m.html#ga329fac4f1af8dee4e45200fd0ce5a9a5">R_GTM_Open</a>(&amp;g_timer_ctrl, &amp;g_timer_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_t_m.html#gae0fe404d6571eb59c9f05f43f55eed25">R_GTM_Start</a>(&amp;g_timer_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* (Optional) Stop the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_t_m.html#ga89c7ca62fbb288cd5f44e5c773c699cf">R_GTM_Stop</a>(&amp;g_timer_ctrl);</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Read the current counter value. Counter value is in status.counter. */</span></div><div class="line">    <a class="code" href="group___t_i_m_e_r___a_p_i.html#structtimer__status__t">timer_status_t</a> status;</div><div class="line">    (void) <a class="code" href="group___g_t_m.html#gaa95357cd0d4d8c43f7a2523d4c3b24f7">R_GTM_StatusGet</a>(&amp;g_timer_ctrl, &amp;status);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --> <h2>GTM Period Update Example</h2>
 <p>This is an example of updating the period.</p>
-<div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define GTM_EXAMPLE_MSEC_PER_SEC           (1000)</span></div><div class="line"><span class="preprocessor">#define GTM_EXAMPLE_DESIRED_PERIOD_MSEC    (20)</span></div><div class="line"></div><div class="line"><span class="comment">/* This example shows how to calculate a new period value at runtime. */</span></div><div class="line"><span class="keywordtype">void</span> gtm_period_calculation_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_t_m.html#ga329fac4f1af8dee4e45200fd0ce5a9a5">R_GTM_Open</a>(&amp;g_timer_ctrl, &amp;g_timer_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_t_m.html#gae0fe404d6571eb59c9f05f43f55eed25">R_GTM_Start</a>(&amp;g_timer_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Get the source clock frequency (in Hz). There are several ways to do this in FSP:</span></div><div class="line"><span class="comment">     *  - Use the R_GTM_InfoGet function (it accounts for the clock source and divider).</span></div><div class="line"><span class="comment">     *  - Calculate the current P0 clock frequency using R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_P0CLK).</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * This example uses the last option (R_FSP_SystemClockHzGet).</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    uint32_t timer_freq_hz = <a class="code" href="group___b_s_p___m_c_u.html#ga992632ae2e45c2f962855fe4bbe98a63">R_FSP_SystemClockHzGet</a>(FSP_PRIV_CLOCK_P0CLK);</div><div class="line"></div><div class="line">    <span class="comment">/* Calculate the desired period based on the current clock. Note that this calculation could overflow if the</span></div><div class="line"><span class="comment">     * desired period is larger than UINT32_MAX / pclkb_freq_hz. A cast to uint64_t is used to prevent this. */</span></div><div class="line">    uint32_t period_counts =</div><div class="line">        (uint32_t) (((uint64_t) timer_freq_hz * gtm_EXAMPLE_DESIRED_PERIOD_MSEC) / gtm_EXAMPLE_MSEC_PER_SEC);</div><div class="line"></div><div class="line">    <span class="comment">/* Set the calculated period. */</span></div><div class="line">    err = <a class="code" href="group___g_t_m.html#ga4368d6d5d2ae11cdb0f18cf8bdc75e24">R_GTM_PeriodSet</a>(&amp;g_timer_ctrl, period_counts);</div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
+<div class="fragment"><div class="line"></div><div class="line"><span class="preprocessor">#define GTM_EXAMPLE_MSEC_PER_SEC           (1000)</span></div><div class="line"><span class="preprocessor">#define GTM_EXAMPLE_DESIRED_PERIOD_MSEC    (20)</span></div><div class="line"></div><div class="line"><span class="comment">/* This example shows how to calculate a new period value at runtime. */</span></div><div class="line"><span class="keywordtype">void</span> gtm_period_calculation_example (<span class="keywordtype">void</span>)</div><div class="line">{</div><div class="line">    <a class="code" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> err = FSP_SUCCESS;</div><div class="line"></div><div class="line">    <span class="comment">/* Initializes the module. */</span></div><div class="line">    err = <a class="code" href="group___g_t_m.html#ga329fac4f1af8dee4e45200fd0ce5a9a5">R_GTM_Open</a>(&amp;g_timer_ctrl, &amp;g_timer_cfg);</div><div class="line"></div><div class="line">    <span class="comment">/* Handle any errors. This function should be defined by the user. */</span></div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">    <span class="comment">/* Start the timer. */</span></div><div class="line">    (void) <a class="code" href="group___g_t_m.html#gae0fe404d6571eb59c9f05f43f55eed25">R_GTM_Start</a>(&amp;g_timer_ctrl);</div><div class="line"></div><div class="line"></div><div class="line">    <span class="comment">/* Get the source clock frequency (in Hz). There are several ways to do this in FSP:</span></div><div class="line"><span class="comment">     *  - Use the R_GTM_InfoGet function (it accounts for the clock source and divider).</span></div><div class="line"><span class="comment">     *  - Calculate the current P0 clock frequency using R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_P0CLK).</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * This example uses the last option (R_FSP_SystemClockHzGet).</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    uint32_t timer_freq_hz = <a class="code" href="group___b_s_p___m_c_u.html#ga992632ae2e45c2f962855fe4bbe98a63">R_FSP_SystemClockHzGet</a>(FSP_PRIV_CLOCK_P0CLK);</div><div class="line"></div><div class="line">    <span class="comment">/* Calculate the desired period based on the current clock. Note that this calculation could overflow if the</span></div><div class="line"><span class="comment">     * desired period is larger than UINT32_MAX / pclkb_freq_hz. A cast to uint64_t is used to prevent this. */</span></div><div class="line">    uint32_t period_counts =</div><div class="line">        (uint32_t) (((uint64_t) timer_freq_hz * GTM_EXAMPLE_DESIRED_PERIOD_MSEC) / GTM_EXAMPLE_MSEC_PER_SEC);</div><div class="line"></div><div class="line">    <span class="comment">/* Set the calculated period. */</span></div><div class="line">    err = <a class="code" href="group___g_t_m.html#ga4368d6d5d2ae11cdb0f18cf8bdc75e24">R_GTM_PeriodSet</a>(&amp;g_timer_ctrl, period_counts);</div><div class="line">    assert(FSP_SUCCESS == err);</div><div class="line"></div><div class="line">}</div><div class="line"></div></div><!-- fragment --><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Data Structures</h2></td></tr>
 <tr class="memitem:structgtm__instance__ctrl__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_t_m.html#structgtm__instance__ctrl__t">gtm_instance_ctrl_t</a></td></tr>
@@ -789,6 +791,47 @@ Stop the timer before calling this function if one-shot output is used.</dd></dl
 
 </div>
 </div>
+<a id="ga4cfb37b2ba2dfedecaf9bf45a9f93fa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4cfb37b2ba2dfedecaf9bf45a9f93fa8">&#9670;&nbsp;</a></span>R_GTM_CompareMatchSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a> R_GTM_CompareMatchSet </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group___t_i_m_e_r___a_p_i.html#ga2da99b474151cb687d5882ad21b09c2a">timer_ctrl_t</a> *const&#160;</td>
+          <td class="paramname"><em>p_ctrl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t const&#160;</td>
+          <td class="paramname"><em>compare_match_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group___t_i_m_e_r___a_p_i.html#gaf5f22f5e34fe6ea640fd6a1c7e864cd9">timer_compare_match_t</a> const&#160;</td>
+          <td class="paramname"><em>match_channel</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Placeholder for unsupported compareMatch function. Implements <a class="el" href="group___t_i_m_e_r___a_p_i.html#a01da35856c7e395c56ab65c3fe033b56">timer_api_t::compareMatchSet</a>.</p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">FSP_ERR_UNSUPPORTED</td><td>GTM compare match is not supported. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga0213edecdcc056ecf3353c3b59a85bd9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga0213edecdcc056ecf3353c3b59a85bd9">&#9670;&nbsp;</a></span>R_GTM_CallbackSet()</h2>
 
@@ -826,7 +869,7 @@ Stop the timer before calling this function if one-shot output is used.</dd></dl
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Updates the user callback with the option to provide memory for the callback argument structure. Implements <a class="el" href="group___t_i_m_e_r___a_p_i.html#a1b2c51a519145c2482ca2fb6b4b3d749">timer_api_t::callbackSet</a>.</p>
+<p>Updates the user callback with the option to provide memory for the callback argument structure. Implements <a class="el" href="group___t_i_m_e_r___a_p_i.html#ad2569f06e8034790e7b363142d93a816">timer_api_t::callbackSet</a>.</p>
 <dl class="retval"><dt>Return values</dt><dd>
   <table class="retval">
     <tr><td class="paramname">FSP_SUCCESS</td><td>Callback updated successfully. </td></tr>
@@ -845,7 +888,7 @@ Stop the timer before calling this function if one-shot output is used.</dd></dl
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v2.1.0 User's Manual Copyright © (2024) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['uart_20interface',['UART Interface',['../group___u_a_r_t___a_p_i.html',1,'']]]
+  ['watchdog_20_28r_5fwdt_29',['Watchdog (r_wdt)',['../group___w_d_t.html',1,'']]],
+  ['wdt_20interface',['WDT Interface',['../group___w_d_t___a_p_i.html',1,'']]]
 ];

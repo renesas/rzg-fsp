@@ -16,7 +16,7 @@ var group___m_h_u___a_p_i =
     [ "mhu_api_t", "group___m_h_u___a_p_i.html#structmhu__api__t", [
       [ "open", "group___m_h_u___a_p_i.html#ac3886717d220de2c7861063acceee859", null ],
       [ "msgSend", "group___m_h_u___a_p_i.html#af6d608ef42020cdccb89d9d0bd7a28b0", null ],
-      [ "callbackSet", "group___m_h_u___a_p_i.html#a71110c354941eb9204f6af5969ce7132", null ],
+      [ "callbackSet", "group___m_h_u___a_p_i.html#a9ddecf19d6d0e278424651b4fcc745bb", null ],
       [ "close", "group___m_h_u___a_p_i.html#a435b9195d22768cde4eda0f37246a84f", null ]
     ] ],
     [ "mhu_instance_t", "group___m_h_u___a_p_i.html#structmhu__instance__t", [

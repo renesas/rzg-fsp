@@ -7,8 +7,6 @@ var searchData=
   ['dmac_5fb_5fchannel_5fscheduling_5fround_5frobin',['DMAC_B_CHANNEL_SCHEDULING_ROUND_ROBIN',['../group___d_m_a_c___b.html#ggab359dcd5cfb24ecd20655106c9397d63a481ea85a54aca23ab1215c7b14a969fb',1,'r_dmac_b.h']]],
   ['dmac_5fb_5fcontinuous_5fsetting_5ftransfer_5falternately',['DMAC_B_CONTINUOUS_SETTING_TRANSFER_ALTERNATELY',['../group___d_m_a_c___b.html#gga096bd7a43751a80690fd7ed3454b78a7a61c972e3ce54cbcb765c280c977e2857',1,'r_dmac_b.h']]],
   ['dmac_5fb_5fcontinuous_5fsetting_5ftransfer_5fonce',['DMAC_B_CONTINUOUS_SETTING_TRANSFER_ONCE',['../group___d_m_a_c___b.html#gga096bd7a43751a80690fd7ed3454b78a7a7de91e47558887cbcf23934645dca258',1,'r_dmac_b.h']]],
-  ['dmac_5fb_5fevent_5ftransfer_5fend',['DMAC_B_EVENT_TRANSFER_END',['../group___d_m_a_c___b.html#gga1ea3acbac3625e15f0b656d9b220cc8aac41c065b08dd64341516cdc406f0a43a',1,'r_dmac_b.h']]],
-  ['dmac_5fb_5fevent_5ftransfer_5ferror',['DMAC_B_EVENT_TRANSFER_ERROR',['../group___d_m_a_c___b.html#gga1ea3acbac3625e15f0b656d9b220cc8aa63dd08ef2be01ac99472a7b9d39fabc0',1,'r_dmac_b.h']]],
   ['dmac_5fb_5fexternal_5fdetection_5ffalling_5fedge',['DMAC_B_EXTERNAL_DETECTION_FALLING_EDGE',['../group___d_m_a_c___b.html#ga14518809e8fbb9e21fdef462b5a6355ba1e4a1303234cd1b4bd879da0a5497c81',1,'r_dmac_b.h']]],
   ['dmac_5fb_5fexternal_5fdetection_5ffalling_5frising_5fedge',['DMAC_B_EXTERNAL_DETECTION_FALLING_RISING_EDGE',['../group___d_m_a_c___b.html#ga14518809e8fbb9e21fdef462b5a6355babdf24e175dde86c8a869f358d5bb30b1',1,'r_dmac_b.h']]],
   ['dmac_5fb_5fexternal_5fdetection_5flow_5flevel',['DMAC_B_EXTERNAL_DETECTION_LOW_LEVEL',['../group___d_m_a_c___b.html#ga14518809e8fbb9e21fdef462b5a6355ba9b733b38f6216a7bafaa62855dcdea06',1,'r_dmac_b.h']]],

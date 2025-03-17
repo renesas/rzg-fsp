@@ -36,6 +36,7 @@ typedef struct st_poeg_instance_ctrl
     uint32_t           open;                     // Whether or not channel is open
     const poeg_cfg_t * p_cfg;                    // Pointer to initial configurations
     R_POEGA_Type     * p_reg;                    // Base register for this channel
+    R_GPT0_Type      * p_gpt_reg;                // Base register for GPT channel link with POEG
 
     void (* p_callback)(poeg_callback_args_t *); // Pointer to callback
     poeg_callback_args_t * p_callback_memory;    // Pointer to optional callback argument memory

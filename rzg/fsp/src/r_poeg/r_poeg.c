@@ -158,9 +158,10 @@ fsp_err_t R_POEG_OutputDisable (poeg_ctrl_t * const p_ctrl)
  * @note Status flags are only reset if the original POEG trigger is resolved. Check the status using
  * @ref R_POEG_StatusGet after calling this function to verify the status is cleared.
  *
- * @retval FSP_SUCCESS                 Function attempted to clear status flags.
+ * @retval FSP_SUCCESS                 Function clear status flags successfully.
  * @retval FSP_ERR_ASSERTION           p_ctrl was NULL.
  * @retval FSP_ERR_NOT_OPEN            The instance is not opened.
+ * @retval FSP_ERR_NOT_INITIALIZED     The GPT status flags was not clear before the attempt to clear IOCF flag.
  **********************************************************************************************************************/
 fsp_err_t R_POEG_Reset (poeg_ctrl_t * const p_ctrl)
 {
@@ -171,7 +172,21 @@ fsp_err_t R_POEG_Reset (poeg_ctrl_t * const p_ctrl)
 #endif
 
     /* Reset POEG status flags. */
-    p_instance_ctrl->p_reg->POEGGn &= ~POEG_PRV_STATUS_FLAGS;
+    if (p_instance_ctrl->p_cfg->trigger & POEG_TRIGGER_GPT_OUTPUT_LEVEL)
+    {
+        /* IOCF flag is cleared only if specific GPT status flags are 0 (See section "Release from Output-Disable" in the user's manual). */
+        if (p_instance_ctrl->p_gpt_reg->BSP_FEATURE_GPT_STATUS_REGISTER &
+            BSP_FEATURE_GPT_OUTPUT_DISABLE_REQUEST_STATUS_MASK)
+        {
+            return FSP_ERR_NOT_INITIALIZED;
+        }
+
+        p_instance_ctrl->p_reg->POEGGn &= ~POEG_PRV_FLAG_CLEAR;
+    }
+    else
+    {
+        p_instance_ctrl->p_reg->POEGGn &= ~(R_POEG_POEGGn_SSF_Msk | R_POEG_POEGGn_PIDF_Msk);
+    }
 
     return FSP_SUCCESS;
 }

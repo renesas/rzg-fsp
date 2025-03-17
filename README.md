@@ -10,7 +10,7 @@ FSP uses an open software ecosystem and provides flexibility in using your prefe
 
 ### Current Release
 
-[FSP v2.1.0](https://github.com/renesas/rzg-fsp/releases/tag/v2.1.0)
+[FSP v3.0.0](https://github.com/renesas/rzg-fsp/releases/tag/v3.0.0)
 
 ### Supported RZ/G MPU Kits
 
@@ -31,19 +31,19 @@ For a list of software modules packaged with FSP, see [Supported Software](SUPPO
 
 [Visit GitHub Issues for this project.](https://github.com/renesas/rzg-fsp/issues)
 
-[Critical issues](https://github.com/renesas/rzg-fsp/issues?q=label%3Acritical+is%3Aclosed) that cause an MCU to operate out of the hardware manual documented specifications are tagged with the 'critical' label. Please check critical issues before going to production for a workaround or recommended patch upgrade.
+[Critical issues](https://github.com/renesas/rzg-fsp/issues?q=label%3Acritical+is%3Aclosed) that cause an MPU to operate out of the user's manual documented specifications are tagged with the 'critical' label. Please check critical issues before going to production for a workaround or recommended patch upgrade.
 
 ### Setup Instructions
 
 #### For existing users that are using FSP with e² studio
 
-- FSP versions of 2.0.0 and later require a minimum e² studio version of 2024-07.
+- FSP versions of 3.0.0 and later require a minimum e² studio version of 2025-01.
 
 If you have already installed a previous FSP release that included e² studio then you can download the packs separately. These are available for download under the Assets section for each release. There is a zipped version, RZG_FSP_Packs_\<version\>.zip, and an installer version, RZG_FSP_Packs_\<version\>.exe.
 
 #### For new users that are using FSP with e² studio
 
-1.	Download the FSP with e² studio Installer from the Assets section of the [current release](https://github.com/renesas/rzg-fsp/releases/tag/v2.1.0).
+1.	Download the FSP with e² studio Installer from the Assets section of the [current release](https://github.com/renesas/rzg-fsp/releases/tag/v3.0.0).
 2.	Run the installer. This will install the e² studio tool, FSP packs, GCC toolchain and other tools required to use this software. No additional installations are required.
 
 <!--

@@ -146,7 +146,7 @@ const spi_flash_api_t g_spi_flash_on_xspi_qspi =
  * @retval FSP_SUCCESS                    Configuration was successful.
  * @retval FSP_ERR_ASSERTION              The parameter p_instance_ctrl or p_cfg is NULL.
  * @retval FSP_ERR_ALREADY_OPEN           Driver has already been opened with the same p_instance_ctrl.
- * @retval FSP_ERR_IP_CHANNEL_NOT_PRESENT The requested channel does not exist on this MCU.
+ * @retval FSP_ERR_IP_CHANNEL_NOT_PRESENT The requested channel does not exist on this MPU.
  **********************************************************************************************************************/
 fsp_err_t R_XSPI_QSPI_Open (spi_flash_ctrl_t * p_ctrl, spi_flash_cfg_t const * const p_cfg)
 {
@@ -194,7 +194,7 @@ fsp_err_t R_XSPI_QSPI_Open (spi_flash_ctrl_t * p_ctrl, spi_flash_cfg_t const * c
         }
     }
 
-    /* xSPI configuration (see RZ microprocessor User's Manual section "Flow of Configuration"). */
+    /* xSPI configuration (see the user's manual section "Flow of Configuration"). */
     p_instance_ctrl->p_reg->LIOCFGCS[p_cfg_extend->chip_select] = (p_cfg->spi_protocol) <<
                                                                   XSPI_QSPI_PRV_LIOCFGCS_PRTMD_OFFSET;
     p_instance_ctrl->spi_protocol = p_cfg->spi_protocol;
@@ -230,7 +230,7 @@ fsp_err_t R_XSPI_QSPI_Open (spi_flash_ctrl_t * p_ctrl, spi_flash_cfg_t const * c
             XSPI_QSPI_PRV_LIOCFGCS_CSENGEX_OFFSET);
 
     /* Specifies the read/write commands and Read dummy clocks for Device
-     * (see RZ microprocessor User's Manual section "Flow of Memory-mapping"). */
+     * (see the user's manual section "Flow of Memory-mapping"). */
     p_instance_ctrl->p_reg->CSa[p_cfg_extend->chip_select].CMCFG0 =
         (0U << XSPI_QSPI_PRV_CMCFG0_FFMT_OFFSET) |
         ((p_cfg->address_bytes & XSPI_QSPI_PRV_CMCFG0_ADDSIZE_VALUE_MASK) << XSPI_QSPI_PRV_CMCFG0_ADDSIZE_OFFSET);
@@ -260,8 +260,27 @@ fsp_err_t R_XSPI_QSPI_Open (spi_flash_ctrl_t * p_ctrl, spi_flash_cfg_t const * c
                                     ((p_cfg_extend->prefetch_en & XSPI_QSPI_PRV_BMCFG_PREEN_VALUE_MASK) <<
                                      XSPI_QSPI_PRV_BMCFG_PREEN_OFFSET);
 
+#if (defined(BSP_FEATURE_XSPI_NUM_BRIDGE_CONTROL_CHANNEL) && \
+    (BSP_FEATURE_XSPI_NUM_BRIDGE_CONTROL_CHANNEL == 2U))
+    p_instance_ctrl->p_reg->BMCFGCH1 = (0 << XSPI_QSPI_PRV_BMCFG_WRMD_OFFSET) |
+                                       (1 << XSPI_QSPI_PRV_BMCFG_MWRCOMB_OFFSET) |
+                                       (0x0F << XSPI_QSPI_PRV_BMCFG_MWRSIZE_OFFSET) |
+                                       ((p_cfg_extend->prefetch_en & XSPI_QSPI_PRV_BMCFG_PREEN_VALUE_MASK) <<
+                                        XSPI_QSPI_PRV_BMCFG_PREEN_OFFSET);
+#endif
+
     /* Set use Channel. */
     p_instance_ctrl->p_reg->CDCTL0_b.CSSEL = p_cfg_extend->chip_select;
+
+    /* Set command code for XIP mode */
+    p_instance_ctrl->p_reg->CMCTL_b.XIPENCODE = p_instance_ctrl->p_cfg->xip_enter_command;
+    p_instance_ctrl->p_reg->CMCTL_b.XIPEXCODE = p_instance_ctrl->p_cfg->xip_exit_command;
+
+#if (defined(BSP_FEATURE_XSPI_NUM_BRIDGE_CONTROL_CHANNEL) && \
+    (BSP_FEATURE_XSPI_NUM_BRIDGE_CONTROL_CHANNEL == 2U))
+    p_instance_ctrl->p_reg->CMCTLCH1_b.XIPENCODE = p_instance_ctrl->p_cfg->xip_enter_command;
+    p_instance_ctrl->p_reg->CMCTLCH1_b.XIPEXCODE = p_instance_ctrl->p_cfg->xip_exit_command;
+#endif
 
     /* The memory size is read from the device if needed. */
     p_instance_ctrl->total_size_bytes = 0U;
@@ -614,7 +633,7 @@ fsp_err_t R_XSPI_QSPI_BankSet (spi_flash_ctrl_t * p_ctrl, uint32_t bank)
  *
  * Implements @ref spi_flash_api_t::spiProtocolSet.
  *
- * @retval FSP_SUCCESS                SPI protocol updated on MCU peripheral.
+ * @retval FSP_SUCCESS                SPI protocol updated on MPU peripheral.
  * @retval FSP_ERR_ASSERTION          A required pointer is NULL.
  * @retval FSP_ERR_NOT_OPEN           Driver is not opened.
  * @retval FSP_ERR_INVALID_ARGUMENT   Invalid SPI protocol requested.
@@ -713,6 +732,7 @@ static void r_xspi_qspi_write_enable (xspi_qspi_instance_ctrl_t * p_instance_ctr
  **********************************************************************************************************************/
 static fsp_err_t r_xspi_qspi_xip (xspi_qspi_instance_ctrl_t * p_instance_ctrl, uint8_t code, bool enter_mode)
 {
+    FSP_PARAMETER_NOT_USED(code);
 #if XSPI_QSPI_CFG_PARAM_CHECKING_ENABLE
 
     /* FSP_ASSERT(NULL != p_instance_ctrl) is optimized out when it shouldn't be.  It appears to be affected by GCC bug
@@ -731,7 +751,7 @@ static fsp_err_t r_xspi_qspi_xip (xspi_qspi_instance_ctrl_t * p_instance_ctrl, u
     volatile uint8_t dummy = 0;
     FSP_PARAMETER_NOT_USED(dummy);
 
-    /* XiP configuration (see RZ microprocessor User's Manual section "Flow of XiP"). */
+    /* XiP configuration (see the user's manual section "Flow of XiP"). */
     if (true == enter_mode)
     {
         if (XSPI_QSPI_CHIP_SELECT_0 == chip_select)
@@ -744,9 +764,11 @@ static fsp_err_t r_xspi_qspi_xip (xspi_qspi_instance_ctrl_t * p_instance_ctrl, u
         }
     }
 
-    p_instance_ctrl->p_reg->CMCTL_b.XIPENCODE = code;
-    p_instance_ctrl->p_reg->CMCTL_b.XIPEXCODE = code;
-    p_instance_ctrl->p_reg->CMCTL_b.XIPEN     = enter_mode;
+    p_instance_ctrl->p_reg->CMCTL_b.XIPEN = enter_mode;
+
+#if (defined(BSP_FEATURE_XSPI_NUM_BRIDGE_CONTROL_CHANNEL) && (BSP_FEATURE_XSPI_NUM_BRIDGE_CONTROL_CHANNEL == 2U))
+    p_instance_ctrl->p_reg->CMCTLCH1_b.XIPEN = enter_mode;
+#endif
 
     /* Read from QSPI to send the XIP entry request.
      * Read via a cache-invalid mirror area to ensure access to QSPI. */
@@ -829,7 +851,7 @@ static void r_xspi_qspi_direct_transfer (xspi_qspi_instance_ctrl_t         * p_i
     p_instance_ctrl->p_reg->CDCTL0_b.TRNUM = 0;
 
     /* Direct Read/Write settings
-     * (see RZ microprocessor User's Manual section "Flow of Manual-command Procedure"). */
+     * (see the user's manual section "Flow of Manual-command Procedure"). */
     FSP_HARDWARE_REGISTER_WAIT(p_instance_ctrl->p_reg->CDCTL0_b.TRREQ, 0);
 
     p_instance_ctrl->p_reg->BUF[0].CDT =

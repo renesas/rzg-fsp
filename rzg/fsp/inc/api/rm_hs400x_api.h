@@ -5,15 +5,13 @@
 */
 
 /*******************************************************************************************************************//**
- * @ingroup RENESAS_INTERFACES
+ * @ingroup RENESAS_SENSOR_INTERFACES
  * @defgroup RM_HS400X_API HS400X Middleware Interface
  * @brief Interface for HS400X Middleware functions.
  *
  * @section RM_HS400X_API_Summary Summary
  * The HS400X interface provides HS400X functionality.
  *
- * The HS400X interface can be implemented by:
- * - @ref RM_HS400X
  *
  * @{
  **********************************************************************************************************************/
@@ -138,8 +136,6 @@ typedef struct st_rm_hs400x_cfg
 } rm_hs400x_cfg_t;
 
 /** HS400X control block.  Allocate an instance specific control block to pass into the HS400X API calls.
- * @par Implemented as
- * - rm_hs400x_instance_ctrl_t
  */
 typedef void rm_hs400x_ctrl_t;
 
@@ -147,8 +143,6 @@ typedef void rm_hs400x_ctrl_t;
 typedef struct st_rm_hs400x_api
 {
     /** Open sensor.
-     * @par Implemented as
-     * - @ref RM_HS400X_Open()
      *
      * @param[in]  p_ctrl       Pointer to control structure.
      * @param[in]  p_cfg        Pointer to configuration structure.
@@ -156,24 +150,18 @@ typedef struct st_rm_hs400x_api
     fsp_err_t (* open)(rm_hs400x_ctrl_t * const p_ctrl, rm_hs400x_cfg_t const * const p_cfg);
 
     /** Start one shot measurement.
-     * @par Implemented as
-     * - @ref RM_HS400X_MeasurementStart()
      *
      * @param[in]  p_ctrl   Pointer to control structure.
      */
     fsp_err_t (* measurementStart)(rm_hs400x_ctrl_t * const p_ctrl);
 
     /** Stop a period measurement.
-     * @par Implemented as
-     * - @ref RM_HS400X_MeasurementStop()
      *
      * @param[in]  p_ctrl   Pointer to control structure.
      */
     fsp_err_t (* measurementStop)(rm_hs400x_ctrl_t * const p_ctrl);
 
     /** Read ADC data from HS400X.
-     * @par Implemented as
-     * - @ref RM_HS400X_Read()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      * @param[in]  p_raw_data       Pointer to raw data structure.
@@ -181,8 +169,6 @@ typedef struct st_rm_hs400x_api
     fsp_err_t (* read)(rm_hs400x_ctrl_t * const p_ctrl, rm_hs400x_raw_data_t * const p_raw_data);
 
     /** Calculate humidity and temperature values from ADC data.
-     * @par Implemented as
-     * - @ref RM_HS400X_DataCalculate()
      *
      * @param[in]  p_ctrl           Pointer to control structure.
      * @param[in]  p_raw_data       Pointer to raw data.
@@ -192,8 +178,6 @@ typedef struct st_rm_hs400x_api
                                 rm_hs400x_data_t * const p_hs400x_data);
 
     /** Close HS400X.
-     * @par Implemented as
-     * - @ref RM_HS400X_Close()
      *
      * @param[in]  p_ctrl       Pointer to control structure.
      */
@@ -227,5 +211,5 @@ FSP_FOOTER
 #endif                                 /* RM_HS400X_API_H_*/
 
 /*******************************************************************************************************************//**
- * @} (end addtogroup RM_HS400X_API)
+ * @} (end defgroup RM_HS400X_API)
  **********************************************************************************************************************/

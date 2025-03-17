@@ -89,7 +89,7 @@ void R_BSP_NonSecureEnter (void)
     /* Set the NS vector table address */
     SCB_NS->VTOR = (uint32_t) p_ns_vector_table;
 
-    /* Use CM33 stack monitor. */
+    /* Use Cortex-M33 stack monitor. */
     __TZ_set_MSPLIM_NS(BSP_PRV_STACK_LIMIT);
 
     /* Set the NS stack pointer to the first entry in the NS vector table */

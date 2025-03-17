@@ -15,11 +15,48 @@
  * Macro definitions
  **********************************************************************************************************************/
 
-#define WDT_OPEN                                  (0x00574454ULL)
+#define WDT_OPEN    (0x00574454ULL)
+#if (BSP_FEATURE_WDT_TYPE == 1U)
+
+/* Lookup functions for WDT settings.  Using function like macro for stringification. */
+ #define WDT_PRV_WDTCR_SETTING_GET(setting,                                                   \
+                                   wdtcr)    (((wdtcr >> WDT_PRV_WDTCR_ ## setting ## _BIT) & \
+                                               WDT_PRV_WDTCR_ ## setting ## _MASK));
+ #define WDT_PRV_WDTCR_SETTING_SET(setting,                                                   \
+                                   value)    ((value & WDT_PRV_WDTCR_ ## setting ## _MASK) << \
+                                              WDT_PRV_WDTCR_ ## setting ## _BIT);
+#endif
 
 /* WDT register settings. */
-#define WDT_PRV_STATUS_FLAG_SET_POS               (2U)
-#define WDT_PRV_WDTSET_TIMEOUT_CALCULATE_VALUE    (1024 * 1024)
+#if (BSP_FEATURE_WDT_TYPE == 0U)
+ #define WDT_PRV_STATUS_FLAG_SET_POS               (2U)
+ #define WDT_PRV_WDTSET_TIMEOUT_CALCULATE_VALUE    (1024 * 1024)
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+ #define WDT_PRV_WDTSR_COUNTER_MASK                (0x3FFFU)
+ #define WDT_PRV_WDTSR_FLAGS_MASK                  (0xC000U)
+
+ #define WDT_PRV_WDTCR_TIMEOUT_BIT                 (0)
+ #define WDT_PRV_WDTCR_CLOCK_DIVISION_BIT          (4)
+ #define WDT_PRV_WDTCR_WINDOW_END_BIT              (8)
+ #define WDT_PRV_WDTCR_WINDOW_START_BIT            (12)
+
+ #define WDT_PRV_WDTRCR_RESET_CONTROL_BIT          (7)
+ #define WDT_PRV_WDTCSTPR_STOP_CONTROL_BIT         (7)
+
+ #define WDT_PRV_WDTCR_TIMEOUT_MASK                (0x3U) // Bits 0-1
+ #define WDT_PRV_WDTCR_CLOCK_DIVISION_MASK         (0xFU) // Bits 4-7
+ #define WDT_PRV_WDTCR_WINDOW_END_MASK             (0x3U) // Bits 8-9
+ #define WDT_PRV_WDTCR_WINDOW_START_MASK           (0x3U) // Bits 12-13
+
+/* Refresh register values */
+ #define WDT_PRV_REFRESH_STEP_1                    (0U)
+ #define WDT_PRV_REFRESH_STEP_2                    (0xFFU)
+#endif
+#if (BSP_FEATURE_WDT_TYPE == 1U)
+
+/* Reset Interrupt Request Select value */
+ #define WDT_PRV_ERROR_NOTIFICATION_PERMITTED      (0U)
+#endif
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -35,15 +72,74 @@ typedef BSP_CMSE_NONSECURE_CALL void (*volatile wdt_prv_ns_callback)(wdt_callbac
  * Private function prototypes
  **********************************************************************************************************************/
 
-void wdt_overflow_isr(void);
+void wdt_timeout_isr(void);
+
+#if (BSP_FEATURE_WDT_TYPE == 1U)
+static uint32_t r_wdt_clock_divider_get(wdt_clock_division_t division);
+
+#endif
 
 static fsp_err_t r_wdt_parameter_checking(wdt_instance_ctrl_t * const p_instance_ctrl, wdt_cfg_t const * const p_cfg);
 
-static void r_wdt_overflow_callback(wdt_instance_ctrl_t * p_ctrl);
+static void r_wdt_timeout_callback(wdt_instance_ctrl_t * p_ctrl);
 
 /***********************************************************************************************************************
  * Private global variables
  **********************************************************************************************************************/
+
+/* WDT base address */
+static const uint32_t volatile * p_wdt_base_address[BSP_FEATURE_WDT_MAX_CHANNEL] =
+{
+    (uint32_t *) R_WDT0_BASE,
+#if BSP_FEATURE_WDT_MAX_CHANNEL > 1
+    (uint32_t *) R_WDT1_BASE,
+ #if BSP_FEATURE_WDT_MAX_CHANNEL > 2
+    (uint32_t *) R_WDT2_BASE,
+  #if BSP_FEATURE_WDT_MAX_CHANNEL > 3
+    (uint32_t *) R_WDT3_BASE,
+  #endif
+ #endif
+#endif
+};
+#if (BSP_FEATURE_WDT_TYPE == 1U)
+static const uint8_t g_wdtcr_timeout[] =
+{
+    0xFFU,                             // WDTCR value for WDT_TIMEOUT_128 (not supported by WDT).
+    0xFFU,                             // WDTCR value for WDT_TIMEOUT_512 (not supported by WDT).
+    0x00U,                             // WDTCR value for WDT_TIMEOUT_1024.
+    0xFFU,                             // WDTCR value for WDT_TIMEOUT_2048 (not supported by WDT).
+    0x01U,                             // WDTCR value for WDT_TIMEOUT_4096.
+    0x02U,                             // WDTCR value for WDT_TIMEOUT_8192.
+    0x03U,                             // WDTCR value for WDT_TIMEOUT_16384.
+};
+
+/* Convert WDT/IWDT timeout value to an integer */
+static const uint32_t g_wdt_timeout[] =
+{
+    128U,
+    512U,
+    1024U,
+    2048U,
+    4096U,
+    8192U,
+    16384U
+};
+
+/* Converts WDT division enum to log base 2 of the division value, used to shift the PCLKB frequency. */
+static const uint8_t g_wdt_division_lookup[] =
+{
+    0U,                                // log base 2(1)    = 0
+    2U,                                // log base 2(4)    = 2
+    4U,                                // log base 2(16)   = 4
+    5U,                                // log base 2(32)   = 5
+    6U,                                // log base 2(64)   = 6
+    8U,                                // log base 2(256)  = 8
+    9U,                                // log base 2(512)  = 9
+    11U,                               // log base 2(2048) = 11
+    13U,                               // log base 2(8192) = 13
+};
+
+#endif
 
 /***********************************************************************************************************************
  * Global variables
@@ -72,7 +168,7 @@ const wdt_api_t g_wdt_on_wdt =
 
 /*******************************************************************************************************************//**
  * Configures the WDT driver based on the input configurations. This function sets the callback function,
- * the timeout count value, and enables the overflow interrupt. Implements
+ * the timeout count value, and enables the timeout interrupt. Implements
  * @ref wdt_api_t::open.
  *
  * This function should only be called once as WDT configuration registers can only be written to once so subsequent
@@ -95,27 +191,62 @@ fsp_err_t R_WDT_Open (wdt_ctrl_t * const p_ctrl, wdt_cfg_t const * const p_cfg)
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 
     wdt_extended_cfg_t * p_extend = (wdt_extended_cfg_t *) p_cfg->p_extend;
+#if (BSP_FEATURE_WDT_TYPE == 0U)
 
     /* Set the callback function. */
     p_instance_ctrl->p_callback        = p_cfg->p_callback;
     p_instance_ctrl->p_context         = p_cfg->p_context;
     p_instance_ctrl->p_callback_memory = NULL;
+#endif
 
-    p_instance_ctrl->p_reg = (R_WDT0_Type *) ((1U == p_extend->channel) ? R_WDT1_BASE : \
-                                              R_WDT2_BASE);
+    /* Set the base address for specified channel */
+    p_instance_ctrl->p_reg = (R_WDT0_Type *) p_wdt_base_address[p_extend->channel];
 
     p_instance_ctrl->p_cfg = p_cfg;
 
     /* Clock On and Reset Off. */
     R_BSP_MODULE_START(FSP_IP_WDT, p_extend->channel);
 
+#if (BSP_FEATURE_WDT_TYPE == 0U)
     p_instance_ctrl->p_reg->WDTSET = (uint32_t) p_extend->wdt_timeout << R_WDT0_WDTSET_WDTTIME_Pos;
 
-    /* Enable WDT Overflow interrupt. */
+    /* Enable WDT timeout interrupt. */
     if (NULL != p_instance_ctrl->p_callback)
     {
-        R_BSP_IrqCfgEnable(p_extend->overflow_irq, p_extend->overflow_ipl, p_instance_ctrl);
+        R_BSP_IrqCfgEnable(p_extend->timeout_irq, p_extend->timeout_ipl, p_instance_ctrl);
     }
+
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+
+    /* Register-start mode. */
+
+    if (p_extend->timeout_irq >= 0)
+    {
+        /* IRQ output mode. */
+        R_BSP_IrqCfgEnable(p_extend->timeout_irq, p_extend->timeout_ipl, p_instance_ctrl);
+    }
+
+    /* Set the callback function. */
+    p_instance_ctrl->p_callback        = p_cfg->p_callback;
+    p_instance_ctrl->p_context         = p_cfg->p_context;
+    p_instance_ctrl->p_callback_memory = NULL;
+
+    /* Enable error notification to the ICU. */
+    p_instance_ctrl->p_reg->WDT0_WDTRCR =
+        (uint8_t) (WDT_PRV_ERROR_NOTIFICATION_PERMITTED << WDT_PRV_WDTRCR_RESET_CONTROL_BIT);
+
+    uint32_t wdtcr = WDT_PRV_WDTCR_SETTING_SET(TIMEOUT, (uint16_t) g_wdtcr_timeout[p_cfg->timeout]);
+    wdtcr |= WDT_PRV_WDTCR_SETTING_SET(CLOCK_DIVISION, (uint16_t) p_cfg->clock_division);
+    wdtcr |= WDT_PRV_WDTCR_SETTING_SET(WINDOW_START, (uint16_t) p_cfg->window_start);
+    wdtcr |= WDT_PRV_WDTCR_SETTING_SET(WINDOW_END, (uint16_t) p_cfg->window_end);
+
+    p_instance_ctrl->p_reg->WDT0_WDTCR = (uint16_t) wdtcr;
+#endif
+
+    R_BSP_WDT_COUNTING_ENABLE(p_extend->channel, p_extend->wdt_counting_enable);
+    R_BSP_WDT_SYSTEM_RESET_ENABLE(p_extend->channel, p_extend->system_reset_enable);
+    R_BSP_WDT_PIN_ASSERTION_ENABLE(p_extend->channel, p_extend->wdt_pin_assertion_enable);
+    R_BSP_WDT_COLD_RESET_ENABLE(p_extend->channel, p_extend->cold_reset_enable);
 
     p_instance_ctrl->wdt_open = WDT_OPEN;
 
@@ -138,6 +269,8 @@ fsp_err_t R_WDT_TimeoutGet (wdt_ctrl_t * const p_ctrl, wdt_timeout_values_t * co
     FSP_ERROR_RETURN(WDT_OPEN == p_instance_ctrl->wdt_open, FSP_ERR_NOT_OPEN);
 #endif
 
+#if (BSP_FEATURE_WDT_TYPE == 0U)
+
     /* Get timeout value from WDTTIM register.
      * (see section 'WDT Period Setting Register_n (WDTSET_n)' of the user's manual)*/
     p_timeout->timeout_clocks = WDT_PRV_WDTSET_TIMEOUT_CALCULATE_VALUE *
@@ -145,6 +278,32 @@ fsp_err_t R_WDT_TimeoutGet (wdt_ctrl_t * const p_ctrl, wdt_timeout_values_t * co
 
     /* Get the frequency of the clock supplying the watchdog */
     p_timeout->clock_frequency_hz = R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_OSCCLK);
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+    uint32_t             shift;
+    uint32_t             index;
+    uint32_t             timeout = 0;
+    wdt_clock_division_t clock_division;
+
+    /* Read the configuration of the watchdog */
+    uint32_t wdtcr = p_instance_ctrl->p_reg->WDT0_WDTCR;
+    clock_division = (wdt_clock_division_t) WDT_PRV_WDTCR_SETTING_GET(CLOCK_DIVISION, wdtcr);
+    timeout        = WDT_PRV_WDTCR_SETTING_GET(TIMEOUT, wdtcr);
+
+    /* Get timeout value from WDTCR register. */
+    for (index = 0U; index < (sizeof(g_wdtcr_timeout)); index++)
+    {
+        if (g_wdtcr_timeout[index] == timeout)
+        {
+            p_timeout->timeout_clocks = g_wdt_timeout[index];
+        }
+    }
+
+    /* Get the frequency of the clock supplying the watchdog */
+    uint32_t pckb_frequency = R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_OSCCLK);
+    shift = r_wdt_clock_divider_get(clock_division);
+
+    p_timeout->clock_frequency_hz = pckb_frequency >> shift;
+#endif
 
     return FSP_SUCCESS;
 }
@@ -152,7 +311,7 @@ fsp_err_t R_WDT_TimeoutGet (wdt_ctrl_t * const p_ctrl, wdt_timeout_values_t * co
 /*******************************************************************************************************************//**
  * Refresh the watchdog timer. Implements @ref wdt_api_t::refresh.
  *
- * In addition to refreshing the watchdog counter this function can be used to start the counter.
+ * In addition to refreshing the watchdog counter this function can be used to start the counter in register start mode.
  *
  * Example:
  * @snippet r_wdt_example.c R_WDT_Refresh
@@ -168,15 +327,19 @@ fsp_err_t R_WDT_Refresh (wdt_ctrl_t * const p_ctrl)
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ERROR_RETURN(WDT_OPEN == p_instance_ctrl->wdt_open, FSP_ERR_NOT_OPEN);
 #endif
-
+#if (BSP_FEATURE_WDT_TYPE == 0U)
     if (0 == p_instance_ctrl->p_reg->WDTCNT_b.WDTEN)
     {
         /* Start the WDT. */
         p_instance_ctrl->p_reg->WDTCNT = R_WDT0_WDTCNT_WDTEN_Msk;
     }
 
-    /* WDT overflow interrupt flag is cleared. */
+    /* WDT timeout interrupt flag is cleared. */
     p_instance_ctrl->p_reg->WDTINT = R_WDT0_WDTINT_INTDISP_Msk;
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+    p_instance_ctrl->p_reg->WDT0_WDTRR = WDT_PRV_REFRESH_STEP_1;
+    p_instance_ctrl->p_reg->WDT0_WDTRR = WDT_PRV_REFRESH_STEP_2;
+#endif
 
     return FSP_SUCCESS;
 }
@@ -202,8 +365,15 @@ fsp_err_t R_WDT_StatusGet (wdt_ctrl_t * const p_ctrl, wdt_status_t * const p_sta
     FSP_ERROR_RETURN(WDT_OPEN == p_instance_ctrl->wdt_open, FSP_ERR_NOT_OPEN);
 #endif
 
+#if (BSP_FEATURE_WDT_TYPE == 0U)
+
     /* Check if WDT interrupt occurred. */
     *p_status = (wdt_status_t) (p_instance_ctrl->p_reg->WDTINT << WDT_PRV_STATUS_FLAG_SET_POS);
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+
+    /* Check for refresh or underflow errors. */
+    *p_status = (wdt_status_t) (p_instance_ctrl->p_reg->WDT0_WDTSR >> 14);
+#endif
 
     return FSP_SUCCESS;
 }
@@ -232,17 +402,30 @@ fsp_err_t R_WDT_StatusClear (wdt_ctrl_t * const p_ctrl, const wdt_status_t statu
     value = (uint16_t) status;
 
     /* Write zero to clear flags. */
+#if (BSP_FEATURE_WDT_TYPE == 0U)
     value = (uint16_t) (value >> WDT_PRV_STATUS_FLAG_SET_POS);
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+    value = (uint16_t) ~value;
+    value = (uint16_t) (value << 14);
+#endif
 
     /* Read back status flags until required flag(s) cleared. */
     /* Flags cannot be cleared until the clock cycle after they are set.  */
     do
     {
+#if (BSP_FEATURE_WDT_TYPE == 0U)
         p_instance_ctrl->p_reg->WDTINT = value & R_WDT0_WDTINT_INTDISP_Msk;
         read_value = (uint16_t) p_instance_ctrl->p_reg->WDTINT;
 
         /* Isolate flags to clear. */
         read_value = (uint16_t) (read_value & (status >> WDT_PRV_STATUS_FLAG_SET_POS));
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+        p_instance_ctrl->p_reg->WDT0_WDTSR = value;
+        read_value = p_instance_ctrl->p_reg->WDT0_WDTSR;
+
+        /* Isolate flags to clear. */
+        read_value &= (uint16_t) ((uint16_t) status << 14);
+#endif
     } while (0U != read_value);
 
     return FSP_SUCCESS;
@@ -268,8 +451,13 @@ fsp_err_t R_WDT_CounterGet (wdt_ctrl_t * const p_ctrl, uint32_t * const p_count)
 #endif
 
     /* Get the WDT counter value. */
+#if (BSP_FEATURE_WDT_TYPE == 0U)
     *p_count  = p_instance_ctrl->p_reg->WDTTIM;
     *p_count &= R_WDT0_WDTTIM_CRTTIME_Msk;
+#elif (BSP_FEATURE_WDT_TYPE == 1U)
+    *p_count  = (uint32_t) p_instance_ctrl->p_reg->WDT0_WDTSR;
+    *p_count &= WDT_PRV_WDTSR_COUNTER_MASK;
+#endif
 
     return FSP_SUCCESS;
 }
@@ -295,8 +483,9 @@ fsp_err_t R_WDT_CallbackSet (wdt_ctrl_t * const          p_ctrl,
     FSP_ASSERT(p_callback);
     FSP_ERROR_RETURN(WDT_OPEN == p_instance_ctrl->wdt_open, FSP_ERR_NOT_OPEN);
 #endif
-
+#if (BSP_FEATURE_WDT_TYPE == 0U)
     wdt_extended_cfg_t * p_extend = (wdt_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend;
+#endif
 
     /* Store callback and context */
 #if BSP_TZ_SECURE_BUILD
@@ -324,8 +513,11 @@ fsp_err_t R_WDT_CallbackSet (wdt_ctrl_t * const          p_ctrl,
     p_instance_ctrl->p_context         = p_context;
     p_instance_ctrl->p_callback_memory = p_callback_memory;
 
-    /* Enable WDT Overflow interrupt. */
-    R_BSP_IrqCfgEnable(p_extend->overflow_irq, p_extend->overflow_ipl, p_instance_ctrl);
+#if (BSP_FEATURE_WDT_TYPE == 0U)
+
+    /* Enable WDT timeout interrupt. */
+    R_BSP_IrqCfgEnable(p_extend->timeout_irq, p_extend->timeout_ipl, p_instance_ctrl);
+#endif
 
     return FSP_SUCCESS;
 }
@@ -343,7 +535,7 @@ fsp_err_t R_WDT_CallbackSet (wdt_ctrl_t * const          p_ctrl,
  *
  * @param[in]    p_ctrl   Pointer to instance control structure
  **********************************************************************************************************************/
-static void r_wdt_overflow_callback (wdt_instance_ctrl_t * p_ctrl)
+static void r_wdt_timeout_callback (wdt_instance_ctrl_t * p_ctrl)
 {
     wdt_callback_args_t args;
 
@@ -390,6 +582,31 @@ static void r_wdt_overflow_callback (wdt_instance_ctrl_t * p_ctrl)
     }
 }
 
+#if (BSP_FEATURE_WDT_TYPE == 1U)
+
+/*******************************************************************************************************************//**
+ * Gets clock division shift value.
+ *
+ * @param[in]   division     Right shift value used to divide clock frequency.
+ **********************************************************************************************************************/
+static uint32_t r_wdt_clock_divider_get (wdt_clock_division_t division)
+{
+    uint32_t shift;
+
+    if (WDT_CLOCK_DIVISION_128 == division)
+    {
+        shift = 7U;                    /* log base 2(128) = 7 */
+    }
+    else
+    {
+        shift = g_wdt_division_lookup[division];
+    }
+
+    return shift;
+}
+
+#endif
+
 /*******************************************************************************************************************//**
  * Parameter checking function for WDT Open
  *
@@ -409,6 +626,15 @@ static fsp_err_t r_wdt_parameter_checking (wdt_instance_ctrl_t * const p_instanc
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ERROR_RETURN(WDT_OPEN != p_instance_ctrl->wdt_open, FSP_ERR_ALREADY_OPEN);
     FSP_ASSERT(NULL != p_cfg->p_extend);
+ #if (BSP_FEATURE_WDT_TYPE == 1U)
+
+    /* Check timeout parameter is supported by WDT. */
+
+    /* Enum checking is done here because some enums in wdt_timeout_t are not supported by the WDT peripheral (they are
+     * included for other implementations of the watchdog interface). */
+    FSP_ASSERT((p_cfg->timeout == WDT_TIMEOUT_1024) || (p_cfg->timeout == WDT_TIMEOUT_4096) || \
+               (p_cfg->timeout == WDT_TIMEOUT_8192) || (p_cfg->timeout == WDT_TIMEOUT_16384));
+ #endif
 #else
     FSP_PARAMETER_NOT_USED(p_instance_ctrl);
     FSP_PARAMETER_NOT_USED(p_cfg);
@@ -418,9 +644,9 @@ static fsp_err_t r_wdt_parameter_checking (wdt_instance_ctrl_t * const p_instanc
 }
 
 /*******************************************************************************************************************//**
- * WDT Overflow ISR
+ * WDT Timeout ISR
  **********************************************************************************************************************/
-void wdt_overflow_isr (void)
+void wdt_timeout_isr (void)
 {
     /* Save context if RTOS is used */
     FSP_CONTEXT_SAVE
@@ -431,7 +657,7 @@ void wdt_overflow_isr (void)
     if (NULL != p_ctrl->p_callback)
     {
         /* Call the callback function. */
-        r_wdt_overflow_callback(p_ctrl);
+        r_wdt_timeout_callback(p_ctrl);
     }
 
     /* Restore context if RTOS is used */

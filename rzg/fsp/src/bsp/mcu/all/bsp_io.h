@@ -26,14 +26,9 @@ FSP_HEADER
 #define BSP_IO_PRV_8BIT_MASK            (0xFF)
 #define BSP_IO_PRV_PIN_MASK             (1U)
 #define BSP_IO_PRV_PORT_OFFSET          (8U)
-#define BSP_IO_PRV_PFCWE_MASK           (0xFFFFFFBF)
-#define BSP_IO_PRV_OENWE_MASK           (0xFFFFFFDF)
 #define BSP_IO_PRV_SET_OEN_ENABLE       (0U)
 #define BSP_IO_PRV_SET_SSEL0_SELCTL2    (0x1000U)
 #define BSP_IO_PRV_SET_SSEL1_SELCTL0    (0x0100U)
-#define BSP_IO_PWPR_B0WI_OFFSET         (7U)
-#define BSP_IO_PWPR_PFSWE_OFFSET        (6U)
-#define BSP_IO_PWPR_OENWE_OFFSET        (5U)
 #define BSP_IO_PM_PM_OUTPUT             (3U)
 
 #define BSP_IO_PRV_P_REG_BASE_SET(base)      BSP_IO_PRV_P_REG_BASE(base)
@@ -427,7 +422,6 @@ typedef enum e_bsp_bypass_oscillator
 {
     BSP_BYPASS_OSCILLATOR_RTC   = 0x00, ///< Oscillator set to RTC
     BSP_BYPASS_OSCILLATOR_AUDIO = 0x01, ///< Oscillator set to Audio
-    BSP_BYPASS_OSCILLATOR_EMCLK = 0x02, ///< Oscillator set to EMCLK
 } bsp_bypass_oscillator_t;
 
 /** Superset of bypass modes. */
@@ -509,7 +503,7 @@ __STATIC_INLINE void R_BSP_PinWrite (bsp_io_port_pin_t pin, bsp_io_level_t level
 }
 
 /*******************************************************************************************************************//**
- * Enable access to the PFS registers. Uses a reference counter to protect against interrupts that could occur
+ * Enable access to the PFC registers. Uses a reference counter to protect against interrupts that could occur
  * via multiple threads or an ISR re-entering this code.
  **********************************************************************************************************************/
 __STATIC_INLINE void R_BSP_PinAccessEnable (void)
@@ -520,14 +514,15 @@ __STATIC_INLINE void R_BSP_PinAccessEnable (void)
     FSP_CRITICAL_SECTION_DEFINE;
     FSP_CRITICAL_SECTION_ENTER;
 
-    /** If this is first entry then allow writing of PFS. */
+    /** If this is first entry then allow writing of PFC. */
     if (0 == g_protect_pfswe_counter)
     {
  #if BSP_FEATURE_BSP_SUPPORT_PFCWE_PROTECT
-        R_GPIO->PWPR = 0;                              ///< Clear BOWI bit - writing to PFSWE bit enabled
-        R_GPIO->PWPR = 1U << BSP_IO_PWPR_PFSWE_OFFSET; ///< Set PFSWE bit - writing to PFS register enabled
+        R_GPIO->PWPR = 0;                                                               ///< Clear BOWI bit - writing to PFCWE bit enabled
+        R_GPIO->PWPR = 1U << BSP_FEATURE_IOPORT_PWPR_PFCWE_OFFSET;                      ///< Set PFCWE bit - writing to PFC register enabled
  #else
-        R_GPIO->PWPR = (uint32_t) ((BSP_IO_PRV_PFCWE_MASK & R_GPIO->PWPR) | (1U << BSP_IO_PWPR_PFSWE_OFFSET));
+        R_GPIO->PWPR = (uint32_t) ((BSP_FEATURE_IOPORT_PFC_PWPR_REGWE_A_MASK & R_GPIO->PWPR) | \
+                                   (1U << BSP_FEATURE_IOPORT_PFC_PWPR_REGWE_A_OFFSET)); ///< Set REGWE_A bit - writing to PFC and PMC registers enabled
  #endif
     }
 
@@ -540,7 +535,7 @@ __STATIC_INLINE void R_BSP_PinAccessEnable (void)
 }
 
 /*******************************************************************************************************************//**
- * Disable access to the PFS registers. Uses a reference counter to protect against interrupts that could occur via
+ * Disable access to the PFC registers. Uses a reference counter to protect against interrupts that could occur via
  * multiple threads or an ISR re-entering this code.
  **********************************************************************************************************************/
 __STATIC_INLINE void R_BSP_PinAccessDisable (void)
@@ -551,21 +546,21 @@ __STATIC_INLINE void R_BSP_PinAccessDisable (void)
     FSP_CRITICAL_SECTION_DEFINE;
     FSP_CRITICAL_SECTION_ENTER;
 
-    /** Is it safe to disable PFS register? */
+    /** Is it safe to disable PFC register? */
     if (0 != g_protect_pfswe_counter)
     {
         /* Decrement the protect counter */
         g_protect_pfswe_counter--;
     }
 
-    /** Is it safe to disable writing of PFS? */
+    /** Is it safe to disable writing of PFC? */
     if (0 == g_protect_pfswe_counter)
     {
  #if BSP_FEATURE_BSP_SUPPORT_PFCWE_PROTECT
-        R_GPIO->PWPR = 0;                             ///< Clear PFSWE bit - writing to PFS register disabled
-        R_GPIO->PWPR = 1U << BSP_IO_PWPR_B0WI_OFFSET; ///< Set BOWI bit - writing to PFSWE bit disabled
+        R_GPIO->PWPR = 0;                                                                    ///< Clear PFCWE bit - writing to PFC register disabled
+        R_GPIO->PWPR = 1U << BSP_FEATURE_IOPORT_PWPR_B0WI_OFFSET;                            ///< Set BOWI bit - writing to PFCWE bit disabled
  #else
-        R_GPIO->PWPR = (uint32_t) (BSP_IO_PRV_PFCWE_MASK & R_GPIO->PWPR);
+        R_GPIO->PWPR = (uint32_t) (BSP_FEATURE_IOPORT_PFC_PWPR_REGWE_A_MASK & R_GPIO->PWPR); ///< Clear REGWE_A bit - writing to PFC and PMC registers disabled
  #endif
     }
 
@@ -586,7 +581,9 @@ __STATIC_INLINE void R_BSP_OENAccessEnable (void)
     FSP_CRITICAL_SECTION_DEFINE;
     FSP_CRITICAL_SECTION_ENTER;
 
-    R_GPIO->PWPR = (uint32_t) ((BSP_IO_PRV_OENWE_MASK & R_GPIO->PWPR) | (1U << BSP_IO_PWPR_OENWE_OFFSET));
+    R_GPIO->PWPR =
+        (uint32_t) ((BSP_FEATURE_IOPORT_PFC_PWPR_REGWE_B_MASK & R_GPIO->PWPR) |
+                    (1U << BSP_FEATURE_IOPORT_PFC_PWPR_REGWE_B_OFFSET));
 
     /** Restore the interrupt state */
     FSP_CRITICAL_SECTION_EXIT;
@@ -606,7 +603,7 @@ __STATIC_INLINE void R_BSP_OENAccessDisable (void)
     FSP_CRITICAL_SECTION_DEFINE;
     FSP_CRITICAL_SECTION_ENTER;
 
-    R_GPIO->PWPR = (uint32_t) (BSP_IO_PRV_OENWE_MASK & R_GPIO->PWPR);
+    R_GPIO->PWPR = (uint32_t) (BSP_FEATURE_IOPORT_PFC_PWPR_REGWE_B_MASK & R_GPIO->PWPR);
 
     /** Restore the interrupt state */
     FSP_CRITICAL_SECTION_EXIT;
@@ -771,7 +768,7 @@ __STATIC_INLINE void R_BSP_I3CControlCfg (bsp_i3c_voltage_t voltage, bsp_i3c_mod
 }
 
 /*******************************************************************************************************************//**
- * Configures bypass mode for RTC, Audio and EMCLK oscillator.
+ * Configures bypass mode for RTC and Audio oscillator.
  **********************************************************************************************************************/
 __STATIC_INLINE void R_BSP_BypassModeCfg (bsp_bypass_oscillator_t oscillator,
                                           bsp_bypass_mode_t       mode,
@@ -785,14 +782,6 @@ __STATIC_INLINE void R_BSP_BypassModeCfg (bsp_bypass_oscillator_t oscillator,
             R_GPIO->PFC_OSCBYPS_b.OSCBYPS1 = mode & 1U;
             R_GPIO->PFC_OSCBYPS_b.OSCPW1   = ((mode >> 1U) & 1U);
             R_GPIO->PFC_OSCBYPS_b.OSCSF1   = freq_range;
-            break;
-        }
-
-        case BSP_BYPASS_OSCILLATOR_EMCLK:
-        {
-            R_GPIO->PFC_OSCBYPS_b.OSCBYPS2 = mode & 1U;
-            R_GPIO->PFC_OSCBYPS_b.OSCPW2   = ((mode >> 1U) & 1U);
-            R_GPIO->PFC_OSCBYPS_b.OSCSF2   = freq_range;
             break;
         }
 

@@ -5,7 +5,7 @@
 */
 
 /*******************************************************************************************************************//**
- * @ingroup RENESAS_INTERFACES
+ * @ingroup RENESAS_TIMERS_INTERFACES
  * @defgroup POEG_API POEG Interface
  *
  * @brief Interface for the Port Output Enable for GPT.
@@ -15,8 +15,6 @@
  * @section POEG_API_SUMMARY Summary
  * @brief The POEG disables GPT output pins based on configurable events.
  *
- * Implemented by:
- * @ref POEG
  *
  * @{
  **********************************************************************************************************************/
@@ -41,6 +39,7 @@ FSP_HEADER
 /**********************************************************************************************************************
  * Typedef definitions
  **********************************************************************************************************************/
+#ifndef BSP_OVERRIDE_POEG_STATE_T
 
 /** POEG states. */
 typedef enum e_poeg_state
@@ -55,6 +54,10 @@ typedef enum e_poeg_state
      * the filtered input. */
     POEG_STATE_PIN_DISABLE_REQUEST_ACTIVE = 1U << 16,
 } poeg_state_t;
+
+#endif
+
+#ifndef BSP_OVERRIDE_POEG_TRIGGER_T
 
 /** Triggers that will disable GPT output pins. */
 typedef enum e_poeg_trigger
@@ -72,6 +75,8 @@ typedef enum e_poeg_trigger
     POEG_TRIGGER_ACMPHS5          = 1U << 9, ///< Disable GPT output based on ACMPHS5 comparator result
 } poeg_trigger_t;
 
+#endif
+
 /** GTETRG polarity. */
 typedef enum e_poeg_gtetrg_polarity
 {
@@ -84,11 +89,11 @@ typedef enum e_poeg_gtetrg_polarity
  */
 typedef enum e_poeg_gtetrg_noise_filter
 {
-    POEG_GTETRG_NOISE_FILTER_DISABLED      = 0U, ///< No noise filter applied to GTETRG input
-    POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_1   = 1U, ///< Apply noise filter with sample clock P0CLK
-    POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_8   = 3U, ///< Apply noise filter with sample clock P0CLK/8
-    POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_32  = 5U, ///< Apply noise filter with sample clock P0CLK/32
-    POEG_GTETRG_NOISE_FILTER_PCLKB_DIV_128 = 7U, ///< Apply noise filter with sample clock P0CLK/128
+    POEG_GTETRG_NOISE_FILTER_DISABLED           = 0U, ///< No noise filter applied to GTETRG input
+    POEG_GTETRG_NOISE_FILTER_CLK_SOURCE_DIV_1   = 1U, ///< Apply noise filter with sample clock equal to Clock source/1
+    POEG_GTETRG_NOISE_FILTER_CLK_SOURCE_DIV_8   = 3U, ///< Apply noise filter with sample clock equal to Clock source/8
+    POEG_GTETRG_NOISE_FILTER_CLK_SOURCE_DIV_32  = 5U, ///< Apply noise filter with sample clock equal to Clock source/32
+    POEG_GTETRG_NOISE_FILTER_CLK_SOURCE_DIV_128 = 7U, ///< Apply noise filter with sample clock equal to Clock source/128
 } poeg_gtetrg_noise_filter_t;
 
 /** POEG status */
@@ -104,8 +109,6 @@ typedef struct st_poeg_callback_args
 } poeg_callback_args_t;
 
 /** POEG control block.  Allocate an instance specific control block to pass into the POEG API calls.
- * @par Implemented as
- * - @ref poeg_instance_ctrl_t
  */
 typedef void poeg_ctrl_t;
 
@@ -121,8 +124,9 @@ typedef struct st_poeg_cfg
 
     /** Placeholder for user data. Passed to the user callback in @ref poeg_callback_args_t. */
     void const * p_context;
+    uint32_t     unit;                 ///< POEG unit to be used
     uint32_t     channel;              ///< Channel 0 corresponds to GTETRGA, 1 to GTETRGB, etc.
-    IRQn_Type    irq;                  ///< NVIC interrupt number assigned to this instance
+    IRQn_Type    irq;                  ///< Interrupt number assigned to this instance
     uint8_t      ipl;                  ///< POEG interrupt priority
 } poeg_cfg_t;
 
@@ -130,8 +134,6 @@ typedef struct st_poeg_cfg
 typedef struct st_poeg_api
 {
     /** Initial configuration.
-     * @par Implemented as
-     * - @ref R_POEG_Open()
      *
      * @param[in]   p_ctrl      Pointer to control block. Must be declared by user. Elements set here.
      * @param[in]   p_cfg       Pointer to configuration structure. All elements of this structure must be set by user.
@@ -139,8 +141,6 @@ typedef struct st_poeg_api
     fsp_err_t (* open)(poeg_ctrl_t * const p_ctrl, poeg_cfg_t const * const p_cfg);
 
     /** Gets the current driver state.
-     * @par Implemented as
-     * - @ref R_POEG_StatusGet()
      *
      * @param[in]   p_ctrl      Control block set in @ref poeg_api_t::open call.
      * @param[out]  p_status    Provides the current state of the POEG.
@@ -148,8 +148,6 @@ typedef struct st_poeg_api
     fsp_err_t (* statusGet)(poeg_ctrl_t * const p_ctrl, poeg_status_t * p_status);
 
     /** Specify callback function and optional context pointer and working memory pointer.
-     * @par Implemented as
-     * - @ref R_POEG_CallbackSet()
      *
      * @param[in]   p_ctrl                   Control block set in @ref poeg_api_t::open call for this timer.
      * @param[in]   p_callback               Callback function to register
@@ -157,12 +155,10 @@ typedef struct st_poeg_api
      * @param[in]   p_working_memory         Pointer to volatile memory where callback structure can be allocated.
      *                                       Callback arguments allocated here are only valid during the callback.
      */
-    fsp_err_t (* callbackSet)(poeg_ctrl_t * const p_api_ctrl, void (* p_callback)(poeg_callback_args_t *),
+    fsp_err_t (* callbackSet)(poeg_ctrl_t * const p_ctrl, void (* p_callback)(poeg_callback_args_t *),
                               void const * const p_context, poeg_callback_args_t * const p_callback_memory);
 
     /** Disables GPT output pins by software request.
-     * @par Implemented as
-     * - @ref R_POEG_OutputDisable()
      *
      * @param[in]   p_ctrl      Control block set in @ref poeg_api_t::open call.
      */
@@ -170,16 +166,12 @@ typedef struct st_poeg_api
 
     /** Attempts to clear status flags to reenable GPT output pins. Confirm all status flags are cleared after calling
      * this function by calling poeg_api_t::statusGet().
-     * @par Implemented as
-     * - @ref R_POEG_Reset()
      *
      * @param[in]   p_ctrl      Control block set in @ref poeg_api_t::open call.
      */
     fsp_err_t (* reset)(poeg_ctrl_t * const p_ctrl);
 
     /** Disables POEG interrupt.
-     * @par Implemented as
-     * - @ref R_POEG_Close()
      *
      * @param[in]   p_ctrl      Control block set in @ref poeg_api_t::open call.
      */
@@ -200,5 +192,5 @@ FSP_FOOTER
 #endif
 
 /*******************************************************************************************************************//**
- * @} (end addtogroup POEG_API)
+ * @} (end defgroup POEG_API)
  **********************************************************************************************************************/

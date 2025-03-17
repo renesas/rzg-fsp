@@ -345,11 +345,6 @@ void SysTick_Handler(timer_callback_args_t * p_args) PRIVILEGED_FUNCTION;
 portDONT_DISCARD void vPortSVCHandler_C(uint32_t * pulCallerStackAddress) PRIVILEGED_FUNCTION;
 
 /**
- * @brief Idle Hook
- */
-void vApplicationIdleHook(void);
-
-/**
  * @brief IRQ Wake Up
  */
 IRQn_Type vPortGetWakeUpIrq(void);
@@ -487,7 +482,7 @@ __attribute__((weak)) void vPortSuppressTicksAndSleep (TickType_t xExpectedIdleT
 
         configPOST_SLEEP_PROCESSING(xExpectedIdleTime);
 
-        /* Re-enable interrupts to allow the interrupt that brought the MCU
+        /* Re-enable interrupts to allow the interrupt that brought the MPU
          * out of sleep mode to execute immediately. See comments above
          * the cpsid instruction above. */
         __enable_irq();
@@ -942,7 +937,7 @@ StackType_t * pxPortInitialiseStack(StackType_t * pxTopOfStack,
      * interrupt. */
 #if (portPRELOAD_REGISTERS == 0)
     {
-        pxTopOfStack--;                                        /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
+        pxTopOfStack--;                                        /* Offset added to account for the way the MPU uses the stack on entry/exit of interrupts. */
         *pxTopOfStack = portINITIAL_XPSR;                      /* xPSR */
         pxTopOfStack--;
         *pxTopOfStack = (StackType_t) pxCode;                  /* PC */
@@ -980,7 +975,7 @@ StackType_t * pxPortInitialiseStack(StackType_t * pxTopOfStack,
     }
 #else                                                          /* portPRELOAD_REGISTERS */
     {
-        pxTopOfStack--;                                        /* Offset added to account for the way the MCU uses the stack on entry/exit of interrupts. */
+        pxTopOfStack--;                                        /* Offset added to account for the way the MPU uses the stack on entry/exit of interrupts. */
         *pxTopOfStack = portINITIAL_XPSR;                      /* xPSR */
         pxTopOfStack--;
         *pxTopOfStack = (StackType_t) pxCode;                  /* PC */
@@ -1287,9 +1282,10 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
         uint32_t nvic_iser_backup[sizeof(NVIC->ISER) / sizeof(uint32_t)];
         uint32_t nvic_icer[sizeof(NVIC->ICER) / sizeof(uint32_t)];
 
-        /* Go to Cortex-M33 Sleep Mode. Refer to "Cortex-M33 Sleep Mode" section of Hardware Manual */
+        /* Go to Cortex-M33 Sleep Mode. Refer to "Cortex-M33 Sleep Mode" section of the user's manual */
 
-        /* Sequence "1. Slow down the speed of Cortex-M33 clock" is not mandatory. */
+        /* Sequence "1. Set sleep request for Cortex-M33. */
+        BSP_SLEEP_SET_SLEEP_REQ();
 
         /* Sequence 2.
          * Set the IM33_MASK bit of the SYS_LP_CTL7 register to 1.
@@ -1336,7 +1332,7 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
         /* Sequence 7.
          * Issue a WFI instruction to enter Cortex-M33 Sleep Mode.
          *
-         * If there is a pending interrupt (wake up condition for WFI is true), the MCU does not enter low power mode:
+         * If there is a pending interrupt (wake up condition for WFI is true), the MPU does not enter low power mode:
          * http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0552a/BABHHGEB.html
          * Note that interrupt will bring the CPU out of the low power mode.  After exiting from low power mode,
          * interrupt will be re-enabled. */
@@ -1365,9 +1361,10 @@ void rm_freertos_port_sleep_preserving_lpm (uint32_t xExpectedIdleTime)
         /* Restore NVIC ISER register from backup */
         memcpy((void *) NVIC->ISER, (void *) nvic_iser_backup, sizeof(NVIC->ISER));
 
-        /* Sequence "12. Recover the speed of Cortex-M33 clock." is not mandatory. */
+        /* Sequence "12. Clear sleep request for Cortex-M33. */
+        BSP_SLEEP_CLEAR_SLEEP_REQ();
 
-        /* Re-enable interrupts to allow the interrupt that brought the MCU
+        /* Re-enable interrupts to allow the interrupt that brought the MPU
          * out of sleep mode to execute immediately. This will not cause a
          * context switch because all tasks are currently suspended. */
         __enable_irq();

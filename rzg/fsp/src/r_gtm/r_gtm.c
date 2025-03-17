@@ -46,6 +46,33 @@ void gtm_int_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
+/* GTM base address */
+static const uint32_t volatile * p_gtm_base_address[BSP_FEATURE_GTM_MAX_CHANNEL] =
+{
+    (uint32_t *) R_GTM0_BASE,
+#if BSP_FEATURE_GTM_MAX_CHANNEL > 1
+    (uint32_t *) R_GTM1_BASE,
+ #if BSP_FEATURE_GTM_MAX_CHANNEL > 2
+    (uint32_t *) R_GTM2_BASE,
+  #if BSP_FEATURE_GTM_MAX_CHANNEL > 3
+    (uint32_t *) R_GTM3_BASE,
+   #if BSP_FEATURE_GTM_MAX_CHANNEL > 4
+    (uint32_t *) R_GTM4_BASE,
+    #if BSP_FEATURE_GTM_MAX_CHANNEL > 5
+    (uint32_t *) R_GTM5_BASE,
+     #if BSP_FEATURE_GTM_MAX_CHANNEL > 6
+    (uint32_t *) R_GTM6_BASE,
+      #if BSP_FEATURE_GTM_MAX_CHANNEL > 7
+    (uint32_t *) R_GTM7_BASE,
+      #endif
+     #endif
+    #endif
+   #endif
+  #endif
+ #endif
+#endif
+};
+
 /***********************************************************************************************************************
  * Global Variables
  **********************************************************************************************************************/
@@ -53,18 +80,19 @@ void gtm_int_isr(void);
 /** GTM Implementation of General Timer Driver  */
 const timer_api_t g_timer_on_gtm =
 {
-    .open         = R_GTM_Open,
-    .stop         = R_GTM_Stop,
-    .start        = R_GTM_Start,
-    .reset        = R_GTM_Reset,
-    .enable       = R_GTM_Enable,
-    .disable      = R_GTM_Disable,
-    .periodSet    = R_GTM_PeriodSet,
-    .dutyCycleSet = R_GTM_DutyCycleSet,
-    .infoGet      = R_GTM_InfoGet,
-    .statusGet    = R_GTM_StatusGet,
-    .callbackSet  = R_GTM_CallbackSet,
-    .close        = R_GTM_Close,
+    .open            = R_GTM_Open,
+    .stop            = R_GTM_Stop,
+    .start           = R_GTM_Start,
+    .reset           = R_GTM_Reset,
+    .enable          = R_GTM_Enable,
+    .disable         = R_GTM_Disable,
+    .periodSet       = R_GTM_PeriodSet,
+    .dutyCycleSet    = R_GTM_DutyCycleSet,
+    .compareMatchSet = R_GTM_CompareMatchSet,
+    .infoGet         = R_GTM_InfoGet,
+    .statusGet       = R_GTM_StatusGet,
+    .callbackSet     = R_GTM_CallbackSet,
+    .close           = R_GTM_Close,
 };
 
 /*******************************************************************************************************************//**
@@ -102,10 +130,9 @@ fsp_err_t R_GTM_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_c
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 #endif
 
-    /* calculate base address for specified channel */
-    intptr_t base_address = (intptr_t) R_GTM0_BASE +
-                            (p_cfg->channel * ((intptr_t) R_GTM1_BASE - (intptr_t) R_GTM0_BASE));
-    p_instance_ctrl->p_reg = (R_GTM0_Type *) base_address;
+    /* Set the base address for specified channel */
+    p_instance_ctrl->p_reg = (R_GTM0_Type *) p_gtm_base_address[p_cfg->channel];
+
     p_instance_ctrl->p_cfg = p_cfg;
 
     /* Power on the GTM channel. */
@@ -274,6 +301,24 @@ fsp_err_t R_GTM_DutyCycleSet (timer_ctrl_t * const p_ctrl, uint32_t const duty_c
 }
 
 /*******************************************************************************************************************//**
+ * Placeholder for unsupported compareMatch function. Implements @ref timer_api_t::compareMatchSet.
+ *
+ * @retval FSP_ERR_UNSUPPORTED      GTM compare match is not supported.
+ **********************************************************************************************************************/
+fsp_err_t R_GTM_CompareMatchSet (timer_ctrl_t * const        p_ctrl,
+                                 uint32_t const              compare_match_value,
+                                 timer_compare_match_t const match_channel)
+{
+    /* This function isn't supported. It is defined only to implement a required function of timer_api_t.
+     * Mark the input parameter as unused since this function isn't supported. */
+    FSP_PARAMETER_NOT_USED(p_ctrl);
+    FSP_PARAMETER_NOT_USED(compare_match_value);
+    FSP_PARAMETER_NOT_USED(match_channel);
+
+    return FSP_ERR_UNSUPPORTED;
+}
+
+/*******************************************************************************************************************//**
  * Gets timer information and store it in provided pointer p_info. Implements @ref timer_api_t::infoGet.
  *
  * @retval FSP_SUCCESS                 Period, count direction, and frequency stored in p_info.
@@ -406,7 +451,7 @@ fsp_err_t R_GTM_Close (timer_ctrl_t * const p_ctrl)
 
     if (FSP_INVALID_VECTOR != p_instance_ctrl->p_cfg->cycle_end_irq)
     {
-        NVIC_DisableIRQ(p_instance_ctrl->p_cfg->cycle_end_irq);
+        R_BSP_IrqDisable(p_instance_ctrl->p_cfg->cycle_end_irq);
         R_FSP_IsrContextSet(p_instance_ctrl->p_cfg->cycle_end_irq, p_instance_ctrl);
     }
 
@@ -513,8 +558,8 @@ static uint32_t r_gtm_clock_frequency_get (R_GTM0_Type * p_gtm_regs)
     (void) p_gtm_regs;
     uint32_t clock_freq_hz = 0U;
 
-    /* Call CGC function to obtain current PCLKB clock frequency. */
-    clock_freq_hz = R_FSP_SystemClockHzGet(FSP_PRIV_CLOCK_P0CLK);
+    /* Call CGC function to obtain current clock frequency. */
+    clock_freq_hz = R_FSP_SystemClockHzGet(BSP_FEATURE_GTM_SOURCE_CLOCK);
 
     return clock_freq_hz;
 }

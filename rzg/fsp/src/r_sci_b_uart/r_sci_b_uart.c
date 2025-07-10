@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -207,11 +207,6 @@ void sci_b_uart_rx_dmac_callback(sci_b_uart_instance_ctrl_t * p_ctrl);
  * Private global variables
  **********************************************************************************************************************/
 
-/* Name of module used by error logger macro */
-#if BSP_CFG_ERROR_LOG != 0
-static const char g_module_name[] = "sci_b_uart";
-#endif
-
 /* Baud rate divisor information (UART mode) */
 static const baud_setting_const_t g_async_baud[SCI_B_UART_NUM_DIVISORS_ASYNC] =
 {
@@ -259,39 +254,6 @@ const uart_api_t g_uart_on_sci_b =
     .communicationAbort = R_SCI_B_UART_Abort,
     .callbackSet        = R_SCI_B_UART_CallbackSet,
     .readStop           = R_SCI_B_UART_ReadStop,
-};
-
-/** SCI_B_UART base address */
-static const uint32_t volatile * p_sci_b_uart_base_address[BSP_FEATURE_SCI_MAX_CHANNELS] =
-{
-    (uint32_t *) R_SCI0_BASE,
-#if BSP_FEATURE_SCI_MAX_CHANNELS > 1
-    (uint32_t *) R_SCI1_BASE,
- #if BSP_FEATURE_SCI_MAX_CHANNELS > 2
-    (uint32_t *) R_SCI2_BASE,
-  #if BSP_FEATURE_SCI_MAX_CHANNELS > 3
-    (uint32_t *) R_SCI3_BASE,
-   #if BSP_FEATURE_SCI_MAX_CHANNELS > 4
-    (uint32_t *) R_SCI4_BASE,
-    #if BSP_FEATURE_SCI_MAX_CHANNELS > 5
-    (uint32_t *) R_SCI5_BASE,
-     #if BSP_FEATURE_SCI_MAX_CHANNELS > 6
-    (uint32_t *) R_SCI6_BASE,
-      #if BSP_FEATURE_SCI_MAX_CHANNELS > 7
-    (uint32_t *) R_SCI7_BASE,
-       #if BSP_FEATURE_SCI_MAX_CHANNELS > 8
-    (uint32_t *) R_SCI8_BASE,
-        #if BSP_FEATURE_SCI_MAX_CHANNELS > 9
-    (uint32_t *) R_SCI9_BASE,
-        #endif
-       #endif
-      #endif
-     #endif
-    #endif
-   #endif
-  #endif
- #endif
-#endif
 };
 
 /*******************************************************************************************************************//**
@@ -356,10 +318,14 @@ fsp_err_t R_SCI_B_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * 
     FSP_ASSERT(p_cfg->txi_irq >= 0);
     FSP_ASSERT(p_cfg->tei_irq >= 0);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
+    sci_b_uart_extended_cfg_t * p_extend = (sci_b_uart_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
+#else
+    sci_b_uart_extended_cfg_t * p_extend = (sci_b_uart_extended_cfg_t *) p_cfg->p_extend;
 #endif
 
     /* Save register base address. */
-    p_ctrl->p_reg = (R_SCI_B0_Type *) p_sci_b_uart_base_address[p_cfg->channel];
+    p_ctrl->p_reg = (R_SCI_B0_Type *) p_extend->p_reg;
 
     p_ctrl->fifo_depth = 0U;
 #if SCI_B_UART_CFG_FIFO_SUPPORT
@@ -377,7 +343,6 @@ fsp_err_t R_SCI_B_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * 
     p_ctrl->p_callback        = p_cfg->p_callback;
     p_ctrl->p_context         = p_cfg->p_context;
     p_ctrl->p_callback_memory = NULL;
-    sci_b_uart_extended_cfg_t * p_extend = (sci_b_uart_extended_cfg_t *) p_cfg->p_extend;
 
     p_ctrl->data_bytes = 1U;
     if (UART_DATA_BITS_9 == p_cfg->data_bits)
@@ -453,7 +418,7 @@ fsp_err_t R_SCI_B_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * 
 
     /* Wait until interanl state of RE is 1 as it takes some time for the state to be reflected internally after
      * rewriting the control register. Please refer "Communication Enable Status Register(CESR)" description in the
-     * manual */
+     * user's manual */
     FSP_HARDWARE_REGISTER_WAIT(p_ctrl->p_reg->CESR_b.RIST, 1U);
 
     p_ctrl->open = SCI_B_UART_OPEN;
@@ -498,7 +463,7 @@ fsp_err_t R_SCI_B_UART_Close (uart_ctrl_t * const p_api_ctrl)
 
     /* Wait until interanl state of TE is 0 as it takes some time for the state to be reflected internally after
      * rewriting the control register. Please refer "Communication Enable Status Register(CESR)" description in the
-     * manual */
+     * user's manual */
     FSP_HARDWARE_REGISTER_WAIT(p_ctrl->p_reg->CESR_b.TIST, 0U);
 
     /* If transmission is enabled at build time, disable transmission irqs. */
@@ -1445,7 +1410,7 @@ static void r_sci_b_uart_fifo_cfg (sci_b_uart_instance_ctrl_t * const p_ctrl)
             /* RTRG(Receive FIFO Data Trigger Number) controls when the RXI interrupt will be generated. If data is
              * received but the trigger number is not met the RXI interrupt will be generated after 15 ETUs from
              * the last stop bit in asynchronous mode. For more information see the FIFO Selected section of "Serial
-             * Data Reception (Asynchronous Mode)" in the manual */
+             * Data Reception (Asynchronous Mode)" in the user's manual */
             fcr |= (((p_ctrl->fifo_depth - 1U) & p_extend->rx_fifo_trigger) & SCI_B_UART_FCR_TRIGGER_MASK) <<
                    R_SCI_B0_FCR_RTRG_Pos;
         }

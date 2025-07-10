@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -385,13 +385,14 @@ typedef struct st_canfd_global_cfg
 /** CANFD Extended Configuration */
 typedef struct st_canfd_extended_cfg
 {
-    canfd_afl_entry_t const * p_afl;           ///< AFL rules list
-    uint64_t               txmb_txi_enable;    ///< Array of TX Message Buffer enable bits
-    uint32_t               error_interrupts;   ///< Error interrupt enable bits
-    can_bit_timing_cfg_t * p_data_timing;      ///< FD Data Rate (when bitrate switching is used)
-    uint8_t                delay_compensation; ///< FD Transceiver Delay Compensation (enable or disable)
-    canfd_global_cfg_t   * p_global_cfg;       ///< Global configuration (global error callback channel only)
-    canfd_txmb_merge_mode_t txmb_merge_mode_enable;  ///< TXMB buffer marge mode configuration
+    canfd_afl_entry_t const * p_afl;                   ///< AFL rules list
+    uint64_t                  txmb_txi_enable;         ///< Array of TX Message Buffer enable bits
+    uint32_t                  error_interrupts;        ///< Error interrupt enable bits
+    can_bit_timing_cfg_t    * p_data_timing;           ///< FD Data Rate (when bitrate switching is used)
+    uint8_t                   delay_compensation;      ///< FD Transceiver Delay Compensation (enable or disable)
+    canfd_global_cfg_t      * p_global_cfg;            ///< Global configuration (global error callback channel only)
+    canfd_txmb_merge_mode_t   txmb_merge_mode_enable;  ///< TXMB buffer marge mode configuration
+    void                    * p_reg;                   ///< Register base address for specified channel
 } canfd_extended_cfg_t;
 
 /**********************************************************************************************************************

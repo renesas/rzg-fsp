@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -68,6 +68,7 @@ typedef struct st_gtm_extended_cfg
 {
     gtm_giws_type_t  generate_interrupt_when_starts; // Controls enabling/disabling of interrupt requests when start
     gtm_timer_mode_t gtm_mode;                       // Select GTM timer mode
+    void           * p_reg;                          // Register base address for specified channel
 } gtm_extended_cfg_t;
 
 /**********************************************************************************************************************

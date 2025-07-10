@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -562,7 +562,7 @@ FSP_HEADER
 #endif
 
 /***********************************************************************************************************************
- * Definition of macros to control TSU clock ON/OFF and reset ON/OFF
+ * Definition of macros to control MTU3 clock ON/OFF and reset ON/OFF
  **********************************************************************************************************************/
 #define BSP_CLKON_REG_FSP_IP_MTU3(channel)       (R_CPG->CPG_CLKON_MTU)
 #define BSP_CLKON_BIT_FSP_IP_MTU3(channel)       (1U << (R_CPG_CPG_CLKON_MTU_CLK0_ON_Pos))

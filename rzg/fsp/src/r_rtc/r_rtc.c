@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -12,67 +12,73 @@
 /***********************************************************************************************************************
  * Macro definitions
  **********************************************************************************************************************/
-#define RTC_MASK_MSB                      (0x0F)
-#define RTC_MASK_LSB                      (0xF0)
+#define RTC_MASK_MSB                       (0x0F)
+#define RTC_MASK_LSB                       (0xF0)
 
-#define RTC_FIRST_DAY_OF_A_MONTH          (1)
+#define RTC_FIRST_DAY_OF_A_MONTH           (1)
 
 /* Day of week : valid range between 0 to 6. */
-#define RTC_DAYS_IN_A_WEEK                (6)
+#define RTC_DAYS_IN_A_WEEK                 (6)
 
 /* Month : valid range between 0 to 11.*/
-#define RTC_MONTHS_IN_A_YEAR              (11)
-#define RTC_LAST_DAY_OF_LEAP_FEB_MONTH    (29)
-#define RTC_LAST_DAY_OF_A_MONTH           (31)
-#define RTC_YEAR_VALUE_MIN                (100)
-#define RTC_YEAR_VALUE_MAX                (199)
+#define RTC_MONTHS_IN_A_YEAR               (11)
+#define RTC_LAST_DAY_OF_LEAP_FEB_MONTH     (29)
+#define RTC_LAST_DAY_OF_A_MONTH            (31)
+#define RTC_YEAR_VALUE_MIN                 (100)
+#define RTC_YEAR_VALUE_MAX                 (199)
 
 /* Seconds : valid range between 0 to 59.*/
-#define RTC_SECONDS_IN_A_MINUTE           (59)
+#define RTC_SECONDS_IN_A_MINUTE            (59)
 
 /* Minute : valid range between 0 to 59. */
-#define RTC_MINUTES_IN_A_HOUR             (59)
+#define RTC_MINUTES_IN_A_HOUR              (59)
 
 /* Hours : valid range between 0 to 23. */
-#define RTC_HOURS_IN_A_DAY                (23)
+#define RTC_HOURS_IN_A_DAY                 (23)
 
 /* In Zeller algorithm value of (-[Y/100] + [Y/400]) is 15 for Y = 2000 to Y = 2099) */
-#define RTC_ZELLER_ALGM_CONST_FIFTEEN     (15)
+#define RTC_ZELLER_ALGM_CONST_FIFTEEN      (15)
 
 /* Macro definitions for February and March months */
-#define RTC_FEBRUARY_MONTH                (2U)
-#define RTC_MARCH_MONTH                   (3U)
+#define RTC_FEBRUARY_MONTH                 (2U)
+#define RTC_MARCH_MONTH                    (3U)
 
-#define RTC_TIME_H_MONTH_OFFSET           (1)
+#define RTC_TIME_H_MONTH_OFFSET            (1)
 
 /*The RTC has a 100 year calendar to match the starting year 2000, year offset(1900) is added like 117 + 1900 = 2017 */
-#define RTC_TIME_H_YEAR_OFFSET            (1900)
+#define RTC_TIME_H_YEAR_OFFSET             (1900)
 
 /** "RTC" in ASCII, used to determine if device is open. */
-#define RTC_OPEN                          (0x00525443ULL)
+#define RTC_OPEN                           (0x00525443ULL)
 
-#define RTC_MAX_ERROR_ADJUSTMENT_VALUE    (0x3FU)
+#if BSP_FEATURE_RTC_HAS_RADJ_ADJ6
+ #define RTC_MAX_ERROR_ADJUSTMENT_VALUE    (0x7FU)
+ #define RTC_MAX_ADJ_VALUE                 (0x3FU)
+ #define RTC_ADJ6_ADJUSTMENT_VALUE         (0x40U)
+#else
+ #define RTC_MAX_ERROR_ADJUSTMENT_VALUE    (0x3FU)
+#endif
 
-#define RTC_RHRCNT_HOUR_MASK              (0x3f)
-#define RTC_COMPARE_ENB_BIT               (7U)
-#define RTC_MASK_8TH_BIT                  (0x7F)
+#define RTC_RHRCNT_HOUR_MASK               (0x3f)
+#define RTC_COMPARE_ENB_BIT                (7U)
+#define RTC_MASK_8TH_BIT                   (0x7F)
 
-/* As per HW manual, value of Year is between 0 to 99, the RTC has a 100 year calendar from 2000 to 2099.
+/* As per user's manual, value of Year is between 0 to 99, the RTC has a 100 year calendar from 2000 to 2099.
  * But as per C standards, tm_year is years since 1900.*/
-#define RTC_C_TIME_OFFSET                 (100)
+#define RTC_C_TIME_OFFSET                  (100)
 
 /* See section Frequency Register (RFRH/RFRL)" of the user's manual) */
-#define RTC_RFRL_MIN_VALUE_LOCO           (0x7U)
-#define RTC_RFRL_MAX_VALUE_LOCO           (0x1FFU)
+#define RTC_RFRL_MIN_VALUE_LOCO            (0x7U)
+#define RTC_RFRL_MAX_VALUE_LOCO            (0x1FFU)
 
-#define RTC_ALARM_REG_SIZE                (0x20)
+#define RTC_ALARM_REG_SIZE                 (0x20)
 
-#define BSP_DELAY_US_PER_SECOND           (1000000)
-#define NOISE_FILTER_SET_NUMBER_DELAY     (3)
-#define NOISE_FILTER_CLOCK_DEVIDE_1       (1)
-#define NOISE_FILTER_CLOCK_DEVIDE_32      (32)
-#define NOISE_FILTER_CLOCK_DEVIDE_4096    (4096)
-#define NOISE_FILTER_CLOCK_DEVIDE_8192    (8192)
+#define BSP_DELAY_US_PER_SECOND            (1000000)
+#define NOISE_FILTER_SET_NUMBER_DELAY      (3)
+#define NOISE_FILTER_CLOCK_DEVIDE_1        (1)
+#define NOISE_FILTER_CLOCK_DEVIDE_32       (32)
+#define NOISE_FILTER_CLOCK_DEVIDE_4096     (4096)
+#define NOISE_FILTER_CLOCK_DEVIDE_8192     (8192)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -295,7 +301,7 @@ fsp_err_t R_RTC_Close (rtc_ctrl_t * const p_ctrl)
     R_RTC->RCR1 = 0U;
 
     /* When the RCR1 register is modified, check that all the bits are updated before proceeding
-     * (see section "RTC Control Register 1 (RCR1)" of the manual)*/
+     * (see section "RTC Control Register 1 (RCR1)" of the user's manual)*/
     FSP_HARDWARE_REGISTER_WAIT(R_RTC->RCR1, 0);
 
     /* Set the START bit to 0 */
@@ -321,7 +327,7 @@ fsp_err_t R_RTC_Close (rtc_ctrl_t * const p_ctrl)
         R_FSP_IsrContextSet(p_instance_ctrl->p_cfg->alarm_irq, NULL);
     }
 
-#if BSP_FEATURE_RTC_IS_IRTC
+#if BSP_FEATURE_RTC_HAS_ALARM1
     if (((rtc_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend)->alarm1_irq >= 0)
     {
         R_BSP_IrqDisable(((rtc_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend)->alarm1_irq);
@@ -528,7 +534,7 @@ fsp_err_t R_RTC_CalendarAlarmSet (rtc_ctrl_t * const p_ctrl, rtc_alarm_time_t * 
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ASSERT(NULL != p_alarm);
     FSP_ERROR_RETURN(RTC_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
- #if BSP_FEATURE_RTC_IS_IRTC
+ #if BSP_FEATURE_RTC_HAS_ALARM1
     FSP_ERROR_RETURN((p_alarm->channel == RTC_ALARM_CHANNEL_0 && p_instance_ctrl->p_cfg->alarm_irq >= 0) ||
                      (p_alarm->channel == RTC_ALARM_CHANNEL_1 &&
                       ((rtc_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend)->alarm1_irq >= 0),
@@ -547,7 +553,7 @@ fsp_err_t R_RTC_CalendarAlarmSet (rtc_ctrl_t * const p_ctrl, rtc_alarm_time_t * 
     IRQn_Type           alarm_irq     = p_instance_ctrl->p_cfg->alarm_irq;
     rtc_alarm_channel_t alarm_channel = RTC_ALARM_CHANNEL_0;
 
-#if BSP_FEATURE_RTC_IS_IRTC
+#if BSP_FEATURE_RTC_HAS_ALARM1
     alarm_channel = p_alarm->channel;
     if (RTC_ALARM_CHANNEL_1 == alarm_channel)
     {
@@ -687,7 +693,7 @@ fsp_err_t R_RTC_CalendarAlarmGet (rtc_ctrl_t * const p_ctrl, rtc_alarm_time_t * 
 
     rtc_alarm_channel_t alarm_channel = RTC_ALARM_CHANNEL_0;
 
-#if BSP_FEATURE_RTC_IS_IRTC
+#if BSP_FEATURE_RTC_HAS_ALARM1
     alarm_channel = p_alarm->channel;
 #endif
 
@@ -907,7 +913,7 @@ fsp_err_t R_RTC_CallbackSet (rtc_ctrl_t * const          p_ctrl,
  **********************************************************************************************************************/
 fsp_err_t R_RTC_TimeCaptureSet (rtc_ctrl_t * const p_ctrl, rtc_time_capture_t * const p_time_capture)
 {
-#if BSP_FEATURE_RTC_IS_IRTC && BSP_FEATURE_RTC_HAS_TCEN
+#if BSP_FEATURE_RTC_HAS_ALARM1
  #if (RTC_CFG_PARAM_CHECKING_ENABLE)
     rtc_instance_ctrl_t * p_instance_ctrl = (rtc_instance_ctrl_t *) p_ctrl;
     FSP_ASSERT(NULL != p_instance_ctrl);
@@ -997,7 +1003,7 @@ fsp_err_t R_RTC_TimeCaptureSet (rtc_ctrl_t * const p_ctrl, rtc_time_capture_t * 
  **********************************************************************************************************************/
 fsp_err_t R_RTC_TimeCaptureGet (rtc_ctrl_t * const p_ctrl, rtc_time_capture_t * const p_time_capture)
 {
-#if BSP_FEATURE_RTC_IS_IRTC && BSP_FEATURE_RTC_HAS_TCEN
+#if BSP_FEATURE_RTC_HAS_ALARM1
  #if (RTC_CFG_PARAM_CHECKING_ENABLE)
     rtc_instance_ctrl_t * p_instance_ctrl = (rtc_instance_ctrl_t *) p_ctrl;
     FSP_ASSERT(NULL != p_instance_ctrl);
@@ -1136,7 +1142,7 @@ static void r_rtc_set_clock_source (rtc_instance_ctrl_t * const p_ctrl, rtc_cfg_
     R_RTC->RCR4 = (uint8_t) p_ctrl->p_cfg->clock_source;
 
     /* Supply 6 clocks of the count source (LOCO/SOSC, 183us, 32kHZ).
-     * See "Clock and Count Mode Setting Procedure" of the manual */
+     * See "Clock and Count Mode Setting Procedure" of the user's manual */
     R_BSP_SoftwareDelay(BSP_PRV_RTC_RESET_DELAY_US, BSP_DELAY_UNITS_MICROSECONDS);
 
     r_rtc_start_bit_update(0U);
@@ -1162,7 +1168,7 @@ static void r_rtc_set_clock_source (rtc_instance_ctrl_t * const p_ctrl, rtc_cfg_
     R_RTC->RCR1 = 0;
 
     /* When the RCR1 register is modified, check that all the bits are updated before proceeding
-     * (see section "RTC Control Register 1 (RCR1)" of the manual)*/
+     * (see section "RTC Control Register 1 (RCR1)" of the user's manual)*/
     FSP_HARDWARE_REGISTER_WAIT(R_RTC->RCR1, 0);
 
     /* Force RTC to 24 hour mode. Set HR24 bit in the RCR2 register */
@@ -1198,7 +1204,7 @@ static void r_rtc_config_rtc_interrupts (rtc_instance_ctrl_t * const p_ctrl, rtc
         R_BSP_IrqCfg(p_cfg->alarm_irq, p_cfg->alarm_ipl, p_ctrl);
     }
 
-#if BSP_FEATURE_RTC_IS_IRTC
+#if BSP_FEATURE_RTC_HAS_ALARM1
     if (((rtc_extended_cfg_t *) p_cfg->p_extend)->alarm1_irq >= 0)
     {
         R_BSP_IrqCfg(((rtc_extended_cfg_t *) p_cfg->p_extend)->alarm1_irq,
@@ -1406,7 +1412,7 @@ static fsp_err_t r_rtc_time_validate (rtc_time_t * p_time)
  * The user's manual indicates that "A value from 01 through 12 (in BCD) can be specified" for Month Counter register in the RTC.
  * This difference will be taken care in the Set and Get functions.
  *
- * As per HW manual, value of Year is between 0 to 99, the RTC has a 100 year calendar from 2000 to 2099.
+ * As per user's manual, value of Year is between 0 to 99, the RTC has a 100 year calendar from 2000 to 2099.
  * (see section "Overview" of the user's manual)
  * But as per C standards, tm_year is years since 1900.
  * A sample year set in an application would be like time.tm_year = 2019-1900; (to set year 2019)
@@ -1632,8 +1638,6 @@ static fsp_err_t r_rtc_alarm_dayofmonth_and_dayofweek_validate (rtc_alarm_time_t
  **********************************************************************************************************************/
 static void r_rtc_error_adjustment_set (rtc_error_adjustment_cfg_t const * const err_adj_cfg)
 {
-    uint8_t error_adjustment = 0;
-
     rtc_error_adjustment_mode_t   mode   = err_adj_cfg->adjustment_mode;
     rtc_error_adjustment_period_t period = err_adj_cfg->adjustment_period;
     rtc_error_adjustment_t        type   = err_adj_cfg->adjustment_type;
@@ -1670,8 +1674,16 @@ static void r_rtc_error_adjustment_set (rtc_error_adjustment_cfg_t const * const
         }
     }
 
-    error_adjustment = (uint8_t) ((uint8_t) (((uint8_t) type) << 6U) |
-                                  (RTC_MAX_ERROR_ADJUSTMENT_VALUE & value));
+#if BSP_FEATURE_RTC_HAS_RADJ_ADJ6
+    uint16_t error_adjustment =
+        (uint16_t) ((uint16_t) (((value & RTC_ADJ6_ADJUSTMENT_VALUE) > 0) << R_RTC_RADJ_ADJ6_Pos) |
+                    ((uint8_t) (type << R_RTC_RADJ_PMADJ_Pos) |
+                     (value & RTC_MAX_ADJ_VALUE)));
+#else
+    uint8_t error_adjustment = (uint8_t) ((uint8_t) (((uint8_t) type) << R_RTC_RADJ_PMADJ_Pos) |
+                                          (RTC_MAX_ERROR_ADJUSTMENT_VALUE & value));
+#endif
+
     R_RTC->RADJ = error_adjustment;
 
     /* When RADJ is modified, check that all the bits are updated before continuing with more processing.
@@ -1710,7 +1722,7 @@ void rtc_alarm_periodic_isr (void)
             event = RTC_EVENT_ALARM_IRQ;
         }
 
-#if BSP_FEATURE_RTC_IS_IRTC
+#if BSP_FEATURE_RTC_HAS_ALARM1
         else if (irq == ((rtc_extended_cfg_t *) p_ctrl->p_cfg->p_extend)->alarm1_irq)
         {
             event = RTC_EVENT_ALARM1_IRQ;

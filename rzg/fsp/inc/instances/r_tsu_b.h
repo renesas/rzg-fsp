@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -52,6 +52,7 @@ typedef struct st_tsu_b_extended_cfg
     int16_t                          compare_ref_high;      ///< Upper reference value
     IRQn_Type                        compare_irq;           ///< IRQ number for Comparison Result Interrupts
     uint8_t                          compare_ipl;           ///< Priority for Comparison Result Interrupts
+    void                           * p_reg;                 ///< Register base address for specified channel
 } tsu_b_extended_cfg_t;
 
 /** TSU_B instance control block. DO NOT INITIALIZE. Initialized in @ref adc_api_t::open(). */

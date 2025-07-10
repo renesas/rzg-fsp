@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -45,33 +45,6 @@ void gtm_int_isr(void);
 /***********************************************************************************************************************
  * Private global variables
  **********************************************************************************************************************/
-
-/* GTM base address */
-static const uint32_t volatile * p_gtm_base_address[BSP_FEATURE_GTM_MAX_CHANNEL] =
-{
-    (uint32_t *) R_GTM0_BASE,
-#if BSP_FEATURE_GTM_MAX_CHANNEL > 1
-    (uint32_t *) R_GTM1_BASE,
- #if BSP_FEATURE_GTM_MAX_CHANNEL > 2
-    (uint32_t *) R_GTM2_BASE,
-  #if BSP_FEATURE_GTM_MAX_CHANNEL > 3
-    (uint32_t *) R_GTM3_BASE,
-   #if BSP_FEATURE_GTM_MAX_CHANNEL > 4
-    (uint32_t *) R_GTM4_BASE,
-    #if BSP_FEATURE_GTM_MAX_CHANNEL > 5
-    (uint32_t *) R_GTM5_BASE,
-     #if BSP_FEATURE_GTM_MAX_CHANNEL > 6
-    (uint32_t *) R_GTM6_BASE,
-      #if BSP_FEATURE_GTM_MAX_CHANNEL > 7
-    (uint32_t *) R_GTM7_BASE,
-      #endif
-     #endif
-    #endif
-   #endif
-  #endif
- #endif
-#endif
-};
 
 /***********************************************************************************************************************
  * Global Variables
@@ -130,8 +103,11 @@ fsp_err_t R_GTM_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_c
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 #endif
 
-    /* Set the base address for specified channel */
-    p_instance_ctrl->p_reg = (R_GTM0_Type *) p_gtm_base_address[p_cfg->channel];
+    /* Get extended configuration structure pointer. */
+    gtm_extended_cfg_t * p_extend = (gtm_extended_cfg_t *) p_cfg->p_extend;
+
+    /* Set the base address for specified channel. */
+    p_instance_ctrl->p_reg = (R_GTM0_Type *) p_extend->p_reg;
 
     p_instance_ctrl->p_cfg = p_cfg;
 
@@ -489,6 +465,8 @@ static fsp_err_t r_gtm_open_param_checking (gtm_instance_ctrl_t * p_instance_ctr
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ASSERT(NULL != p_cfg);
     FSP_ASSERT(NULL != p_cfg->p_extend);
+    gtm_extended_cfg_t * p_extend = (gtm_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
     FSP_ERROR_RETURN(GTM_OPEN != p_instance_ctrl->open, FSP_ERR_ALREADY_OPEN);
 
     /* Enable IRQ if user supplied a callback function,

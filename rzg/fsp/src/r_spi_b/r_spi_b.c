@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -83,18 +83,6 @@ void spi_b_eri_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
-/* SPI_B base address */
-static const R_SPI_B0_Type volatile * p_spi_b_base_address[BSP_FEATURE_SPI_MAX_CHANNEL] =
-{
-    R_SPI_B0,
-#if BSP_FEATURE_SPI_MAX_CHANNEL > 1
-    R_SPI_B1,
- #if BSP_FEATURE_SPI_MAX_CHANNEL > 2
-    R_SPI_B2,
- #endif
-#endif
-};
-
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
@@ -154,9 +142,10 @@ fsp_err_t R_SPI_B_Open (spi_ctrl_t * p_api_ctrl, spi_cfg_t const * const p_cfg)
     FSP_ASSERT(p_cfg->txi_irq >= 0);
     FSP_ASSERT(p_cfg->tei_irq >= 0);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
+    spi_b_extended_cfg_t * p_extend = (spi_b_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
 
  #if SPI_B_TRANSMIT_FROM_RXI_ISR == 1
-    spi_b_extended_cfg_t * p_extend = (spi_b_extended_cfg_t *) p_cfg->p_extend;
 
     /* Half Duplex - Transmit Only mode is not supported when transmit interrupt is handled in the RXI ISR. */
     FSP_ERROR_RETURN(p_extend->spi_comm != SPI_B_COMMUNICATION_TRANSMIT_ONLY, FSP_ERR_UNSUPPORTED);
@@ -168,6 +157,8 @@ fsp_err_t R_SPI_B_Open (spi_ctrl_t * p_api_ctrl, spi_cfg_t const * const p_cfg)
         FSP_ERROR_RETURN(0 != p_cfg->p_transfer_tx, FSP_ERR_UNSUPPORTED);
     }
  #endif
+#else
+    spi_b_extended_cfg_t * p_extend = (spi_b_extended_cfg_t *) p_cfg->p_extend;
 #endif
 
     /* Configure transfers if they are provided in p_cfg. */
@@ -180,7 +171,7 @@ fsp_err_t R_SPI_B_Open (spi_ctrl_t * p_api_ctrl, spi_cfg_t const * const p_cfg)
     p_ctrl->p_context         = p_cfg->p_context;
     p_ctrl->p_callback_memory = NULL;
 
-    p_ctrl->p_regs = (R_SPI_B0_Type *) p_spi_b_base_address[p_cfg->channel];
+    p_ctrl->p_regs = p_extend->p_reg;
 
     /* Configure hardware registers according to the r_spi_api configuration structure. */
     r_spi_b_hw_config(p_ctrl);
@@ -477,7 +468,9 @@ static fsp_err_t r_spi_b_transfer_config (spi_cfg_t const * const p_cfg)
 
 #if SPI_B_DTC_SUPPORT_ENABLE == 1 || SPI_B_DMAC_SUPPORT_ENABLE == 1
     const transfer_instance_t * p_transfer_tx = p_cfg->p_transfer_tx;
-    void * p_spdr = (void *) &(p_spi_b_base_address[p_cfg->channel]->SPDR);
+    spi_b_extended_cfg_t      * p_extend      = (spi_b_extended_cfg_t *) p_cfg->p_extend;
+    R_SPI_B0_Type             * p_reg         = p_extend->p_reg;
+    void * p_spdr = (void *) &(p_reg->SPDR);
     if (p_transfer_tx)
     {
  #if SPI_B_DTC_SUPPORT_ENABLE == 1
@@ -793,7 +786,7 @@ static fsp_err_t r_spi_b_write_read_common (spi_ctrl_t * const    p_api_ctrl,
 #endif
 
     /* Check to ensure SPE is cleared after the last transmission.
-     * (see User's Manual Figure "Transmission flow in master mode") */
+     * (see the user's manual Figure "Transmission flow in master mode") */
     FSP_ERROR_RETURN(0 == p_ctrl->p_regs->SPPSR, FSP_ERR_IN_USE);
 
     p_ctrl->p_tx_data = p_src;
@@ -1168,7 +1161,7 @@ void spi_b_tei_isr (void)
         p_ctrl->p_regs->SPCR_b.CENDIE = 0;
 
         /* Writing 0 to SPE generatates a TXI IRQ. Disable the TXI IRQ.
-         * (See Section SPI Control Register in the Use's manual). */
+         * (See Section SPI Control Register in the user's manual). */
         R_BSP_IrqDisable(p_ctrl->p_cfg->txi_irq);
 
         /* Disable the SPI Transfer. */
@@ -1197,7 +1190,7 @@ void spi_b_eri_isr (void)
     spi_b_instance_ctrl_t * p_ctrl = (spi_b_instance_ctrl_t *) R_FSP_IsrContextGet(irq);
 
     /* Writing 0 to SPE generatates a TXI IRQ. Disable the TXI IRQ.
-     * (See Section SPI Control Register in the User's manual). */
+     * (See Section SPI Control Register in the user's manual). */
     R_BSP_IrqDisable(p_ctrl->p_cfg->txi_irq);
 
     /* Disable the SPI Transfer. */

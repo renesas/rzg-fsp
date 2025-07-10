@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -85,11 +85,13 @@ fsp_err_t R_MHU_B_NS_SWINT_GET_Open (mhu_ns_swint_get_ctrl_t * const p_ctrl, mhu
 #if MHU_B_NS_SWINT_GET_CFG_PARAM_CHECKING_ENABLE
     fsp_err_t err = r_mhu_b_ns_swint_get_open_param_checking(p_instance_ctrl, p_cfg);
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
+    FSP_ASSERT(NULL != ((mhu_b_ns_swint_get_extended_cfg_t *) p_cfg->p_extend)->p_reg);
 #endif
 
-    p_instance_ctrl->p_regs = (R_MHU_SWINT0_Type *) (R_MHU_SWINT0_BASE +
-                                                     (p_cfg->channel *
-                                                      ((intptr_t) R_MHU_SWINT1_BASE - (intptr_t) R_MHU_SWINT0_BASE)));
+    /* Get extended configuration structure pointer. */
+    mhu_b_ns_swint_get_extended_cfg_t * p_extend = (mhu_b_ns_swint_get_extended_cfg_t *) p_cfg->p_extend;
+
+    p_instance_ctrl->p_regs  = (R_MHU_SWINT0_Type *) p_extend->p_reg;
     p_instance_ctrl->p_cfg   = p_cfg;
     p_instance_ctrl->channel = p_cfg->channel;
 

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -124,6 +124,7 @@ typedef struct st_xspi_qspi_extended_cfg
     xspi_qspi_init_callback_t          pre_init;          ///< Pre-initialize callback
     xspi_qspi_init_callback_t          post_init;         ///< Post-initialize callback
     bool stop_on_close;                                   ///< Stop controller on close
+    void *                             p_reg;             ///< Register base address for specified channel
 } xspi_qspi_extended_cfg_t;
 
 /**********************************************************************************************************************

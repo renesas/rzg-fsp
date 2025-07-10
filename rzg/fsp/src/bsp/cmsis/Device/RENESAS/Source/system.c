@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -238,7 +238,7 @@ void SystemInit (void)
     R_BSP_WarmStart(BSP_WARM_START_POST_C);
 
 #if BSP_FEATURE_BSP_CLOCK_FREQ_INIT_CFG_SUPPORT
-    if (0 == (BSP_FESTURE_BSP_BOOTCPU_MASK & R_SYSC->SYS_LSI_MODE))
+    if (0 == (BSP_FEATURE_BSP_BOOTCPU_MASK & R_SYSC->SYS_LSI_MODE))
     {
         /* Change the frequency based on the settings on the Clocks tab. */
         bsp_clock_freq_init_cfg();

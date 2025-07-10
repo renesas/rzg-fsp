@@ -10,14 +10,15 @@ FSP uses an open software ecosystem and provides flexibility in using your prefe
 
 ### Current Release
 
-[FSP v3.0.0](https://github.com/renesas/rzg-fsp/releases/tag/v3.0.0)
+[FSP v3.1.0](https://github.com/renesas/rzg-fsp/releases/tag/v3.1.0)
 
 ### Supported RZ/G MPU Kits
 
 - [RZ/G2L Evaluation Board Kit](https://www.renesas.com/products/microcontrollers-microprocessors/rz-mpus/rzg2l-evaluation-board-kit-rzg2l-evaluation-board-kit)
 - [RZ/G2LC Evaluation Board Kit](https://www.renesas.com/products/microcontrollers-microprocessors/rz-mpus/rzg2lc-evaluation-board-kit-rzg2lc-evaluation-board-kit)
-- [RZ/G2UL Evaluation Board Kit](https://www.renesas.com/products/microcontrollers-microprocessors/rz-mpus/rzg2ul-evaluation-board-kit-rzg2ul-evaluation-board-kit#overview)
+- [RZ/G2UL Evaluation Board Kit](https://www.renesas.com/products/microcontrollers-microprocessors/rz-mpus/rzg2ul-evaluation-board-kit-rzg2ul-evaluation-board-kit)
 - [RZ/G3S Evaluation Board Kit](https://www.renesas.com/RTK9845S33S01000BE)
+- [RZ/G3E Evaluation Board Kit](www.renesas.com/rzg3e-evk/)
 
 ### Supported Software Packaged with FSP
 
@@ -37,13 +38,13 @@ For a list of software modules packaged with FSP, see [Supported Software](SUPPO
 
 #### For existing users that are using FSP with e² studio
 
-- FSP versions of 3.0.0 and later require a minimum e² studio version of 2025-01.
+- FSP versions of 3.1.0 and later require a minimum e² studio version of 2025-07.
 
 If you have already installed a previous FSP release that included e² studio then you can download the packs separately. These are available for download under the Assets section for each release. There is a zipped version, RZG_FSP_Packs_\<version\>.zip, and an installer version, RZG_FSP_Packs_\<version\>.exe.
 
 #### For new users that are using FSP with e² studio
 
-1.	Download the FSP with e² studio Installer from the Assets section of the [current release](https://github.com/renesas/rzg-fsp/releases/tag/v3.0.0).
+1.	Download the FSP with e² studio Installer from the Assets section of the [current release](https://github.com/renesas/rzg-fsp/releases/tag/v3.1.0).
 2.	Run the installer. This will install the e² studio tool, FSP packs, GCC toolchain and other tools required to use this software. No additional installations are required.
 
 <!--
@@ -71,12 +72,14 @@ RZ/G2UL Product Information : www.renesas.com/rzg2ul
 
 RZ/G3S Product Information : www.renesas.com/rzg3s
 
+RZ/G3E Product Information : www.renesas.com/rzg3e
+
 e² studio : www.renesas.com/e2studio
 
 <!--
 ToDo: Example Projects : www.renesas.com/rzg/example-projects
 -->
 
-Knowledge Base: https://en-support.renesas.com/knowledgeBase/category/31087
+Knowledge Base: https://en-support.renesas.com/knowledgeBase/category/31243
 
 Support: www.renesas.com/support

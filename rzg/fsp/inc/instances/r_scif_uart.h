@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -176,19 +176,17 @@ typedef struct st_scif_uart_rs485_setting
 /** UART on SCIF device Configuration */
 typedef struct st_scif_uart_extended_cfg
 {
-    uint8_t                        bri_ipl;       ///< Break interrupt priority
-    IRQn_Type                      bri_irq;       ///< Break interrupt IRQ number
-    scif_clk_src_t                 clock;         ///< The source clock for the baud-rate generator.
-    scif_uart_noise_cancellation_t noise_cancel;  ///< Noise cancellation setting
-
-    scif_baud_setting_t * p_baud_setting;         ///< Register settings for a desired baud rate.
-
-    scif_uart_rx_fifo_trigger_t rx_fifo_trigger;  ///< Receive FIFO trigger level.
-    scif_uart_rts_trigger_t     rts_fifo_trigger; ///< RTS trigger level.
-
-    scif_uart_mode_t          uart_mode;          ///< UART communication mode selection
-    scif_uart_flow_control_t  flow_control;       ///< CTS/RTS function
-    scif_uart_rs485_setting_t rs485_setting;      ///< RS-485 settings.
+    uint8_t                        bri_ipl;          ///< Break interrupt priority
+    IRQn_Type                      bri_irq;          ///< Break interrupt IRQ number
+    scif_clk_src_t                 clock;            ///< The source clock for the baud-rate generator.
+    scif_uart_noise_cancellation_t noise_cancel;     ///< Noise cancellation setting
+    scif_baud_setting_t          * p_baud_setting;   ///< Register settings for a desired baud rate.
+    scif_uart_rx_fifo_trigger_t    rx_fifo_trigger;  ///< Receive FIFO trigger level.
+    scif_uart_rts_trigger_t        rts_fifo_trigger; ///< RTS trigger level.
+    scif_uart_mode_t               uart_mode;        ///< UART communication mode selection
+    scif_uart_flow_control_t       flow_control;     ///< CTS/RTS function
+    scif_uart_rs485_setting_t      rs485_setting;    ///< RS-485 settings.
+    void                         * p_reg;            ///< Register base address for specified channel
 } scif_uart_extended_cfg_t;
 
 /**********************************************************************************************************************

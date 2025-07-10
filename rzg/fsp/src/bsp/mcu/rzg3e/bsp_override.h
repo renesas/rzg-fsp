@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -31,6 +31,7 @@
 #define BSP_OVERRIDE_BSP_ACCESS_CONTROL
 #define BSP_OVERRIDE_BSP_PIN_T
 #define BSP_OVERRIDE_BSP_PORT_T
+#define BSP_OVERRIDE_BSP_SYSTEM_RESET_SIGNAL_T
 #define BSP_OVERRIDE_CAN_INFO_T
 #define BSP_OVERRIDE_CANFD_ERROR_T
 #define BSP_OVERRIDE_CANFD_RX_BUFFER_T
@@ -1934,6 +1935,21 @@
 #define BSP_RSTMON_BIT_FSP_IP_PDM(channel)           (3U << ((R_CPG_CPG_RSTMON_7_RST3_MON_Pos) + (channel * 2)))
 
 /***********************************************************************************************************************
+ * Definition of macros to control SYC clock ON/OFF and reset ON/OFF
+ **********************************************************************************************************************/
+#define BSP_CLKON_REG_FSP_IP_SYC(channel)            (R_CPG->CPG_CLKON_2)
+#define BSP_CLKON_BIT_FSP_IP_SYC(channel)            (1U << (R_CPG_CPG_CLKON_2_CLK15_ON_Pos))
+
+#define BSP_CLKMON_REG_FSP_IP_SYC(channel)           (R_CPG->CPG_CLKMON_1)
+#define BSP_CLKMON_BIT_FSP_IP_SYC(channel)           (1U << (R_CPG_CPG_CLKMON_1_CLK15_MON_Pos))
+
+#define BSP_RST_REG_FSP_IP_SYC(channel)              (R_CPG->CPG_RST_5)
+#define BSP_RST_BIT_FSP_IP_SYC(channel)              (1U << (R_CPG_CPG_RST_5_RSTB7_Pos))
+
+#define BSP_RSTMON_REG_FSP_IP_SYC(channel)           (R_CPG->CPG_RSTMON_2)
+#define BSP_RSTMON_BIT_FSP_IP_SYC(channel)           (1U << (R_CPG_CPG_RSTMON_2_RST8_MON_Pos))
+
+/***********************************************************************************************************************
  * Definition of macros to control GTM module START/STOP
  **********************************************************************************************************************/
 #define BSP_MSTP_REG_FSP_IP_GTM(channel)             *((channel <                                                     \
@@ -2224,12 +2240,18 @@
         volatile uint32_t tsctr = BSP_FEATURE_INTC_BASE_ADDR->TSCTR;                   \
         FSP_PARAMETER_NOT_USED(tsctr);                                                 \
         /* Clear the TCLR bit. */                                                      \
-        BSP_FEATURE_INTC_BASE_ADDR->TSCLR = (INTC_TINT_CLR_REG_MASK << channel);      \
+        BSP_FEATURE_INTC_BASE_ADDR->TSCLR = (INTC_TINT_CLR_REG_MASK << channel);       \
         /* Dummy read the TSCTR to prevent the interrupt cause that should have been cleared from being accidentally \
          * accepted again. */                      \
         tsctr = BSP_FEATURE_INTC_BASE_ADDR->TSCTR; \
         FSP_PARAMETER_NOT_USED(tsctr);             \
     } while (0);
+
+/*==============================================
+ * BSP-Related Macros Overrides
+ *==============================================*/
+
+#define BSP_SYSTEM_RESET_STATUS_REG_BASE       (&R_CPG->CPG_ERROR_RST2)
 
 /*==============================================
  * ELC-Related Macros Overrides
@@ -2983,7 +3005,8 @@ typedef enum e_fsp_ip
     FSP_IP_XSPI   = 17,                ///< Expanded Serial Peripheral Interface
     FSP_IP_CRC    = 18,                ///< Cyclic redundancy check (CRC) operation units
     FSP_IP_I3C    = 19,                ///< I3C Bus Interface
-    FSP_IP_RTC    = 20                 ///< Realtime Clock
+    FSP_IP_RTC    = 20,                ///< Realtime Clock
+    FSP_IP_SYC    = 21                 ///< System counter
 } fsp_ip_t;
 
 /** master access control. */
@@ -3104,6 +3127,78 @@ typedef enum e_fsp_priv_clock_selector
     FSP_PRIV_CLOCK_SELECTOR_SMUX2_DSI1_CLK,
     FSP_PRIV_CLOCK_SELECTOR_NUM,
 } fsp_priv_clock_selector_t;
+
+/** BSP System Reset Signals */
+typedef enum e_bsp_system_reset_signal
+{
+    BSP_SYSTEM_RESET_SIGNAL_WDT_CM33             = 0,  ///< WDT for Cortex-M33.
+    BSP_SYSTEM_RESET_SIGNAL_WDT_CA55             = 1,  ///< WDT for Cortex-A55.
+    BSP_SYSTEM_RESET_SIGNAL_WDT_Other_0          = 2,  ///< WDT_Other_0_iwdt_nmiundf_n.
+    BSP_SYSTEM_RESET_SIGNAL_WDT_Other_1          = 3,  ///< WDT_Other_1_iwdt_nmiundf_n.
+    BSP_SYSTEM_RESET_SIGNAL_BUS_ERR_INT          = 4,  ///< BUS_ERR_INT.
+    BSP_SYSTEM_RESET_SIGNAL_RAM_ERR_INT          = 5,  ///< RAM_ERR_INT.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nFAULTIRQ_0     = 6,  ///< ACPU_nFAULTIRQ_0.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nFAULTIRQ_1     = 7,  ///< ACPU_nFAULTIRQ_1.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nFAULTIRQ_2     = 8,  ///< ACPU_nFAULTIRQ_2.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nFAULTIRQ_3     = 9,  ///< ACPU_nFAULTIRQ_3.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nFAULTIRQ_4     = 10, ///< ACPU_nFAULTIRQ_4.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nERRIRQ_0       = 11, ///< ACPU_nERRIRQ_0.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nERRIRQ_1       = 12, ///< ACPU_nERRIRQ_1.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nERRIRQ_2       = 13, ///< ACPU_nERRIRQ_2.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nERRIRQ_3       = 14, ///< ACPU_nERRIRQ_3.
+    BSP_SYSTEM_RESET_SIGNAL_ACPU_nERRIRQ_4       = 15, ///< ACPU_nERRIRQ_4.
+    BSP_SYSTEM_RESET_SIGNAL_MCPU_LOCKUP          = 29, ///< MCPU_LOCKUP.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_0 = 49, ///< GPT_U0_gpt_gtciv_n_0.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_1 = 50, ///< GPT_U0_gpt_gtciv_n_1.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_2 = 51, ///< GPT_U0_gpt_gtciv_n_2.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_3 = 52, ///< GPT_U0_gpt_gtciv_n_3.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_4 = 53, ///< GPT_U0_gpt_gtciv_n_4.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_5 = 54, ///< GPT_U0_gpt_gtciv_n_5.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_6 = 55, ///< GPT_U0_gpt_gtciv_n_6.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciv_n_7 = 56, ///< GPT_U0_gpt_gtciv_n_7.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_0 = 57, ///< GPT_U0_gpt_gtciu_n_0.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_1 = 58, ///< GPT_U0_gpt_gtciu_n_1.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_2 = 59, ///< GPT_U0_gpt_gtciu_n_2.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_3 = 60, ///< GPT_U0_gpt_gtciu_n_3.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_4 = 61, ///< GPT_U0_gpt_gtciu_n_4.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_5 = 62, ///< GPT_U0_gpt_gtciu_n_5.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_6 = 63, ///< GPT_U0_gpt_gtciu_n_6.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtciu_n_7 = 64, ///< GPT_U0_gpt_gtciu_n_7.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_0 = 65, ///< GPT_U0_gpt_gtdei_n_0.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_1 = 66, ///< GPT_U0_gpt_gtdei_n_1.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_2 = 67, ///< GPT_U0_gpt_gtdei_n_2.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_3 = 68, ///< GPT_U0_gpt_gtdei_n_3.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_4 = 69, ///< GPT_U0_gpt_gtdei_n_4.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_5 = 70, ///< GPT_U0_gpt_gtdei_n_5.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_6 = 71, ///< GPT_U0_gpt_gtdei_n_6.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U0_gpt_gtdei_n_7 = 72, ///< GPT_U0_gpt_gtdei_n_7.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_0 = 73, ///< GPT_U1_gpt_gtciv_n_0.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_1 = 74, ///< GPT_U1_gpt_gtciv_n_1.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_2 = 75, ///< GPT_U1_gpt_gtciv_n_2.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_3 = 76, ///< GPT_U1_gpt_gtciv_n_3.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_4 = 77, ///< GPT_U1_gpt_gtciv_n_4.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_5 = 78, ///< GPT_U1_gpt_gtciv_n_5.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_6 = 79, ///< GPT_U1_gpt_gtciv_n_6.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciv_n_7 = 80, ///< GPT_U1_gpt_gtciv_n_7.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_0 = 81, ///< GPT_U1_gpt_gtciu_n_0.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_1 = 82, ///< GPT_U1_gpt_gtciu_n_1.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_2 = 83, ///< GPT_U1_gpt_gtciu_n_2.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_3 = 84, ///< GPT_U1_gpt_gtciu_n_3.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_4 = 85, ///< GPT_U1_gpt_gtciu_n_4.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_5 = 86, ///< GPT_U1_gpt_gtciu_n_5.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_6 = 87, ///< GPT_U1_gpt_gtciu_n_6.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtciu_n_7 = 88, ///< GPT_U1_gpt_gtciu_n_7.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_0 = 89, ///< GPT_U1_gpt_gtdei_n_0.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_1 = 90, ///< GPT_U1_gpt_gtdei_n_1.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_2 = 91, ///< GPT_U1_gpt_gtdei_n_2.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_3 = 92, ///< GPT_U1_gpt_gtdei_n_3.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_4 = 93, ///< GPT_U1_gpt_gtdei_n_4.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_5 = 94, ///< GPT_U1_gpt_gtdei_n_5.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_6 = 95, ///< GPT_U1_gpt_gtdei_n_6.
+    BSP_SYSTEM_RESET_SIGNAL_GPT_U1_gpt_gtdei_n_7 = 96, ///< GPT_U1_gpt_gtdei_n_7.
+    BSP_SYSTEM_RESET_SIGNAL_ADC_ada_adereq_n     = 97, ///< ADC_ada_adereq_n.
+    BSP_SYSTEM_RESET_SIGNAL_MAX = 98,                  ///< The number of supported system reset signals.
+} bsp_system_reset_signal_t;
 
 /*==============================================
  * ELC-Related Definitions Overrides

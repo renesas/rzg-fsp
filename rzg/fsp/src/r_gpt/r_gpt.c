@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -114,6 +114,8 @@ static void r_gpt_call_callback(gpt_instance_ctrl_t * p_ctrl, timer_event_t even
 
 static void r_gpt_init_compare_match_channel(gpt_instance_ctrl_t * p_instance_ctrl);
 
+static fsp_err_t gpt_select_interrupt_to_gpt(timer_cfg_t const * const p_cfg);
+
 /***********************************************************************************************************************
  * ISR prototypes
  **********************************************************************************************************************/
@@ -126,57 +128,6 @@ void gpt_dead_time_isr(void);
 /***********************************************************************************************************************
  * Private global variables
  **********************************************************************************************************************/
-
-/* GPT base address */
-static const uint32_t volatile * p_gpt_base_address[BSP_FEATURE_GPT_MAX_CHANNEL] =
-{
-    (uint32_t *) R_GPT0,
-#if BSP_FEATURE_GPT_MAX_CHANNEL > 1
-    (uint32_t *) R_GPT1,
- #if BSP_FEATURE_GPT_MAX_CHANNEL > 2
-    (uint32_t *) R_GPT2,
-  #if BSP_FEATURE_GPT_MAX_CHANNEL > 3
-    (uint32_t *) R_GPT3,
-   #if BSP_FEATURE_GPT_MAX_CHANNEL > 4
-    (uint32_t *) R_GPT4,
-    #if BSP_FEATURE_GPT_MAX_CHANNEL > 5
-    (uint32_t *) R_GPT5,
-     #if BSP_FEATURE_GPT_MAX_CHANNEL > 6
-    (uint32_t *) R_GPT6,
-      #if BSP_FEATURE_GPT_MAX_CHANNEL > 7
-    (uint32_t *) R_GPT7,
-       #if BSP_FEATURE_GPT_MAX_CHANNEL > 8
-    (uint32_t *) R_GPT10,
-        #if BSP_FEATURE_GPT_MAX_CHANNEL > 9
-    (uint32_t *) R_GPT11,
-         #if BSP_FEATURE_GPT_MAX_CHANNEL > 10
-    (uint32_t *) R_GPT12,
-          #if BSP_FEATURE_GPT_MAX_CHANNEL > 11
-    (uint32_t *) R_GPT13,
-           #if BSP_FEATURE_GPT_MAX_CHANNEL > 12
-    (uint32_t *) R_GPT14,
-            #if BSP_FEATURE_GPT_MAX_CHANNEL > 13
-    (uint32_t *) R_GPT15,
-             #if BSP_FEATURE_GPT_MAX_CHANNEL > 14
-    (uint32_t *) R_GPT16,
-              #if BSP_FEATURE_GPT_MAX_CHANNEL > 15
-    (uint32_t *) R_GPT17,
-              #endif
-             #endif
-            #endif
-           #endif
-          #endif
-         #endif
-        #endif
-       #endif
-      #endif
-     #endif
-    #endif
-   #endif
-  #endif
- #endif
-#endif
-};
 
 /***********************************************************************************************************************
  * Global Variables
@@ -231,6 +182,7 @@ const timer_api_t g_timer_on_gpt =
 fsp_err_t R_GPT_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_cfg)
 {
     gpt_instance_ctrl_t * p_instance_ctrl = (gpt_instance_ctrl_t *) p_ctrl;
+    fsp_err_t             err             = FSP_SUCCESS;
 #if GPT_CFG_PARAM_CHECKING_ENABLE
     FSP_ASSERT(NULL != p_cfg);
     FSP_ASSERT(NULL != p_cfg->p_extend);
@@ -292,10 +244,14 @@ fsp_err_t R_GPT_Open (timer_ctrl_t * const p_ctrl, timer_cfg_t const * const p_c
         }
     }
  #endif
+    FSP_ASSERT(NULL != p_extend->p_reg);
 #endif
 
     /* Initialize control structure based on configurations. */
     gpt_common_open(p_instance_ctrl, p_cfg);
+
+    err = gpt_select_interrupt_to_gpt(p_cfg);
+    FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 
     gpt_hardware_initialize(p_instance_ctrl, p_cfg);
 
@@ -543,7 +499,7 @@ fsp_err_t R_GPT_DutyCycleSet (timer_ctrl_t * const p_ctrl, uint32_t const duty_c
     }
 
     FSP_ERROR_RETURN(GPT_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
-    FSP_ERROR_RETURN(duty_cycle_counts <= (p_instance_ctrl->p_reg->GTPR + 1), FSP_ERR_INVALID_ARGUMENT);
+    FSP_ERROR_RETURN(duty_cycle_counts <= (p_instance_ctrl->p_reg->GTPBR + 1), FSP_ERR_INVALID_ARGUMENT);
  #endif
 
     /* Set duty cycle. */
@@ -1291,8 +1247,11 @@ static void gpt_common_open (gpt_instance_ctrl_t * const p_instance_ctrl, timer_
         p_instance_ctrl->variant = TIMER_VARIANT_32_BIT;
     }
 
+    /* Get extended configuration structure pointer. */
+    gpt_extended_cfg_t * p_extend = (gpt_extended_cfg_t *)p_cfg->p_extend;
+
     /* Save register base address. */
-    p_instance_ctrl->p_reg = (R_GPT0_Type *) p_gpt_base_address[p_cfg->channel];
+    p_instance_ctrl->p_reg = p_extend->p_reg;
 
     /* Set callback and context pointers, if configured */
     p_instance_ctrl->p_callback        = p_cfg->p_callback;
@@ -1468,6 +1427,9 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
      * IVTT[2:0] bits, first set the IVTC[1:0] bits to 00b.  Reference section "General PWM Timer Interrupt
      * and A/D Converter Start Request Skipping Setting Register (GTITC)"" of the user's manual. */
     p_instance_ctrl->p_reg->GTITC = 0U;
+#if BSP_FEATURE_GPT_SUPPORT_EXTENDED_INTERRUPT_SKIP
+    p_instance_ctrl->p_reg->GTEITC = 0U;
+#endif
 
     uint32_t gtintad = 0;
     uint32_t gtdtcr  = 0;
@@ -1487,6 +1449,21 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
         p_instance_ctrl->p_reg->GTITC = ((uint32_t) p_pwm_cfg->interrupt_skip_source << R_GPT0_GTITC_IVTC_Pos) |
                                         ((uint32_t) p_pwm_cfg->interrupt_skip_count << R_GPT0_GTITC_IVTT_Pos) |
                                         ((uint32_t) p_pwm_cfg->interrupt_skip_adc << R_GPT0_GTITC_ADTAL_Pos);
+ #if BSP_FEATURE_GPT_SUPPORT_EXTENDED_INTERRUPT_SKIP
+        p_instance_ctrl->p_reg->GTEITC =
+            ((uint32_t) p_pwm_cfg->interrupt_skip_source_ext1 << R_GPT0_GTEITC_EIVTC1_Pos) |
+            ((uint32_t) p_pwm_cfg->interrupt_skip_count_ext1 << R_GPT0_GTEITC_EIVTT1_Pos) |
+            ((uint32_t) p_pwm_cfg->interrupt_skip_source_ext2 <<
+                R_GPT0_GTEITC_EIVTC2_Pos) |
+            ((uint32_t) p_pwm_cfg->interrupt_skip_count_ext2 << R_GPT0_GTEITC_EIVTT2_Pos);
+        p_instance_ctrl->p_reg->GTEITLI1 =
+            ((uint32_t) p_pwm_cfg->interrupt_skip_func_ovf << R_GPT0_GTEITLI1_EITLV_Pos) |
+            ((uint32_t) p_pwm_cfg->interrupt_skip_func_unf << R_GPT0_GTEITLI1_EITLU_Pos);
+        p_instance_ctrl->p_reg->GTEITLI2 =
+            ((uint32_t) p_pwm_cfg->interrupt_skip_func_adc_a << R_GPT0_GTEITLI2_EADTAL_Pos) |
+            ((uint32_t) p_pwm_cfg->interrupt_skip_func_adc_b <<
+                R_GPT0_GTEITLI2_EADTBL_Pos);
+ #endif
         p_instance_ctrl->p_reg->GTDVD = p_pwm_cfg->dead_time_count_down;
 
         /* Configure AD Compare match behavior */
@@ -1544,8 +1521,8 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     }
 #endif
 
-    /* Reset counter to 0. */
-    p_instance_ctrl->p_reg->GTCLR = p_instance_ctrl->channel_mask;
+    /* Set the I/O control register. */
+    p_instance_ctrl->p_reg->GTIOR = gtior;
 
     /* Configure duty cycle and force timer to count up. GTUDDTYC must be set, then cleared to force the count
      * direction to be reflected when counting starts. Reference section "General PWM Timer Count Direction
@@ -1553,8 +1530,8 @@ static void gpt_hardware_initialize (gpt_instance_ctrl_t * const p_instance_ctrl
     p_instance_ctrl->p_reg->GTUDDTYC = gtuddtyc | 3U;
     p_instance_ctrl->p_reg->GTUDDTYC = gtuddtyc | 1U;
 
-    /* Set the I/O control register. */
-    p_instance_ctrl->p_reg->GTIOR = gtior;
+    /* Reset counter to 0. */
+    p_instance_ctrl->p_reg->GTCLR = p_instance_ctrl->channel_mask;
 
     /* Enable CPU interrupts if callback is not null.  Also enable interrupts for one shot mode.
      *  @note The GPT hardware does not support one-shot mode natively. To support one-shot mode, the timer will be
@@ -1798,6 +1775,45 @@ static void r_gpt_init_compare_match_channel (gpt_instance_ctrl_t * p_instance_c
          * one. */
         p_instance_ctrl->p_reg->GTCCRB = p_extend->compare_match_value[1] - 1U;
     }
+}
+
+/*******************************************************************************************************************//**
+ * Set the interrupt that conflicts with other IP addresses to be notified to GPT.
+ *
+ * @param[in]  p_cfg                  Pointer to timer configuration.
+ *
+ * @retval FSP_SUCCESS                The interrupt destination setting process was successful.
+ * @retval FSP_ERR_IRQ_BSP_DISABLED   The interrupt destination setting process was fail.
+ **********************************************************************************************************************/
+static fsp_err_t gpt_select_interrupt_to_gpt (timer_cfg_t const * const p_cfg)
+{
+#if BSP_FEATURE_ICU_HAS_INTPMSEL_REG
+    fsp_err_t err = FSP_SUCCESS;
+
+    if (0 <= p_cfg->cycle_end_irq)
+    {
+        err = R_BSP_IntCauseSelectionSet(FSP_IP_GPT, p_cfg->channel, GPT_OVF);
+        FSP_ERROR_RETURN(FSP_SUCCESS == err, FSP_ERR_IRQ_BSP_DISABLED);
+    }
+
+ #if GPT_PRV_EXTRA_FEATURES_ENABLED == GPT_CFG_OUTPUT_SUPPORT_ENABLE
+    gpt_extended_cfg_t           * p_extend  = (gpt_extended_cfg_t *) p_cfg->p_extend;
+    gpt_extended_pwm_cfg_t const * p_pwm_cfg = p_extend->p_pwm_cfg;
+
+    if (NULL != p_pwm_cfg)
+    {
+        if (0 <= p_pwm_cfg->trough_irq)
+        {
+            err = R_BSP_IntCauseSelectionSet(FSP_IP_GPT, p_cfg->channel, GPT_UNF);
+            FSP_ERROR_RETURN(FSP_SUCCESS == err, FSP_ERR_IRQ_BSP_DISABLED);
+        }
+    }
+ #endif
+#else
+    FSP_PARAMETER_NOT_USED(p_cfg);
+#endif
+
+    return FSP_SUCCESS;
 }
 
 /*******************************************************************************************************************//**

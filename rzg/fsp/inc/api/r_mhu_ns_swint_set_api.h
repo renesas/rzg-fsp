@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -55,6 +55,7 @@ typedef struct st_mhu_ns_swint_set_cfg
 
     /** Placeholder for user data.  Passed to the user callback in @ref timer_callback_args_t. */
     void const * p_context;
+    void const * p_extend;             ///< Extension parameter for hardware specific settings
 } mhu_ns_swint_set_cfg_t;
 
 /** MHU control block.  Allocate an instance specific control block to pass into the MHU API calls.

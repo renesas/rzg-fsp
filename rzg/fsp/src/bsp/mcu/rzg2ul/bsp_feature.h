@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -101,9 +101,14 @@
 #define BSP_FEATURE_CPG_HAS_ATCLK                              (1U)
 #define BSP_FEATURE_CPG_HAS_OSCCLK                             (1U)
 
+/* WDT-Related Definitions */
+#define BSP_FEATURE_WDT_TYPE                                   (0U)
+#define BSP_FEATURE_WDT_MAX_CHANNEL                            (2U)
+
 /* DMAC-Related Definitions */
 #define BSP_FEATURE_DMAC_MAX_CHANNEL                           (16U)
 #define BSP_FEATURE_DMAC_MAX_UNIT                              (2U)
+#define BSP_FEATURE_DMAC_B_64BIT_SYSTEM                        (0U)
 
 /* GPT-Related Definitions */
 #define BSP_FEATURE_GPT_VALID_CHANNEL_MASK                     (0xFFU)
@@ -165,6 +170,8 @@
 /* MTU-Related Definitions */
 #define BSP_FEATURE_MTU3_VALID_CHANNEL_MASK                    (0x01FF)
 #define BSP_FEATURE_MTU3_MAX_CHANNELS                          (9U)
+#define BSP_FEATURE_MTU3_CLOCK_DIVIDER_STEP_SIZE               (2U)
+#define BSP_FEATURE_MTU3_CLOCK_DIVIDER_VALUE_7_9_VALID         (0U)
 
 /* POEG-Related Definitions */
 #define BSP_FEATURE_POEG_CHANNEL_MASK                          (0xFU)

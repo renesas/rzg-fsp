@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -49,7 +49,7 @@
 
 /* BSP Capabilities Definitions */
 #define BSP_FEATURE_BSP_ACCESS_CONTROL_SET_SUPPORT              (1U)
-#define BSP_FESTURE_BSP_BOOTCPU_MASK                            (R_SYSC_SYS_LSI_MODE_STAT_BOOTCPUSEL_Msk)
+#define BSP_FEATURE_BSP_BOOTCPU_MASK                            (R_SYSC_SYS_LSI_MODE_STAT_BOOTCPUSEL_Msk)
 #define BSP_FEATURE_BSP_SYSTEM_CORE_CLOCK                       (FSP_PRIV_CLOCK_I2CLK)
 #if BSP_CURRENT_CORE == RZG3S_CORE_CM33_FPU
  #define BSP_FEATURE_BSP_DELAY_LOOP_CYCLES                      (75U)
@@ -57,7 +57,7 @@
  #define BSP_FEATURE_BSP_DELAY_LOOP_CYCLES                      (49U)
 #endif
 #define BSP_FEATURE_BSP_INT_SIGNAL_VIA_DMAC                     (1U)
-#define BSP_FEATURE_BSP_CLOCK_FREQ_INIT_CFG_SUPPORT             (1U)
+#define BSP_FEATURE_BSP_CLOCK_FREQ_INIT_CFG_SUPPORT             (BSP_CFG_MCU_CLOCK_INIT)
 #define BSP_FEATURE_BSP_HAS_ELC                                 (0U)
 #define BSP_FEATURE_BSP_HAS_GPT_CLOCK                           (0U)
 #define BSP_FEATURE_BSP_SLAVE_ADDRESS_CONVERSION_SUPPORT        (1U)
@@ -137,6 +137,7 @@
 /* DMAC-Related Definitions */
 #define BSP_FEATURE_DMAC_MAX_CHANNEL                            (16U)
 #define BSP_FEATURE_DMAC_MAX_UNIT                               (2U)
+#define BSP_FEATURE_DMAC_B_64BIT_SYSTEM                         (0U)
 
 /* GPT-Related Definitions */
 #define BSP_FEATURE_GPT_VALID_CHANNEL_MASK                      (0xFFU)
@@ -151,11 +152,15 @@
 #define BSP_FEATURE_GPT_STATUS_REGISTER                         GTST
 #define BSP_FEATURE_GPT_OUTPUT_DISABLE_REQUEST_STATUS_MASK      (R_GPT0_GTST_OABLF_Msk | R_GPT0_GTST_OABHF_Msk | \
                                                                  R_GPT0_GTST_DTEF_Msk)
+#define BSP_FEATURE_GPT_SUPPORT_EXTENDED_INTERRUPT_SKIP         (0U)
 
 /* GTM-Related Definitions */
 #define BSP_FEATURE_GTM_MAX_CHANNEL                             (8U)
 #define BSP_FEATURE_GTM_VALID_CHANNEL_MASK                      (0xFFU)
 #define BSP_FEATURE_GTM_SOURCE_CLOCK                            (FSP_PRIV_CLOCK_P0CLK)
+
+/* ICU-Related Definitions */
+#define BSP_FEATURE_ICU_HAS_INTPMSEL_REG                        (1)
 
 /* IIC-Related Definitions */
 #define BSP_FEATURE_IIC_SOURCE_CLOCK                            (FSP_PRIV_CLOCK_P0CLK)
@@ -214,6 +219,12 @@
  #define BSP_FEATURE_MHU_S_VALID_CHANNEL_MASK                   (0x2DU)
  #define BSP_FEATURE_MHU_S_SEND_TYPE_RSP_VALID_CHANNEL_MASK     (0x21U)
 #endif
+
+/* MTU-Related Definitions */
+#define BSP_FEATURE_MTU3_VALID_CHANNEL_MASK                     (0x01FF)
+#define BSP_FEATURE_MTU3_MAX_CHANNELS                           (9U)
+#define BSP_FEATURE_MTU3_CLOCK_DIVIDER_STEP_SIZE                (2U)
+#define BSP_FEATURE_MTU3_CLOCK_DIVIDER_VALUE_7_9_VALID          (0U)
 
 /* POEG-Related Definitions */
 #define BSP_FEATURE_POEG_CHANNEL_MASK                           (0xFU)

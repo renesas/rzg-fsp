@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -54,39 +54,6 @@ const spi_api_t g_spi_on_sci_b =
     .writeRead   = R_SCI_B_SPI_WriteRead,
     .close       = R_SCI_B_SPI_Close,
     .callbackSet = R_SCI_B_SPI_CallbackSet
-};
-
-/** SCI_B_SPI base address */
-static const uint32_t volatile * p_sci_b_spi_base_address[BSP_FEATURE_SCI_MAX_CHANNELS] =
-{
-    (uint32_t *) R_SCI0_BASE,
-#if BSP_FEATURE_SCI_MAX_CHANNELS > 1
-    (uint32_t *) R_SCI1_BASE,
- #if BSP_FEATURE_SCI_MAX_CHANNELS > 2
-    (uint32_t *) R_SCI2_BASE,
-  #if BSP_FEATURE_SCI_MAX_CHANNELS > 3
-    (uint32_t *) R_SCI3_BASE,
-   #if BSP_FEATURE_SCI_MAX_CHANNELS > 4
-    (uint32_t *) R_SCI4_BASE,
-    #if BSP_FEATURE_SCI_MAX_CHANNELS > 5
-    (uint32_t *) R_SCI5_BASE,
-     #if BSP_FEATURE_SCI_MAX_CHANNELS > 6
-    (uint32_t *) R_SCI6_BASE,
-      #if BSP_FEATURE_SCI_MAX_CHANNELS > 7
-    (uint32_t *) R_SCI7_BASE,
-       #if BSP_FEATURE_SCI_MAX_CHANNELS > 8
-    (uint32_t *) R_SCI8_BASE,
-        #if BSP_FEATURE_SCI_MAX_CHANNELS > 9
-    (uint32_t *) R_SCI9_BASE,
-        #endif
-       #endif
-      #endif
-     #endif
-    #endif
-   #endif
-  #endif
- #endif
-#endif
 };
 
 /***********************************************************************************************************************
@@ -170,10 +137,14 @@ fsp_err_t R_SCI_B_SPI_Open (spi_ctrl_t * p_api_ctrl, spi_cfg_t const * const p_c
     FSP_ASSERT(p_cfg->txi_irq >= 0);
     FSP_ASSERT(p_cfg->tei_irq >= 0);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
+    sci_b_spi_extended_cfg_t * p_extend = (sci_b_spi_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
+#else
+    sci_b_spi_extended_cfg_t * p_extend = (sci_b_spi_extended_cfg_t *) p_cfg->p_extend;
 #endif
 
     /* Save register base address. */
-    p_ctrl->p_reg = (R_SCI_B0_Type *) p_sci_b_spi_base_address[p_cfg->channel];
+    p_ctrl->p_reg = (R_SCI_B0_Type *) p_extend->p_reg;
 
     p_ctrl->p_cfg = p_cfg;
 
@@ -624,7 +595,7 @@ static void r_sci_b_spi_hw_config (sci_b_spi_instance_ctrl_t * const p_ctrl)
 #if SCI_B_SPI_DMAC_SUPPORT_ENABLE
 
     /* Enable FIFO when DMAC is active. Set the maximum FIFO depth in TTRG, while keeping RTRG at 0, as required by the
-     * User's Manual. */
+     * user's manual. */
     p_ctrl->p_reg->FCR |= (BSP_FEATURE_SCI_UART_FIFO_DEPTH - 1) << R_SCI_B0_FCR_TTRG_Pos;
     ccr3               |= (1U << R_SCI_B0_CCR3_FM_Pos) & R_SCI_B0_CCR3_FM_Msk;
 #endif

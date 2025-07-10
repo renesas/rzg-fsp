@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -150,36 +150,6 @@ static void iic_tmoi_slave(iic_slave_instance_ctrl_t * p_ctrl);
  * Private global variables
  *********************************************************************************************************************/
 
-/* RIIC base address */
-static const uint32_t volatile * p_iic_slave_base_address[BSP_FEATURE_IIC_MAX_CHANNEL] =
-{
-    (uint32_t *) R_RIIC0,
-#if BSP_FEATURE_IIC_MAX_CHANNEL > 1U
-    (uint32_t *) R_RIIC1,
- #if BSP_FEATURE_IIC_MAX_CHANNEL > 2U
-    (uint32_t *) R_RIIC2,
-  #if BSP_FEATURE_IIC_MAX_CHANNEL > 3U
-    (uint32_t *) R_RIIC3,
-   #if BSP_FEATURE_IIC_MAX_CHANNEL > 4U
-    (uint32_t *) R_RIIC4,
-    #if BSP_FEATURE_IIC_MAX_CHANNEL > 5U
-    (uint32_t *) R_RIIC5,
-     #if BSP_FEATURE_IIC_MAX_CHANNEL > 6U
-    (uint32_t *) R_RIIC6,
-      #if BSP_FEATURE_IIC_MAX_CHANNEL > 7U
-    (uint32_t *) R_RIIC7,
-       #if BSP_FEATURE_IIC_MAX_CHANNEL > 8U
-    (uint32_t *) R_RIIC8,
-       #endif
-      #endif
-     #endif
-    #endif
-   #endif
-  #endif
- #endif
-#endif
-};
-
 /**********************************************************************************************************************
  * Global variables
  *********************************************************************************************************************/
@@ -228,6 +198,7 @@ fsp_err_t R_RIIC_SLAVE_Open (i2c_slave_ctrl_t * const p_api_ctrl, i2c_slave_cfg_
     FSP_ASSERT(p_ctrl != NULL);
     FSP_ASSERT(p_cfg != NULL);
     FSP_ASSERT(p_cfg->p_extend != NULL);
+    FSP_ASSERT(NULL != p_extend->p_reg);
     FSP_ASSERT(p_cfg->rxi_irq >= (IRQn_Type) 0);
     FSP_ASSERT(p_cfg->txi_irq >= (IRQn_Type) 0);
     FSP_ASSERT(p_cfg->tei_irq >= (IRQn_Type) 0);
@@ -248,7 +219,7 @@ fsp_err_t R_RIIC_SLAVE_Open (i2c_slave_ctrl_t * const p_api_ctrl, i2c_slave_cfg_
 #endif
 
     /* Save register base address. */
-    p_ctrl->p_reg = (R_RIIC0_Type *) p_iic_slave_base_address[p_cfg->channel];
+    p_ctrl->p_reg = (R_RIIC0_Type *) p_extend->p_reg;
 
     /* Record the configuration on the device for use later */
     p_ctrl->p_cfg             = p_cfg;

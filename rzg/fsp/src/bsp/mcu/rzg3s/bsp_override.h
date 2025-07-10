@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -31,10 +31,10 @@
 #define BSP_OVERRIDE_BSP_ACCESS_CONTROL
 #define BSP_OVERRIDE_BSP_PIN_T
 #define BSP_OVERRIDE_BSP_PORT_T
+#define BSP_OVERRIDE_BSP_SYSTEM_RESET_SIGNAL_T
 #define BSP_OVERRIDE_CANFD_TX_BUFFER_T
 #define BSP_OVERRIDE_CANFD_TX_MB_T
 #define BSP_OVERRIDE_DMAC_B_EXTERNAL_DETECTION_T
-#define BSP_OVERRIDE_FSP_IP_T
 #define BSP_OVERRIDE_FSP_PRIV_CLOCK_T
 #define BSP_OVERRIDE_FSP_PRIV_CLOCK_DIVIDER_T
 #define BSP_OVERRIDE_FSP_PRIV_CLOCK_SELECTOR_T
@@ -759,6 +759,15 @@ typedef enum e_bsp_io_port_pin_t
     BSP_IO_SD1_DATA3 = 0xFFFF1303,      /* SD1_DATA3 */
 } bsp_io_port_pin_t;
 
+/** BSP System Reset Signals */
+typedef enum e_bsp_system_reset_signal
+{
+    BSP_SYSTEM_RESET_SIGNAL_WDT_CA55_0   = 0, ///< WDT for Cortex-A55 Core 0.
+    BSP_SYSTEM_RESET_SIGNAL_WDT_CM33     = 1, ///< WDT for Cortex-M33.
+    BSP_SYSTEM_RESET_SIGNAL_WDT_CM33_FPU = 2, ///< WDT for Cortex-M33_FPU.
+    BSP_SYSTEM_RESET_SIGNAL_MAX          = 3, ///< The number of supported system reset signals.
+} bsp_system_reset_signal_t;
+
 /*==============================================
  * CANFD Overrides
  *==============================================*/
@@ -947,29 +956,6 @@ typedef enum e_acc_control_ip
     ACCCNT_GPREG,
     ACCCNT_IPCONT,
 } fsp_acc_control_ip_t;
-
-/** Available modules. */
-typedef enum e_fsp_ip
-{
-    FSP_IP_GTM    = 0,                 ///< General Timer
-    FSP_IP_GPT    = 1,                 ///< General PWM Timer
-    FSP_IP_POEG   = 2,                 ///< Port Output Enable for GPT
-    FSP_IP_PORT   = 3,                 ///< I/O Ports
-    FSP_IP_IM33   = 4,                 ///< IM33 (Interrupt controller)
-    FSP_IP_SCIF   = 5,                 ///< Serial Communications Interface with FIFO
-    FSP_IP_RIIC   = 6,                 ///< I2C Bus Interface
-    FSP_IP_RSPI   = 7,                 ///< Renesas Serial Peripheral Interface
-    FSP_IP_MHU    = 8,                 ///< Message Handling Unit
-    FSP_IP_DMAC   = 9,                 ///< Direct Memory Access Controller
-    FSP_IP_DMAC_s = 9,                 ///< Direct Memory Access Controller
-    FSP_IP_SSI    = 10,                ///< Serial Sound Interface
-    FSP_IP_CANFD  = 11,                ///< CANFD Interface (RS-CANFD)
-    FSP_IP_ADC    = 12,                ///< A/D Converter
-    FSP_IP_TSU    = 13,                ///< Thermal Sensor Unit
-    FSP_IP_WDT    = 14,                ///< Watchdog Timer
-    FSP_IP_SCI    = 15,                ///< Serial Communications Interface
-    FSP_IP_XSPI   = 16                 ///< Expanded Serial Peripheral Interface
-} fsp_ip_t;
 
 /** master access control. */
 typedef enum e_mst_acc_control_ip

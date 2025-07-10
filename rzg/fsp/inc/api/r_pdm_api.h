@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -44,11 +44,11 @@ typedef enum e_pdm_pcm_width
     PDM_PCM_WIDTH_20_BITS_1_18 = 0x01, ///< Using 20-bit PCM Clips [18:1] bit of the buffer and 2-bits of sign
     PDM_PCM_WIDTH_20_BITS_2_18 = 0x02, ///< Using 20-bit PCM Clips [18:2] bit of the buffer and 3-bits of sign
     PDM_PCM_WIDTH_20_BITS_3_18 = 0x03, ///< Using 20-bit PCM Clips [18:3] bit of the buffer and 4-bits of sign
-    PDM_PCM_WIDTH_16_BITS_4_18 = 0x10, ///< Using 16-bit PCM Clips [18:4] bit of the buffer and 1-bit of sign
-    PDM_PCM_WIDTH_16_BITS_3_17 = 0x11, ///< Using 16-bit PCM Clips [17:3] bit of the buffer and 1-bit of sign
-    PDM_PCM_WIDTH_16_BITS_2_16 = 0x12, ///< Using 16-bit PCM Clips [16:2] bit of the buffer and 1-bit of sign
-    PDM_PCM_WIDTH_16_BITS_1_15 = 0x13, ///< Using 16-bit PCM Clips [15:1] bit of the buffer and 1-bit of sign
-    PDM_PCM_WIDTH_16_BITS_0_14 = 0x14, ///< Using 16-bit PCM Clips [14:0] bit of the buffer and 1-bit of sign
+    PDM_PCM_WIDTH_16_BITS_4_18 = 0x08, ///< Using 16-bit PCM Clips [18:4] bit of the buffer and 1-bit of sign
+    PDM_PCM_WIDTH_16_BITS_3_17 = 0x09, ///< Using 16-bit PCM Clips [17:3] bit of the buffer and 1-bit of sign
+    PDM_PCM_WIDTH_16_BITS_2_16 = 0x0A, ///< Using 16-bit PCM Clips [16:2] bit of the buffer and 1-bit of sign
+    PDM_PCM_WIDTH_16_BITS_1_15 = 0x0B, ///< Using 16-bit PCM Clips [15:1] bit of the buffer and 1-bit of sign
+    PDM_PCM_WIDTH_16_BITS_0_14 = 0x0C, ///< Using 16-bit PCM Clips [14:0] bit of the buffer and 1-bit of sign
 } pdm_pcm_width_t;
 
 /** Input data select. */
@@ -70,17 +70,18 @@ typedef enum e_pdm_event
 /** Error information included in a callback function */
 typedef enum e_pdm_error
 {
+    PDM_ERROR_NONE              = 0,          ///< No error
     PDM_ERROR_SHORT_CIRCUIT     = (1UL << 0), ///< Short circuit detection
     PDM_ERROR_OVERVOLTAGE_LOWER = (1UL << 1), ///< Overvoltage lower limit exceeded detection
     PDM_ERROR_OVERVOLTAGE_UPPER = (1UL << 2), ///< Overvoltage upper limit exceeded detection
-    PDM_ERROR_BUFFER_OVERWRITE  = (1UL << 3)  ///< Buffer overwriting detection
+    PDM_ERROR_BUFFER_OVERWRITE  = (1UL << 11) ///< Buffer overwriting detection
 } pdm_error_t;
 
 /** Possible status values returned by @ref pdm_api_t::statusGet. */
 typedef enum e_pdm_state
 {
-    PDM_STATE_IN_USE,                  ///< PDM is in use
-    PDM_STATE_STOPPED                  ///< PDM is stopped
+    PDM_STATE_IN_USE,                  ///< PDM is actively reading data
+    PDM_STATE_STOPPED                  ///< PDM is stopped and not actively reading data
 } pdm_state_t;
 
 /** Callback function parameter data */
@@ -92,6 +93,13 @@ typedef struct st_pdm_callback_args
     pdm_error_t  error;                ///< The kind of error.
 } pdm_callback_args_t;
 
+/** Sound detection window setting */
+typedef struct st_pdm_sound_detection_setting
+{
+    uint32_t sound_detection_lower_limit; ///< Sound detection lower limit (20-bit signed fixed point data)
+    uint32_t sound_detection_upper_limit; ///< Sound detection upper limit (20-bit signed fixed point data)
+} pdm_sound_detection_setting_t;
+
 /** PDM control block.  Allocate an instance specific control block to pass into the PDM API calls.
  */
 typedef void pdm_ctrl_t;
@@ -99,7 +107,9 @@ typedef void pdm_ctrl_t;
 /** PDM status. */
 typedef struct st_pdm_status
 {
-    pdm_state_t state;                 ///< Current PDM state
+    pdm_state_t state;                   ///< Current PDM data state
+    bool        sound_detection_enabled; ///< Current PDM sound detection status
+    pdm_error_t error;                   ///< Bitfield of current PDM errors
 } pdm_status_t;
 
 /** User configuration structure, used in open function */
@@ -155,6 +165,20 @@ typedef struct st_pdm_api
      * @param[in]   p_ctrl     Control block set in @ref pdm_api_t::open call for this instance.
      */
     fsp_err_t (* stop)(pdm_ctrl_t * const p_ctrl);
+
+    /** Enable sound detection with the specified settings.
+     *
+     * @param[in]   p_ctrl                     Control block set in @ref pdm_api_t::open call for this instance.
+     * @param[in]   pdm_sound_detection_setting    Settings to configure sound detection.
+     */
+    fsp_err_t (* soundDetectionEnable)(pdm_ctrl_t * const            p_ctrl,
+                                       pdm_sound_detection_setting_t pdm_sound_detection_setting);
+
+    /** Disable sound detection.
+     *
+     * @param[in]   p_ctrl                     Control block set in @ref pdm_api_t::open call for this instance.
+     */
+    fsp_err_t (* soundDetectionDisable)(pdm_ctrl_t * const p_ctrl);
 
     /** Read remaining PDM data. This function can be called during PDM_STATE_STOPPED.
      *

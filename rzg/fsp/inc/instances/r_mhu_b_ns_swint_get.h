@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -47,6 +47,12 @@ typedef struct st_mhu_b_ns_swint_get_instance_ctrl
     mhu_ns_swint_get_callback_args_t * p_callback_memory; // Pointer to non-secure memory that can be used to pass arguments to a callback in non-secure memory.
     void const * p_context;                               // Pointer to context to be passed into callback function
 } mhu_b_ns_swint_get_instance_ctrl_t;
+
+/** R_MHU_B_NS_SWINT_GET extended configuration */
+typedef struct st_mhu_b_ns_swint_get_extended_cfg
+{
+    void * p_reg;                      ///< Register base address for specified channel
+} mhu_b_ns_swint_get_extended_cfg_t;
 
 /**********************************************************************************************************************
  * Exported global variables

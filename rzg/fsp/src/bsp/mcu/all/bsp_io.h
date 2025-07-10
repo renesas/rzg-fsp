@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -632,14 +632,11 @@ __STATIC_INLINE void R_BSP_EthernetModeCfg (bsp_ethernet_channel_t channel, bsp_
 
     R_BSP_OENAccessEnable();
 
-    if (BSP_ETHERNET_CHANNEL_0 == channel)
-    {
-        R_GPIO->PFC_OEN_b.OEN0 = mode;
-    }
-    else if (BSP_ETHERNET_CHANNEL_1 == channel)
-    {
-        R_GPIO->PFC_OEN_b.OEN1 = mode;
-    }
+    uint32_t reg_value = R_GPIO->PFC_OEN;
+
+    reg_value      &= ~(1U << channel);
+    reg_value      |= (mode << channel);
+    R_GPIO->PFC_OEN = reg_value;
 
     R_BSP_OENAccessDisable();
  #elif BSP_FEATURE_BSP_HAS_ETHER_MODE_REG
@@ -759,8 +756,7 @@ __STATIC_INLINE void R_BSP_EthernetVoltageModeCfg (bsp_ethernet_channel_t channe
 __STATIC_INLINE void R_BSP_I3CControlCfg (bsp_i3c_voltage_t voltage, bsp_i3c_mode_t mode)
 {
 #if BSP_FEATURE_BSP_SUPPORT_I3C
-    R_GPIO->I3C_SET_b.POC  = voltage;
-    R_GPIO->I3C_SET_b.STBN = mode;
+    R_GPIO->I3C_SET = (voltage << R_GPIO_I3C_SET_POC_Pos) | mode;
 #else
     FSP_PARAMETER_NOT_USED(voltage);
     FSP_PARAMETER_NOT_USED(mode);
@@ -775,20 +771,25 @@ __STATIC_INLINE void R_BSP_BypassModeCfg (bsp_bypass_oscillator_t oscillator,
                                           bsp_bypass_freq_range_t freq_range)
 {
 #if BSP_FEATURE_BSP_SUPPORT_BYPASS
+    uint32_t reg_value = R_GPIO->PFC_OSCBYPS;
+
     switch (oscillator)
     {
         case BSP_BYPASS_OSCILLATOR_AUDIO:
         {
-            R_GPIO->PFC_OSCBYPS_b.OSCBYPS1 = mode & 1U;
-            R_GPIO->PFC_OSCBYPS_b.OSCPW1   = ((mode >> 1U) & 1U);
-            R_GPIO->PFC_OSCBYPS_b.OSCSF1   = freq_range;
+            reg_value &= ~(R_GPIO_PFC_OSCBYPS_OSCBYPS1_Msk | R_GPIO_PFC_OSCBYPS_OSCPW1_Msk |
+                           R_GPIO_PFC_OSCBYPS_OSCSF1_Msk);
+            reg_value |= ((mode & 1U) << R_GPIO_PFC_OSCBYPS_OSCBYPS1_Pos) |
+                         (((mode >> 1U) & 1U) << R_GPIO_PFC_OSCBYPS_OSCPW1_Pos) |
+                         (freq_range << R_GPIO_PFC_OSCBYPS_OSCSF1_Pos);
             break;
         }
 
         case BSP_BYPASS_OSCILLATOR_RTC:
         {
-            R_GPIO->PFC_OSCBYPS_b.OSCBYPS0 = mode & 1U;
-            R_GPIO->PFC_OSCBYPS_b.OSCPW0   = ((mode >> 1U) & 1U);
+            reg_value &= ~(R_GPIO_PFC_OSCBYPS_OSCBYPS0_Msk | R_GPIO_PFC_OSCBYPS_OSCPW0_Msk);
+            reg_value |= ((mode & 1U) << R_GPIO_PFC_OSCBYPS_OSCBYPS0_Pos) |
+                         (((mode >> 1U) & 1U) << R_GPIO_PFC_OSCBYPS_OSCPW0_Pos);
             FSP_PARAMETER_NOT_USED(freq_range);
             break;
         }
@@ -800,6 +801,7 @@ __STATIC_INLINE void R_BSP_BypassModeCfg (bsp_bypass_oscillator_t oscillator,
             FSP_PARAMETER_NOT_USED(freq_range);
     }
 
+    R_GPIO->PFC_OSCBYPS = reg_value;
 #else
     FSP_PARAMETER_NOT_USED(oscillator);
     FSP_PARAMETER_NOT_USED(mode);

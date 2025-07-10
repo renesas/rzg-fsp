@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -88,37 +88,37 @@ typedef struct st_sci_b_uart_instance_ctrl
 /** Receive FIFO trigger configuration. */
 typedef enum e_sci_b_uart_rx_fifo_trigger
 {
-    SCI_B_UART_RX_FIFO_TRIGGER_1   = 0x01,  ///< Callback after each byte is received without buffering
-    SCI_B_UART_RX_FIFO_TRIGGER_2   = 0x02,  ///< Callback when FIFO having 2 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_3   = 0x03,  ///< Callback when FIFO having 3 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_4   = 0x04,  ///< Callback when FIFO having 4 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_5   = 0x05,  ///< Callback when FIFO having 5 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_6   = 0x06,  ///< Callback when FIFO having 6 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_7   = 0x07,  ///< Callback when FIFO having 7 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_8   = 0x08,  ///< Callback when FIFO having 8 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_9   = 0x09,  ///< Callback when FIFO having 9 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_10  = 0x0A,  ///< Callback when FIFO having 10 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_11  = 0x0B,  ///< Callback when FIFO having 11 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_12  = 0x0C,  ///< Callback when FIFO having 12 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_13  = 0x0D,  ///< Callback when FIFO having 13 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_14  = 0x0E,  ///< Callback when FIFO having 14 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_15  = 0x0F,  ///< Callback when FIFO having 15 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_16  = 0x10,  ///< Callback when FIFO having 16 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_17  = 0x11,  ///< Callback when FIFO having 17 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_18  = 0x12,  ///< Callback when FIFO having 18 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_19  = 0x13,  ///< Callback when FIFO having 19 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_20  = 0x14,  ///< Callback when FIFO having 20 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_21  = 0x15,  ///< Callback when FIFO having 21 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_22  = 0x16,  ///< Callback when FIFO having 22 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_23  = 0x17,  ///< Callback when FIFO having 23 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_24  = 0x18,  ///< Callback when FIFO having 24 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_25  = 0x19,  ///< Callback when FIFO having 25 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_26  = 0x1A,  ///< Callback when FIFO having 26 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_27  = 0x1B,  ///< Callback when FIFO having 27 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_28  = 0x1C,  ///< Callback when FIFO having 28 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_29  = 0x1D,  ///< Callback when FIFO having 29 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_30  = 0x1E,  ///< Callback when FIFO having 30 bytes
-    SCI_B_UART_RX_FIFO_TRIGGER_MAX = 0x1F,  ///< Callback when FIFO is full or after 31 bit times with no data (fewer interrupts)
+    SCI_B_UART_RX_FIFO_TRIGGER_1   = 0x01, ///< Callback after each byte is received without buffering
+    SCI_B_UART_RX_FIFO_TRIGGER_2   = 0x02, ///< Callback when FIFO having 2 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_3   = 0x03, ///< Callback when FIFO having 3 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_4   = 0x04, ///< Callback when FIFO having 4 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_5   = 0x05, ///< Callback when FIFO having 5 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_6   = 0x06, ///< Callback when FIFO having 6 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_7   = 0x07, ///< Callback when FIFO having 7 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_8   = 0x08, ///< Callback when FIFO having 8 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_9   = 0x09, ///< Callback when FIFO having 9 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_10  = 0x0A, ///< Callback when FIFO having 10 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_11  = 0x0B, ///< Callback when FIFO having 11 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_12  = 0x0C, ///< Callback when FIFO having 12 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_13  = 0x0D, ///< Callback when FIFO having 13 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_14  = 0x0E, ///< Callback when FIFO having 14 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_15  = 0x0F, ///< Callback when FIFO having 15 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_16  = 0x10, ///< Callback when FIFO having 16 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_17  = 0x11, ///< Callback when FIFO having 17 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_18  = 0x12, ///< Callback when FIFO having 18 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_19  = 0x13, ///< Callback when FIFO having 19 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_20  = 0x14, ///< Callback when FIFO having 20 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_21  = 0x15, ///< Callback when FIFO having 21 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_22  = 0x16, ///< Callback when FIFO having 22 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_23  = 0x17, ///< Callback when FIFO having 23 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_24  = 0x18, ///< Callback when FIFO having 24 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_25  = 0x19, ///< Callback when FIFO having 25 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_26  = 0x1A, ///< Callback when FIFO having 26 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_27  = 0x1B, ///< Callback when FIFO having 27 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_28  = 0x1C, ///< Callback when FIFO having 28 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_29  = 0x1D, ///< Callback when FIFO having 29 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_30  = 0x1E, ///< Callback when FIFO having 30 bytes
+    SCI_B_UART_RX_FIFO_TRIGGER_MAX = 0x1F, ///< Callback when FIFO is full or after 31 bit times with no data (fewer interrupts)
 } sci_b_uart_rx_fifo_trigger_t;
 
 /** Asynchronous Start Bit Edge Detection configuration. */
@@ -208,6 +208,7 @@ typedef struct st_sci_b_uart_extended_cfg
     sci_b_uart_flow_control_t       flow_control;      ///< CTS/RTS function of the SSn pin
     sci_b_uart_rs485_setting_t      rs485_setting;     ///< RS-485 settings.
     sci_b_uart_half_data_setting_t  half_data_setting; ///< Half Data Function settings
+    void                          * p_reg;             ///< Register base address for specified channel
 } sci_b_uart_extended_cfg_t;
 
 /**********************************************************************************************************************

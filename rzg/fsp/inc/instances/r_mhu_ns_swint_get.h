@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -48,6 +48,12 @@ typedef struct st_mhu_ns_swint_get_instance_ctrl
     void const * p_context;                               // Pointer to context to be passed into callback function
 } mhu_ns_swint_get_instance_ctrl_t;
 
+/** R_MHU_NS_SWINT_GET extended configuration */
+typedef struct st_mhu_ns_swint_get_extended_cfg
+{
+    void * p_reg;                      ///< Register base address for specified channel
+} mhu_ns_swint_get_extended_cfg_t;
+
 /**********************************************************************************************************************
  * Exported global variables
  **********************************************************************************************************************/
@@ -65,8 +71,8 @@ fsp_err_t R_MHU_NS_SWINT_GET_Open(mhu_ns_swint_get_ctrl_t * p_ctrl, mhu_ns_swint
 
 fsp_err_t R_MHU_NS_SWINT_GET_Close(mhu_ns_swint_get_ctrl_t * const p_ctrl);
 
-fsp_err_t R_MHU_NS_SWINT_GET_CallbackSet(mhu_ns_swint_get_ctrl_t * const          p_api_ctrl,
-                                         void (                                 * p_callback ) (
+fsp_err_t R_MHU_NS_SWINT_GET_CallbackSet(mhu_ns_swint_get_ctrl_t * const p_api_ctrl,
+                                         void (                        * p_callback)(
                                              mhu_ns_swint_get_callback_args_t *),
                                          void const * const                       p_context,
                                          mhu_ns_swint_get_callback_args_t * const p_callback_memory);

@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -32,6 +32,10 @@
  #include "r_elc_api.h"
 #endif
 #include "r_transfer_api.h"
+
+#if __has_include("r_adc_device_types.h")
+ #include "r_adc_device_types.h"
+#endif
 
 /* Common macro for FSP header files. There is also a corresponding FSP_FOOTER macro at the end of this file. */
 FSP_HEADER
@@ -107,6 +111,8 @@ typedef enum e_adc_event
     ADC_EVENT_WINDOW_COMPARE_A,        ///< Window A comparison condition met
     ADC_EVENT_WINDOW_COMPARE_B,        ///< Window B comparison condition met
     ADC_EVENT_ZERO_CROSS_DETECTION,    ///< Zero-cross detection interrupt
+    ADC_EVENT_CAPTURE_A,               ///< Capture A conversion complete
+    ADC_EVENT_CAPTURE_B,               ///< Capture B conversion complete
 } adc_event_t;
 
 #endif
@@ -212,15 +218,14 @@ typedef struct st_adc_callback_args
 /** ADC Information Structure for Transfer Interface */
 typedef struct st_adc_info
 {
-    __I void * p_address;                 ///< The address to start reading the data from
-    uint32_t   length;                    ///< The total number of transfers to read
+    __I void * p_address;              ///< The address to start reading the data from
+    uint32_t   length;                 ///< The total number of transfers to read
 
-    transfer_size_t  transfer_size;       ///< The size of each transfer
-    elc_peripheral_t elc_peripheral;      ///< Name of the peripheral in the ELC list
-    elc_event_t      elc_event;           ///< Name of the ELC event for the peripheral
-    uint32_t         calibration_data;    ///< Temperature sensor calibration data (0xFFFFFFFF if unsupported) for reference voltage
-    int16_t          slope_microvolts;    ///< Temperature sensor slope in microvolts/degrees C
-    bool             calibration_ongoing; ///< Calibration is in progress.
+    transfer_size_t  transfer_size;    ///< The size of each transfer
+    elc_peripheral_t elc_peripheral;   ///< Name of the peripheral in the ELC list
+    elc_event_t      elc_event;        ///< Name of the ELC event for the peripheral
+    uint32_t         calibration_data; ///< Temperature sensor calibration data (0xFFFFFFFF if unsupported) for reference voltage
+    int16_t          slope_microvolts; ///< Temperature sensor slope in microvolts/degrees C
 } adc_info_t;
 
 #endif

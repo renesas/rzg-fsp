@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -91,6 +91,7 @@ typedef struct st_sci_b_i2c_instance_ctrl
 typedef struct st_sci_b_i2c_extended_cfg
 {
     sci_b_i2c_clock_settings_t clock_settings; ///< I2C Clock settings
+    void                     * p_reg;          ///< Base register address for specified channel
 } sci_b_i2c_extended_cfg_t;
 
 /**********************************************************************************************************************

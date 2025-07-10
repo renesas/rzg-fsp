@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -180,11 +180,6 @@ void sci_uart_tei_isr(void);
  * Private global variables
  **********************************************************************************************************************/
 
-/* Name of module used by error logger macro */
-#if BSP_CFG_ERROR_LOG != 0
-static const char g_module_name[] = "sci_uart";
-#endif
-
 /* Baud rate divisor information (UART mode) */
 static const baud_setting_const_t g_async_baud[SCI_UART_NUM_DIVISORS_ASYNC] =
 {
@@ -293,9 +288,14 @@ fsp_err_t R_SCI_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * co
     FSP_ASSERT(p_cfg->txi_irq >= 0);
     FSP_ASSERT(p_cfg->tei_irq >= 0);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
+    sci_uart_extended_cfg_t * p_extend = (sci_uart_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
+#else
+    sci_uart_extended_cfg_t * p_extend = (sci_uart_extended_cfg_t *) p_cfg->p_extend;
 #endif
 
-    p_ctrl->p_reg = ((R_SCI0_Type *) ((uintptr_t) R_SCI0_BASE + ((uintptr_t) SCI_REG_SIZE * p_cfg->channel)));
+    /* Get extended configuration structure pointer. */
+    p_ctrl->p_reg = (R_SCI0_Type *) p_extend->p_reg;
 
     p_ctrl->fifo_depth = 0U;
     p_ctrl->p_cfg      = p_cfg;
@@ -339,8 +339,6 @@ fsp_err_t R_SCI_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * co
     p_ctrl->tx_src_bytes  = 0U;
     p_ctrl->p_rx_dest     = NULL;
     p_ctrl->rx_dest_bytes = 0;
-
-    sci_uart_extended_cfg_t * p_extend = (sci_uart_extended_cfg_t *) p_cfg->p_extend;
 
     uint32_t scr = ((uint8_t) p_extend->clock) & 0x3U;
 #if (SCI_UART_CFG_RX_ENABLE)

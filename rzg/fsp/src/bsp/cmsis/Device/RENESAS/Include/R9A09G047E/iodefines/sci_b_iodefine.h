@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -476,15 +476,15 @@ typedef struct
 /* ================                                  Peripheral declaration                                   ================ */
 /* =========================================================================================================================== */
 
-#define R_SCI0    ((R_SCI_B0_Type *) R_SCI0_BASE)
-#define R_SCI1    ((R_SCI_B0_Type *) R_SCI1_BASE)
-#define R_SCI2    ((R_SCI_B0_Type *) R_SCI2_BASE)
-#define R_SCI3    ((R_SCI_B0_Type *) R_SCI3_BASE)
-#define R_SCI4    ((R_SCI_B0_Type *) R_SCI4_BASE)
-#define R_SCI5    ((R_SCI_B0_Type *) R_SCI5_BASE)
-#define R_SCI6    ((R_SCI_B0_Type *) R_SCI6_BASE)
-#define R_SCI7    ((R_SCI_B0_Type *) R_SCI7_BASE)
-#define R_SCI8    ((R_SCI_B0_Type *) R_SCI8_BASE)
-#define R_SCI9    ((R_SCI_B0_Type *) R_SCI9_BASE)
+#define R_SCI_B0    ((R_SCI_B0_Type *) R_SCI0_BASE)
+#define R_SCI_B1    ((R_SCI_B0_Type *) R_SCI1_BASE)
+#define R_SCI_B2    ((R_SCI_B0_Type *) R_SCI2_BASE)
+#define R_SCI_B3    ((R_SCI_B0_Type *) R_SCI3_BASE)
+#define R_SCI_B4    ((R_SCI_B0_Type *) R_SCI4_BASE)
+#define R_SCI_B5    ((R_SCI_B0_Type *) R_SCI5_BASE)
+#define R_SCI_B6    ((R_SCI_B0_Type *) R_SCI6_BASE)
+#define R_SCI_B7    ((R_SCI_B0_Type *) R_SCI7_BASE)
+#define R_SCI_B8    ((R_SCI_B0_Type *) R_SCI8_BASE)
+#define R_SCI_B9    ((R_SCI_B0_Type *) R_SCI9_BASE)
 
 #endif

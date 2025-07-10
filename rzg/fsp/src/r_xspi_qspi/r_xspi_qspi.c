@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -73,6 +73,8 @@
 
 #define XSPI_QSPI_PRV_WORD_ACCESS_SIZE                (4U)
 #define XSPI_QSPI_PRV_HALF_WORD_ACCESS_SIZE           (2U)
+
+#define XSPI_QSPI_BUFFER_WRITE_WAIT_CYCLE             (5U)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -164,16 +166,15 @@ fsp_err_t R_XSPI_QSPI_Open (spi_flash_ctrl_t * p_ctrl, spi_flash_cfg_t const * c
 #endif
 
     xspi_qspi_extended_cfg_t * p_cfg_extend = (xspi_qspi_extended_cfg_t *) p_cfg->p_extend;
+#if XSPI_QSPI_CFG_PARAM_CHECKING_ENABLE
+    FSP_ASSERT(NULL != p_cfg_extend->p_reg);
+#endif
 
     /* Enable clock to the QSPI block */
     R_BSP_MODULE_START(FSP_IP_XSPI, p_cfg_extend->unit);
 
-#if (defined(BSP_FEATURE_XSPI_NUM_UNITS) && (1U == BSP_FEATURE_XSPI_NUM_UNITS))
-    uint32_t base_address = (uint32_t) R_XSPI0;
-#else
-    uint32_t base_address = (uint32_t) R_XSPI0 + (p_cfg_extend->unit * ((uint32_t) R_XSPI1 - (uint32_t) R_XSPI0));
-#endif
-    p_instance_ctrl->p_reg = (R_XSPI0_Type *) base_address;
+    /* Register base address */
+    p_instance_ctrl->p_reg = p_cfg_extend->p_reg;
 
     /* Initialize control block. */
     p_instance_ctrl->p_cfg = p_cfg;
@@ -200,7 +201,6 @@ fsp_err_t R_XSPI_QSPI_Open (spi_flash_ctrl_t * p_ctrl, spi_flash_cfg_t const * c
     p_instance_ctrl->spi_protocol = p_cfg->spi_protocol;
 #if defined(BSP_FEATURE_XSPI_DO_NOT_HAS_CSSCTL)
 #else
-
     /* Set xSPI CSn slave memory size. */
     if (XSPI_QSPI_CHIP_SELECT_0 == p_cfg_extend->chip_select)
     {
@@ -450,6 +450,7 @@ fsp_err_t R_XSPI_QSPI_Write (spi_flash_ctrl_t    * p_ctrl,
                              uint32_t              byte_count)
 {
     xspi_qspi_instance_ctrl_t * p_instance_ctrl = (xspi_qspi_instance_ctrl_t *) p_ctrl;
+    xspi_qspi_extended_cfg_t  * p_cfg_extend    = (xspi_qspi_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend;
 
 #if XSPI_QSPI_CFG_PARAM_CHECKING_ENABLE
     fsp_err_t err = r_xspi_qspi_program_param_check(p_instance_ctrl, p_src, p_dest, byte_count);
@@ -494,18 +495,35 @@ fsp_err_t R_XSPI_QSPI_Write (spi_flash_ctrl_t    * p_ctrl,
         }
     }
 
-    /* Ensure that all write data is in the xSPI write buffer. */
-    __asm volatile ("dsb");
+    /* Protect the order between access to the xSPI external memory space and the xSPI peripheral space. */
+    __DSB();
 
     /* Request to push the pending data */
     if (XSPI_QSPI_PRV_MAX_COMBINE_SIZE > byte_count)
     {
+        /* Do dummy read for wait.
+         * To ensure that all write data is stored in the xSPI internal write buffer before issuing a push request,
+         * it is necessary to wait a few cycles. */
+        volatile uint32_t dummy;
+        for (uint32_t wait_cycle = 0; wait_cycle < XSPI_QSPI_BUFFER_WRITE_WAIT_CYCLE; wait_cycle++)
+        {
+            dummy = p_instance_ctrl->p_reg->COMCFG;
+            FSP_PARAMETER_NOT_USED(dummy);
+        }
+
         /* Push the pending data. */
         p_instance_ctrl->p_reg->BMCTL1_b.MWRPUSH = 1;
     }
 
     /* Wait until memory access starts in write API. */
     FSP_HARDWARE_REGISTER_WAIT(p_instance_ctrl->p_reg->COMSTT_b.MEMACC, 1);
+
+    /* If prefetch is enabled, make sure the banks aren't being used and flush the prefetch caches after a write. */
+    if (p_cfg_extend->prefetch_en == XSPI_QSPI_PREFETCH_FUNCTION_ENABLE)
+    {
+        FSP_HARDWARE_REGISTER_WAIT(p_instance_ctrl->p_reg->COMSTT_b.MEMACC, 0);
+        p_instance_ctrl->p_reg->BMCTL1_b.PBUFCLR = 1;
+    }
 
     return FSP_SUCCESS;
 }
@@ -526,6 +544,7 @@ fsp_err_t R_XSPI_QSPI_Write (spi_flash_ctrl_t    * p_ctrl,
 fsp_err_t R_XSPI_QSPI_Erase (spi_flash_ctrl_t * p_ctrl, uint8_t * const p_device_address, uint32_t byte_count)
 {
     xspi_qspi_instance_ctrl_t * p_instance_ctrl = (xspi_qspi_instance_ctrl_t *) p_ctrl;
+    xspi_qspi_extended_cfg_t  * p_cfg_extend    = (xspi_qspi_extended_cfg_t *) p_instance_ctrl->p_cfg->p_extend;
 
 #if XSPI_QSPI_CFG_PARAM_CHECKING_ENABLE
     fsp_err_t err = r_xspi_qspi_param_checking_dcom(p_instance_ctrl);
@@ -533,9 +552,9 @@ fsp_err_t R_XSPI_QSPI_Erase (spi_flash_ctrl_t * p_ctrl, uint8_t * const p_device
     FSP_ASSERT(NULL != p_device_address);
 #endif
 
-    uint16_t erase_command = 0;
-    uint32_t chip_address  = (uint32_t) p_device_address - BSP_FEATURE_XSPI_START_ADDRESS;
-    bool     send_address  = true;
+    uint16_t  erase_command = 0;
+    uintptr_t chip_address  = (uintptr_t) p_device_address - (uintptr_t) BSP_FEATURE_XSPI_START_ADDRESS;
+    bool      send_address  = true;
 
     for (uint32_t index = 0; index < p_instance_ctrl->p_cfg->erase_command_list_length; index++)
     {
@@ -568,6 +587,13 @@ fsp_err_t R_XSPI_QSPI_Erase (spi_flash_ctrl_t * p_ctrl, uint8_t * const p_device
     direct_command.command_length = 1U;
 
     r_xspi_qspi_direct_transfer(p_instance_ctrl, &direct_command, SPI_FLASH_DIRECT_TRANSFER_DIR_WRITE);
+
+    /* If prefetch is enabled, make sure the banks aren't being used and flush the prefetch caches after an erase. */
+    if (p_cfg_extend->prefetch_en == XSPI_QSPI_PREFETCH_FUNCTION_ENABLE)
+    {
+        FSP_HARDWARE_REGISTER_WAIT(p_instance_ctrl->p_reg->COMSTT_b.MEMACC, 0);
+        p_instance_ctrl->p_reg->BMCTL1_b.PBUFCLR = 1;
+    }
 
     return FSP_SUCCESS;
 }
@@ -734,7 +760,6 @@ static fsp_err_t r_xspi_qspi_xip (xspi_qspi_instance_ctrl_t * p_instance_ctrl, u
 {
     FSP_PARAMETER_NOT_USED(code);
 #if XSPI_QSPI_CFG_PARAM_CHECKING_ENABLE
-
     /* FSP_ASSERT(NULL != p_instance_ctrl) is optimized out when it shouldn't be.  It appears to be affected by GCC bug
      * https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90949. */
     xspi_qspi_instance_ctrl_t * volatile p_volatile_ctrl = p_instance_ctrl;

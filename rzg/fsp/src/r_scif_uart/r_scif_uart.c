@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -132,11 +132,6 @@ void scif_uart_rx_dmac_callback(scif_uart_instance_ctrl_t * p_ctrl);
  * Private global variables
  **********************************************************************************************************************/
 
-/** Name of module used by error logger macro */
-#if BSP_CFG_ERROR_LOG != 0
-static const char g_module_name[] = "scif_uart";
-#endif
-
 /** Baud rate divisor information (UART mode) */
 static const baud_setting_const_t g_async_baud[SCIF_UART_NUM_DIVISORS_ASYNC] =
 {
@@ -176,27 +171,6 @@ const uart_api_t g_uart_on_scif =
     .communicationAbort = R_SCIF_UART_Abort,
     .callbackSet        = R_SCIF_UART_CallbackSet,
     .readStop           = R_SCIF_UART_ReadStop,
-};
-
-/** SCIF_UART base address */
-static const uint32_t volatile * p_scif_uart_base_address[BSP_FEATURE_SCIF_MAX_CHANNEL] =
-{
-    (uint32_t *) R_SCIFA0_BASE,
-#if BSP_FEATURE_SCIF_MAX_CHANNEL > 1
-    (uint32_t *) R_SCIFA1_BASE,
- #if BSP_FEATURE_SCIF_MAX_CHANNEL > 2
-    (uint32_t *) R_SCIFA2_BASE,
-  #if BSP_FEATURE_SCIF_MAX_CHANNEL > 3
-    (uint32_t *) R_SCIFA3_BASE,
-   #if BSP_FEATURE_SCIF_MAX_CHANNEL > 4
-    (uint32_t *) R_SCIFA4_BASE,
-    #if BSP_FEATURE_SCIF_MAX_CHANNEL > 5
-    (uint32_t *) R_SCIFA5_BASE,
-    #endif
-   #endif
-  #endif
- #endif
-#endif
 };
 
 /*******************************************************************************************************************//**
@@ -242,6 +216,7 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
     FSP_ASSERT(p_cfg->tei_irq >= 0);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
     FSP_ASSERT(((scif_uart_extended_cfg_t *) p_cfg->p_extend)->bri_irq >= 0);
+    FSP_ASSERT(NULL != ((scif_uart_extended_cfg_t *) p_cfg->p_extend)->p_reg);
  #if (SCIF_UART_CFG_FLOW_CONTROL_SUPPORT)
     if (((scif_uart_extended_cfg_t *) p_cfg->p_extend)->uart_mode != SCIF_UART_MODE_RS232)
     {
@@ -252,8 +227,11 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
  #endif
 #endif
 
+    /* Get extended configuration structure pointer. */
+    scif_uart_extended_cfg_t * p_extend = (scif_uart_extended_cfg_t *) p_cfg->p_extend;
+
     /* Set the base address for specified channel */
-    p_ctrl->p_reg = (R_SCIFA0_Type *) p_scif_uart_base_address[p_cfg->channel];
+    p_ctrl->p_reg = (R_SCIFA0_Type *) p_extend->p_reg;
 
     p_ctrl->p_cfg = p_cfg;
 
@@ -271,8 +249,6 @@ fsp_err_t R_SCIF_UART_Open (uart_ctrl_t * const p_api_ctrl, uart_cfg_t const * c
 
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 #endif
-
-    scif_uart_extended_cfg_t * p_extend = (scif_uart_extended_cfg_t *) p_ctrl->p_cfg->p_extend;
 
     /* Enable the SCIF channel. */
     R_BSP_MODULE_START(FSP_IP_SCIF, p_cfg->channel);

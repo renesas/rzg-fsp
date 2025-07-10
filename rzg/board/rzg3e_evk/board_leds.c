@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -37,8 +37,8 @@
 static const uint16_t g_bsp_prv_leds[] =
 {
     (uint16_t) BSP_IO_PORT_06_PIN_05,  ///< LD0 (P65)
-    (uint16_t) BSP_IO_PORT_06_PIN_06,  ///< LD1 (P66)
-    (uint16_t) BSP_IO_PORT_05_PIN_06,  ///< LD2 (P56)
+    (uint16_t) BSP_IO_PORT_05_PIN_06,  ///< LD1 (P56)
+    (uint16_t) BSP_IO_PORT_06_PIN_06,  ///< LD2 (P66)
     (uint16_t) BSP_IO_PORT_06_PIN_04,  ///< LD3 (P64)
 };
 

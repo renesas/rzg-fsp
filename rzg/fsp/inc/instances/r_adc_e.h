@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -198,6 +198,7 @@ typedef struct st_adc_e_extended_cfg
     IRQn_Type              window_b_irq;                ///< IRQ number for Window Compare B interrupts
     uint8_t                window_a_ipl;                ///< Priority for Window Compare A interrupts
     uint8_t                window_b_ipl;                ///< Priority for Window Compare B interrupts
+    void                 * p_reg;                       ///< Register base address for specified channel
 } adc_e_extended_cfg_t;
 
 /** ADC Window Compare configuration */

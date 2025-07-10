@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -39,8 +39,8 @@
 
 /* BSP Capabilities Definitions */
 #define BSP_FEATURE_BSP_ACCESS_CONTROL_SET_SUPPORT            (1U)
-#define BSP_FESTURE_BSP_BOOTCPU_MASK                          (R_SYSC_SYS_LSI_MODE_STAT_BOOTSELECTER_Msk)
-#define BSP_FEATURE_BSP_CLOCK_FREQ_INIT_CFG_SUPPORT           (0U)
+#define BSP_FEATURE_BSP_BOOTCPU_MASK                          (R_SYSC_SYS_LSI_MODE_STAT_BOOTSELECTER_Msk)
+#define BSP_FEATURE_BSP_CLOCK_FREQ_INIT_CFG_SUPPORT           (BSP_CFG_MCU_CLOCK_INIT)
 #define BSP_FEATURE_BSP_DELAY_LOOP_CYCLES                     (30U)
 #define BSP_FEATURE_BSP_INT_SIGNAL_VIA_DMAC                   (0U)
 #define BSP_FEATURE_BSP_SYSTEM_CORE_CLOCK                     (FSP_PRIV_CLOCK_I7CLK)
@@ -134,6 +134,7 @@
 /* DMAC-Related Definitions */
 #define BSP_FEATURE_DMAC_MAX_CHANNEL                          (16U)
 #define BSP_FEATURE_DMAC_MAX_UNIT                             (5U)
+#define BSP_FEATURE_DMAC_B_64BIT_SYSTEM                       (0U)
 
 /* GPT-Related Definitions */
 #define BSP_FEATURE_GPT_VALID_CHANNEL_MASK                    (0xFFFFU)
@@ -148,6 +149,7 @@
 #define BSP_FEATURE_GPT_STATUS_REGISTER                       GTST
 #define BSP_FEATURE_GPT_OUTPUT_DISABLE_REQUEST_STATUS_MASK    (R_GPT0_GTST_OABLF_Msk | R_GPT0_GTST_OABHF_Msk | \
                                                                R_GPT0_GTST_DTEF_Msk)
+#define BSP_FEATURE_GPT_SUPPORT_EXTENDED_INTERRUPT_SKIP       (1U)
 
 /* GTM-Related Definitions */
 #define BSP_FEATURE_GTM_MAX_CHANNEL                           (8U)
@@ -212,11 +214,9 @@
 
 /* MHU-Related Definitions */
 #define BSP_FEATURE_MHU_B_NS_VALID_CHANNEL_MASK               (0x00820820U)
-#define BSP_FEATURE_MHU_B_NS_RSP_VALID_CHANNEL_MASK           (0x00820820U)
 #define BSP_FEATURE_MHU_B_NS_SWINT_GET_VALID_CHANNEL_MASK     (0x00000924U)
 #define BSP_FEATURE_MHU_B_NS_SWINT_SET_VALID_CHANNEL_MASK     (0x03C00000U)
 #define BSP_FEATURE_MHU_B_S_VALID_CHANNEL_MASK                (0x00820820U)
-#define BSP_FEATURE_MHU_B_S_RSP_VALID_CHANNEL_MASK            (0x00820820U)
 #define BSP_FEATURE_MHU_B_TX_COMPLETE_DELAY()    (vTaskDelay(0))
 
 /* PDM-Related Definitions */
@@ -260,8 +260,7 @@
 #define BSP_FEATURE_TSU_B_CALIBRAION_DATA_INVALID             (0U)
 #define BSP_FEATURE_TSU_B_ELC_TRIGGER_SUPPORTED               (1)
 #define BSP_FEATURE_TSU_B_CONTINUOUS_MODE_SUPPORTED           (0)
-#define BSP_FEATURE_TSU_B_MAX_UNIT                            (2)
-#define BSP_FEATURE_TSU_B_VALID_CHANNEL_MASK                  (0x2U)
+#define BSP_FEATURE_TSU_B_VALID_UNIT_MASK                     (0x2U)
 
 /* XSPI-Related Definitions */
 #define BSP_FEATURE_XSPI_CHANNELS                             (0x01U)

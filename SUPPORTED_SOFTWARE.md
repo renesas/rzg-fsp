@@ -49,10 +49,9 @@
     * [FreeRTOS Heap 5](https://www.freertos.org/a00111.html#heap_5)
     * [FreeRTOS Port (rm_freertos_port)](https://renesas.github.io/rzg-fsp/group___r_m___f_r_e_e_r_t_o_s___p_o_r_t.html)
   * Sensor
-    * [HS300X Temperature/Humidity Sensor (rm_hs300x)](https://renesas.github.io/rzg-fsp/group___r_m___h_s300_x.html)
-    * [HS400X Temperature/Humidity Sensor (rm_hs400x)](https://renesas.github.io/rzg-fsp/group___r_m___h_s400_x.html)
+    * [HS300X Temperature/Humidity Sensor (rm_hs300x) [Deprecated]](https://renesas.github.io/rzg-fsp/group___r_m___h_s300_x.html)
+    * [HS400X Temperature/Humidity Sensor (rm_hs400x) [Deprecated]](https://renesas.github.io/rzg-fsp/group___r_m___h_s400_x.html)
     * [Temperature Sensor Unit (r_tsu_b)](https://renesas.github.io/rzg-fsp/group___t_s_u___b.html)
-    * [ZMOD4XXX Gas Sensor (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
   * Storage
     * [QSPI Flash (r_xspi_qspi)](https://renesas.github.io/rzg-fsp/group___x_s_p_i___q_s_p_i.html)
   * System
@@ -72,14 +71,6 @@
   * OpenAMP
     * [libmetal](https://github.com/OpenAMP/libmetal)
     * [open-amp](https://github.com/OpenAMP/open-amp)
-  * Sensor
-    * [ZMOD4410 IAQ 1st Generation (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
-    * [ZMOD4410 IAQ 2nd Generation (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
-    * [ZMOD4410 IAQ 2nd Generation Ultra Low Power (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
-    * [ZMOD4410 Odor (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
-    * [ZMOD4410 Sulfur-based Odor (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
-    * [ZMOD4510 OAQ 1st Generation (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
-    * [ZMOD4510 OAQ 2nd Generation (rm_zmod4xxx)](https://renesas.github.io/rzg-fsp/group___r_m___z_m_o_d4_x_x_x.html)
   * System
     * [Arm CMSIS6 Core (M)](https://arm-software.github.io/CMSIS_6/latest/Core/index.html)
   * Timers

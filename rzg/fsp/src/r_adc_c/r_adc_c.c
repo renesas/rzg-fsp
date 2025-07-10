@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -108,6 +108,11 @@ fsp_err_t R_ADC_C_Open (adc_ctrl_t * p_ctrl, adc_cfg_t const * const p_cfg)
     {
         FSP_ERROR_RETURN((p_cfg->scan_end_irq >= 0), FSP_ERR_IRQ_BSP_DISABLED);
     }
+
+    adc_c_extended_cfg_t const * p_cfg_extend = (adc_c_extended_cfg_t const *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_cfg_extend->p_reg);
+#else
+    adc_c_extended_cfg_t const * p_cfg_extend = (adc_c_extended_cfg_t const *) p_cfg->p_extend;
 #endif
 
     /* Save configurations. */
@@ -117,7 +122,7 @@ fsp_err_t R_ADC_C_Open (adc_ctrl_t * p_ctrl, adc_cfg_t const * const p_cfg)
     p_instance_ctrl->p_callback_memory = NULL;
 
     /* Calculate the register base address. */
-    p_instance_ctrl->p_reg = R_ADC_C;
+    p_instance_ctrl->p_reg = p_cfg_extend->p_reg;
 
     /* Initialize the hardware based on the configuration. */
     r_adc_c_open_sub(p_instance_ctrl, p_cfg);

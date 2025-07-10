@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -71,18 +71,6 @@ static const uint32_t g_adc_valid_channels[] =
     BSP_FEATURE_ADC_E_UNIT_0_CHANNELS,
 };
 #endif
-
-/* ADC_E base address */
-static const uint32_t volatile * p_adc_e_base_address[BSP_FEATURE_ADC_E_MAX_UNIT] =
-{
-    (uint32_t *) R_ADC_E0,
-#if BSP_FEATURE_ADC_E_MAX_UNIT > 1
-    (uint32_t *) R_ADC_E1,
- #if BSP_FEATURE_ADC_E_MAX_UNIT > 2
-    (uint32_t *) R_ADC_E2,
- #endif
-#endif
-};
 
 /***********************************************************************************************************************
  * Global Variables
@@ -159,6 +147,7 @@ fsp_err_t R_ADC_E_Open (adc_ctrl_t * p_ctrl, adc_cfg_t const * const p_cfg)
          * has priority over group B. */
     }
 
+    FSP_ASSERT(NULL != p_extend->p_reg);
 #else
     adc_e_extended_cfg_t const * p_extend = (adc_e_extended_cfg_t const *) p_cfg->p_extend;
 #endif
@@ -169,7 +158,7 @@ fsp_err_t R_ADC_E_Open (adc_ctrl_t * p_ctrl, adc_cfg_t const * const p_cfg)
     p_instance_ctrl->p_callback        = p_cfg->p_callback;
     p_instance_ctrl->p_context         = p_cfg->p_context;
     p_instance_ctrl->p_callback_memory = NULL;
-    p_instance_ctrl->p_reg             = (R_ADC_E0_Type *) p_adc_e_base_address[p_cfg->unit];
+    p_instance_ctrl->p_reg             = p_extend->p_reg;
 
     /* Initialize the hardware based on the configuration. */
     r_adc_e_open_sub(p_instance_ctrl, p_cfg);
@@ -780,7 +769,7 @@ static void r_adc_e_stop_sub (adc_e_instance_ctrl_t * const p_instance_ctrl)
 
 /*******************************************************************************************************************//**
  * Enforces constraints on Window Compare function usage per section  "Constraints on the compare function" in
- * User's Manual.
+ * the user's manual.
  *
  * @param[in]  p_window_cfg            Pointer to window compare configuration
  *

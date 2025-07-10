@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -52,6 +52,7 @@ typedef struct st_wdt_extended_cfg
     bool      cold_reset_enable;        // Enable or disable cold reset.
     uint8_t   timeout_ipl;              // WDT timeout interrupt priority.
     IRQn_Type timeout_irq;              // WDT timeout interrupt ID.
+    void    * p_reg;                    // WDT register base address for specified channel
 } wdt_extended_cfg_t;
 
 /**********************************************************************************************************************

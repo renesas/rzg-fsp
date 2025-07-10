@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -134,6 +134,7 @@ typedef struct st_spi_b_extended_cfg
     uint8_t                        transmit_fifo_threshold;               ///< Transmit FIFO threshold (0~15)
     uint8_t                        receive_fifo_threshold;                ///< Receive FIFO threshold  (0~15)
     uint8_t                        receive_data_ready_detect_adjustment;  ///< Receive data ready detect timing (0~255 counts of operation clock)
+    void                         * p_reg;                                 ///< Register base address for specified channel
 } spi_b_extended_cfg_t;
 
 /** Channel control block. DO NOT INITIALIZE.  Initialization occurs when @ref spi_api_t::open is called. */

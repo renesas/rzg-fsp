@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -87,20 +87,6 @@ static void r_wdt_timeout_callback(wdt_instance_ctrl_t * p_ctrl);
  * Private global variables
  **********************************************************************************************************************/
 
-/* WDT base address */
-static const uint32_t volatile * p_wdt_base_address[BSP_FEATURE_WDT_MAX_CHANNEL] =
-{
-    (uint32_t *) R_WDT0_BASE,
-#if BSP_FEATURE_WDT_MAX_CHANNEL > 1
-    (uint32_t *) R_WDT1_BASE,
- #if BSP_FEATURE_WDT_MAX_CHANNEL > 2
-    (uint32_t *) R_WDT2_BASE,
-  #if BSP_FEATURE_WDT_MAX_CHANNEL > 3
-    (uint32_t *) R_WDT3_BASE,
-  #endif
- #endif
-#endif
-};
 #if (BSP_FEATURE_WDT_TYPE == 1U)
 static const uint8_t g_wdtcr_timeout[] =
 {
@@ -190,6 +176,7 @@ fsp_err_t R_WDT_Open (wdt_ctrl_t * const p_ctrl, wdt_cfg_t const * const p_cfg)
     err = r_wdt_parameter_checking(p_instance_ctrl, p_cfg);
     FSP_ERROR_RETURN(FSP_SUCCESS == err, err);
 
+    /* Get extended configuration structure pointer. */
     wdt_extended_cfg_t * p_extend = (wdt_extended_cfg_t *) p_cfg->p_extend;
 #if (BSP_FEATURE_WDT_TYPE == 0U)
 
@@ -200,7 +187,7 @@ fsp_err_t R_WDT_Open (wdt_ctrl_t * const p_ctrl, wdt_cfg_t const * const p_cfg)
 #endif
 
     /* Set the base address for specified channel */
-    p_instance_ctrl->p_reg = (R_WDT0_Type *) p_wdt_base_address[p_extend->channel];
+    p_instance_ctrl->p_reg = (R_WDT0_Type *) p_extend->p_reg;
 
     p_instance_ctrl->p_cfg = p_cfg;
 
@@ -626,6 +613,8 @@ static fsp_err_t r_wdt_parameter_checking (wdt_instance_ctrl_t * const p_instanc
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ERROR_RETURN(WDT_OPEN != p_instance_ctrl->wdt_open, FSP_ERR_ALREADY_OPEN);
     FSP_ASSERT(NULL != p_cfg->p_extend);
+    wdt_extended_cfg_t * p_extend = (wdt_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
  #if (BSP_FEATURE_WDT_TYPE == 1U)
 
     /* Check timeout parameter is supported by WDT. */

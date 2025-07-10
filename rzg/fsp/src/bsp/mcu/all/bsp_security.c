@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -30,7 +30,6 @@ void R_BSP_PinCfgSecurityInit(void);
 /***********************************************************************************************************************
  * External symbols
  **********************************************************************************************************************/
-extern fsp_vector_t g_vector_table[BSP_ICU_VECTOR_MAX_ENTRIES];
 
 #if defined(__ARMCC_VERSION) || defined(__ICCARM__)
 typedef void (BSP_CMSE_NONSECURE_CALL * bsp_nonsecure_func_t)(void);

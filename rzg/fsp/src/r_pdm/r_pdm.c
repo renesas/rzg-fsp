@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -17,40 +17,25 @@
  * Macro definitions
  **********************************************************************************************************************/
 
-/* PCM width */
-#define PDM_PRV_PCM_WIDTH_20_BITS_0_18    (0x0)
-#define PDM_PRV_PCM_WIDTH_20_BITS_1_18    (0x1)
-#define PDM_PRV_PCM_WIDTH_20_BITS_2_18    (0x2)
-#define PDM_PRV_PCM_WIDTH_20_BITS_3_18    (0x3)
-#define PDM_PRV_PCM_WIDTH_16_BITS_4_18    (0x8)
-#define PDM_PRV_PCM_WIDTH_16_BITS_3_17    (0x9)
-#define PDM_PRV_PCM_WIDTH_16_BITS_2_16    (0xa)
-#define PDM_PRV_PCM_WIDTH_16_BITS_1_15    (0xb)
-#define PDM_PRV_PCM_WIDTH_16_BITS_0_14    (0xc)
+#define PDM_PRV_PDSCR_CLEAR_MASK            (R_PDM_PDSCRCH0_SDFC_Msk | R_PDM_PDSCRCH0_SCDFC_Msk |    \
+                                             R_PDM_PDSCRCH0_OVLDFC_Msk | R_PDM_PDSCRCH0_OVUDFC_Msk | \
+                                             R_PDM_PDSCRCH0_BFOWDFC_Msk)
+#define PDM_PRV_PDSR_ERROR_MASK             (R_PDM_PDSRCH0_SCDF_Msk | R_PDM_PDSRCH0_OVLDF_Msk | \
+                                             R_PDM_PDSRCH0_OVUDF_Msk |                          \
+                                             R_PDM_PDSRCH0_BFOWDF_Msk)
 
-/* SINC Filter Mode */
-#define PDM_PRV_SINC_FILTER_MODE_4        (0U)
-#define PDM_PRV_SINC_FILTER_MODE_1        (1U)
-#define PDM_PRV_SINC_FILTER_MODE_2        (2U)
-#define PDM_PRV_SINC_FILTER_MODE_3        (3U)
-
-/* PCM bits */
-#define PDM_PRV_PCM_WIDTH_MASK            (0xF0U)
-#define PDM_PRV_PCM_WIDTH_20_BITS         (0x00U)
-#define PDM_PRV_PCM_WIDTH_16_BITS         (0x10U)
+#define PDM_PRV_FIFO_SAMPLE_SIZE            sizeof(uint32_t)
+#define PDM_PRV_FIFO_DEPTH                  32
+#define PDM_PRV_FIFO_INITIAL_READ_LENGTH    (PDM_PRV_FIFO_DEPTH - 2)
 
 /* PDM macro functions */
-#define PDM_PRV_CHANNEL_OFFSET            (uintptr_t) (&(R_PDM0->PDMDSRCH1) - &(R_PDM0->PDMDSRCH0))
+#define PDM_PRV_CHANNEL_OFFSET              (uintptr_t) (&(R_PDM0->PDMDSRCH1) - &(R_PDM0->PDMDSRCH0))
 #define PDM_REG_CH(a, b)    *(&(a) + (PDM_PRV_CHANNEL_OFFSET * (b)))
 
 /* "PDM" in ASCII, used to determine if driver is open. */
-#define PDM_PRV_OPEN                      (0x50444DU)
+#define PDM_PRV_OPEN                        (0x50444DU)
 
-#define PDM_PRV_LOOP_MAX                  (1000)
-
-#define PDM_PRV_BITS_OF_UINT32            (32)
-#define PDM_PRV_BITS_OF_WIDTH20           (20)
-#define PDM_PRV_BITS_OF_WIDTH16           (16)
+#define PDM_PRV_LOOP_MAX                    (1000)
 
 /***********************************************************************************************************************
  * Typedef definitions
@@ -61,23 +46,6 @@ typedef void (BSP_CMSE_NONSECURE_CALL * pdm_prv_ns_callback)(pdm_callback_args_t
 #elif defined(__GNUC__)
 typedef BSP_CMSE_NONSECURE_CALL void (*volatile pdm_prv_ns_callback)(pdm_callback_args_t * p_args);
 #endif
-
-/* PDM communication direction */
-typedef enum e_pdm_dir
-{
-    PDM_DIR_RX    = 1U,                ///< Receive direction only
-    PDM_DIR_TX    = 2U,                ///< Transmit direction only
-    PDM_DIR_TX_RX = 3U,                ///< Transmit and receive direction
-} pdm_dir_t;
-
-/* Arguments are stored in a structure for transfer reset subroutine to avoid having more than 4 arguments. */
-typedef struct e_pdm_prv_transfer_reset
-{
-    void const * p_data;
-    uint32_t     bytes;
-    void const * p_src;
-    void       * p_dest;
-} pdm_prv_transfer_reset_t;
 
 /***********************************************************************************************************************
  * Private function prototypes
@@ -93,33 +61,18 @@ static void r_pdm_call_callback(pdm_instance_ctrl_t * p_ctrl, pdm_event_t event,
 /* FIFO subroutines */
 static uint32_t r_pdm_fifo_read(pdm_instance_ctrl_t * p_instance_ctrl);
 
-/* Open subroutines */
-
-static void r_pdm_interrupts_configure(pdm_instance_ctrl_t * const p_instance, pdm_cfg_t const * const p_cfg);
-
 #if PDM_CFG_DMAC_ENABLE
 static fsp_err_t r_pdm_dependent_drivers_configure(pdm_instance_ctrl_t * p_instance_ctrl);
 void             pdm_rxi_dmac_isr(dmac_b_callback_args_t * args);
 
 #endif
 
-/* Stop subroutines */
+/* Subroutines */
 static void r_pdm_stop_sub(pdm_instance_ctrl_t * const p_instance_ctrl);
-static void r_pdm_start_sub(pdm_instance_ctrl_t * const p_instance_ctrl);
 
 /***********************************************************************************************************************
  * Private global variables
  **********************************************************************************************************************/
-static uintptr_t const pdm_reg_base[] =
-{
-    (uintptr_t) R_PDM0,
-#if (1 < BSP_FEATURE_PDM_UNITS)
-    (uintptr_t) R_PDM1,
- #if (2 < BSP_FEATURE_PDM_UNITS)
-    (uintptr_t) R_PDM2,
- #endif                                /* 2 */
-#endif                                 /* 1 */
-};
 
 /***********************************************************************************************************************
  * Global Variables
@@ -128,13 +81,15 @@ static uintptr_t const pdm_reg_base[] =
 /** PDM Implementation of PDM interface.  */
 const pdm_api_t g_pdm_on_pdm =
 {
-    .open        = R_PDM_Open,
-    .start       = R_PDM_Start,
-    .stop        = R_PDM_Stop,
-    .read        = R_PDM_Read,
-    .statusGet   = R_PDM_StatusGet,
-    .close       = R_PDM_Close,
-    .callbackSet = R_PDM_CallbackSet,
+    .open                  = R_PDM_Open,
+    .start                 = R_PDM_Start,
+    .stop                  = R_PDM_Stop,
+    .soundDetectionEnable  = R_PDM_SoundDetectionEnable,
+    .soundDetectionDisable = R_PDM_SoundDetectionDisable,
+    .read                  = R_PDM_Read,
+    .statusGet             = R_PDM_StatusGet,
+    .close                 = R_PDM_Close,
+    .callbackSet           = R_PDM_CallbackSet,
 };
 
 /*******************************************************************************************************************//**
@@ -145,21 +100,18 @@ const pdm_api_t g_pdm_on_pdm =
 /*******************************************************************************************************************//**
  * Opens the PDM. Implements @ref pdm_api_t::open.
  *
- * This function sets this clock divisor and the configurations specified in pdm_cfg_t.  It also opens the timer and
- * transfer instances if they are provided.
+ * This function sets this clock divisor and the configurations specified in pdm_cfg_t.
  *
  * @retval FSP_SUCCESS                     Ready for PDM communication.
  * @retval FSP_ERR_ASSERTION               The pointer to p_ctrl or p_cfg is null.
  * @retval FSP_ERR_ALREADY_OPEN            The control block has already been opened.
  * @retval FSP_ERR_IP_CHANNEL_NOT_PRESENT  Channel number is not available on this device.
  * @return                                 See @ref RENESAS_ERROR_CODES or functions called by this function for other
- *                                         popdmble return codes. This function calls:
- *                                             * @ref transfer_api_t::open
+ *                                         possible return codes.
  **********************************************************************************************************************/
 fsp_err_t R_PDM_Open (pdm_ctrl_t * const p_ctrl, pdm_cfg_t const * const p_cfg)
 {
     pdm_instance_ctrl_t * p_instance_ctrl = (pdm_instance_ctrl_t *) p_ctrl;
-
 #if PDM_CFG_PARAM_CHECKING_ENABLE
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ASSERT(NULL != p_cfg);
@@ -183,123 +135,27 @@ fsp_err_t R_PDM_Open (pdm_ctrl_t * const p_ctrl, pdm_cfg_t const * const p_cfg)
  #endif
 
     FSP_ERROR_RETURN(PDM_PRV_OPEN != p_instance_ctrl->open, FSP_ERR_ALREADY_OPEN);
-#endif
-
-#if BSP_FEATURE_PDM_VALID_CHANNEL_MASK == 1
-    uint32_t base_address = (uint32_t) R_PDM0;
-#else
-
-    /* Calculate base address for registers on this channel. */
-    uintptr_t base_address = pdm_reg_base[p_cfg->unit];
-#endif
-    R_PDM0_Type        * p_reg    = (R_PDM0_Type *) base_address;
     pdm_extended_cfg_t * p_extend = (pdm_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
+#else
+    pdm_extended_cfg_t * p_extend = (pdm_extended_cfg_t *) p_cfg->p_extend;
+#endif
+    R_PDM0_Type * p_reg = (R_PDM0_Type *) p_extend->p_reg;
 
-    /************************************
-     *   MODULE_ON
-     ************************************/
+    /* Enable PDM module */
     R_BSP_MODULE_START(FSP_IP_PDM, p_cfg->unit);
 
-    /************************************
-     *   PDM-IF initializing
-     ************************************/
+    /* Initialize PDM IP according to "PDM-IF Start Flow" in
+     * section "Start Flow" from the user's manual. */
 
     /* Set Channel's Mode setting */
-    uint32_t pcm_width;
-    uint32_t sfmd;
-    switch (p_cfg->pcm_width)
-    {
-        default:
-        case PDM_PCM_WIDTH_20_BITS_0_18:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_20_BITS_0_18;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_20_BITS_1_18:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_20_BITS_1_18;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_20_BITS_2_18:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_20_BITS_2_18;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_20_BITS_3_18:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_20_BITS_3_18;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_16_BITS_4_18:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_16_BITS_4_18;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_16_BITS_3_17:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_16_BITS_3_17;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_16_BITS_2_16:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_16_BITS_2_16;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_16_BITS_1_15:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_16_BITS_1_15;
-            break;
-        }
-
-        case PDM_PCM_WIDTH_16_BITS_0_14:
-        {
-            pcm_width = PDM_PRV_PCM_WIDTH_16_BITS_0_14;
-            break;
-        }
-    }
-
-    switch (p_extend->sinc_filter_mode)
-    {
-        default:
-        case PDM_SINC_FILTER_MODE_4:
-        {
-            sfmd = PDM_PRV_SINC_FILTER_MODE_4;
-            break;
-        }
-
-        case PDM_SINC_FILTER_MODE_1:
-        {
-            sfmd = PDM_PRV_SINC_FILTER_MODE_1;
-            break;
-        }
-
-        case PDM_SINC_FILTER_MODE_2:
-        {
-            sfmd = PDM_PRV_SINC_FILTER_MODE_2;
-            break;
-        }
-
-        case PDM_SINC_FILTER_MODE_3:
-        {
-            sfmd = PDM_PRV_SINC_FILTER_MODE_3;
-            break;
-        }
-    }
-
     PDM_REG_CH(p_reg->PDMDSRCH0, p_cfg->channel) =
-        (pcm_width << R_PDM_PDMDSRCH0_DBIS_Pos) |
+        (uint32_t) (p_cfg->pcm_width << R_PDM_PDMDSRCH0_DBIS_Pos) |
         (uint32_t) (p_extend->moving_average_mode << R_PDM_PDMDSRCH0_SDMAMD_Pos) |
         (uint32_t) (p_extend->low_pass_filter_shift << R_PDM_PDMDSRCH0_LFIS_Pos) |
         (uint32_t) (p_extend->compensation_filter_shift << R_PDM_PDMDSRCH0_CFIS_Pos) |
         (uint32_t) (p_extend->high_pass_filter_shift << R_PDM_PDMDSRCH0_HFIS_Pos) |
-        (sfmd << R_PDM_PDMDSRCH0_SFMD_Pos) |
+        (uint32_t) (p_extend->sinc_filter_mode << R_PDM_PDMDSRCH0_SFMD_Pos) |
         (uint32_t) (p_cfg->pcm_edge << R_PDM_PDMDSRCH0_INPSEL_Pos);
 
     /* Set Channel's Digital Filter Configuration */
@@ -307,53 +163,46 @@ fsp_err_t R_PDM_Open (pdm_ctrl_t * const p_ctrl, pdm_cfg_t const * const p_cfg)
         (uint32_t) (p_extend->sincrng << R_PDM_PDSFCRCH0_SINCRNG_Pos) |
         (uint32_t) (p_extend->sincdec << R_PDM_PDSFCRCH0_SINCDEC_Pos) |
         (uint32_t) (p_extend->clock_div << R_PDM_PDSFCRCH0_CKDIV_Pos);
-    PDM_REG_CH(p_reg->PDHFCS0RCH0, p_cfg->channel)  = (uint32_t) p_extend->hpf_coefficient_s0;
-    PDM_REG_CH(p_reg->PDHFCK1RCH0, p_cfg->channel)  = (uint32_t) p_extend->hpf_coefficient_k1;
-    PDM_REG_CH(p_reg->PDHFCH0RCH0, p_cfg->channel)  = (uint32_t) p_extend->hpf_coefficient_h[0];
-    PDM_REG_CH(p_reg->PDHFCH1RCH0, p_cfg->channel)  = (uint32_t) p_extend->hpf_coefficient_h[1];
-    PDM_REG_CH(p_reg->PDCFCH00RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[0];
-    PDM_REG_CH(p_reg->PDCFCH01RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[1];
-    PDM_REG_CH(p_reg->PDCFCH02RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[2];
-    PDM_REG_CH(p_reg->PDCFCH03RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[3];
-    PDM_REG_CH(p_reg->PDCFCH04RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[4];
-    PDM_REG_CH(p_reg->PDCFCH05RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[5];
-    PDM_REG_CH(p_reg->PDCFCH06RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[6];
-    PDM_REG_CH(p_reg->PDCFCH07RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[7];
-    PDM_REG_CH(p_reg->PDCFCH08RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[8];
-    PDM_REG_CH(p_reg->PDCFCH09RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[9];
-    PDM_REG_CH(p_reg->PDCFCH10RCH0, p_cfg->channel) = (uint32_t) p_extend->compensation_filter_coefficient_h[10];
 
+    /* Set high pass filter coefficients */
+    PDM_REG_CH(p_reg->PDHFCS0RCH0, p_cfg->channel) = (uint32_t) p_extend->hpf_coefficient_s0;
+    PDM_REG_CH(p_reg->PDHFCK1RCH0, p_cfg->channel) = (uint32_t) p_extend->hpf_coefficient_k1;
+    volatile uint32_t * p_hpf_reg  = &(p_reg->PDHFCH0RCH0);
+    uintptr_t           hpf_offset = (uintptr_t) (&(p_reg->PDHFCH1RCH0) - &(p_reg->PDHFCH0RCH0));
+    p_hpf_reg += p_cfg->channel;
+
+    for (uint32_t i = 0; i < PDM_NUM_HPF_COEFFICIENT_H; i++)
+    {
+        *(p_hpf_reg + hpf_offset * i) = (uint32_t) p_extend->hpf_coefficient_h[i];
+    }
+
+    /* Set compensation filter coefficients */
+    volatile uint32_t * p_comp_reg  = &(p_reg->PDCFCH00RCH0);
+    uintptr_t           comp_offset = (uintptr_t) (&(p_reg->PDCFCH01RCH0) - &(p_reg->PDCFCH00RCH0));
+    p_comp_reg += p_cfg->channel;
+
+    for (uint32_t i = 0; i < PDM_NUM_COMPENSATION_FILTER_COEFFICIENT_H; i++)
+    {
+        *(p_comp_reg + comp_offset * i) = (uint32_t) p_extend->compensation_filter_coefficient_h[i];
+    }
+
+    /* Set low pass filter coefficients */
     PDM_REG_CH(p_reg->PDLFCH010RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h0;
-    PDM_REG_CH(p_reg->PDLFCH100RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[0];
-    PDM_REG_CH(p_reg->PDLFCH101RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[1];
-    PDM_REG_CH(p_reg->PDLFCH102RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[2];
-    PDM_REG_CH(p_reg->PDLFCH103RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[3];
-    PDM_REG_CH(p_reg->PDLFCH104RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[4];
-    PDM_REG_CH(p_reg->PDLFCH105RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[5];
-    PDM_REG_CH(p_reg->PDLFCH106RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[6];
-    PDM_REG_CH(p_reg->PDLFCH107RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[7];
-    PDM_REG_CH(p_reg->PDLFCH108RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[8];
-    PDM_REG_CH(p_reg->PDLFCH109RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[9];
-    PDM_REG_CH(p_reg->PDLFCH110RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[10];
-    PDM_REG_CH(p_reg->PDLFCH111RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[11];
-    PDM_REG_CH(p_reg->PDLFCH112RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[12];
-    PDM_REG_CH(p_reg->PDLFCH113RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[13];
-    PDM_REG_CH(p_reg->PDLFCH114RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[14];
-    PDM_REG_CH(p_reg->PDLFCH115RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[15];
-    PDM_REG_CH(p_reg->PDLFCH116RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[16];
-    PDM_REG_CH(p_reg->PDLFCH117RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[17];
-    PDM_REG_CH(p_reg->PDLFCH118RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[18];
-    PDM_REG_CH(p_reg->PDLFCH119RCH0, p_cfg->channel) = (uint32_t) p_extend->lpf_coefficient_h1[19];
 
-    /* Set Channel's Sound Detection Control */
-    PDM_REG_CH(p_reg->PDSDLTRCH0, p_cfg->channel) = p_extend->sound_detection_lower_limit;
-    PDM_REG_CH(p_reg->PDSDUTRCH0, p_cfg->channel) = p_extend->sound_detection_upper_limit;
+    volatile uint32_t * p_lpf_reg  = &(p_reg->PDLFCH100RCH0);
+    uintptr_t           lpf_offset = (uintptr_t) (&(p_reg->PDLFCH101RCH0) - &(p_reg->PDLFCH100RCH0));
+    p_lpf_reg += p_cfg->channel;
+
+    for (uint32_t i = 0; i < PDM_NUM_LPF_FILTER_COEFFICIENT_H1; i++)
+    {
+        *(p_lpf_reg + lpf_offset * i) = (uint32_t) p_extend->lpf_coefficient_h1[i];
+    }
 
     /* Set Channel's Data Buffer Control */
 #if PDM_CFG_DMAC_ENABLE
     PDM_REG_CH(p_reg->PDDBCRCH0, p_cfg->channel) = PDM_INTERRUPT_THRESHOLD_1;
 #else
-    PDM_REG_CH(p_reg->PDDBCRCH0, p_cfg->channel) = (uint32_t) p_extend->interupt_threshold;
+    PDM_REG_CH(p_reg->PDDBCRCH0, p_cfg->channel) = (uint32_t) p_extend->interrupt_threshold;
 #endif
 
     /* Set Channel's Error Detection Control */
@@ -363,16 +212,29 @@ fsp_err_t R_PDM_Open (pdm_ctrl_t * const p_ctrl, pdm_cfg_t const * const p_cfg)
     PDM_REG_CH(p_reg->PDOVLTRCH0, p_cfg->channel) = p_extend->overvoltage_detection_lower_limit;
     PDM_REG_CH(p_reg->PDOVUTRCH0, p_cfg->channel) = p_extend->overvoltage_detection_upper_limit;
 
+    /* Activate target channel's filtering */
+    p_reg->PDCSTRTR |= (uint32_t) (1UL << p_cfg->channel);
+
+    /* Wait for settling time */
+#if (BSP_CFG_RTOS == 2)
+    vTaskDelay(p_extend->filter_setting_time * BSP_DELAY_UNITS_MILLISECONDS);
+#else
+    bsp_prv_software_delay_loop(p_extend->filter_setting_time * 2);
+#endif
+
+    /* Clear Channel's Status */
+    PDM_REG_CH(p_reg->PDSCRCH0, p_cfg->channel) = PDM_PRV_PDSCR_CLEAR_MASK;
+
+    /* Set Channel's Status Detection Control (for Error Detection) */
+    PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) =
+        (uint32_t) (p_extend->short_circuit_detection_enable) |
+        (uint32_t) (p_extend->over_voltage_lower_limit_detection_enable) |
+        (uint32_t) (p_extend->over_voltage_upper_limit_detection_enable) |
+        (uint32_t) (p_extend->buffer_overwrite_detection_enable);
+
     /* Initialize the control structure. */
     p_instance_ctrl->p_reg = p_reg;
     p_instance_ctrl->p_cfg = p_cfg;
-
-    /* Configure interrupts. */
-    r_pdm_interrupts_configure(p_instance_ctrl, p_cfg);
-
-    /* Initialize the PDM following the procedure in "Procedure to start communication (CPU operation
-     * procedure)" of the user's manual. This function follows this procedure except for enabling
-     * interrupts and enabling communication, which are done before communication begins. */
 
     p_instance_ctrl->p_callback        = p_cfg->p_callback;
     p_instance_ctrl->p_context         = p_cfg->p_context;
@@ -393,10 +255,10 @@ fsp_err_t R_PDM_Open (pdm_ctrl_t * const p_ctrl, pdm_cfg_t const * const p_cfg)
  *
  * @retval FSP_SUCCESS               PDM communication stop request issued.
  * @retval FSP_ERR_ASSERTION         The pointer to p_ctrl was null.
- * @retval FSP_ERR_INVALID_SIZE      The size of buffer is not the multiple of pdm_interrupt_threshold_t.
+ * @retval FSP_ERR_INVALID_SIZE      The size of buffer is not a multiple of pdm_interrupt_threshold_t.
  * @retval FSP_ERR_INVALID_ALIGNMENT The alignment of argument buffer_size is not matched with hardware specification.
  * @retval FSP_ERR_NOT_OPEN          The channel is not opened.
- * @return                       See @ref RENESAS_ERROR_CODES or lower level drivers for other popdmble return codes.
+ * @return                       See @ref RENESAS_ERROR_CODES or lower level drivers for other possible return codes.
  **********************************************************************************************************************/
 fsp_err_t R_PDM_Start (pdm_ctrl_t * const p_ctrl,
                        void * const       p_buffer,
@@ -416,24 +278,45 @@ fsp_err_t R_PDM_Start (pdm_ctrl_t * const p_ctrl,
 #if PDM_CFG_PARAM_CHECKING_ENABLE
     FSP_ASSERT(NULL != p_extend);
 #endif
-    uint32_t stages_per_interrupt = 1U << p_extend->interupt_threshold;
-    uint32_t datum_bytes;
-    datum_bytes = sizeof(uint32_t);
 
-    FSP_ERROR_RETURN((0 == ((uint32_t) p_buffer & 3)), FSP_ERR_INVALID_ALIGNMENT);
+    R_PDM0_Type           * p_reg                = p_instance_ctrl->p_reg;
+    pdm_cfg_t const * const p_cfg                = p_instance_ctrl->p_cfg;
+    uint32_t                stages_per_interrupt = 1U << p_extend->interrupt_threshold;
 
-    uint32_t number_of_interrupt_in_buffer;
-    uint32_t tmp = number_of_data_to_callback / stages_per_interrupt;
-    FSP_ERROR_RETURN((number_of_data_to_callback == stages_per_interrupt * tmp), FSP_ERR_INVALID_SIZE);
-    number_of_interrupt_in_buffer = buffer_size / datum_bytes / (number_of_data_to_callback / stages_per_interrupt);
-    FSP_ERROR_RETURN((buffer_size ==
-                      number_of_interrupt_in_buffer * datum_bytes * (number_of_data_to_callback / stages_per_interrupt)),
-                     FSP_ERR_INVALID_SIZE);
+    /* Verify that the buffer is aligned to 4 bytes. */
+    FSP_ERROR_RETURN((0 == ((uint32_t) p_buffer & 0x03U)), FSP_ERR_INVALID_ALIGNMENT);
+
+    /* Verify that number_of_data_to_callback is a multiple of configured interrupt threshold which determines the
+     * number of stages per interrupt */
+    FSP_ERROR_RETURN((0 == (number_of_data_to_callback % stages_per_interrupt)), FSP_ERR_INVALID_SIZE);
+
+    /* Verify that buffer size is a multiple of 4 bytes */
+    FSP_ERROR_RETURN((0 == buffer_size % PDM_PRV_FIFO_SAMPLE_SIZE), FSP_ERR_INVALID_SIZE);
+
+    /* Verify that number of samples in buffer is a multiple of the number of data to callback */
+    uint32_t number_of_samples_in_buffer = buffer_size / PDM_PRV_FIFO_SAMPLE_SIZE;
+    FSP_ERROR_RETURN((0 == (number_of_samples_in_buffer % number_of_data_to_callback)), FSP_ERR_INVALID_SIZE);
+
     p_instance_ctrl->p_rx_dest        = p_buffer;
     p_instance_ctrl->p_rx_fifo        = p_buffer;
-    p_instance_ctrl->rx_dest_samples  = buffer_size / datum_bytes;
+    p_instance_ctrl->rx_dest_samples  = number_of_samples_in_buffer;
     p_instance_ctrl->rx_int_count     = 0;
     p_instance_ctrl->rx_int_count_max = number_of_data_to_callback;
+
+    /* Start communication according to "PDM-IF normal processing flow" in
+     * section "Normal Processing Flow" from the user's manual. */
+
+    /* Set Channel's Data Read Enable */
+    PDM_REG_CH(p_reg->PDDRCRCH0, p_cfg->channel) = R_PDM_PDDRCRCH0_DATRE_Msk;
+
+    /* Read PDMm_PDDRRCHn x (P_FD - 2) before starting interrupts/DMA
+     * P_FD: FIFO Depth
+     * Note: this data discarded and not stored anywhere
+     */
+    for (int i = 0; i < PDM_PRV_FIFO_INITIAL_READ_LENGTH; i++)
+    {
+        FSP_REGISTER_READ((void *) &PDM_REG_CH(p_reg->PDDRRCH0, p_cfg->channel));
+    }
 
 #if PDM_CFG_DMAC_ENABLE
 
@@ -442,7 +325,20 @@ fsp_err_t R_PDM_Start (pdm_ctrl_t * const p_ctrl,
     FSP_ERROR_RETURN((FSP_SUCCESS == err), err);
 #endif
 
-    r_pdm_start_sub(p_instance_ctrl);
+    /* Enable error interrupt if allocated and not already enabled */
+    if ((p_cfg->err_irq >= 0) && (0 == (PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) & R_PDM_PDICRCH0_IEDE_Msk)))
+    {
+        PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) |= R_PDM_PDICRCH0_IEDE_Msk;
+        R_BSP_IrqCfgEnable(p_cfg->err_irq, p_cfg->err_ipl, p_instance_ctrl);
+    }
+
+    /* Enable data interrupt */
+    PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) |= R_PDM_PDICRCH0_IDRE_Msk;
+
+    if (p_cfg->dat_irq >= 0)
+    {
+        R_BSP_IrqCfgEnable(p_cfg->dat_irq, p_cfg->dat_ipl, p_instance_ctrl);
+    }
 
     return FSP_SUCCESS;
 }
@@ -457,7 +353,7 @@ fsp_err_t R_PDM_Start (pdm_ctrl_t * const p_ctrl,
  * @retval FSP_SUCCESS           PDM communication stop request issued.
  * @retval FSP_ERR_ASSERTION     The pointer to p_ctrl was null.
  * @retval FSP_ERR_NOT_OPEN      The channel is not opened.
- * @return                       See @ref RENESAS_ERROR_CODES or lower level drivers for other popdmble return codes.
+ * @return                       See @ref RENESAS_ERROR_CODES or lower level drivers for other possible return codes.
  **********************************************************************************************************************/
 fsp_err_t R_PDM_Stop (pdm_ctrl_t * const p_ctrl)
 {
@@ -468,74 +364,116 @@ fsp_err_t R_PDM_Stop (pdm_ctrl_t * const p_ctrl)
     FSP_ERROR_RETURN(PDM_PRV_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    /* Stop is complete after an PDM_EVENT_IDLE interrupt. */
     r_pdm_stop_sub(p_instance_ctrl);
 
     return FSP_SUCCESS;
 }
 
 /*******************************************************************************************************************//**
- * Reads data into provided buffer. Implements @ref pdm_api_t::read.
+ * Configures and enables sound detection. Implements @ref pdm_api_t::soundDetectionEnable.
  *
- * This function resets the transfer if the transfer interface is used, or reads the length of data available in the
- * FIFO then stores the remaining read buffer in the control block to be filled in the ISR.
+ * This function configures sound detection based on the passed in settings. It then enables sound detection.
  *
- * Read() cannot be called if another Start() operation is in progress.  Read can be called
- * when the PDM is idle.
- *
- * @retval FSP_SUCCESS                 Read initiated successfully.
- * @retval FSP_ERR_IN_USE              Peripheral is in the wrong mode or not idle.
- * @retval FSP_ERR_ASSERTION           The pointer to p_ctrl or p_dest was null, or bytes requested was 0.
- * @retval FSP_ERR_NOT_OPEN            The channel is not opened.
- * @return                             See @ref RENESAS_ERROR_CODES or functions called by this function for other
- *                                     popdmble return codes. This function calls:
- *                                         * @ref transfer_api_t::reset
+ * @retval FSP_SUCCESS           Sound detection configured and enabled.
+ * @retval FSP_ERR_ASSERTION     The pointer to p_ctrl was null.
+ * @retval FSP_ERR_NOT_OPEN      The channel is not opened.
+ * @return                       See @ref RENESAS_ERROR_CODES or lower level drivers for other possible return codes.
  **********************************************************************************************************************/
-fsp_err_t R_PDM_Read (pdm_ctrl_t * const p_ctrl, void * const p_dest, uint32_t const bytes)
+fsp_err_t R_PDM_SoundDetectionEnable (pdm_ctrl_t * const p_ctrl, pdm_sound_detection_setting_t sound_detection_setting)
 {
     pdm_instance_ctrl_t * p_instance_ctrl = (pdm_instance_ctrl_t *) p_ctrl;
 
 #if PDM_CFG_PARAM_CHECKING_ENABLE
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ERROR_RETURN(PDM_PRV_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
-    FSP_ASSERT(NULL != p_dest);
-
-    /* bytes must be a non-zero multiple of the FIFO access size multiplied by 2 (for the left and right channel). */
-    FSP_ASSERT(bytes > 0U);
 #endif
 
-    FSP_ERROR_RETURN((0 ==
-                      (p_instance_ctrl->p_reg->PDCSR & (1 << (R_PDM_PDCSR_STATE_Pos + p_instance_ctrl->p_cfg->channel)))),
-                     FSP_ERR_IN_USE)
+    pdm_cfg_t const * const p_cfg = p_instance_ctrl->p_cfg;
+    R_PDM0_Type           * p_reg = p_instance_ctrl->p_reg;
 
-    uint32_t count = 0;
-    uint32_t   max_count = PDM_REG_CH(p_instance_ctrl->p_reg->PDDSRCH0, p_instance_ctrl->p_cfg->channel);
-    uint32_t * p_data    = p_dest;
-    int32_t    tmp_data;
-    uint32_t   sift_size;
-    if (p_instance_ctrl->p_cfg->pcm_width >= PDM_PCM_WIDTH_16_BITS_4_18)
+    /* Enable error interrupt if allocated and not already enabled */
+    if ((p_cfg->err_irq >= 0) && (0 == (PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) & R_PDM_PDICRCH0_IEDE_Msk)))
     {
-        sift_size = PDM_PRV_BITS_OF_UINT32 - PDM_PRV_BITS_OF_WIDTH16;
-    }
-    else
-    {
-        sift_size = PDM_PRV_BITS_OF_UINT32 - PDM_PRV_BITS_OF_WIDTH20;
+        PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) |= R_PDM_PDICRCH0_IEDE_Msk;
+        R_BSP_IrqCfgEnable(p_cfg->err_irq, p_cfg->err_ipl, p_instance_ctrl);
     }
 
-    if (max_count > bytes / sizeof(uint32_t))
-    {
-        max_count = bytes / sizeof(uint32_t);
-    }
+    /* Clear sound detection status */
+    PDM_REG_CH(p_reg->PDSCRCH0, p_cfg->channel) |= R_PDM_PDSCRCH0_SDFC_Msk;
 
-    for (count = 0; count < max_count; count++)
+    /* Set Channel's Sound Detection Control */
+    PDM_REG_CH(p_reg->PDSDLTRCH0, p_cfg->channel) = sound_detection_setting.sound_detection_lower_limit;
+    PDM_REG_CH(p_reg->PDSDUTRCH0, p_cfg->channel) = sound_detection_setting.sound_detection_upper_limit;
+
+    /* Set sound detection enable */
+    PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) |= R_PDM_PDSDCRCH0_SDE_Msk;
+
+    /* Enable sound detection interrupt if used */
+    if (p_cfg->sdet_irq >= 0)
     {
-        tmp_data   = (int32_t) PDM_REG_CH(p_instance_ctrl->p_reg->PDDRRCH0, p_instance_ctrl->p_cfg->channel);
-        tmp_data <<= sift_size;
-        tmp_data >>= sift_size;
-        *p_data++  = (uint32_t) tmp_data;
+        PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) |= R_PDM_PDICRCH0_ISDE_Msk;
+        R_BSP_IrqCfgEnable(p_cfg->sdet_irq, p_cfg->sdet_ipl, p_instance_ctrl);
     }
 
     return FSP_SUCCESS;
+}
+
+/*******************************************************************************************************************//**
+ * Disables sound detection. Implements @ref pdm_api_t::soundDetectionDisable.
+ *
+ * This function disables sound detection.
+ *
+ * @retval FSP_SUCCESS           Sound detection disabled.
+ * @retval FSP_ERR_ASSERTION     The pointer to p_ctrl was null.
+ * @retval FSP_ERR_NOT_OPEN      The channel is not opened.
+ * @return                       See @ref RENESAS_ERROR_CODES or lower level drivers for other possible return codes.
+ **********************************************************************************************************************/
+fsp_err_t R_PDM_SoundDetectionDisable (pdm_ctrl_t * const p_ctrl)
+{
+    pdm_instance_ctrl_t * p_instance_ctrl = (pdm_instance_ctrl_t *) p_ctrl;
+
+#if PDM_CFG_PARAM_CHECKING_ENABLE
+    FSP_ASSERT(NULL != p_instance_ctrl);
+    FSP_ERROR_RETURN(PDM_PRV_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
+#endif
+
+    pdm_cfg_t const * const p_cfg = p_instance_ctrl->p_cfg;
+    R_PDM0_Type           * p_reg = p_instance_ctrl->p_reg;
+
+    /* Clear sound detection enable */
+    PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) &= ~R_PDM_PDSDCRCH0_SDE_Msk;
+
+    /* Disable sound detection interrupt if used */
+    if (p_cfg->sdet_irq >= 0)
+    {
+        PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) &= ~R_PDM_PDICRCH0_ISDE_Msk;
+    }
+
+    /* Clear sound detection status */
+    PDM_REG_CH(p_reg->PDSCRCH0, p_cfg->channel) |= R_PDM_PDSCRCH0_SDFC_Msk;
+
+    /* Disable error interrupt if allocated and if data read isn't enabled */
+    if ((p_cfg->err_irq >= 0) && (0 == PDM_REG_CH(p_reg->PDDRCRCH0, p_cfg->channel)))
+    {
+        PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) &= ~R_PDM_PDICRCH0_IEDE_Msk;
+        R_BSP_IrqDisable(p_cfg->err_irq);
+    }
+
+    return FSP_SUCCESS;
+}
+
+/*******************************************************************************************************************//**
+ * This function is not supported. Implements @ref pdm_api_t::read.
+ *
+ * @retval FSP_ERR_UNSUPPORTED                 This function is not supported.
+ **********************************************************************************************************************/
+fsp_err_t R_PDM_Read (pdm_ctrl_t * const p_ctrl, void * const p_dest, uint32_t const bytes)
+{
+    FSP_PARAMETER_NOT_USED(p_ctrl);
+    FSP_PARAMETER_NOT_USED(p_dest);
+    FSP_PARAMETER_NOT_USED(bytes);
+
+    return FSP_ERR_UNSUPPORTED;
 }
 
 /*******************************************************************************************************************//**
@@ -557,11 +495,20 @@ fsp_err_t R_PDM_StatusGet (pdm_ctrl_t * const p_ctrl, pdm_status_t * const p_sta
     FSP_ERROR_RETURN(PDM_PRV_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
-    p_status->state =
-        (0 ==
-         (p_instance_ctrl->p_reg->PDCSR & (1 << (R_PDM_PDCSR_STATE_Pos + p_instance_ctrl->p_cfg->channel)))) ?
-        PDM_STATE_STOPPED :
-        PDM_STATE_IN_USE;
+    R_PDM0_Type           * p_reg = p_instance_ctrl->p_reg;
+    pdm_cfg_t const * const p_cfg = p_instance_ctrl->p_cfg;
+
+    /* Set state based on if data read is enabled */
+    p_status->state = PDM_REG_CH(p_reg->PDDRCRCH0, p_cfg->channel) ? PDM_STATE_IN_USE : PDM_STATE_STOPPED;
+
+    /* Set sound detection state */
+    p_status->sound_detection_enabled = (0 != (PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) & R_PDM_PDICRCH0_ISDE_Msk));
+
+    /* Get status, mask out non-error statuses */
+    uint32_t pdsr = PDM_REG_CH(p_reg->PDSRCH0, p_cfg->channel) & PDM_PRV_PDSR_ERROR_MASK;
+
+    /* Set errors, shift so that error statuses match the error enum*/
+    p_status->error = (pdm_error_t) (pdsr >> R_PDM_PDSCRCH0_SCDFC_Pos);
 
     return FSP_SUCCESS;
 }
@@ -578,29 +525,57 @@ fsp_err_t R_PDM_StatusGet (pdm_ctrl_t * const p_ctrl, pdm_status_t * const p_sta
 fsp_err_t R_PDM_Close (pdm_ctrl_t * const p_ctrl)
 {
     pdm_instance_ctrl_t * p_instance_ctrl = (pdm_instance_ctrl_t *) p_ctrl;
+
 #if PDM_CFG_PARAM_CHECKING_ENABLE
     FSP_ASSERT(NULL != p_instance_ctrl);
     FSP_ERROR_RETURN(PDM_PRV_OPEN == p_instance_ctrl->open, FSP_ERR_NOT_OPEN);
 #endif
 
+    pdm_cfg_t const * const p_cfg = p_instance_ctrl->p_cfg;
+    R_PDM0_Type           * p_reg = p_instance_ctrl->p_reg;
+
     r_pdm_stop_sub(p_instance_ctrl);
+
+    /* Stop PDM according to "PDM-IF Stop Flow" in
+     * section "Stop Flow" from the user's manual. */
+
+    /* Stop target channel's filtering */
+    PDM_REG_CH(p_reg->PDSTPTRCH0, p_cfg->channel) = R_PDM_PDSTPTRCH0_STPTRG_Msk;
+
+    /* Target channel is stopped? */
+    for (uint32_t loop = 0; loop < PDM_PRV_LOOP_MAX; loop++)
+    {
+        if (!(PDM_REG_CH(p_reg->PDSRCH0, p_cfg->channel) & R_PDM_PDSRCH0_STATE_Msk))
+        {
+            break;
+        }
+    }
+
+    /* Disable Channel's Interrupt */
+    PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) &= ~(R_PDM_PDICRCH0_ISDE_Msk | R_PDM_PDICRCH0_IEDE_Msk);
+
+    /* Disable Channel's Status Detection */
+    PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) = 0;
+
+    /* Clear Channel's Status */
+    PDM_REG_CH(p_reg->PDSCRCH0, p_cfg->channel) = PDM_PRV_PDSCR_CLEAR_MASK;
 
     p_instance_ctrl->open = 0U;
 
     /* Disable interrupts. */
-    if (p_instance_ctrl->p_cfg->dat_irq >= 0)
+    if (p_cfg->dat_irq >= 0)
     {
-        R_BSP_IrqDisable(p_instance_ctrl->p_cfg->dat_irq);
+        R_BSP_IrqDisable(p_cfg->dat_irq);
     }
 
-    if (p_instance_ctrl->p_cfg->sdet_irq >= 0)
+    if (p_cfg->sdet_irq >= 0)
     {
-        R_BSP_IrqDisable(p_instance_ctrl->p_cfg->sdet_irq);
+        R_BSP_IrqDisable(p_cfg->sdet_irq);
     }
 
-    if (p_instance_ctrl->p_cfg->err_irq >= 0)
+    if (p_cfg->err_irq >= 0)
     {
-        R_BSP_IrqDisable(p_instance_ctrl->p_cfg->err_irq);
+        R_BSP_IrqDisable(p_cfg->err_irq);
     }
 
 #if PDM_CFG_DMAC_ENABLE
@@ -673,45 +648,16 @@ fsp_err_t R_PDM_CallbackSet (pdm_ctrl_t * const          p_ctrl,
  * Private Functions
  **********************************************************************************************************************/
 
-/*******************************************************************************************************************//**
- * For each interrupt, if it is enabled, sets the interrupt priority based on user configuration and stores the control
- * block so it can be accessed in the ISR.
- *
- * @param[in] p_instance               Pointer to the p_instance structure.
- * @param[in] p_cfg                    Pointer to the configuration structure.
- **********************************************************************************************************************/
-static void r_pdm_interrupts_configure (pdm_instance_ctrl_t * const p_instance, pdm_cfg_t const * const p_cfg)
-{
-    if (p_cfg->dat_irq >= 0)
-    {
-        R_BSP_IrqCfg(p_cfg->dat_irq, p_cfg->dat_ipl, p_instance);
-        R_BSP_IrqEnable(p_cfg->dat_irq);
-    }
-
-    if (p_cfg->sdet_irq >= 0)
-    {
-        R_BSP_IrqCfg(p_cfg->sdet_irq, p_cfg->sdet_ipl, p_instance);
-        R_BSP_IrqEnable(p_cfg->sdet_irq);
-    }
-
-    if (p_cfg->err_irq >= 0)
-    {
-        R_BSP_IrqCfg(p_cfg->err_irq, p_cfg->err_ipl, p_instance);
-        R_BSP_IrqEnable(p_cfg->err_irq);
-    }
-}
-
 #if PDM_CFG_DMAC_ENABLE
 
 /*******************************************************************************************************************//**
  * Configures any dependent drivers selected by the user, including transfer and timer drivers.
  *
- * @param[in] p_reg                    Pointer to PDM base register address for this channel.
- * @param[in] p_cfg                    Pointer to the configuration structure.
+ * @param[in] p_instance_ctrl               Pointer to the p_instance_ctrl structure.
  *
  * @retval FSP_SUCCESS                 Dependent drivers configured successfully.
  * @return                             See @ref RENESAS_ERROR_CODES or functions called by this function for other
- *                                     popdmble return codes. This function calls:
+ *                                     possible return codes. This function calls:
  *                                         * @ref transfer_api_t::open
  **********************************************************************************************************************/
 static fsp_err_t r_pdm_dependent_drivers_configure (pdm_instance_ctrl_t * p_instance_ctrl)
@@ -775,72 +721,25 @@ static fsp_err_t r_pdm_dependent_drivers_configure (pdm_instance_ctrl_t * p_inst
 #endif
 
 /*******************************************************************************************************************//**
- * Enables PDM transmipdmon and reception.
- *
- * @param[in] p_instance_ctrl          Pointer to the control block.
- **********************************************************************************************************************/
-static void r_pdm_start_sub (pdm_instance_ctrl_t * const p_instance_ctrl)
-{
-    const pdm_cfg_t    * p_cfg    = p_instance_ctrl->p_cfg;
-    R_PDM0_Type        * p_reg    = p_instance_ctrl->p_reg;
-    pdm_extended_cfg_t * p_extend = (pdm_extended_cfg_t *) p_cfg->p_extend;
-
-    /* Activate target channel's filtering */
-    p_reg->PDCSTRTR |= (uint32_t) (1UL << p_cfg->channel);
-
-    /* Wait for settling time (maximum 90.5ms) */
-#if (BSP_CFG_RTOS == 2)
-    vTaskDelay(p_extend->filter_setting_time);
-#else
-    bsp_prv_software_delay_loop(p_extend->filter_setting_time * BSP_DELAY_UNITS_MILLISECONDS);
-#endif
-
-    /* Clear Channel's Status */
-    PDM_REG_CH(p_reg->PDSCRCH0, p_cfg->channel) =
-        R_PDM_PDSCRCH0_SDFC_Msk |
-        R_PDM_PDSCRCH0_SCDFC_Msk |
-        R_PDM_PDSCRCH0_OVLDFC_Msk |
-        R_PDM_PDSCRCH0_OVUDFC_Msk |
-        R_PDM_PDSCRCH0_BFOWDFC_Msk;
-
-    /* Set Channel's Status Detection Control (for Error Detection) */
-    PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) =
-        (R_PDM_PDSDCRCH0_SDE_Msk * p_extend->sound_detection_enable) |
-        (R_PDM_PDSDCRCH0_SCDE_Msk * p_extend->short_circuit_detection_enable) |
-        (R_PDM_PDSDCRCH0_OVLDE_Msk * p_extend->over_voltage_lower_limit_detection_enable) |
-        (R_PDM_PDSDCRCH0_OVUDE_Msk * p_extend->over_voltage_upper_limit_detection_enable) |
-        (R_PDM_PDSDCRCH0_BFOWDE_Msk * p_extend->buffer_overwrite_detection_enable);
-
-    /* Set Channel's Interrupt Control (for Error Detection) */
-    p_reg->PDCICR |=
-        (((1U << R_PDM_PDCICR_ISDE_Pos) * ((p_cfg->sdet_irq >= 0) ? 1 : 0)) |
-         ((1U << R_PDM_PDCICR_IDRE_Pos) * ((p_cfg->dat_irq >= 0) ? 1 : 0)) |
-         ((1U << R_PDM_PDCICR_IEDE_Pos) * ((p_cfg->err_irq >= 0) ? 1 : 0))) << p_cfg->channel;
-
-    /* Set Channel's Data Read Enable */
-    p_reg->PDCDRCR |= 1 << (R_PDM_PDCDRCR_DATRE_Pos + p_cfg->channel);
-}
-
-/*******************************************************************************************************************//**
- * Disables PDM transmipdmon and reception.
+ * Disables PDM reception.
  *
  * @param[in] p_instance_ctrl          Pointer to the control block.
  **********************************************************************************************************************/
 static void r_pdm_stop_sub (pdm_instance_ctrl_t * const p_instance_ctrl)
 {
-    /* Stop communication following the procedure from "Procedure to halt communication (CPU operation
-     * procedure)" in the user's manual. */
+    /* Stop communication according to "PDM-IF normal processing flow" in
+     * section "Normal Processing Flow" from the user's manual. */
+    R_PDM0_Type           * p_reg = p_instance_ctrl->p_reg;
+    pdm_cfg_t const * const p_cfg = p_instance_ctrl->p_cfg;
 
-    const pdm_cfg_t * p_cfg = p_instance_ctrl->p_cfg;
-    R_PDM0_Type     * p_reg = p_instance_ctrl->p_reg;
-    uint32_t          loop;
-    pdm_status_t      status = {.state = PDM_STATE_STOPPED};
-    fsp_err_t         err    = R_PDM_StatusGet(p_instance_ctrl, &status);
-
-    if ((FSP_SUCCESS == err) && (PDM_STATE_STOPPED != status.state))
+    /* Only stop if data read is currently enabled */
+    if (PDM_REG_CH(p_reg->PDDRCRCH0, p_cfg->channel))
     {
-        /* Disable Channel's Data Read */
-        p_reg->PDCDRCR &= ~(uint32_t) (1U << (R_PDM_PDCDRCR_DATRE_Pos + p_cfg->channel));
+        /* Disable channel data interrupt. */
+        PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) &= ~R_PDM_PDICRCH0_IDRE_Msk;
+
+        /* Disable Channel's Data Read. */
+        PDM_REG_CH(p_reg->PDDRCRCH0, p_cfg->channel) = 0;
 
 #if PDM_CFG_DMAC_ENABLE
 
@@ -851,36 +750,12 @@ static void r_pdm_stop_sub (pdm_instance_ctrl_t * const p_instance_ctrl)
         }
 #endif
 
-        /* Stop target channel's filtering */
-        p_reg->PDCSTPTR |= 1 << (R_PDM_PDCSTPTR_STPTRG_Pos + p_cfg->channel);
-
-        /* Target channel is stopped? */
-
-        for (loop = 0; loop < PDM_PRV_LOOP_MAX; loop++)
+        /* Disable error interrupt if allocated and if sound detection isn't enabled */
+        if ((p_cfg->err_irq >= 0) && (0 == (PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) & R_PDM_PDSDCRCH0_SDE_Msk)))
         {
-            if (0 == (p_reg->PDCSR & (1 << (R_PDM_PDCSR_STATE_Pos + p_cfg->channel))))
-            {
-                break;
-            }
+            PDM_REG_CH(p_reg->PDICRCH0, p_cfg->channel) &= ~R_PDM_PDICRCH0_IEDE_Msk;
+            R_BSP_IrqDisable(p_cfg->err_irq);
         }
-
-        /* Disable Channel's Interrupt */
-        p_reg->PDCICR &=
-            ~(((uint32_t) (1U << R_PDM_PDCICR_ISDE_Pos) |
-               (uint32_t) (1U << R_PDM_PDCICR_IDRE_Pos) |
-               (uint32_t) (1U << R_PDM_PDCICR_IEDE_Pos)) << p_cfg->channel);
-
-        /* Disable Channel's Status Detection */
-        PDM_REG_CH(p_reg->PDSDCRCH0, p_cfg->channel) = 0;
-        p_reg->PDCSDCR &= ~(uint32_t) (1U << (R_PDM_PDCSDCR_SDE_Pos + p_cfg->channel));
-
-        /* Clear Channel's Status */
-        PDM_REG_CH(p_reg->PDSCRCH0, p_cfg->channel) =
-            R_PDM_PDSCRCH0_SDFC_Msk |
-            R_PDM_PDSCRCH0_SCDFC_Msk |
-            R_PDM_PDSCRCH0_OVLDFC_Msk |
-            R_PDM_PDSCRCH0_OVUDFC_Msk |
-            R_PDM_PDSCRCH0_BFOWDFC_Msk;
     }
 }
 
@@ -899,23 +774,9 @@ static uint32_t r_pdm_fifo_read (pdm_instance_ctrl_t * p_instance_ctrl)
     p_data_end += p_instance_ctrl->rx_dest_samples;
     uint32_t * p_data      = p_instance_ctrl->p_rx_fifo;
     uint32_t   fifo_number = PDM_REG_CH(p_instance_ctrl->p_reg->PDDSRCH0, p_instance_ctrl->p_cfg->channel);
-    int32_t    tmp_data;
-    uint32_t   sift_size;
-    if (p_instance_ctrl->p_cfg->pcm_width >= PDM_PCM_WIDTH_16_BITS_4_18)
-    {
-        sift_size = PDM_PRV_BITS_OF_UINT32 - PDM_PRV_BITS_OF_WIDTH16;
-    }
-    else
-    {
-        sift_size = PDM_PRV_BITS_OF_UINT32 - PDM_PRV_BITS_OF_WIDTH20;
-    }
-
     for (count = 0; count < fifo_number; count++)
     {
-        tmp_data   = (int32_t) PDM_REG_CH(p_instance_ctrl->p_reg->PDDRRCH0, p_instance_ctrl->p_cfg->channel);
-        tmp_data <<= sift_size;
-        tmp_data >>= sift_size;
-        *p_data++  = (uint32_t) tmp_data;
+        *p_data++ = PDM_REG_CH(p_instance_ctrl->p_reg->PDDRRCH0, p_instance_ctrl->p_cfg->channel);
         if (p_data >= p_data_end)
         {
             p_data = p_instance_ctrl->p_rx_dest;
@@ -996,20 +857,23 @@ void pdm_sdet_isr (void)
     IRQn_Type             irq             = R_FSP_CurrentIrqGet();
     pdm_instance_ctrl_t * p_instance_ctrl = (pdm_instance_ctrl_t *) R_FSP_IsrContextGet(irq);
 
-    /* disable Sound detection */
+    /* Disable Sound detection */
     PDM_REG_CH(p_instance_ctrl->p_reg->PDSDCRCH0, p_instance_ctrl->p_cfg->channel) &= ~R_PDM_PDSDCRCH0_SDE_Msk;
 
-    /* clear Sound detection flag */
+    /* Clear Sound detection flag */
     PDM_REG_CH(p_instance_ctrl->p_reg->PDSCRCH0, p_instance_ctrl->p_cfg->channel) = R_PDM_PDSCRCH0_SDFC_Msk;
+
+    /* Call callback if provided with sound detection event */
+    if (p_instance_ctrl->p_callback)
+    {
+        r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_SOUND_DETECTION, PDM_ERROR_NONE);
+    }
 
     /* Clear the IR flag in the ICU */
     R_BSP_IrqStatusClear(irq);
 
-    /* If there are more samples to write to the FIFO or the FIFO is above the watermark, don't call the callback. */
-    if (p_instance_ctrl->p_callback)
-    {
-        r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_SOUND_DETECTION, 0);
-    }
+    /* Enable Sound detection */
+    PDM_REG_CH(p_instance_ctrl->p_reg->PDSDCRCH0, p_instance_ctrl->p_cfg->channel) |= R_PDM_PDSDCRCH0_SDE_Msk;
 
     /* Restore context if RTOS is used */
     FSP_CONTEXT_RESTORE
@@ -1041,7 +905,7 @@ void pdm_dat_isr (void)
             p_instance_ctrl->rx_int_count -= p_instance_ctrl->rx_int_count_max;
             if (p_instance_ctrl->p_callback)
             {
-                r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_DATA, 0);
+                r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_DATA, PDM_ERROR_NONE);
             }
         }
     }
@@ -1063,34 +927,18 @@ void pdm_err_isr (void)
     IRQn_Type             irq             = R_FSP_CurrentIrqGet();
     pdm_instance_ctrl_t * p_instance_ctrl = (pdm_instance_ctrl_t *) R_FSP_IsrContextGet(irq);
 
+    pdm_error_t error = PDM_ERROR_NONE;
+
+    /* Get status, mask out non-error statuses */
+    uint32_t pdsr =
+        PDM_REG_CH(p_instance_ctrl->p_reg->PDSRCH0, p_instance_ctrl->p_cfg->channel) & PDM_PRV_PDSR_ERROR_MASK;
+
+    /* Set error for callback, shift so that error statuses match the error enum*/
+    error = (pdm_error_t) (pdsr >> R_PDM_PDSCRCH0_SCDFC_Pos);
+
     if (p_instance_ctrl->p_callback)
     {
-        pdm_error_t error    = 0;
-        uint32_t    pdsdcrch = 0;
-
-        /* Get Status. */
-        pdsdcrch = PDM_REG_CH(p_instance_ctrl->p_reg->PDSRCH0, p_instance_ctrl->p_cfg->channel);
-        if (pdsdcrch & R_PDM_PDSRCH0_SCDF_Msk)
-        {
-            error |= PDM_ERROR_SHORT_CIRCUIT;
-        }
-
-        if (pdsdcrch & R_PDM_PDSRCH0_OVLDF_Msk)
-        {
-            error |= PDM_ERROR_OVERVOLTAGE_LOWER;
-        }
-
-        if (pdsdcrch & R_PDM_PDSRCH0_OVUDF_Msk)
-        {
-            error |= PDM_ERROR_OVERVOLTAGE_UPPER;
-        }
-
-        if (pdsdcrch & R_PDM_PDSRCH0_BFOWDF_Msk)
-        {
-            error |= PDM_ERROR_BUFFER_OVERWRITE;
-        }
-
-        /* If peripheral is idle, call idle callback. */
+        /* Call callback if provided. */
         r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_ERROR, error);
     }
 
@@ -1140,7 +988,7 @@ void pdm_rxi_dmac_isr (dmac_b_callback_args_t * args)
             }
 
             /* Call callback function */
-            r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_DATA, 0);
+            r_pdm_call_callback(p_instance_ctrl, PDM_EVENT_DATA, PDM_ERROR_NONE);
         }
     }
 }

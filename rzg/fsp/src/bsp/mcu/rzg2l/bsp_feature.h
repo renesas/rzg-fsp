@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -102,9 +102,14 @@
 #define BSP_FEATURE_CPG_HAS_ATCLK                              (1U)
 #define BSP_FEATURE_CPG_HAS_OSCCLK                             (1U)
 
+/* WDT-Related Definitions */
+#define BSP_FEATURE_WDT_TYPE                                    (0U)
+#define BSP_FEATURE_WDT_MAX_CHANNEL                             (3U)
+
 /* DMAC-Related Definitions */
 #define BSP_FEATURE_DMAC_MAX_CHANNEL                           (16U)
 #define BSP_FEATURE_DMAC_MAX_UNIT                              (2U)
+#define BSP_FEATURE_DMAC_B_64BIT_SYSTEM                        (0U)
 
 /* GPT-Related Definitions */
 #define BSP_FEATURE_GPT_VALID_CHANNEL_MASK                     (0xFFU)
@@ -119,6 +124,7 @@
 #define BSP_FEATURE_GPT_STATUS_REGISTER                        GTST
 #define BSP_FEATURE_GPT_OUTPUT_DISABLE_REQUEST_STATUS_MASK     (R_GPT0_GTST_OABLF_Msk | R_GPT0_GTST_OABHF_Msk | \
                                                                 R_GPT0_GTST_DTEF_Msk)
+#define BSP_FEATURE_GPT_SUPPORT_EXTENDED_INTERRUPT_SKIP        (0U)
 
 /* GTM-Related Definitions */
 #define BSP_FEATURE_GTM_MAX_CHANNEL                            (3U)
@@ -169,6 +175,8 @@
 /* MTU3-Related Definitions */
 #define BSP_FEATURE_MTU3_VALID_CHANNEL_MASK                    (0x01FF)
 #define BSP_FEATURE_MTU3_MAX_CHANNELS                          (9U)
+#define BSP_FEATURE_MTU3_CLOCK_DIVIDER_STEP_SIZE               (2U)
+#define BSP_FEATURE_MTU3_CLOCK_DIVIDER_VALUE_7_9_VALID         (0U)
 
 /* MHU-Related Definitions */
 #define BSP_FEATURE_MHU_NS_VALID_CHANNEL_MASK                  (0x3AU)

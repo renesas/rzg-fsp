@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -49,6 +49,7 @@ typedef struct st_sci_b_spi_extended_cfg
 
     /** Clock source to generate SCK can either be selected as PCLK or SCISPICLK. */
     sci_b_spi_clock_source_t clock_source;
+    void                   * p_reg;                     ///< Register base address for specified channel
 } sci_b_spi_extended_cfg_t;
 
 /** SPI instance control block. DO NOT INITIALIZE. */

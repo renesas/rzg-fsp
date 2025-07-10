@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -145,6 +145,8 @@ fsp_err_t R_RSPI_Open (spi_ctrl_t * p_api_ctrl, spi_cfg_t const * const p_cfg)
     FSP_ASSERT(NULL != p_cfg->p_extend);
     FSP_ERROR_RETURN(BSP_FEATURE_RSPI_VALID_CHANNELS_MASK & (1 << p_cfg->channel), FSP_ERR_IP_CHANNEL_NOT_PRESENT);
     FSP_ASSERT(p_cfg->eri_irq >= 0);
+    rspi_extended_cfg_t * p_extend = (rspi_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
 #endif
 
     /* Initialize the control structure */
@@ -490,8 +492,8 @@ static void r_rspi_init_control_structure (rspi_instance_ctrl_t * p_ctrl, spi_cf
     p_ctrl->p_callback_memory = NULL;
 
     /* register base address */
-    ptrdiff_t size_of_regs = (ptrdiff_t) R_RSPI1 - (ptrdiff_t) R_RSPI0;
-    p_ctrl->p_regs = (R_RSPI0_Type *) ((ptrdiff_t) R_RSPI0 + (size_of_regs * p_ctrl->p_cfg->channel));
+    rspi_extended_cfg_t * p_extend = (rspi_extended_cfg_t *) p_cfg->p_extend;
+    p_ctrl->p_regs = (R_RSPI0_Type *) p_extend->p_reg;
 
     /* Clear flags */
     p_ctrl->transfer_is_pending = false;

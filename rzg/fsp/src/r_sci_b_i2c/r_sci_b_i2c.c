@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2020 - 2024 Renesas Electronics Corporation and/or its affiliates
+* Copyright (c) 2020 Renesas Electronics Corporation and/or its affiliates
 *
 * SPDX-License-Identifier: BSD-3-Clause
 */
@@ -150,39 +150,6 @@ i2c_master_api_t const g_i2c_master_on_sci_b =
     .statusGet       = R_SCI_B_I2C_StatusGet
 };
 
-/** SCI_B_SPI base address */
-static const uint32_t volatile * p_sci_b_i2c_base_address[BSP_FEATURE_SCI_MAX_CHANNELS] =
-{
-    (uint32_t *) R_SCI0_BASE,
-#if BSP_FEATURE_SCI_MAX_CHANNELS > 1
-    (uint32_t *) R_SCI1_BASE,
- #if BSP_FEATURE_SCI_MAX_CHANNELS > 2
-    (uint32_t *) R_SCI2_BASE,
-  #if BSP_FEATURE_SCI_MAX_CHANNELS > 3
-    (uint32_t *) R_SCI3_BASE,
-   #if BSP_FEATURE_SCI_MAX_CHANNELS > 4
-    (uint32_t *) R_SCI4_BASE,
-    #if BSP_FEATURE_SCI_MAX_CHANNELS > 5
-    (uint32_t *) R_SCI5_BASE,
-     #if BSP_FEATURE_SCI_MAX_CHANNELS > 6
-    (uint32_t *) R_SCI6_BASE,
-      #if BSP_FEATURE_SCI_MAX_CHANNELS > 7
-    (uint32_t *) R_SCI7_BASE,
-       #if BSP_FEATURE_SCI_MAX_CHANNELS > 8
-    (uint32_t *) R_SCI8_BASE,
-        #if BSP_FEATURE_SCI_MAX_CHANNELS > 9
-    (uint32_t *) R_SCI9_BASE,
-        #endif
-       #endif
-      #endif
-     #endif
-    #endif
-   #endif
-  #endif
- #endif
-#endif
-};
-
 /*******************************************************************************************************************//**
  * @addtogroup SCI_B_I2C
  * @{
@@ -219,10 +186,11 @@ fsp_err_t R_SCI_B_I2C_Open (i2c_master_ctrl_t * const p_api_ctrl, i2c_master_cfg
     FSP_ERROR_RETURN((p_cfg->channel < 8 * sizeof(unsigned int)) &&
                      (BSP_FEATURE_SCI_CHANNELS_MASK & (1U << p_cfg->channel)),
                      FSP_ERR_IP_CHANNEL_NOT_PRESENT);
-    sci_b_i2c_extended_cfg_t * pextend = (sci_b_i2c_extended_cfg_t *) p_cfg->p_extend;
-    if (true == pextend->clock_settings.bitrate_modulation)
+    sci_b_i2c_extended_cfg_t * p_extend = (sci_b_i2c_extended_cfg_t *) p_cfg->p_extend;
+    FSP_ASSERT(NULL != p_extend->p_reg);
+    if (true == p_extend->clock_settings.bitrate_modulation)
     {
-        FSP_ASSERT(pextend->clock_settings.mddr_value >= SCI_B_I2C_PRV_MDDR_REG_MIN);
+        FSP_ASSERT(p_extend->clock_settings.mddr_value >= SCI_B_I2C_PRV_MDDR_REG_MIN);
     }
 
  #if SCI_B_I2C_CFG_DTC_ENABLE || SCI_B_I2C_CFG_DMAC_ENABLE
@@ -232,13 +200,15 @@ fsp_err_t R_SCI_B_I2C_Open (i2c_master_ctrl_t * const p_api_ctrl, i2c_master_cfg
         FSP_ASSERT(p_cfg->p_transfer_tx != NULL);
     }
  #endif
+#else
+  sci_b_i2c_extended_cfg_t * p_extend = (sci_b_i2c_extended_cfg_t *) p_cfg->p_extend;
 #endif
 #if SCI_B_I2C_CFG_DTC_ENABLE || SCI_B_I2C_CFG_DMAC_ENABLE
     fsp_err_t err = FSP_SUCCESS;
 #endif
 
-    /* Save register base address. */
-    p_ctrl->p_reg = (R_SCI_B0_Type *) p_sci_b_i2c_base_address[p_cfg->channel];
+    /* Set the base address for specified channel. */
+    p_ctrl->p_reg = (R_SCI_B0_Type *) p_extend->p_reg;
 
     /* Record the configuration on the device for use later */
     p_ctrl->p_cfg             = p_cfg;

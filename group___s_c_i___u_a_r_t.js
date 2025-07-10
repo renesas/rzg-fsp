@@ -19,7 +19,8 @@ var group___s_c_i___u_a_r_t =
       [ "rx_fifo_trigger", "group___s_c_i___u_a_r_t.html#a4f1ca52116b41cfc8ef07758a0554c2f", null ],
       [ "flow_control_pin", "group___s_c_i___u_a_r_t.html#ac5ec261549de2cae5c3a48abe9e2ee67", null ],
       [ "flow_control", "group___s_c_i___u_a_r_t.html#aa97993b4804fd761a731322038ec7730", null ],
-      [ "rs485_setting", "group___s_c_i___u_a_r_t.html#afbddfe3e0c2394d7cfd9db923078404f", null ]
+      [ "rs485_setting", "group___s_c_i___u_a_r_t.html#afbddfe3e0c2394d7cfd9db923078404f", null ],
+      [ "p_reg", "group___s_c_i___u_a_r_t.html#a7f5290a2e1b72d137e9532c2d2abde1c", null ]
     ] ],
     [ "sci_clk_src_t", "group___s_c_i___u_a_r_t.html#ga5775d25bc461e9b175b7fcb87d71b7c7", [
       [ "SCI_UART_CLOCK_INT", "group___s_c_i___u_a_r_t.html#gga5775d25bc461e9b175b7fcb87d71b7c7a628202878594fe0e906308ede0258d0f", null ],

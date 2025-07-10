@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -249,7 +249,7 @@ Selecting a Timer</h2>
 <tr>
 <th></th><th>GPT </th><th>GTM </th><th>MTU3  </th></tr>
 <tr>
-<td>Available Channels</td><td>The number of GPT channels are 8 channels (ch0~7).</td><td>It is available the GTM channels supported on each device.</td><td>It is available all MTU3 channels supported on each device. </td></tr>
+<td>Available Channels</td><td>The number of GPT channels are 8 channels (channel 0 to 7).</td><td>It is available the GTM channels supported on each device.</td><td>It is available all MTU3 channels supported on each device. </td></tr>
 <tr>
 <td>Timer Resolution</td><td>The GPT timers have 32-bit timers.</td><td>The GTM timers are 32-bit timers.</td><td>All MPUs support 16-bit and 32-bit MTU3 timer. </td></tr>
 <tr>
@@ -260,7 +260,7 @@ Selecting a Timer</h2>
 <tr>
 <th></th><th>GPT </th><th>GTM  </th></tr>
 <tr>
-<td>Available Channels</td><td>The number of GPT channels are 16 channels (ch0~15).</td><td>The number of GTM channels are 3 channels (ch0~2). </td></tr>
+<td>Available Channels</td><td>The number of GPT channels are 16 channels (channel 0 to 15).</td><td>The number of GTM channels are 3 channels (channel 0 to 2). </td></tr>
 <tr>
 <td>Timer Resolution</td><td>The GPT timers have 32-bit GPT timer.</td><td>The GTM timers are 32-bit timers. </td></tr>
 <tr>
@@ -501,9 +501,41 @@ Pin Level High</li>
 </ul>
 </td><td>Pin Level Low </td><td>Select the behavior of the output pin when the timer is stopped. </td></tr>
 <tr>
-<td>Input &gt; Count Up Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will increment the counter. If any count up source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
+<td>Input &gt; Count Mode &gt; Phase Count &gt; Phase Count Setting Automatically Enable</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Enabled</li>
+<li>
+Disabled</li>
+</ul>
+</td><td>Disabled </td><td>Enable Phase Count Setting Automatically. If Phase Count Setting Automatically Enable is set to Enable, the Count Up Source and Count Down Source settings under Event Count are ignored. </td></tr>
 <tr>
-<td>Input &gt; Count Down Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will decrement the counter. If any count down source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
+<td>Input &gt; Count Mode &gt; Phase Count &gt; Phase Counting Mode</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+Mode1</li>
+<li>
+Mode2(A)</li>
+<li>
+Mode2(B)</li>
+<li>
+Mode2(C)</li>
+<li>
+Mode3(A)</li>
+<li>
+Mode3(B)</li>
+<li>
+Mode3(C)</li>
+<li>
+Mode4</li>
+<li>
+Mode5(A)</li>
+<li>
+Mode5(B)</li>
+</ul>
+</td><td>Mode1 </td><td>Phase count mode is count up or down operation mode by detecting the phase difference between the inputs on the GTIOCnA and GTIOCnB pins. </td></tr>
+<tr>
+<td>Input &gt; Count Mode &gt; Event Count &gt; Count Up Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will increment the counter. If any count up source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
+<tr>
+<td>Input &gt; Count Mode &gt; Event Count &gt; Count Down Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will decrement the counter. If any count down source is selected, the timer will count the external sources only. It will not count P0 clock cycles. </td></tr>
 <tr>
 <td>Input &gt; Start Source</td><td>MCU Specific Options</td><td></td><td>Select external source that will start the timer. <br />
 <br />
@@ -634,6 +666,8 @@ Overflow and Underflow (sawtooth)</li>
 Crest (triangle)</li>
 <li>
 Trough (triangle)</li>
+<li>
+Crest and Trough (triangle)</li>
 </ul>
 </td><td>None </td><td>Select the count source for interrupt skipping. The interrupt skip counter increments after each source event. All crest/overflow and trough/underflow interrupts are skipped when the interrupt skip counter is non-zero. </td></tr>
 <tr>
@@ -667,7 +701,107 @@ ADC B Compare Match</li>
 <li>
 ADC A and B Compare Match</li>
 </ul>
-</td><td>module.driver.timer.interrupt_skip.adc.none </td><td>Select ADC events to suppress when the interrupt skip count is not zero. </td></tr>
+</td><td>None </td><td>Select ADC events to suppress when the interrupt skip count is not zero. </td></tr>
+<tr>
+<td>Extra Features &gt; Extended Interrupt Skipping 1 &gt; Interrupt to Count</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+None</li>
+<li>
+Crest (triangle)</li>
+<li>
+Trough (triangle)</li>
+<li>
+Crest and Trough (triangle)</li>
+</ul>
+</td><td>None </td><td>Interrupt source to count for interrupt skipping(GTEITC.EIVTC1) </td></tr>
+<tr>
+<td>Extra Features &gt; Extended Interrupt Skipping 1 &gt; Interrupt Skip Count</td><td>Refer to the RZG Configuration tool for available options.</td><td>0 </td><td>Number of interrupts to skip between events(GTEITC.EIVTT1) </td></tr>
+<tr>
+<td>Extra Features &gt; Extended Interrupt Skipping 2 &gt; Interrupt to Count</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+None</li>
+<li>
+Crest (triangle)</li>
+<li>
+Trough (triangle)</li>
+<li>
+Crest and Trough (triangle)</li>
+</ul>
+</td><td>None </td><td>Interrupt source to count for interrupt skipping(GTEITC.EIVTC2) </td></tr>
+<tr>
+<td>Extra Features &gt; Extended Interrupt Skipping 2 &gt; Interrupt Skip Count</td><td>Refer to the RZG Configuration tool for available options.</td><td>0 </td><td>Number of interrupts to skip between events(GTEITC.EIVTT2) </td></tr>
+<tr>
+<td>Extra Features &gt; Input Capture Interrupt Extended Skipping Function &gt; Overflow Interrupt</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+None</li>
+<li>
+Interrupts are skipped when skip counter 1 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 2 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 1 or 2 is other than 0</li>
+<li>
+Skip counter 1 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 2 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 1 or 2 skips interrupts when the skip setting value is not set</li>
+</ul>
+</td><td>None </td><td>Extended Skipping Function Select(GTEITLI1.EITLV) </td></tr>
+<tr>
+<td>Extra Features &gt; Input Capture Interrupt Extended Skipping Function &gt; Underflow Interrupt</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+None</li>
+<li>
+Interrupts are skipped when skip counter 1 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 2 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 1 or 2 is other than 0</li>
+<li>
+Skip counter 1 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 2 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 1 or 2 skips interrupts when the skip setting value is not set</li>
+</ul>
+</td><td>None </td><td>Extended Skipping Function Select(GTEITLI1.EITLU) </td></tr>
+<tr>
+<td>Extra Features &gt; Input Capture Interrupt Extended Skipping Function &gt; GTADTRA A/D Converter Start Request</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+None</li>
+<li>
+Interrupts are skipped when skip counter 1 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 2 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 1 or 2 is other than 0</li>
+<li>
+Skip counter 1 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 2 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 1 or 2 skips interrupts when the skip setting value is not set</li>
+</ul>
+</td><td>None </td><td>Extended Skipping Function Select(GTEITLI2.EADTAL) </td></tr>
+<tr>
+<td>Extra Features &gt; Input Capture Interrupt Extended Skipping Function &gt; GTADTRB A/D Converter Start Request</td><td><ul style="margin-top:0;margin-bottom:0;">
+<li>
+None</li>
+<li>
+Interrupts are skipped when skip counter 1 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 2 is other than 0</li>
+<li>
+Interrupts are skipped when skip counter 1 or 2 is other than 0</li>
+<li>
+Skip counter 1 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 2 skips interrupts when the skip setting value is not set</li>
+<li>
+Skip counter 1 or 2 skips interrupts when the skip setting value is not set</li>
+</ul>
+</td><td>None </td><td>Extended Skipping Function Select(GTEITLI2.EADTBL) </td></tr>
 <tr>
 <td>Extra Features &gt; Extra Features</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -694,6 +828,7 @@ Usage Notes</h1>
 <dl class="section note"><dt>Note</dt><dd>When manually changing the timer period counts the maximum value for a 32-bit GPT is 0x100000000. This number overflows the 32-bit value for <a class="el" href="group___t_i_m_e_r___a_p_i.html#aa892b6997a1972de6a6ebd48e0fb9233" title="Period in raw timer counts. ">timer_cfg_t::period_counts</a>. To configure the timer for the maximum period, set <a class="el" href="group___t_i_m_e_r___a_p_i.html#aa892b6997a1972de6a6ebd48e0fb9233" title="Period in raw timer counts. ">timer_cfg_t::period_counts</a> to 0.</dd></dl>
 <h2>Updating Period and Duty Cycle</h2>
 <p>The period and duty cycle are updated after the next counter overflow after calling <a class="el" href="group___g_p_t.html#gafedbfd8bc3f534d06969588ff10a351b">R_GPT_PeriodSet()</a> or <a class="el" href="group___g_p_t.html#gad14bacf6fb7fce88f3e877160be529ea">R_GPT_DutyCycleSet()</a>. To force them to update before the next counter overflow, call <a class="el" href="group___g_p_t.html#ga5eb494add3d40775dbc48c5498e15a3a">R_GPT_Reset()</a> while the counter is running.</p>
+<dl class="section note"><dt>Note</dt><dd>When changing the period and duty cycle at the same time when Parameter Checking is enabled, call R_GPT_PeriodSet first followed by R_GPT_DutyCycleSet to ensure input validation is performed correctly.</dd></dl>
 <h2>One-Shot Mode</h2>
 <p>The GPT timer does not support one-shot mode natively. One-shot mode is achieved by stopping the timer in the interrupt service routine before the callback is called. If the interrupt is not serviced before the timer period expires again, the timer generates more than one event. The callback is only called once in this case.</p>
 <h3>One-Shot Mode Output</h3>
@@ -808,6 +943,8 @@ Enumerations</h2></td></tr>
 <tr class="separator:gac737ceea25e4989a9afbf47969a71ba3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga9928e374919fa53240edaca52412beaa"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga9928e374919fa53240edaca52412beaa">gpt_interrupt_skip_adc_t</a> </td></tr>
 <tr class="separator:ga9928e374919fa53240edaca52412beaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad297aa9dbe72334682b6171d1c972a1e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e">gpt_interrupt_skip_select_t</a> </td></tr>
+<tr class="separator:gad297aa9dbe72334682b6171d1c972a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga749be81f99469c5607a684976d9ae374"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga749be81f99469c5607a684976d9ae374">gpt_pwm_output_delay_setting_t</a> </td></tr>
 <tr class="separator:ga749be81f99469c5607a684976d9ae374"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6a1389fe5c3bef2301d294b88263628e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___g_p_t.html#ga6a1389fe5c3bef2301d294b88263628e">gpt_pwm_output_delay_edge_t</a> </td></tr>
@@ -960,6 +1097,54 @@ Number of interrupts to skip between events. </td></tr>
 interrupt_skip_adc</td>
 <td class="fielddoc">
 ADC events to skip when interrupt skipping is enabled. </td></tr>
+<tr><td class="fieldtype">
+<a id="aac268db75712185ba478b3c5ed097b79"></a><a class="el" href="group___g_p_t.html#ga88d6114404f61d9ca10684f393deb613">gpt_interrupt_skip_source_t</a></td>
+<td class="fieldname">
+interrupt_skip_source_ext1</td>
+<td class="fielddoc">
+Interrupt source to count for interrupt skipping(GTEITC.EIVTC1) </td></tr>
+<tr><td class="fieldtype">
+<a id="a479e315a7b135906e0ce27d3c5a94386"></a><a class="el" href="group___g_p_t.html#gac737ceea25e4989a9afbf47969a71ba3">gpt_interrupt_skip_count_t</a></td>
+<td class="fieldname">
+interrupt_skip_count_ext1</td>
+<td class="fielddoc">
+Number of interrupts to skip between events(GTEITC.EIVTT1) </td></tr>
+<tr><td class="fieldtype">
+<a id="a9fbfbda97d5f8b3f606c72c718cbbdd8"></a><a class="el" href="group___g_p_t.html#ga88d6114404f61d9ca10684f393deb613">gpt_interrupt_skip_source_t</a></td>
+<td class="fieldname">
+interrupt_skip_source_ext2</td>
+<td class="fielddoc">
+Interrupt source to count for interrupt skipping(GTEITC.EIVTC2) </td></tr>
+<tr><td class="fieldtype">
+<a id="a955c9522ef4c9cf87a70b0bcf516f269"></a><a class="el" href="group___g_p_t.html#gac737ceea25e4989a9afbf47969a71ba3">gpt_interrupt_skip_count_t</a></td>
+<td class="fieldname">
+interrupt_skip_count_ext2</td>
+<td class="fielddoc">
+Number of interrupts to skip between events(GTEITC.EIVTT2) </td></tr>
+<tr><td class="fieldtype">
+<a id="a4b4debd1f40763db56d831871a2945b9"></a><a class="el" href="group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e">gpt_interrupt_skip_select_t</a></td>
+<td class="fieldname">
+interrupt_skip_func_ovf</td>
+<td class="fielddoc">
+Extended Skipping Function Select(GTEITL1.EITVL) </td></tr>
+<tr><td class="fieldtype">
+<a id="ad729946e1ed37ee00f2bc2af6bab15f3"></a><a class="el" href="group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e">gpt_interrupt_skip_select_t</a></td>
+<td class="fieldname">
+interrupt_skip_func_unf</td>
+<td class="fielddoc">
+Extended Skipping Function Select(GTEITL1.EITUL) </td></tr>
+<tr><td class="fieldtype">
+<a id="a13ebaa8c8b8ef831fa83e8c146d070d1"></a><a class="el" href="group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e">gpt_interrupt_skip_select_t</a></td>
+<td class="fieldname">
+interrupt_skip_func_adc_a</td>
+<td class="fielddoc">
+Extended Skipping Function Select(GTEITL2.EADTAL) </td></tr>
+<tr><td class="fieldtype">
+<a id="a1ec36d55e823bbea753217f454fad154"></a><a class="el" href="group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e">gpt_interrupt_skip_select_t</a></td>
+<td class="fieldname">
+interrupt_skip_func_adc_b</td>
+<td class="fielddoc">
+Extended Skipping Function Select(GTEITL2.EADTBL) </td></tr>
 <tr><td class="fieldtype">
 <a id="af8c63e238ee298b4f1dac545a597eff7"></a><a class="el" href="group___g_p_t.html#ga82d61d33edf38d50f1247d1d55ec506b">gpt_gtioc_disable_t</a></td>
 <td class="fieldname">
@@ -1118,6 +1303,12 @@ Advanced PWM features, optional. </td></tr>
 gtior_setting</td>
 <td class="fielddoc">
 Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </td></tr>
+<tr><td class="fieldtype">
+<a id="a2ac23a360ba1091ffa01869c0f5cc184"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified channel. </td></tr>
 </table>
 
 </div>
@@ -1402,6 +1593,14 @@ Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ggac13c16f82e0b7cafcdb8eb6892722943a7d98bec67e920f1f0f8a98ac18aaa7b5"></a>GPT_POEG_LINK_POEG3&#160;</td><td class="fielddoc"><p>Link this GPT channel to POEG channel 3 (GTETRGD) </p>
 </td></tr>
+<tr><td class="fieldname"><a id="ggac13c16f82e0b7cafcdb8eb6892722943abc434a013565eec9950b3d60a0bd30f1"></a>GPT_POEG_LINK_POEG4&#160;</td><td class="fielddoc"><p>Link this GPT channel to POEG channel 4 (GTETRGE) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac13c16f82e0b7cafcdb8eb6892722943a469167ae05e11ca4d37b404cfe4a5dd6"></a>GPT_POEG_LINK_POEG5&#160;</td><td class="fielddoc"><p>Link this GPT channel to POEG channel 5 (GTETRGF) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac13c16f82e0b7cafcdb8eb6892722943aaf23a70597fc8b600d0d78bd00e86f71"></a>GPT_POEG_LINK_POEG6&#160;</td><td class="fielddoc"><p>Link this GPT channel to POEG channel 6 (GTETRGG) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac13c16f82e0b7cafcdb8eb6892722943a9d9acb8fe08688b045a76c734689e8a8"></a>GPT_POEG_LINK_POEG7&#160;</td><td class="fielddoc"><p>Link this GPT channel to POEG channel 7 (GTETRGH) </p>
+</td></tr>
 </table>
 
 </div>
@@ -1531,6 +1730,23 @@ Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3a1f87ae8bbf43b55f063cbcdbdc329d18"></a>GPT_INTERRUPT_SKIP_COUNT_7&#160;</td><td class="fielddoc"><p>Skip seven interrupts. </p>
 </td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3aad64c1abcd3861312ac1310bedeca374"></a>GPT_INTERRUPT_SKIP_COUNT_8&#160;</td><td class="fielddoc"><p>Skip eight interrupts. </p>
+<p>When setting GTIEITC </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3abfea5fb3ec176b5f02f5c869960ae697"></a>GPT_INTERRUPT_SKIP_COUNT_9&#160;</td><td class="fielddoc"><p>Skip nine interrupts. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3a5410398268e09d88c757ff98904d033e"></a>GPT_INTERRUPT_SKIP_COUNT_10&#160;</td><td class="fielddoc"><p>Skip ten interrupts. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3aeed173759506fdb9c273bc20b7b5392b"></a>GPT_INTERRUPT_SKIP_COUNT_11&#160;</td><td class="fielddoc"><p>Skip eleven interrupts. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3a4dd07df8dc5da3b3a522f80652173fda"></a>GPT_INTERRUPT_SKIP_COUNT_12&#160;</td><td class="fielddoc"><p>Skip twelve interrupts. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3a1aa4daa9db33adcabc79596b4b3d1160"></a>GPT_INTERRUPT_SKIP_COUNT_13&#160;</td><td class="fielddoc"><p>Skip thiertenn interrupts. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3a0cd4d728b8a33b779d343be628881eb6"></a>GPT_INTERRUPT_SKIP_COUNT_14&#160;</td><td class="fielddoc"><p>Skip fourteen interrupts. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggac737ceea25e4989a9afbf47969a71ba3aa80e8a04dd9c0a8f9121d4a78df53ed9"></a>GPT_INTERRUPT_SKIP_COUNT_15&#160;</td><td class="fielddoc"><p>Skip fifteen interrupts. </p>
+</td></tr>
 </table>
 
 </div>
@@ -1555,6 +1771,37 @@ Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </td></tr>
 <tr><td class="fieldname"><a id="gga9928e374919fa53240edaca52412beaaa9bc6d33154685e53dab457675e8161e8"></a>GPT_INTERRUPT_SKIP_ADC_B&#160;</td><td class="fielddoc"><p>Skip ADC B events. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="gga9928e374919fa53240edaca52412beaaa872ee214e5d3998245ac518730f9dde6"></a>GPT_INTERRUPT_SKIP_ADC_A_AND_B&#160;</td><td class="fielddoc"><p>Skip ADC A and B events. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="gad297aa9dbe72334682b6171d1c972a1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad297aa9dbe72334682b6171d1c972a1e">&#9670;&nbsp;</a></span>gpt_interrupt_skip_select_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e">gpt_interrupt_skip_select_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>extended interrupt skipping </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1ea3ea77622418bf775b58a902bb048ea43"></a>GPT_INTERRUPT_SKIP_SELECT_NONE&#160;</td><td class="fielddoc"><p>Do not perform an extended interrupt skipping. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1ea44a277b45af8e450b7930233dc0d257c"></a>GPT_INTERRUPT_SKIP_SELECT_EITCNT1&#160;</td><td class="fielddoc"><p>An interrupt is output in the period of EITCNT1[3:0] bits = 0000b. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1eae7c09ef3e3ef643769b86c8a01c6f282"></a>GPT_INTERRUPT_SKIP_SELECT_EITCNT2&#160;</td><td class="fielddoc"><p>An interrupt is output in the period of EITCNT2[3:0] bits = 0000b. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1eaaa378a4cd2712117376a7c6921ea8569"></a>GPT_INTERRUPT_SKIP_SELECT_EITCNT1_2&#160;</td><td class="fielddoc"><p>An interrupt is output in the period of EITCNT1[3:0] bits = 0000b and EITCNT2[3:0] bits = 0000b. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1eaed816dd30888e7b2f5659aedc7aad2e6"></a>GPT_INTERRUPT_SKIP_SELECT_EITVTT1&#160;</td><td class="fielddoc"><p>An interrupt is output in the period of EITCNT1[3:0] bits = EIVTT1[3:0] bits. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1ea63b0ba65ae84729df0a6777f3714245c"></a>GPT_INTERRUPT_SKIP_SELECT_EITVTT2&#160;</td><td class="fielddoc"><p>An interrupt is output in the period of EITCNT2[3:0] bits = EIVTT2[3:0] bits. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggad297aa9dbe72334682b6171d1c972a1ea9bf899a81d74560746f108180a8e1b5c"></a>GPT_INTERRUPT_SKIP_SELECT_EITVTT1_2&#160;</td><td class="fielddoc"><p>An interrupt is output in the period of EITCNT1[3:0] bits = EIVTT1[3:0] bits and EITCNT2[3:0] bits = EIVTT2[3:0] bits. </p>
 </td></tr>
 </table>
 
@@ -2375,7 +2622,7 @@ Custom GTIOR settings used for configuring GTIOCxA and GTIOCxB pins. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

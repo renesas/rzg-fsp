@@ -11,7 +11,8 @@ var group___m_h_u___a_p_i =
       [ "rx_irq", "group___m_h_u___a_p_i.html#af6d5343757b4e233873d1707ceac8998", null ],
       [ "p_callback", "group___m_h_u___a_p_i.html#ae6ee1dfc1a00326e8b26dfc9701f0b31", null ],
       [ "p_shared_memory", "group___m_h_u___a_p_i.html#a8820bea933c4deea77e01e48b6f76865", null ],
-      [ "p_context", "group___m_h_u___a_p_i.html#ad3cc3a49b8f6d7cbbcc6a72833f51e2c", null ]
+      [ "p_context", "group___m_h_u___a_p_i.html#ad3cc3a49b8f6d7cbbcc6a72833f51e2c", null ],
+      [ "p_extend", "group___m_h_u___a_p_i.html#a8c88e7dcb85b83838e8d4304570b1618", null ]
     ] ],
     [ "mhu_api_t", "group___m_h_u___a_p_i.html#structmhu__api__t", [
       [ "open", "group___m_h_u___a_p_i.html#ac3886717d220de2c7861063acceee859", null ],

@@ -11,7 +11,8 @@ var group___r_i_i_c___s_l_a_v_e =
       [ "sti_irq", "group___r_i_i_c___s_l_a_v_e.html#a01d8a48ff4d983d8d8995d6dbd4e5ac6", null ],
       [ "spi_irq", "group___r_i_i_c___s_l_a_v_e.html#a5710872e90c0db5ed2c177e883979cc7", null ],
       [ "ali_irq", "group___r_i_i_c___s_l_a_v_e.html#a55c817a372e45b76fca43326c627c33f", null ],
-      [ "tmoi_irq", "group___r_i_i_c___s_l_a_v_e.html#a17643f2f26d82852032bd200631567ad", null ]
+      [ "tmoi_irq", "group___r_i_i_c___s_l_a_v_e.html#a17643f2f26d82852032bd200631567ad", null ],
+      [ "p_reg", "group___r_i_i_c___s_l_a_v_e.html#aa254ca6cc6d727a504cebf568e1cf472", null ]
     ] ],
     [ "R_RIIC_SLAVE_Open", "group___r_i_i_c___s_l_a_v_e.html#gab0124cdb3b51609214466122053a7d15", null ],
     [ "R_RIIC_SLAVE_Read", "group___r_i_i_c___s_l_a_v_e.html#ga46f545b8b7e7d94c773e2563f3cd2534", null ],

@@ -13,7 +13,8 @@ var group___a_d_c___e =
       [ "window_a_irq", "group___a_d_c___e.html#a1dc98d81c9cfb1b1eb10db8ef7c638fe", null ],
       [ "window_b_irq", "group___a_d_c___e.html#a0b20ef241f551191d580f929c32c8c7a", null ],
       [ "window_a_ipl", "group___a_d_c___e.html#a51c9f7b4d98b8fe863268a2af3da0d59", null ],
-      [ "window_b_ipl", "group___a_d_c___e.html#a3c4857e589eda67d890287c4cbf8cbe6", null ]
+      [ "window_b_ipl", "group___a_d_c___e.html#a3c4857e589eda67d890287c4cbf8cbe6", null ],
+      [ "p_reg", "group___a_d_c___e.html#ae507cdd0d59cdd361617073633587fe7", null ]
     ] ],
     [ "adc_e_window_cfg_t", "group___a_d_c___e.html#structadc__e__window__cfg__t", [
       [ "compare_mask", "group___a_d_c___e.html#ad1de0a6834ea185e7db99c38886c4fc6", null ],

@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -393,14 +393,6 @@ Disable checks that would return FSP_ERR_ASSERTION</li>
 </ul>
 </td><td>Return FSP_ERR_ASSERTION </td><td>Define the behavior of the <a class="el" href="group___b_s_p___m_c_u.html#gaa4fa8ae9390afa996af2dabee6552732">FSP_ASSERT()</a> macro. </td></tr>
 <tr>
-<td>Error Log</td><td><ul style="margin-top:0;margin-bottom:0;">
-<li>
-No Error Log</li>
-<li>
-Errors Logged via fsp_error_log</li>
-</ul>
-</td><td>No Error Log </td><td>Specify error logging behavior. </td></tr>
-<tr>
 <td>PFS Protect</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
 Disabled</li>
@@ -481,6 +473,8 @@ Enumerations</h2></td></tr>
 <tr class="separator:gafd98e2a6f080d6a52a3ef72e3d731b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga72e70676360e6a4d753a8d235e6b93a2"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___b_s_p___m_c_u.html#ga72e70676360e6a4d753a8d235e6b93a2">bsp_grp_irq_t</a> </td></tr>
 <tr class="separator:ga72e70676360e6a4d753a8d235e6b93a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga17f2cebd0486d19d73d81a27d6bd3131"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___b_s_p___m_c_u.html#ga17f2cebd0486d19d73d81a27d6bd3131">intsel_cause_t</a> </td></tr>
+<tr class="separator:ga17f2cebd0486d19d73d81a27d6bd3131"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -927,41 +921,7 @@ Variables</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950ae2e4b37d45024125cbb660f1b3a3090e"></a>FSP_IP_RTC&#160;</td><td class="fielddoc"><p>Realtime Clock. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950afe554013bd2f3cbbd8462cea8eeee4ca"></a>FSP_IP_GTM&#160;</td><td class="fielddoc"><p>General Timer. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a83fe18962b058df65adb9ce089719ebb"></a>FSP_IP_GPT&#160;</td><td class="fielddoc"><p>General PWM Timer. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950acfc9bb8ff007a7b82cf4fd845dfce053"></a>FSP_IP_POEG&#160;</td><td class="fielddoc"><p>Port Output Enable for GPT. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a3403f62d1f8cc29a868e5da9a86a46f7"></a>FSP_IP_PORT&#160;</td><td class="fielddoc"><p>I/O Ports. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a4704af5ed32cbd6532fd28a44d0d028e"></a>FSP_IP_IM33&#160;</td><td class="fielddoc"><p>IM33 (Interrupt controller) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a837b8847e248ed296512f20813008cd5"></a>FSP_IP_SCIF&#160;</td><td class="fielddoc"><p>Serial Communications Interface with FIFO. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a17e007a04505fb7a7614067e3d5e7447"></a>FSP_IP_RIIC&#160;</td><td class="fielddoc"><p>I2C Bus Interface. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950acbce1d6d73ea0d9a18c42b2389c69888"></a>FSP_IP_RSPI&#160;</td><td class="fielddoc"><p>Renesas Serial Peripheral Interface. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950abfff39a6b8ca24d18832ad7153cc0880"></a>FSP_IP_MHU&#160;</td><td class="fielddoc"><p>Message Handling Unit. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a494addfd4ceb1fabb0bea0893b444641"></a>FSP_IP_DMAC&#160;</td><td class="fielddoc"><p>Direct Memory Access Controller. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950adf8c428fc9e6594881035cfc67a66373"></a>FSP_IP_DMAC_s&#160;</td><td class="fielddoc"><p>Direct Memory Access Controller. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a372bbc7267801454ac9a1bf3677ef60c"></a>FSP_IP_SSI&#160;</td><td class="fielddoc"><p>Serial Sound Interface. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950aacbead3e070986a6c40c32d2485d5c4e"></a>FSP_IP_CANFD&#160;</td><td class="fielddoc"><p>CANFD Interface (RS-CANFD) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950ac49bfca1e1ccf88f53586fc28bd54250"></a>FSP_IP_ADC&#160;</td><td class="fielddoc"><p>A/D Converter. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a55e1c8e5259f5bc822c320abb058142b"></a>FSP_IP_TSU&#160;</td><td class="fielddoc"><p>Thermal Sensor Unit. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a9b738d0f557574bb4d659abc2dc0fbf8"></a>FSP_IP_WDT&#160;</td><td class="fielddoc"><p>Watchdog Timer. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950ad8802ee74d9cafca9a1c4d5faea8e253"></a>FSP_IP_SCI&#160;</td><td class="fielddoc"><p>Serial Communications Interface. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a8e412d35ce1643636ba6bc355914c5e0"></a>FSP_IP_XSPI&#160;</td><td class="fielddoc"><p>Expanded Serial Peripheral Interface. </p>
+<tr><td class="fieldname"><a id="ga7880302f0edd7cc4290c037809975950a308404027f3f10d27b8cb240dec71244"></a>FSP_IP_SYC&#160;</td><td class="fielddoc"><p>System counter. </p>
 </td></tr>
 </table>
 
@@ -1029,6 +989,21 @@ Variables</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga72e70676360e6a4d753a8d235e6b93a2a7478d3bbfdc1220e125de34635c0f47a"></a>BSP_GRP_IRQ_UNSUPPORTED&#160;</td><td class="fielddoc"><p>NMI Group IRQ are not supported in this device. </p>
 </td></tr>
 </table>
+
+</div>
+</div>
+<a id="ga17f2cebd0486d19d73d81a27d6bd3131"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga17f2cebd0486d19d73d81a27d6bd3131">&#9670;&nbsp;</a></span>intsel_cause_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="group___b_s_p___m_c_u.html#ga17f2cebd0486d19d73d81a27d6bd3131">intsel_cause_t</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Cause of Interrupt used to change the setting of the INTPMSEL register. </p>
 
 </div>
 </div>
@@ -1809,7 +1784,7 @@ Variables</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

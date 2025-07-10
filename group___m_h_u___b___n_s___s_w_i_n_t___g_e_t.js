@@ -6,6 +6,9 @@ var group___m_h_u___b___n_s___s_w_i_n_t___g_e_t =
       [ "p_regs", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#af80195b0968f9c69dfd0c89fa645ac4f", null ],
       [ "channel", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#a03917ba43d92ba64f3ceff9d2a5ed8f6", null ]
     ] ],
+    [ "mhu_b_ns_swint_get_extended_cfg_t", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#structmhu__b__ns__swint__get__extended__cfg__t", [
+      [ "p_reg", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#a9703750db46a8c773d05139121484927", null ]
+    ] ],
     [ "R_MHU_B_NS_SWINT_GET_Open", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#gafd2f119cc386c1672bf465ccefb498c3", null ],
     [ "R_MHU_B_NS_SWINT_GET_Close", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#gadab533dca3f9ebbd37eddda34b8269fe", null ],
     [ "R_MHU_B_NS_SWINT_GET_CallbackSet", "group___m_h_u___b___n_s___s_w_i_n_t___g_e_t.html#ga662917c72899887e1ddd67cce497c732", null ],

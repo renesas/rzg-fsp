@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"group___w_d_t___a_p_i.html#ga62d4360afabd1652aa7a1b9f624d7f61":[3,2,4,1,9],
+"group___w_d_t___a_p_i.html#ga6b0f563a6311763e6204add68a018089":[3,2,4,1,7],
 "group___w_d_t___a_p_i.html#ga7624d80dde311cb1289f558ea464fa63":[3,2,4,1,10],
 "group___w_d_t___a_p_i.html#ga803dd68cafce3a3d9ca5630b8c4838da":[3,2,4,1,11],
 "group___w_d_t___a_p_i.html#ga880fcf63a5220c6618a0cf380268a76c":[3,2,4,1,6],
@@ -96,8 +98,8 @@ var NAVTREEINDEX17 =
 "group___x_s_p_i___q_s_p_i.html#ggae60133dc12f4f7ae05fff3e117a2669aab743d88ab010960508bead3d47c4c117":[3,1,7,0,5,1],
 "group___x_s_p_i___q_s_p_i.html#ggae60133dc12f4f7ae05fff3e117a2669aae9c45150b1ef316f0de9bccb1fc3f270":[3,1,7,0,5,0],
 "group___x_s_p_i___q_s_p_i.html#structxspi__qspi__instance__ctrl__t":[3,1,7,0,0],
-"index.html":[],
 "index.html":[0],
+"index.html":[],
 "index.html#build-time-configurations":[0,3,4],
 "index.html#documentation-standard":[0,2],
 "index.html#e2-studio-ide":[0,3,5],

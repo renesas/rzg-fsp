@@ -26,7 +26,6 @@ var searchData=
   ['adjustment_5fperiod',['adjustment_period',['../group___r_t_c___a_p_i.html#af0318e2dbaf3a320504823c4cb1f2ce5',1,'rtc_error_adjustment_cfg_t']]],
   ['adjustment_5ftype',['adjustment_type',['../group___r_t_c___a_p_i.html#a322799f85ff64bfe8d6dd4fd611e1ed7',1,'rtc_error_adjustment_cfg_t']]],
   ['adjustment_5fvalue',['adjustment_value',['../group___r_t_c___a_p_i.html#a3953fbf4c2ae68580302f22001c8f89e',1,'rtc_error_adjustment_cfg_t']]],
-  ['aiq',['aiq',['../group___r_m___z_m_o_d4_x_x_x___a_p_i.html#abcdbe1de7b8f7c882f5f7bdbb60a2274',1,'rm_zmod4xxx_oaq_1st_data_t']]],
   ['alarm1_5fipl',['alarm1_ipl',['../group___r_t_c.html#ac36b179a4311fe95bde1820384dd35cc',1,'rtc_extended_cfg_t']]],
   ['alarm1_5firq',['alarm1_irq',['../group___r_t_c.html#ae7f72a6fbe27e9a3ef60c99022798c9b',1,'rtc_extended_cfg_t']]],
   ['alarm_5fipl',['alarm_ipl',['../group___r_t_c___a_p_i.html#a6a99d08314611e1fe129bef873c56ac2',1,'rtc_cfg_t']]],

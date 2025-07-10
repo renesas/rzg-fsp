@@ -20,7 +20,8 @@ var group___s_c_i___b___u_a_r_t =
       [ "flow_control_pin", "group___s_c_i___b___u_a_r_t.html#a1a570791ada82c7304bd70fd0431014f", null ],
       [ "flow_control", "group___s_c_i___b___u_a_r_t.html#a4b5314fe6a1f23955d5f340ab5447236", null ],
       [ "rs485_setting", "group___s_c_i___b___u_a_r_t.html#a04aa2b43cd4a2879826033bc80c06bff", null ],
-      [ "half_data_setting", "group___s_c_i___b___u_a_r_t.html#a02639fcb8ec9d81d9930ce6e65caef8e", null ]
+      [ "half_data_setting", "group___s_c_i___b___u_a_r_t.html#a02639fcb8ec9d81d9930ce6e65caef8e", null ],
+      [ "p_reg", "group___s_c_i___b___u_a_r_t.html#ab8f78295062b48cc30ebe8643f448ef7", null ]
     ] ],
     [ "sci_b_clk_src_t", "group___s_c_i___b___u_a_r_t.html#ga6c7272b892e958ee32afb345eb1d1bd0", [
       [ "SCI_B_UART_CLOCK_INT", "group___s_c_i___b___u_a_r_t.html#gga6c7272b892e958ee32afb345eb1d1bd0ae7e751b6add47042b86579de38c7a594", null ],

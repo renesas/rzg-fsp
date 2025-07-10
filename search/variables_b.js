@@ -4,8 +4,6 @@ var searchData=
   ['negation_5ftime',['negation_time',['../group___s_c_i___b___u_a_r_t.html#adeab6a6a24f0ccbf45a24fd0185f1e3b',1,'sci_b_uart_rs485_setting_t']]],
   ['next_5faccess_5fdelay',['next_access_delay',['../group___r_s_p_i.html#a4a5671a7b1a0b31742f3fb3ffb832532',1,'rspi_extended_cfg_t::next_access_delay()'],['../group___s_p_i___b.html#a91917729fb266000e5c493d9a4021c43',1,'spi_b_extended_cfg_t::next_access_delay()']]],
   ['next_5fword',['next_word',['../group___i3_c___b.html#a624164578fd3053bde3878a449255aed',1,'i3c_b_instance_ctrl_t']]],
-  ['no2_5fconcentration',['no2_concentration',['../group___r_m___z_m_o_d4_x_x_x___a_p_i.html#a9e3471dc95eec68df543078297796f6b',1,'rm_zmod4xxx_no2_o3_data_t']]],
-  ['no2o3datacalculate',['no2O3DataCalculate',['../group___r_m___z_m_o_d4_x_x_x___a_p_i.html#af901e053d4de7823c96984f1832d9968',1,'rm_zmod4xxx_api_t']]],
   ['no_5fhold_5fmeasurement_5fread',['no_hold_measurement_read',['../group___r_m___h_s400_x.html#a72f6d28fd2d5889d5733ce5ad5b345db',1,'rm_hs400x_instance_ctrl_t']]],
   ['noise_5fcancel',['noise_cancel',['../group___s_c_i___b___u_a_r_t.html#add11aada0e4e3d121e4e86597ec0ed58',1,'sci_b_uart_extended_cfg_t::noise_cancel()'],['../group___s_c_i___u_a_r_t.html#a0bbbfe8b19551f087925eed6409634e4',1,'sci_uart_extended_cfg_t::noise_cancel()'],['../group___s_c_i_f___u_a_r_t.html#a0ff4c8c790a3ebefd5cf18b65b5072c2',1,'scif_uart_extended_cfg_t::noise_cancel()']]],
   ['noise_5ffilter',['noise_filter',['../group___p_o_e_g___a_p_i.html#a7f4c9f27604cdf1b772dc2d4ed8c3a2f',1,'poeg_cfg_t::noise_filter()'],['../group___r_t_c___a_p_i.html#aab9203daea2e24a16626b2b40c98d3fa',1,'rtc_time_capture_t::noise_filter()']]],

@@ -5,8 +5,14 @@ var group___p_d_m___a_p_i =
       [ "event", "group___p_d_m___a_p_i.html#a4baa164d236e7f2c62cd33ddb64f41ec", null ],
       [ "error", "group___p_d_m___a_p_i.html#a98b4bbf5bb1bf1feccda12382e919bbc", null ]
     ] ],
+    [ "pdm_sound_detection_setting_t", "group___p_d_m___a_p_i.html#structpdm__sound__detection__setting__t", [
+      [ "sound_detection_lower_limit", "group___p_d_m___a_p_i.html#a6975853a845298fb1fe31504df9c0071", null ],
+      [ "sound_detection_upper_limit", "group___p_d_m___a_p_i.html#a3feb7a0ac1bec98afe500c6347dd14b6", null ]
+    ] ],
     [ "pdm_status_t", "group___p_d_m___a_p_i.html#structpdm__status__t", [
-      [ "state", "group___p_d_m___a_p_i.html#a2c6cf4b37d45d78d3c1f61721877a691", null ]
+      [ "state", "group___p_d_m___a_p_i.html#a2c6cf4b37d45d78d3c1f61721877a691", null ],
+      [ "sound_detection_enabled", "group___p_d_m___a_p_i.html#a0513231b3e8d097635940848be1ce2c2", null ],
+      [ "error", "group___p_d_m___a_p_i.html#a9fa860006a65df25c9150c146db601e0", null ]
     ] ],
     [ "pdm_cfg_t", "group___p_d_m___a_p_i.html#structpdm__cfg__t", [
       [ "unit", "group___p_d_m___a_p_i.html#a336b1d202eafdf805edd3cc274ef89e3", null ],
@@ -27,6 +33,8 @@ var group___p_d_m___a_p_i =
       [ "open", "group___p_d_m___a_p_i.html#a9144eb5d334c37cba16c54a931ff0b39", null ],
       [ "start", "group___p_d_m___a_p_i.html#abf43fd87ed8c5bdaccb5474009fa6006", null ],
       [ "stop", "group___p_d_m___a_p_i.html#ad8342d4be5d02082a860b08303d0478c", null ],
+      [ "soundDetectionEnable", "group___p_d_m___a_p_i.html#a7505ff95fb609170382ac5c91db60abf", null ],
+      [ "soundDetectionDisable", "group___p_d_m___a_p_i.html#ac73ccdf3b6695640bf0abfc5ecbd3570", null ],
       [ "read", "group___p_d_m___a_p_i.html#ac5a449eb8492fef49421d8e3babf205f", null ],
       [ "statusGet", "group___p_d_m___a_p_i.html#a2b1840e35134d539722e741e0b00042c", null ],
       [ "close", "group___p_d_m___a_p_i.html#a37bb473e04c42ef4dc01e03f6c52ce75", null ],
@@ -60,6 +68,7 @@ var group___p_d_m___a_p_i =
       [ "PDM_EVENT_ERROR", "group___p_d_m___a_p_i.html#ggafb514c195258d2f14c8e18e3778ad946a6ab9b149f9673d692a581c5211f13134", null ]
     ] ],
     [ "pdm_error_t", "group___p_d_m___a_p_i.html#gaf682776db13b51a982b047a8eb5fef2d", [
+      [ "PDM_ERROR_NONE", "group___p_d_m___a_p_i.html#ggaf682776db13b51a982b047a8eb5fef2da671ce73279c7542fa4fe0f04ec631b35", null ],
       [ "PDM_ERROR_SHORT_CIRCUIT", "group___p_d_m___a_p_i.html#ggaf682776db13b51a982b047a8eb5fef2da0507dc19cc300d66e07d4b452a44c9a9", null ],
       [ "PDM_ERROR_OVERVOLTAGE_LOWER", "group___p_d_m___a_p_i.html#ggaf682776db13b51a982b047a8eb5fef2da70bb4c740eec0bdd92cf20e63e540ba7", null ],
       [ "PDM_ERROR_OVERVOLTAGE_UPPER", "group___p_d_m___a_p_i.html#ggaf682776db13b51a982b047a8eb5fef2dab00a11e564c13def3c78e520e09573ab", null ],

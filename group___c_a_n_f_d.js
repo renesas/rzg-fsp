@@ -17,7 +17,8 @@ var group___c_a_n_f_d =
       [ "p_data_timing", "group___c_a_n_f_d.html#a924d2187cf551c85ded2b148e26bbfd9", null ],
       [ "delay_compensation", "group___c_a_n_f_d.html#a3b38e8d28731a86eb521db8a5c5ae85e", null ],
       [ "p_global_cfg", "group___c_a_n_f_d.html#a4cb13ba7074112d39a102638b7895a94", null ],
-      [ "txmb_merge_mode_enable", "group___c_a_n_f_d.html#aaaef4497ea35ba92d6d85cc5cc4a380a", null ]
+      [ "txmb_merge_mode_enable", "group___c_a_n_f_d.html#aaaef4497ea35ba92d6d85cc5cc4a380a", null ],
+      [ "p_reg", "group___c_a_n_f_d.html#a643a6edb1c49ad7e4a200976323744d2", null ]
     ] ],
     [ "canfd_status_t", "group___c_a_n_f_d.html#ga9bc23367cb7fb757b5ce2f29323524c0", [
       [ "CANFD_STATUS_RESET_MODE", "group___c_a_n_f_d.html#gga9bc23367cb7fb757b5ce2f29323524c0a9d1022be800bc150d6daf64245c198ec", null ],

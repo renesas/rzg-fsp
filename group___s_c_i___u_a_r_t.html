@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -323,8 +323,6 @@ Active High</li>
 </ul>
 </td><td>Active High </td><td>Select the polarity of the DE pin. </td></tr>
 <tr>
-<td>Extra &gt; RS-485 &gt; DE Port Number</td><td>MCU Specific Options</td><td></td><td>GPIO output port number to use for generating the DE signal. </td></tr>
-<tr>
 <td>Extra &gt; RS-485 &gt; DE Pin Number</td><td>MCU Specific Options</td><td></td><td>GPIO output pin number to use for generating the DE signal. </td></tr>
 <tr>
 <td>Extra &gt; Clock Source</td><td><ul style="margin-top:0;margin-bottom:0;">
@@ -473,7 +471,7 @@ Enumerations</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="af0bd2894ed72b6ea36fc08fa10c27ad3"></a>union <a class="el" href="group___s_c_i___u_a_r_t.html#unionbaud__setting__t_8____unnamed____">baud_setting_t</a></td>
+<a id="a206c72de8ce93ec6c8eb3a04e6b2d32e"></a>union <a class="el" href="group___s_c_i___u_a_r_t.html#unionbaud__setting__t_8____unnamed____">baud_setting_t</a></td>
 <td class="fieldname">
 __unnamed__</td>
 <td class="fielddoc">
@@ -598,6 +596,12 @@ CTS/RTS function of the SSn pin. </td></tr>
 rs485_setting</td>
 <td class="fielddoc">
 RS-485 settings. </td></tr>
+<tr><td class="fieldtype">
+<a id="a7f5290a2e1b72d137e9532c2d2abde1c"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified channel. </td></tr>
 </table>
 
 </div>
@@ -1204,7 +1208,7 @@ RS-485 settings. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

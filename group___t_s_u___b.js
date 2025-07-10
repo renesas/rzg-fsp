@@ -6,7 +6,8 @@ var group___t_s_u___b =
       [ "compare_ref_low", "group___t_s_u___b.html#a1fce1fbc4e5f916220040a4146e27c49", null ],
       [ "compare_ref_high", "group___t_s_u___b.html#a22491b611c1958bb5405b05b2a7a3feb", null ],
       [ "compare_irq", "group___t_s_u___b.html#a3fc59fe6297b3d440cb73510eaf7f21b", null ],
-      [ "compare_ipl", "group___t_s_u___b.html#a06b6e82fcee558ee4548f37d8620a1f4", null ]
+      [ "compare_ipl", "group___t_s_u___b.html#a06b6e82fcee558ee4548f37d8620a1f4", null ],
+      [ "p_reg", "group___t_s_u___b.html#a94b754189e951e3361eb3b1c7e69b3e6", null ]
     ] ],
     [ "tsu_b_instance_ctrl_t", "group___t_s_u___b.html#structtsu__b__instance__ctrl__t", null ],
     [ "tsu_b_average_t", "group___t_s_u___b.html#ga5ab9606f8b75e848e5743dd79d08aa29", [

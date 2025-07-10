@@ -6,7 +6,8 @@ var group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i =
     ] ],
     [ "mhu_ns_swint_set_cfg_t", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#structmhu__ns__swint__set__cfg__t", [
       [ "channel", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#a911cd4a50f86d1e71e566889625bc77d", null ],
-      [ "p_context", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#a7d3d94f9b3b9162cc59931ac56c36a73", null ]
+      [ "p_context", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#a7d3d94f9b3b9162cc59931ac56c36a73", null ],
+      [ "p_extend", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#ae70adcf569b62367c2831b55eb8c2e1e", null ]
     ] ],
     [ "mhu_ns_swint_set_api_t", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#structmhu__ns__swint__set__api__t", [
       [ "open", "group___m_h_u___n_s___s_w_i_n_t___s_e_t___a_p_i.html#a451a6c711c6a8ea92bd71bcc0ee418b8", null ],

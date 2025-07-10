@@ -1,3 +1,376 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="883px" height="310px" viewBox="-0.5 -0.5 883 310" content="&lt;mxfile modified=&quot;2020-02-18T04:31:45.357Z&quot; host=&quot;www.draw.io&quot; agent=&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36&quot; etag=&quot;T1SMfoPdCxCeCQ3sTOrZ&quot; version=&quot;12.7.1&quot; type=&quot;device&quot;&gt;&lt;diagram id=&quot;Z0y9vCYWpN7sGZbPxlWI&quot; name=&quot;PWM&quot;&gt;7Vttk6I4EP41Vt1dlVO8Rviozuzc1r5NnXM1+sliIAp1SFwIvuyv30SDvDS7KiucszjllNCEDvTT3ekniR11uNg8htbS/UQc7HcUydl01PuOosiGKrMvLtnuJbqs7QXz0HNEo1Qw8r5hIZSENPYcHOUaUkJ86i3zQpsEAbZpTmaFIVnnm82In+91ac0xEIxsy4fSF8+h7l5q6FIq/xt7czfpWZbElYWVNBaCyLUcss6I1IeOOgwJofujxWaIfW68xC4jmfZeP062UUxGw+l74/7reNzdK3t3zi2HVwhxQCurnjyPP7sO+id2txO0tl9Hnz8sxC3SyvJjYS/xrnSbGBAHTp/jwM4CEjDhwKULn53J7PDEJxNvgJ0cVuI5HzFZYBpuWYN1ilACkJsBJ5GF2Leot8ojbAlHmR/UHXp4Ih57PEUSTq30zDt9f9M2cVZdz2uJSBzaWNyYtWpBV888rota4RxToIsdZF4+Fe1wOwNDuY0Y6klUHqyOKiIINWnN4qcA/Ki3wOF0iUOPOFNmtz772CQOaASQpXhD83BGNCT/4SHxSZjCPfN8vyCyfG8esFObwY6ZfLDCIfVY4uyLCwvPcXg3g7XrUTxaWjbvc82GCSYL2eM4mL+WtDujDEzC7+oy653rU7xnvPmpV4mrmolyYJmGsF7G62SlxO0SWZmH5QA9Fz21jdGnGJeKPqip4ejTSvBDPo8px1vlcERfYz7UD3jIdUX09FkLH89oepUdzcX3Tku0tIJEJiVC9qRZeUa86zSRtjvW2dhacI3EUTNO3mis68BXnlmm5j3NuFk5WFbInfuPp+HHD/e7qpZn7T+vFMq6kNNhTaRB6A6VdiPY9QB2/PQvTkduo+0PcOxp+eRs9hBEMcnXjaBowAgMPSuY+7j7Yq14KD69fOLkjfHYjsL6kB6f338Z9jOx6ePVjuL6bEC+TnzrgrMrS8W4lCU5EWWTqtZkZMqtJDCaVCh85KKBK5dQQFPdBBQymDYCKBlyNQCRdkxT3QC2ksSoCJAYVA1AqElDzQIIWYwT0+3U3to+nibFjNRl/w62WJWzK1uvcvBrrLhR1UJxY5YUN5LR5EAI+UULwhBkP7mo49QwNOCQ2nAehSSjjQCy4euu4nRQmTMUddUNoglAPIljDEo4hsuMfaV5tq60WkYyUO9/JxmJ4naFZkmNWpFkHKcrda+SlJEMZC24ZwevEf86ZUJnXwOV1EYdZXCrjjKJWC9UR0gBESwbyp3U5OyPUjZZ/9sHMWAXcjq/+stMRTaBrroDuZVVLjQ8qpiJwbII0FQ3gOgG4G6VuSKAqDhfBzTVDWA7aQqYJkUX45lFTXUDCCnKDcBfi8BmAVRhMfv49MwE5UzzS0yXMQUQX0dJOiMBFds+FaPO+boEIwGakVYuGf/TEvp+6YLUewj+nUz8+/FGG7tosvqmRLh0693lOMlVwv0DBgJwPNUFfrKJ4ITFZ1SSbmpDu4yBnp91C9m0up0ay7p3UuZPyWfOymsmx/SeuILCrG1tM82WvEF0xiAi6WrBMfYqq+b7Us+5zPraW/McrSbPOaK3Ls8B09xin3etnnOZGY835jk9dMRzqm7WP6K3vq2npdhehke/MWzhlHRVNKGmhvGDNPpWxBWL9sJwaxrCaDUssrPT9MdYe4zTn7SpD98B&lt;/diagram&gt;&lt;/mxfile&gt;"><defs/><g><path d="M 290.5 162 L 810.5 162" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 531 172 L 531 152" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="507" y="89" width="120" height="20" fill="none" stroke="none" transform="rotate(-45,567,99)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 567 99)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 99px; margin-left: 508px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">timer_period_t::counts</div></div></div></foreignObject><text x="567" y="103" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">timer_period_t::coun...</text></switch></g><path d="M 291 172 L 291 152" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="290" y="128" width="20" height="20" fill="none" stroke="none" transform="rotate(-45,300,138)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 300 138)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 18px; height: 1px; padding-top: 138px; margin-left: 291px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; "><div style="text-align: left"><span>0</span></div></div></div></div></foreignObject><text x="300" y="142" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">0</text></switch></g><rect x="70.5" y="148" width="100" height="20" fill="none" stroke="none" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 98px; height: 1px; padding-top: 158px; margin-left: 72px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">Time after start (PCLKD counts)</div></div></div></foreignObject><text x="121" y="162" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">Time after start...</text></switch></g><rect x="751" y="83" width="145" height="20" fill="none" stroke="none" transform="rotate(-45,823.5,93)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 823.5 93)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 143px; height: 1px; padding-top: 93px; margin-left: 752px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">2 * timer_period_t::counts</div></div></div></foreignObject><text x="824" y="97" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">2 * timer_period_t::coun...</text></switch></g><rect x="0.5" y="208.5" width="240" height="20" fill="none" stroke="none" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 238px; height: 1px; padding-top: 219px; margin-left: 2px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">Triangle-Wave PWM mode, GTIOCA start level low</div></div></div></foreignObject><text x="121" y="222" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">Triangle-Wave PWM mode, GTIOCA start lev...</text></switch></g><path d="M 411 227 L 291 227" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 411 188 L 651 188" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 371 173 L 371 153" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="341" y="103" width="108" height="20" fill="none" stroke="none" transform="rotate(-45,395,113)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 395 113)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 106px; height: 1px; padding-top: 113px; margin-left: 342px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">duty_cycle_counts - dead_time</div></div></div></foreignObject><text x="395" y="117" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">duty_cycle_counts...</text></switch></g><path d="M 651 228 L 811 228" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 651 188.5 L 651 228.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="0.5" y="274.5" width="240" height="20" fill="none" stroke="none" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 238px; height: 1px; padding-top: 284px; margin-left: 2px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">Triangle-Wave PWM mode, GTIOCB start level high</div></div></div></foreignObject><text x="121" y="288" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">Triangle-Wave PWM mode, GTIOCB start lev...</text></switch></g><path d="M 411 187 L 411 227" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="661" y="69" width="182.05" height="20" fill="none" stroke="none" transform="rotate(-45,752.03,79)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 752.0250000000001 79)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 180px; height: 1px; padding-top: 79px; margin-left: 662px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; "> 2 * timer_period_t::counts - duty_cycle_counts + dead_time</div></div></div></foreignObject><text x="752" y="83" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">2 * timer_period_t::counts -...</text></switch></g><path d="M 371 266.5 L 371 306.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 371 267 L 290 267" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 371 307 L 691 307" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 691 268 L 811 268" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 691 268 L 691 308" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="312" y="6.5" width="419" height="20" fill="none" stroke="none" pointer-events="all"/><g transform="translate(-0.5 -0.5)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 417px; height: 1px; padding-top: 17px; margin-left: 313px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 28px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">GPT Triangle-Wave PWM Output</div></div></div></foreignObject><text x="522" y="25" fill="#000000" font-family="Helvetica" font-size="28px" text-anchor="middle">GPT Triangle-Wave PWM Output</text></switch></g><rect x="601" y="83" width="160" height="20" fill="none" stroke="none" transform="rotate(-45,681,93)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 681 93)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 93px; margin-left: 602px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; "> 2 * timer_period_t::counts - duty_cycle_counts</div></div></div></foreignObject><text x="681" y="97" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">2 * timer_period_t::count...</text></switch></g><path d="M 691 173 L 691 166.5 Q 691 160 691 156.5 L 691 153" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 651 173 L 651 167.5 Q 651 162 651 157.5 L 651 153" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 771 172 L 771 152" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><path d="M 411 172 L 411 152" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke"/><rect x="391" y="94" width="108" height="20" fill="none" stroke="none" transform="rotate(-45,445,104)" pointer-events="all"/><g transform="translate(-0.5 -0.5)rotate(-45 445 104)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 106px; height: 1px; padding-top: 104px; margin-left: 392px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">duty_cycle_counts</div></div></div></foreignObject><text x="445" y="108" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">duty_cycle_counts</text></switch></g></g><switch><g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/><a transform="translate(0,-5)" xlink:href="https://desk.draw.io/support/solutions/articles/16000042487" target="_blank"><text text-anchor="middle" font-size="10px" x="50%" y="100%">Viewer does not support full SVG 1.1</text></a></switch></svg>
+<!-- Microsoft Visio、SVG Export により生成 r_gpt_triangle_wave_pwm_output.svg r_gpt_triangle_wave_pwm_output -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="10.1201in" height="4.01144in"
+		viewBox="0 0 728.648 288.823" xml:space="preserve" color-interpolation-filters="sRGB" class="st11">
+	<v:documentProperties v:langID="1041"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:none;stroke:none;stroke-linecap:butt;stroke-width:0.749998}
+		.st2 {fill:#000000;font-family:Microsoft Sans Serif;font-size:0.75em}
+		.st3 {fill:none;stroke:none;stroke-width:0.999997}
+		.st4 {fill:none}
+		.st5 {stroke:#000000;stroke-linecap:butt;stroke-width:0.749998}
+		.st6 {fill:#000000;font-family:Microsoft Sans Serif;font-size:1.75001em}
+		.st7 {fill:none;stroke:none;stroke-linecap:butt;stroke-width:0.749997}
+		.st8 {font-size:1em}
+		.st9 {fill:none;stroke:#000000;stroke-dasharray:0.01,3.75;stroke-width:0.75}
+		.st10 {stroke:#000000;stroke-dasharray:0.75,3;stroke-linecap:butt;stroke-width:0.75}
+		.st11 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>r_gpt_triangle_wave_pwm_output</title>
+		<v:pageProperties v:drawingScale="1" v:pageScale="1" v:drawingUnits="19" v:shadowOffsetX="8.99997"
+				v:shadowOffsetY="-8.99997"/>
+		<v:layer v:name="コネクタ" v:index="0"/>
+		<g id="shape8-1" v:mID="8" v:groupContext="shape" transform="translate(222.254,-72.4563) rotate(-45)">
+			<title>シート.4</title>
+			<rect x="0" y="273.824" width="89.9997" height="15" class="st1"/>
+		</g>
+		<g id="shape12-3" v:mID="12" v:groupContext="shape" transform="translate(48.5203,-69.7228) rotate(-45)">
+			<title>シート.12</title>
+			<rect x="0" y="273.824" width="15" height="15" class="st1"/>
+		</g>
+		<g id="shape13-5" v:mID="13" v:groupContext="shape" transform="translate(232.825,-160.874)">
+			<title>シート.8</title>
+			<desc>0</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="4.52499" cy="283.423" width="9.05" height="10.8"/>
+			<rect x="0" y="278.024" width="9.04997" height="10.8" class="st1"/>
+			<text x="2.02" y="286.12" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>0</text>		</g>
+		<g id="shape14-8" v:mID="14" v:groupContext="shape" transform="translate(80.6249,-142.424)">
+			<title>シート.9</title>
+			<rect x="0" y="273.824" width="74.9998" height="15" class="st1"/>
+		</g>
+		<g id="shape15-10" v:mID="15" v:groupContext="shape" transform="translate(407.998,-70.3272) rotate(-45)">
+			<title>シート.15</title>
+			<rect x="0" y="273.824" width="108.75" height="15" class="st1"/>
+		</g>
+		<g id="shape16-12" v:mID="16" v:groupContext="shape" transform="translate(28.1251,-97.049)">
+			<title>シート.13</title>
+			<rect x="0" y="273.824" width="179.999" height="15" class="st1"/>
+		</g>
+		<g id="group17-14" transform="translate(237.375,-97.424)" v:mID="17" v:groupContext="group">
+			<title>シート.17</title>
+			<g id="shape18-15" v:mID="18" v:groupContext="shape">
+				<title>シート.18</title>
+				<path d="M100.12 288.82 L0 288.82 L100.12 288.82 Z" class="st3"/>
+			</g>
+			<g id="shape19-17" v:mID="19" v:groupContext="shape">
+				<title>シート.19</title>
+				<path d="M100.12 288.82 L0 288.82 L100.12 288.82 Z" class="st4"/>
+				<path d="M100.12 288.82 L0 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="group20-20" transform="translate(337.125,-127.424)" v:mID="20" v:groupContext="group">
+			<title>シート.20</title>
+			<g id="shape21-21" v:mID="21" v:groupContext="shape">
+				<title>シート.21</title>
+				<path d="M0 288.82 L209.25 288.82 L0 288.82 Z" class="st3"/>
+			</g>
+			<g id="shape22-23" v:mID="22" v:groupContext="shape">
+				<title>シート.22</title>
+				<path d="M0 288.82 L209.25 288.82 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L209.25 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="shape26-26" v:mID="26" v:groupContext="shape" transform="translate(96.4357,-65.1383) rotate(-45)">
+			<title>シート.18</title>
+			<rect x="0" y="273.824" width="80.9998" height="15" class="st1"/>
+		</g>
+		<g id="group27-28" transform="translate(546.75,-97.424)" v:mID="27" v:groupContext="group">
+			<title>シート.27</title>
+			<g id="shape28-29" v:mID="28" v:groupContext="shape">
+				<title>シート.28</title>
+				<path d="M0 288.82 L129.66 288.82 L0 288.82 Z" class="st3"/>
+			</g>
+			<g id="shape29-31" v:mID="29" v:groupContext="shape">
+				<title>シート.29</title>
+				<path d="M0 288.82 L129.66 288.82 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L129.66 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="group30-34" transform="translate(546.75,-97.424)" v:mID="30" v:groupContext="group">
+			<title>シート.21</title>
+			<g id="shape31-35" v:mID="31" v:groupContext="shape">
+				<title>シート.31</title>
+				<path d="M0 258.82 L0 288.82 L0 258.82 Z" class="st3"/>
+			</g>
+			<g id="shape32-37" v:mID="32" v:groupContext="shape">
+				<title>シート.32</title>
+				<path d="M0 258.82 L0 288.82 L0 258.82 Z" class="st4"/>
+				<path d="M0 258.82 L0 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="shape33-40" v:mID="33" v:groupContext="shape" transform="translate(28.1251,-47.5492)">
+			<title>シート.22</title>
+			<rect x="0" y="273.824" width="179.999" height="15" class="st1"/>
+		</g>
+		<g id="group34-42" transform="translate(337.5,-96.6741)" v:mID="34" v:groupContext="group">
+			<title>シート.24</title>
+			<g id="shape35-43" v:mID="35" v:groupContext="shape">
+				<title>シート.35</title>
+				<path d="M0 258.82 L0 288.82 L0 258.82 Z" class="st3"/>
+			</g>
+			<g id="shape36-45" v:mID="36" v:groupContext="shape">
+				<title>シート.36</title>
+				<path d="M0 258.82 L0 288.82 L0 258.82 Z" class="st4"/>
+				<path d="M0 258.82 L0 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="shape37-48" v:mID="37" v:groupContext="shape" transform="translate(344.569,-71.0001) rotate(-45)">
+			<title>シート.25</title>
+			<rect x="0" y="273.824" width="136.537" height="15" class="st1"/>
+		</g>
+		<g id="group38-50" transform="translate(295.875,-38.174)" v:mID="38" v:groupContext="group">
+			<title>シート.38</title>
+			<g id="shape39-51" v:mID="39" v:groupContext="shape">
+				<title>シート.39</title>
+				<path d="M0 258.82 L0 288.82 L0 258.82 Z" class="st3"/>
+			</g>
+			<g id="shape40-53" v:mID="40" v:groupContext="shape">
+				<title>シート.40</title>
+				<path d="M0 258.82 L0 288.82 L0 258.82 Z" class="st4"/>
+				<path d="M0 258.82 L0 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="group41-56" transform="translate(237.375,-68.174)" v:mID="41" v:groupContext="group">
+			<title>シート.28</title>
+			<g id="shape42-57" v:mID="42" v:groupContext="shape">
+				<title>シート.42</title>
+				<path d="M58.5 288.82 L0 288.82 L58.5 288.82 Z" class="st3"/>
+			</g>
+			<g id="shape43-59" v:mID="43" v:groupContext="shape">
+				<title>シート.43</title>
+				<path d="M58.5 288.82 L0 288.82 L58.5 288.82 Z" class="st4"/>
+				<path d="M58.5 288.82 L0 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="group44-62" transform="translate(295.875,-38.1742)" v:mID="44" v:groupContext="group">
+			<title>シート.29</title>
+			<g id="shape45-63" v:mID="45" v:groupContext="shape">
+				<title>シート.45</title>
+				<path d="M0 288.82 L291.94 288.82 L0 288.82 Z" class="st3"/>
+			</g>
+			<g id="shape46-65" v:mID="46" v:groupContext="shape">
+				<title>シート.46</title>
+				<path d="M0 288.82 L291.94 288.82 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L291.94 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="group47-68" transform="translate(587.1,-65.774)" v:mID="47" v:groupContext="group">
+			<title>シート.30</title>
+			<g id="shape48-69" v:mID="48" v:groupContext="shape">
+				<title>シート.48</title>
+				<path d="M0 288.82 L90 288.82 L0 288.82 Z" class="st3"/>
+			</g>
+			<g id="shape49-71" v:mID="49" v:groupContext="shape">
+				<title>シート.49</title>
+				<path d="M0 288.82 L90 288.82 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L90 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="group50-74" transform="translate(587.481,-38.3615)" v:mID="50" v:groupContext="group">
+			<title>シート.31</title>
+			<g id="shape51-75" v:mID="51" v:groupContext="shape">
+				<title>シート.51</title>
+				<path d="M0 261.26 L0 288.82 L0 261.26 Z" class="st3"/>
+			</g>
+			<g id="shape52-77" v:mID="52" v:groupContext="shape">
+				<title>シート.52</title>
+				<path d="M0 261.26 L0 288.82 L0 261.26 Z" class="st4"/>
+				<path d="M0 261.26 L0 288.82" class="st5"/>
+			</g>
+		</g>
+		<g id="shape53-80" v:mID="53" v:groupContext="shape" transform="translate(261.749,-248.549)">
+			<title>シート.32</title>
+			<rect x="0" y="273.824" width="314.249" height="15" class="st1"/>
+		</g>
+		<g id="shape54-82" v:mID="54" v:groupContext="shape" transform="translate(121.85,-244.874)">
+			<title>シート.33</title>
+			<desc>GPT Triangle-Wave PWM Output</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="294.024" cy="276.223" width="588.05" height="25.1999"/>
+			<rect x="0" y="263.624" width="588.048" height="25.1999" class="st1"/>
+			<text x="138.5" y="282.52" class="st6" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>GPT Triangle-Wave PWM Output</text>		</g>
+		<g id="shape55-85" v:mID="55" v:groupContext="shape" transform="translate(297.146,-66.3497) rotate(-45)">
+			<title>シート.34</title>
+			<rect x="0" y="273.824" width="120" height="15" class="st1"/>
+		</g>
+		<g id="shape68-87" v:mID="68" v:groupContext="shape" transform="translate(133.936,-71.8883) rotate(-45)">
+			<title>シート.40</title>
+			<rect x="0" y="273.824" width="80.9998" height="15" class="st1"/>
+		</g>
+		<g id="shape69-89" v:mID="69" v:groupContext="shape" transform="translate(294.75,-162.674)">
+			<title>シート.41</title>
+			<desc>duty_cycle_counts</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="47.2748" cy="283.423" width="94.56" height="10.8"/>
+			<rect x="0" y="278.024" width="94.5495" height="10.8" class="st1"/>
+			<text x="10.27" y="286.12" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>duty_cycle_counts</text>		</g>
+		<g id="shape70-92" v:mID="70" v:groupContext="shape" transform="translate(60.1384,-160.874)">
+			<title>シート.7</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="57.6809" cy="283.423" width="115.37" height="10.8"/>
+			<rect x="0" y="278.024" width="115.362" height="10.8" class="st7"/>
+			<text x="27.51" y="280.72" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>Time after start <v:newlineChar/><tspan
+						x="28.95" dy="1.2em" class="st8">(</tspan>Clock counts)</text>		</g>
+		<g id="shape71-96" v:mID="71" v:groupContext="shape" transform="translate(18.75,-97.499)">
+			<title>シート.43</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="96.3402" cy="283.423" width="192.69" height="10.8"/>
+			<rect x="0" y="278.024" width="192.68" height="10.8" class="st7"/>
+			<text x="12.74" y="280.72" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>Triangle-Wave PWM mode, GTIOCA start<v:newlineChar/><tspan
+						x="79.06" dy="1.2em" class="st8">level low</tspan></text>		</g>
+		<g id="shape72-100" v:mID="72" v:groupContext="shape" transform="translate(19.1594,-54.2991)">
+			<title>シート.44</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="96.3402" cy="283.423" width="192.69" height="10.8"/>
+			<rect x="0" y="278.024" width="192.68" height="10.8" class="st7"/>
+			<text x="12.74" y="280.72" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>Triangle-Wave PWM mode, GTIOCB start<v:newlineChar/><tspan
+						x="77.3" dy="1.2em" class="st8">level high</tspan></text>		</g>
+		<g id="shape73-104" v:mID="73" v:groupContext="shape" transform="translate(239.319,-202.274)">
+			<title>シート.45</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="57.6809" cy="283.423" width="115.37" height="10.8"/>
+			<rect x="0" y="278.024" width="115.362" height="10.8" class="st7"/>
+			<text x="17.98" y="280.72" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>duty_cycle_counts - <tspan
+						x="36.66" dy="1.2em" class="st8">dead_time</tspan></text>		</g>
+		<g id="shape74-108" v:mID="74" v:groupContext="shape" transform="translate(384.138,-166.274)">
+			<title>シート.46</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="57.6809" cy="283.423" width="115.37" height="10.8"/>
+			<rect x="0" y="278.024" width="115.362" height="10.8" class="st7"/>
+			<text x="26.4" y="280.72" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>timer_period_t::<v:newlineChar/><tspan
+						x="44.42" dy="1.2em" class="st8">counts</tspan></text>		</g>
+		<g id="shape75-112" v:mID="75" v:groupContext="shape" transform="translate(486,-171.674)">
+			<title>シート.47</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="45.7155" cy="283.423" width="91.44" height="10.8"/>
+			<rect x="0" y="278.024" width="91.4308" height="10.8" class="st7"/>
+			<text x="7.79" y="275.32" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>2 * timer_period_t::<v:newlineChar/><tspan
+						x="29.76" dy="1.2em" class="st8">counts </tspan>- <tspan x="8.71" dy="1.2em" class="st8">duty_cycle_counts</tspan></text>		</g>
+		<g id="shape76-117" v:mID="76" v:groupContext="shape" transform="translate(510.9,-206.774)">
+			<title>シート.48</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="76.2907" cy="283.423" width="152.59" height="10.8"/>
+			<rect x="0" y="278.024" width="152.582" height="10.8" class="st7"/>
+			<text x="38.37" y="275.32" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>2 * timer_period_t::<v:newlineChar/><tspan
+						x="18.31" dy="1.2em" class="st8">counts </tspan>- duty_cycle_counts + <tspan x="55.27" dy="1.2em"
+						class="st8">dead_time</tspan></text>		</g>
+		<g id="shape77-122" v:mID="77" v:groupContext="shape" transform="translate(591.138,-166.274)">
+			<title>シート.49</title>
+			<desc>Time after start (Count clock)</desc>
+			<v:userDefs/>
+			<v:textBlock v:margins="rect(0,0,0,0)"/>
+			<v:textRect cx="57.6809" cy="283.423" width="115.37" height="10.8"/>
+			<rect x="0" y="278.024" width="115.362" height="10.8" class="st7"/>
+			<text x="19.76" y="280.72" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>2 * timer_period_t::<v:newlineChar/><tspan
+						x="44.42" dy="1.2em" class="st8">counts</tspan></text>		</g>
+		<g id="group80-126" transform="translate(236.93,-19.875)" v:mID="80" v:groupContext="group">
+			<title>シート.11</title>
+			<g id="shape81-127" v:mID="81" v:groupContext="shape">
+				<title>シート.81</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape82-129" v:mID="82" v:groupContext="shape">
+				<title>シート.82</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 148.27" class="st10"/>
+			</g>
+		</g>
+		<g id="group97-132" transform="translate(295.667,-20)" v:mID="97" v:groupContext="group">
+			<title>シート.97</title>
+			<g id="shape98-133" v:mID="98" v:groupContext="shape">
+				<title>シート.98</title>
+				<path d="M0 288.82 L0 117.3 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape99-135" v:mID="99" v:groupContext="shape">
+				<title>シート.99</title>
+				<path d="M0 288.82 L0 117.3 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 117.3" class="st10"/>
+			</g>
+		</g>
+		<g id="group100-138" transform="translate(337.5,-19.7255)" v:mID="100" v:groupContext="group">
+			<title>シート.100</title>
+			<g id="shape101-139" v:mID="101" v:groupContext="shape">
+				<title>シート.101</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape102-141" v:mID="102" v:groupContext="shape">
+				<title>シート.102</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 148.27" class="st10"/>
+			</g>
+		</g>
+		<g id="group103-144" transform="translate(441,-19.7255)" v:mID="103" v:groupContext="group">
+			<title>シート.103</title>
+			<g id="shape104-145" v:mID="104" v:groupContext="shape">
+				<title>シート.104</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape105-147" v:mID="105" v:groupContext="shape">
+				<title>シート.105</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 148.27" class="st10"/>
+			</g>
+		</g>
+		<g id="group106-150" transform="translate(546.6,-19.7255)" v:mID="106" v:groupContext="group">
+			<title>シート.106</title>
+			<g id="shape107-151" v:mID="107" v:groupContext="shape">
+				<title>シート.107</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape108-153" v:mID="108" v:groupContext="shape">
+				<title>シート.108</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 148.27" class="st10"/>
+			</g>
+		</g>
+		<g id="group109-156" transform="translate(648,-19.7255)" v:mID="109" v:groupContext="group">
+			<title>シート.109</title>
+			<g id="shape110-157" v:mID="110" v:groupContext="shape">
+				<title>シート.110</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape111-159" v:mID="111" v:groupContext="shape">
+				<title>シート.111</title>
+				<path d="M0 288.82 L0 148.27 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 148.27" class="st10"/>
+			</g>
+		</g>
+		<g id="group112-162" transform="translate(587.4,-19.9878)" v:mID="112" v:groupContext="group">
+			<title>シート.112</title>
+			<g id="shape113-163" v:mID="113" v:groupContext="shape">
+				<title>シート.113</title>
+				<path d="M0 288.82 L0 117.3 L0 288.82 Z" class="st9"/>
+			</g>
+			<g id="shape114-165" v:mID="114" v:groupContext="shape">
+				<title>シート.114</title>
+				<path d="M0 288.82 L0 117.3 L0 288.82 Z" class="st4"/>
+				<path d="M0 288.82 L0 117.3" class="st10"/>
+			</g>
+		</g>
+	</g>
+</svg>

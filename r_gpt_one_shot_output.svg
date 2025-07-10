@@ -1,2 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="815px" height="353px" viewBox="-0.5 -0.5 815 353" content="&lt;mxfile modified=&quot;2019-04-15T17:56:42.943Z&quot; host=&quot;www.draw.io&quot; agent=&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36&quot; etag=&quot;Sb3tJ0kn84CKvKP4Yn7J&quot; version=&quot;10.6.2&quot; type=&quot;onedrive&quot;&gt;&lt;diagram id=&quot;k3GlwhqzkD03XHKLYxSU&quot; name=&quot;One Shot&quot;&gt;7Vptb9owEP41SNskpjgOAT4CZdCVrWhU7ccoIgashTgz5m2/fjbY5MXpWwqBpZVaET+xz849d+c7JxXYmW961A1nP4iH/IppeJsKvKqYJgDQ5j8C2e6RumnsgSnFnuwUASP8F0lQdVtiDy0SHRkhPsNhEhyTIEBjlsBcSsk62W1C/OSsoTtFGjAau76OPmCPzfZoo2ZEeB/h6UzNDAx5Z+6qzhJYzFyPrGMQ7FZghxLC9lfzTQf5QnlKL/tx3x65e1gYRQF7yYDtd7Bt/3L69x0A+p7VuWnDalVKWbn+Uj6wXCzbKg2gwGsJRfJWQAIOtmds7vMW4Jf6IqRE5CX0KpfUQ2SOGN3yDutIm0qZs5giFUaR7zK8SrLhSlKnB3GHGYYE85WYhjRAU9Ehzc+0wNdaUsiCLOkYyXFx/aVE1e1nRTGXThHTRPGL2KNH0I6gV5AFS06W1TCURpWOa7npyhAGiybM0ghjeI6oEyKKiedw7bX435gsA7bQqGRow5L8LRglv1GH+IRG/E6w76cg18fTgDfHnGfE8fYKUYZ5TGvJG3PseWKa9nqGGRqF7ljMueYRnGOUL8dD4rGMXYtxSokYVbVqTxmRmARtnjQjRU3NTlED7IZCYqYGzAxbU1iWWSX4ey1Zdsm9y7SO6F0Zwgr3rnoGYbYvfMbDqwRx9p+l2GXbwqWq0jtavIePJiy6y6+m8ncnZRG6gcIMBfKVxvEYvJtUoe/Gl03YTBuCUc/w5UJduaFZxh2Pu2KmiVCioMalwpo/DTuDm6td+ihi8OcLJe4YMTeVvJhZJB2S10JYapY94DbAEQOuLqzwgKtqskIiLviIuI9EXD2xPX/EBXoheRug6mJGhA3Picejb0eU8yFzyJKFS+aEOFAZ8IKR0PHRand2sBtt9IZ3zvD6pzPo3ncHzuD24UIZPgKhIBmaoQGyQnOjUDrLngzXTT0ZNnKfDOjCoCbs1LFZ301F8wv//6g5+R27aSYYAraZ5WVWrUAvU05VWi9Ln75B8w35z7OiTuxhZtmP39IqjqWc/yFbWacDZWLLOh5baVFnYEuv2D/Yyu+mp2ar7JX7Cxwi71uj4n0L6lX7MUuz/nWvr7F/GXnko2aWvzaLau+z1Waw7O9sQTN9pAzt/NGy/gJhp/bA0uf56Xhp566l06Iso+hKGpY9z9d2t/xspUWdgS39HXu52cpQ8St8KxULLcMolq3aO2PrDTuXljkWvm+BjENFnvxxQCSQo30CebtLGTUWLyMDnJCAyW8KeYl5nNcvtp2gxZbbRcy+IGzoBpYjH+TN6PPAPanRR5aw+w8=&lt;/diagram&gt;&lt;/mxfile&gt;" style="background-color: rgb(255, 255, 255);"><defs/><g><path d="M 190 183.5 L 750 183.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470.5 193.5 L 470.5 173.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g transform="translate(447.5,114.5)rotate(-45,59,6)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="118" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 120px; white-space: nowrap; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">timer_period_t::counts</div></div></foreignObject><text x="59" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">timer_period_t::counts</text></switch></g><path d="M 230.5 193.5 L 230.5 173.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g transform="translate(236.5,153.5)rotate(-45,3,6)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="6" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 8px; white-space: nowrap; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;"><div style="text-align: left"><span>0</span></div></div></div></foreignObject><text x="3" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">[Not supported by viewer]</text></switch></g><g transform="translate(30.5,166.5)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="98" height="26" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 98px; white-space: normal; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">Time after start (PCLKD counts)</div></div></foreignObject><text x="49" y="19" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">Time after start (PCLKD counts)</text></switch></g><path d="M 271.5 193.5 L 271.5 173.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g transform="translate(277.5,153.5)rotate(-45,3,6)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="6" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 8px; white-space: nowrap; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;"><div style="text-align: left"><span>1</span></div></div></div></foreignObject><text x="3" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">[Not supported by viewer]</text></switch></g><g transform="translate(0.5,233.5)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="178" height="40" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 178px; white-space: normal; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">One-shot mode, gpt_output_pin_t::stop_level = GPT_PIN_LEVEL_LOW</div></div></foreignObject><text x="89" y="26" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">One-shot mode, gpt_output_pin_t::stop_level = GPT_PIN_LEVEL_LOW</text></switch></g><path d="M 710.5 192.5 L 710.5 172.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g transform="translate(685.5,108.5)rotate(-45,68.5,6)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="137" height="12" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 137px; white-space: nowrap; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">2 * timer_period_t::counts</div></div></foreignObject><text x="69" y="12" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">2 * timer_period_t::counts</text></switch></g><path d="M 190 263.5 L 270 263.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 270 223.5 L 270 263.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470 223.5 L 470 263.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470 223.5 L 270 223.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470 263.5 L 750 263.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g transform="translate(0.5,312.5)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="178" height="40" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 178px; white-space: normal; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">One-shot mode, gpt_output_pin_t::stop_level = GPT_PIN_LEVEL_HIGH</div></div></foreignObject><text x="89" y="26" fill="#000000" text-anchor="middle" font-size="12px" font-family="Helvetica">One-shot mode, gpt_output_pin_t::stop_level = GPT_PIN_LEVEL_HIGH</text></switch></g><path d="M 189.5 303.5 L 269.5 303.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 270 302.5 L 270 342.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470 302.5 L 470 342.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470 342.5 L 270.5 342" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><path d="M 470 303.5 L 750 303.5" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="none"/><g transform="translate(285.5,-0.5)"><switch><foreignObject style="overflow:visible;" pointer-events="all" width="278" height="31" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div xmlns="http://www.w3.org/1999/xhtml" style="display: inline-block; font-size: 28px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 278px; white-space: nowrap; overflow-wrap: normal; text-align: center;"><div xmlns="http://www.w3.org/1999/xhtml" style="display:inline-block;text-align:inherit;text-decoration:inherit;">GPT One-Shot Output</div></div></foreignObject><text x="139" y="30" fill="#000000" text-anchor="middle" font-size="28px" font-family="Helvetica">GPT One-Shot Output</text></switch></g></g></svg>
+<!-- Microsoft Visio、SVG Export により生成 r_gpt_one_shot_output.svg r_gpt_one_shot_output -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="9.67125in" height="4.4898in"
+		viewBox="0 0 696.33 323.266" xml:space="preserve" color-interpolation-filters="sRGB" class="st11">
+	<v:documentProperties v:langID="1041"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:none;stroke:none;stroke-linecap:butt;stroke-width:0.749999}
+		.st2 {fill:#000000;font-family:Microsoft Sans Serif;font-size:0.75em}
+		.st3 {font-size:1em}
+		.st4 {fill:none;stroke:#000000;stroke-dasharray:0.01,3.75;stroke-width:0.75}
+		.st5 {fill:none}
+		.st6 {stroke:#000000;stroke-dasharray:0.75,3;stroke-linecap:butt;stroke-width:0.75}
+		.st7 {fill:none;stroke:none;stroke-width:0.999999}
+		.st8 {fill:none;stroke:none;stroke-width:1}
+		.st9 {stroke:#000000;stroke-linecap:butt;stroke-width:0.749999}
+		.st10 {fill:#000000;font-family:Microsoft Sans Serif;font-size:1.75001em}
+		.st11 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>r_gpt_one_shot_output</title>
+		<v:pageProperties v:drawingScale="1" v:pageScale="1" v:drawingUnits="19" v:shadowOffsetX="8.99999"
+				v:shadowOffsetY="-8.99999"/>
+		<g id="group1-1" transform="translate(18.75,-47.2646)" v:mID="1" v:groupContext="group">
+			<title>シート.1</title>
+			<g id="shape12-2" v:mID="12" v:groupContext="shape" transform="translate(314.647,-120.301)">
+				<title>シート.4</title>
+				<desc>timer_period_t::counts</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="45.1701" cy="317.865" width="90.35" height="10.8"/>
+				<rect x="0" y="312.466" width="90.3404" height="10.8" class="st1"/>
+				<text x="13.89" y="315.17" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>timer_period_t::<v:newlineChar/><tspan
+							x="31.91" dy="1.2em" class="st3">counts</tspan></text>			</g>
+			<g id="group13-6" transform="translate(179.988,28.3479)" v:mID="13" v:groupContext="group">
+				<title>シート.5</title>
+				<g id="shape14-7" v:mID="14" v:groupContext="shape">
+					<title>シート.10</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+				</g>
+				<g id="group15-9" v:mID="15" v:groupContext="group">
+					<title>シート.11</title>
+					<g id="shape16-10" v:mID="16" v:groupContext="shape">
+						<title>シート.16</title>
+						<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+					</g>
+					<g id="shape17-12" v:mID="17" v:groupContext="shape">
+						<title>シート.17</title>
+						<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st5"/>
+						<path d="M0 323.27 L0 182.72" class="st6"/>
+					</g>
+				</g>
+			</g>
+			<g id="shape18-15" v:mID="18" v:groupContext="shape" transform="translate(161.734,-116.701)">
+				<title>シート.6</title>
+				<desc>[Not supported by viewer]</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="18.1266" cy="317.865" width="36.26" height="10.8"/>
+				<rect x="0" y="312.466" width="36.2532" height="10.8" class="st1"/>
+				<text x="15.62" y="320.57" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>0</text>			</g>
+			<g id="shape19-18" v:mID="19" v:groupContext="shape" transform="translate(19.5124,-114.001)">
+				<title>シート.7</title>
+				<desc>Time after start (Count clock)</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="57.6811" cy="317.865" width="115.37" height="10.8"/>
+				<rect x="0" y="312.466" width="115.362" height="10.8" class="st1"/>
+				<text x="27.51" y="315.17" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>Time after start <v:newlineChar/><tspan
+							x="28.95" dy="1.2em" class="st3">(C</tspan>lock counts)</text>			</g>
+			<g id="shape25-22" v:mID="25" v:groupContext="shape" transform="translate(191.519,-116.701)">
+				<title>シート.9</title>
+				<desc>[Not supported by viewer]</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="16.7344" cy="317.865" width="33.48" height="10.8"/>
+				<rect x="0" y="312.466" width="33.4689" height="10.8" class="st1"/>
+				<text x="14.23" y="320.57" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>1</text>			</g>
+			<g id="shape26-25" v:mID="26" v:groupContext="shape" transform="translate(0.8438,-60.001)">
+				<title>シート.10</title>
+				<desc>One-shot mode, gpt_output_pin_t::stop_level = GPT_PIN_LEVEL_LOW</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="77.1686" cy="317.865" width="154.34" height="10.8"/>
+				<rect x="0" y="312.466" width="154.337" height="10.8" class="st1"/>
+				<text x="44.96" y="309.77" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>One-shot mode, <v:newlineChar/><tspan
+							x="17.05" dy="1.2em" class="st3">gpt_output_pin_t::stop_level = <v:newlineChar/></tspan><tspan
+							x="28.71" dy="1.2em" class="st3">GPT_PIN_LEVEL_LOW</tspan></text>			</g>
+			<g id="shape32-30" v:mID="32" v:groupContext="shape" transform="translate(440.988,-120.301)">
+				<title>シート.12</title>
+				<desc>2 * timer_period_t::counts</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="64.5003" cy="317.865" width="129.01" height="10.8"/>
+				<rect x="0" y="312.466" width="129.001" height="10.8" class="st1"/>
+				<text x="26.58" y="315.17" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>2 * timer_period_t::<v:newlineChar/><tspan
+							x="51.24" dy="1.2em" class="st3">counts</tspan></text>			</g>
+			<g id="group33-34" transform="translate(148.888,-59.2499)" v:mID="33" v:groupContext="group">
+				<title>シート.13</title>
+				<g id="shape34-35" v:mID="34" v:groupContext="shape">
+					<title>シート.24</title>
+					<path d="M0 323.27 L60 323.27 L0 323.27 Z" class="st7"/>
+				</g>
+				<g id="group35-37" v:mID="35" v:groupContext="group">
+					<title>シート.25</title>
+					<g id="shape36-38" v:mID="36" v:groupContext="shape">
+						<title>シート.36</title>
+						<path d="M0 323.27 L60 323.27 L0 323.27 Z" class="st8"/>
+					</g>
+					<g id="shape37-40" v:mID="37" v:groupContext="shape">
+						<title>シート.37</title>
+						<path d="M0 323.27 L60 323.27 L0 323.27 Z" class="st5"/>
+						<path d="M0 323.27 L60 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group38-43" transform="translate(208.888,-59.2499)" v:mID="38" v:groupContext="group">
+				<title>シート.14</title>
+				<g id="shape39-44" v:mID="39" v:groupContext="shape">
+					<title>シート.27</title>
+					<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st7"/>
+				</g>
+				<g id="group40-46" v:mID="40" v:groupContext="group">
+					<title>シート.28</title>
+					<g id="shape41-47" v:mID="41" v:groupContext="shape">
+						<title>シート.41</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st8"/>
+					</g>
+					<g id="shape42-49" v:mID="42" v:groupContext="shape">
+						<title>シート.42</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st5"/>
+						<path d="M0 293.27 L0 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group43-52" transform="translate(358.888,-59.2499)" v:mID="43" v:groupContext="group">
+				<title>シート.15</title>
+				<g id="shape44-53" v:mID="44" v:groupContext="shape">
+					<title>シート.30</title>
+					<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st7"/>
+				</g>
+				<g id="group45-55" v:mID="45" v:groupContext="group">
+					<title>シート.31</title>
+					<g id="shape46-56" v:mID="46" v:groupContext="shape">
+						<title>シート.46</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st8"/>
+					</g>
+					<g id="shape47-58" v:mID="47" v:groupContext="shape">
+						<title>シート.47</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st5"/>
+						<path d="M0 293.27 L0 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group48-61" transform="translate(208.888,-89.2499)" v:mID="48" v:groupContext="group">
+				<title>シート.16</title>
+				<g id="shape49-62" v:mID="49" v:groupContext="shape">
+					<title>シート.33</title>
+					<path d="M150 323.27 L0 323.27 L150 323.27 Z" class="st7"/>
+				</g>
+				<g id="group50-64" v:mID="50" v:groupContext="group">
+					<title>シート.34</title>
+					<g id="shape51-65" v:mID="51" v:groupContext="shape">
+						<title>シート.51</title>
+						<path d="M150 323.27 L0 323.27 L150 323.27 Z" class="st8"/>
+					</g>
+					<g id="shape52-67" v:mID="52" v:groupContext="shape">
+						<title>シート.52</title>
+						<path d="M150 323.27 L0 323.27 L150 323.27 Z" class="st5"/>
+						<path d="M150 323.27 L0 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group53-70" transform="translate(358.888,-59.2499)" v:mID="53" v:groupContext="group">
+				<title>シート.17</title>
+				<g id="shape54-71" v:mID="54" v:groupContext="shape">
+					<title>シート.36</title>
+					<path d="M0 323.27 L210 323.27 L0 323.27 Z" class="st7"/>
+				</g>
+				<g id="group55-73" v:mID="55" v:groupContext="group">
+					<title>シート.37</title>
+					<g id="shape56-74" v:mID="56" v:groupContext="shape">
+						<title>シート.56</title>
+						<path d="M0 323.27 L210 323.27 L0 323.27 Z" class="st8"/>
+					</g>
+					<g id="shape57-76" v:mID="57" v:groupContext="shape">
+						<title>シート.57</title>
+						<path d="M0 323.27 L210 323.27 L0 323.27 Z" class="st5"/>
+						<path d="M0 323.27 L210 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="shape58-79" v:mID="58" v:groupContext="shape" transform="translate(1.64668E-12,-1.50101)">
+				<title>シート.18</title>
+				<desc>One-shot mode, gpt_output_pin_t::stop_level = GPT_PIN_LEVEL_H...</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="78.0123" cy="317.865" width="156.03" height="10.8"/>
+				<rect x="0" y="312.466" width="156.025" height="10.8" class="st1"/>
+				<text x="45.8" y="309.77" class="st2" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>One-shot mode, <v:newlineChar/><tspan
+							x="17.9" dy="1.2em" class="st3">gpt_output_pin_t::stop_level = <v:newlineChar/></tspan><tspan x="28.55"
+							dy="1.2em" class="st3">GPT_PIN_LEVEL_HIGH</tspan></text>			</g>
+			<g id="group59-84" transform="translate(148.513,-29.25)" v:mID="59" v:groupContext="group">
+				<title>シート.19</title>
+				<g id="shape60-85" v:mID="60" v:groupContext="shape">
+					<title>シート.40</title>
+					<path d="M0 323.27 L60 323.27 L0 323.27 Z" class="st7"/>
+				</g>
+				<g id="group61-87" v:mID="61" v:groupContext="group">
+					<title>シート.41</title>
+					<g id="shape62-88" v:mID="62" v:groupContext="shape">
+						<title>シート.62</title>
+						<path d="M0 323.27 L60 323.27 L0 323.27 Z" class="st8"/>
+					</g>
+					<g id="shape63-90" v:mID="63" v:groupContext="shape">
+						<title>シート.63</title>
+						<path d="M0 323.27 L60 323.27 L0 323.27 Z" class="st5"/>
+						<path d="M0 323.27 L60 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group64-93" transform="translate(208.888,-1.7053E-13)" v:mID="64" v:groupContext="group">
+				<title>シート.20</title>
+				<g id="shape65-94" v:mID="65" v:groupContext="shape">
+					<title>シート.43</title>
+					<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st7"/>
+				</g>
+				<g id="group66-96" v:mID="66" v:groupContext="group">
+					<title>シート.44</title>
+					<g id="shape67-97" v:mID="67" v:groupContext="shape">
+						<title>シート.67</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st8"/>
+					</g>
+					<g id="shape68-99" v:mID="68" v:groupContext="shape">
+						<title>シート.68</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st5"/>
+						<path d="M0 293.27 L0 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group69-102" transform="translate(358.888,-1.7053E-13)" v:mID="69" v:groupContext="group">
+				<title>シート.21</title>
+				<g id="shape70-103" v:mID="70" v:groupContext="shape">
+					<title>シート.46</title>
+					<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st7"/>
+				</g>
+				<g id="group71-105" v:mID="71" v:groupContext="group">
+					<title>シート.47</title>
+					<g id="shape72-106" v:mID="72" v:groupContext="shape">
+						<title>シート.72</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st8"/>
+					</g>
+					<g id="shape73-108" v:mID="73" v:groupContext="shape">
+						<title>シート.73</title>
+						<path d="M0 293.27 L0 323.27 L0 293.27 Z" class="st5"/>
+						<path d="M0 293.27 L0 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group74-111" transform="translate(209.263,5.68434E-14)" v:mID="74" v:groupContext="group">
+				<title>シート.22</title>
+				<g id="shape75-112" v:mID="75" v:groupContext="shape">
+					<title>シート.49</title>
+					<path d="M149.62 323.27 L0 322.89 L149.62 323.27 Z" class="st7"/>
+				</g>
+				<g id="group76-114" v:mID="76" v:groupContext="group">
+					<title>シート.50</title>
+					<g id="shape77-115" v:mID="77" v:groupContext="shape">
+						<title>シート.77</title>
+						<path d="M149.62 323.27 L0 322.89 L149.62 323.27 Z" class="st8"/>
+					</g>
+					<g id="shape78-117" v:mID="78" v:groupContext="shape">
+						<title>シート.78</title>
+						<path d="M149.62 323.27 L0 322.89 L149.62 323.27 Z" class="st5"/>
+						<path d="M149.62 323.27 L0 322.89" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="group79-120" transform="translate(358.888,-29.25)" v:mID="79" v:groupContext="group">
+				<title>シート.23</title>
+				<g id="shape80-121" v:mID="80" v:groupContext="shape">
+					<title>シート.52</title>
+					<path d="M0 323.27 L210 323.27 L0 323.27 Z" class="st7"/>
+				</g>
+				<g id="group81-123" v:mID="81" v:groupContext="group">
+					<title>シート.53</title>
+					<g id="shape82-124" v:mID="82" v:groupContext="shape">
+						<title>シート.82</title>
+						<path d="M0 323.27 L210 323.27 L0 323.27 Z" class="st8"/>
+					</g>
+					<g id="shape83-126" v:mID="83" v:groupContext="shape">
+						<title>シート.83</title>
+						<path d="M0 323.27 L210 323.27 L0 323.27 Z" class="st5"/>
+						<path d="M0 323.27 L210 323.27" class="st9"/>
+					</g>
+				</g>
+			</g>
+			<g id="shape84-129" v:mID="84" v:groupContext="shape" transform="translate(126.313,-175.202)">
+				<title>シート.24</title>
+				<desc>GPT One-Shot Output</desc>
+				<v:userDefs/>
+				<v:textBlock v:margins="rect(0,0,0,0)"/>
+				<v:textRect cx="199.525" cy="310.665" width="399.06" height="25.2"/>
+				<rect x="0" y="298.066" width="399.05" height="25.2" class="st1"/>
+				<text x="95.9" y="316.97" class="st10" v:langID="1041"><v:paragraph v:horizAlign="1"/><v:tabList/>GPT One-Shot Output</text>			</g>
+		</g>
+		<g id="group94-132" transform="translate(227.75,-18.75)" v:mID="94" v:groupContext="group">
+			<title>シート.5</title>
+			<g id="shape95-133" v:mID="95" v:groupContext="shape">
+				<title>シート.10</title>
+				<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+			</g>
+			<g id="group96-135" v:mID="96" v:groupContext="group">
+				<title>シート.11</title>
+				<g id="shape97-136" v:mID="97" v:groupContext="shape">
+					<title>シート.97</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+				</g>
+				<g id="shape98-138" v:mID="98" v:groupContext="shape">
+					<title>シート.98</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st5"/>
+					<path d="M0 323.27 L0 182.72" class="st6"/>
+				</g>
+			</g>
+		</g>
+		<g id="group99-141" transform="translate(377.693,-19.2917)" v:mID="99" v:groupContext="group">
+			<title>シート.99</title>
+			<g id="shape100-142" v:mID="100" v:groupContext="shape">
+				<title>シート.10</title>
+				<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+			</g>
+			<g id="group101-144" v:mID="101" v:groupContext="group">
+				<title>シート.11</title>
+				<g id="shape102-145" v:mID="102" v:groupContext="shape">
+					<title>シート.102</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+				</g>
+				<g id="shape103-147" v:mID="103" v:groupContext="shape">
+					<title>シート.103</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st5"/>
+					<path d="M0 323.27 L0 182.72" class="st6"/>
+				</g>
+			</g>
+		</g>
+		<g id="group104-150" transform="translate(524.25,-19.8922)" v:mID="104" v:groupContext="group">
+			<title>シート.104</title>
+			<g id="shape105-151" v:mID="105" v:groupContext="shape">
+				<title>シート.10</title>
+				<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+			</g>
+			<g id="group106-153" v:mID="106" v:groupContext="group">
+				<title>シート.11</title>
+				<g id="shape107-154" v:mID="107" v:groupContext="shape">
+					<title>シート.107</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st4"/>
+				</g>
+				<g id="shape108-156" v:mID="108" v:groupContext="shape">
+					<title>シート.108</title>
+					<path d="M0 323.27 L0 182.72 L0 323.27 Z" class="st5"/>
+					<path d="M0 323.27 L0 182.72" class="st6"/>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>

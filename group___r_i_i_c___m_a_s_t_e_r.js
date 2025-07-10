@@ -15,7 +15,8 @@ var group___r_i_i_c___m_a_s_t_e_r =
       [ "sti_irq", "group___r_i_i_c___m_a_s_t_e_r.html#ad923980f5252b98f5a994166c32fde87", null ],
       [ "spi_irq", "group___r_i_i_c___m_a_s_t_e_r.html#a8e22c7138ff92050165303b0525e95ba", null ],
       [ "ali_irq", "group___r_i_i_c___m_a_s_t_e_r.html#a2c8ba3ce75de64703a61dd700ae6bcb6", null ],
-      [ "tmoi_irq", "group___r_i_i_c___m_a_s_t_e_r.html#a96e7311f8d945a850954b4f6d4db1dba", null ]
+      [ "tmoi_irq", "group___r_i_i_c___m_a_s_t_e_r.html#a96e7311f8d945a850954b4f6d4db1dba", null ],
+      [ "p_reg", "group___r_i_i_c___m_a_s_t_e_r.html#a54431765fe8963044c38dff872c63fc7", null ]
     ] ],
     [ "iic_master_timeout_mode_t", "group___r_i_i_c___m_a_s_t_e_r.html#gaf8ecd43a76bfa058281bb8b6b3981d3f", [
       [ "IIC_MASTER_TIMEOUT_MODE_LONG", "group___r_i_i_c___m_a_s_t_e_r.html#ggaf8ecd43a76bfa058281bb8b6b3981d3facc441997b6e18766361457d26227b4bd", null ],

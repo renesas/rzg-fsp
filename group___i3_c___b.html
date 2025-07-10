@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -480,8 +480,6 @@ Disabled</li>
 <td>Name</td><td>Name must be a valid C symbol</td><td>g_i3c0 </td><td>Module name. </td></tr>
 <tr>
 <td>Callback</td><td>Name must be a valid C symbol</td><td>g_i3c0_callback </td><td>A user callback function must be provided. This will be called in order to notify the application of I3C_B events and provide status information. </td></tr>
-<tr>
-<td>Callback Context</td><td>Name must be a valid C symbol</td><td>NULL </td><td>A pointer to additional application specific information that is provided to the callback. </td></tr>
 <tr>
 <td>Device Type</td><td><ul style="margin-top:0;margin-bottom:0;">
 <li>
@@ -1146,6 +1144,12 @@ Interrupt Priority for Resp, Rx, Tx, and RCV IRQs. </td></tr>
 eei_ipl</td>
 <td class="fielddoc">
 Error and Event Interrupt Priority. </td></tr>
+<tr><td class="fieldtype">
+<a id="afa59b88471c972b5ee94d70e026f8b54"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified channel. </td></tr>
 </table>
 
 </div>
@@ -1875,7 +1879,7 @@ Error and Event Interrupt Priority. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -300,8 +300,6 @@ Enabled</li>
 NOTE: The baud calculation does not show an error in the tool if this percent error was not achieved. The calculated percent error is recorded in a comment in the generated <a class="el" href="group___s_c_i___b___u_a_r_t.html#structsci__b__baud__setting__t">sci_b_baud_setting_t</a> structure. </td></tr>
 <tr>
 <td>Flow Control &gt; CTS/RTS Selection</td><td>MCU Specific Options</td><td></td><td>Select either CTS or RTS function on the CTSn_RTSn pin of SCI channel n or select CTS function on CTSn pin and RTS function on CTSn_RTSn pin of SCI channel n (Available on selected MPUs and channels). </td></tr>
-<tr>
-<td>Flow Control &gt; Software RTS Port</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin port for the MPU. </td></tr>
 <tr>
 <td>Flow Control &gt; Software RTS Pin</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin for the MPU </td></tr>
 <tr>
@@ -613,6 +611,12 @@ RS-485 settings. </td></tr>
 half_data_setting</td>
 <td class="fielddoc">
 Half Data Function settings. </td></tr>
+<tr><td class="fieldtype">
+<a id="ab8f78295062b48cc30ebe8643f448ef7"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified channel. </td></tr>
 </table>
 
 </div>
@@ -1298,7 +1302,7 @@ Half Data Function settings. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

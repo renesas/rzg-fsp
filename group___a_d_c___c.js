@@ -8,7 +8,8 @@ var group___a_d_c___c =
       [ "operating_mode", "group___a_d_c___c.html#a81f2c8156907fdc5b0055cd8443f3f25", null ],
       [ "buffer_mode", "group___a_d_c___c.html#a8ccf8c0714c173bc9e9d536df5df56f9", null ],
       [ "sampling_time", "group___a_d_c___c.html#af94b7b8c31dab35dcb7bf1bfe1670d6d", null ],
-      [ "external_trigger_filter", "group___a_d_c___c.html#a9f46b83d1e4e113f06b392ca92eda623", null ]
+      [ "external_trigger_filter", "group___a_d_c___c.html#a9f46b83d1e4e113f06b392ca92eda623", null ],
+      [ "p_reg", "group___a_d_c___c.html#ab7fb736c6c4bc8ba6e8f315bcfd38277", null ]
     ] ],
     [ "adc_c_channel_cfg_t", "group___a_d_c___c.html#structadc__c__channel__cfg__t", [
       [ "scan_mask", "group___a_d_c___c.html#a1124a6766edf4954d95d01d6d8e46548", null ],

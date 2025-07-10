@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -176,6 +176,8 @@ Summary</h1>
 Data Structures</h2></td></tr>
 <tr class="memitem:structpdm__callback__args__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#structpdm__callback__args__t">pdm_callback_args_t</a></td></tr>
 <tr class="separator:structpdm__callback__args__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:structpdm__sound__detection__setting__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#structpdm__sound__detection__setting__t">pdm_sound_detection_setting_t</a></td></tr>
+<tr class="separator:structpdm__sound__detection__setting__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structpdm__status__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#structpdm__status__t">pdm_status_t</a></td></tr>
 <tr class="separator:structpdm__status__t"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:structpdm__cfg__t"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#structpdm__cfg__t">pdm_cfg_t</a></td></tr>
@@ -241,6 +243,36 @@ The kind of error. </td></tr>
 
 </div>
 </div>
+<a name="structpdm__sound__detection__setting__t" id="structpdm__sound__detection__setting__t"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#structpdm__sound__detection__setting__t">&#9670;&nbsp;</a></span>pdm_sound_detection_setting_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct pdm_sound_detection_setting_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<div class="textblock"><p>Sound detection window setting </p>
+</div><table class="fieldtable">
+<tr><th colspan="3">Data Fields</th></tr>
+<tr><td class="fieldtype">
+<a id="a6975853a845298fb1fe31504df9c0071"></a>uint32_t</td>
+<td class="fieldname">
+sound_detection_lower_limit</td>
+<td class="fielddoc">
+Sound detection lower limit (20-bit signed fixed point data) </td></tr>
+<tr><td class="fieldtype">
+<a id="a3feb7a0ac1bec98afe500c6347dd14b6"></a>uint32_t</td>
+<td class="fieldname">
+sound_detection_upper_limit</td>
+<td class="fielddoc">
+Sound detection upper limit (20-bit signed fixed point data) </td></tr>
+</table>
+
+</div>
+</div>
 <a name="structpdm__status__t" id="structpdm__status__t"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#structpdm__status__t">&#9670;&nbsp;</a></span>pdm_status_t</h2>
 
@@ -260,7 +292,19 @@ The kind of error. </td></tr>
 <td class="fieldname">
 state</td>
 <td class="fielddoc">
-Current PDM state. </td></tr>
+Current PDM data state. </td></tr>
+<tr><td class="fieldtype">
+<a id="a0513231b3e8d097635940848be1ce2c2"></a>bool</td>
+<td class="fieldname">
+sound_detection_enabled</td>
+<td class="fielddoc">
+Current PDM sound detection status. </td></tr>
+<tr><td class="fieldtype">
+<a id="a9fa860006a65df25c9150c146db601e0"></a><a class="el" href="group___p_d_m___a_p_i.html#gaf682776db13b51a982b047a8eb5fef2d">pdm_error_t</a></td>
+<td class="fieldname">
+error</td>
+<td class="fielddoc">
+Bitfield of current PDM errors. </td></tr>
 </table>
 
 </div>
@@ -408,6 +452,10 @@ IRQn_Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
 <tr class="separator:abf43fd87ed8c5bdaccb5474009fa6006"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8342d4be5d02082a860b08303d0478c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#ad8342d4be5d02082a860b08303d0478c">stop</a> )(<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl)</td></tr>
 <tr class="separator:ad8342d4be5d02082a860b08303d0478c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7505ff95fb609170382ac5c91db60abf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#a7505ff95fb609170382ac5c91db60abf">soundDetectionEnable</a> )(<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl, <a class="el" href="group___p_d_m___a_p_i.html#structpdm__sound__detection__setting__t">pdm_sound_detection_setting_t</a> pdm_sound_detection_setting)</td></tr>
+<tr class="separator:a7505ff95fb609170382ac5c91db60abf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac73ccdf3b6695640bf0abfc5ecbd3570"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#ac73ccdf3b6695640bf0abfc5ecbd3570">soundDetectionDisable</a> )(<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl)</td></tr>
+<tr class="separator:ac73ccdf3b6695640bf0abfc5ecbd3570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5a449eb8492fef49421d8e3babf205f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#ac5a449eb8492fef49421d8e3babf205f">read</a> )(<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl, void *const p_dest, uint32_t const bytes)</td></tr>
 <tr class="separator:ac5a449eb8492fef49421d8e3babf205f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b1840e35134d539722e741e0b00042c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group___p_d_m___a_p_i.html#a2b1840e35134d539722e741e0b00042c">statusGet</a> )(<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl, <a class="el" href="group___p_d_m___a_p_i.html#structpdm__status__t">pdm_status_t</a> *const p_status)</td></tr>
@@ -478,6 +526,49 @@ IRQn_Type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href=
       </table>
 </div><div class="memdoc">
 <p>Stop communication. Communication is stopped when callback is called with PDM_EVENT_IDLE.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Control block set in <a class="el" href="group___p_d_m___a_p_i.html#a9144eb5d334c37cba16c54a931ff0b39">pdm_api_t::open</a> call for this instance. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a7505ff95fb609170382ac5c91db60abf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7505ff95fb609170382ac5c91db60abf">&#9670;&nbsp;</a></span>soundDetectionEnable</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  pdm_api_t::soundDetectionEnable) (<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl, <a class="el" href="group___p_d_m___a_p_i.html#structpdm__sound__detection__setting__t">pdm_sound_detection_setting_t</a> pdm_sound_detection_setting)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Enable sound detection with the specified settings.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Control block set in <a class="el" href="group___p_d_m___a_p_i.html#a9144eb5d334c37cba16c54a931ff0b39">pdm_api_t::open</a> call for this instance. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pdm_sound_detection_setting</td><td>Settings to configure sound detection. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac73ccdf3b6695640bf0abfc5ecbd3570"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac73ccdf3b6695640bf0abfc5ecbd3570">&#9670;&nbsp;</a></span>soundDetectionDisable</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group___r_e_n_e_s_a_s___e_r_r_o_r___c_o_d_e_s.html#gadfb1288da0fcc7ae1dc88c58601374f8">fsp_err_t</a>(*  pdm_api_t::soundDetectionDisable) (<a class="el" href="group___p_d_m___a_p_i.html#ga16be2346ab1fd4d3929228a28914430c">pdm_ctrl_t</a> *const p_ctrl)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Disable sound detection.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">p_ctrl</td><td>Control block set in <a class="el" href="group___p_d_m___a_p_i.html#a9144eb5d334c37cba16c54a931ff0b39">pdm_api_t::open</a> call for this instance. </td></tr>
@@ -727,7 +818,9 @@ Pointer to the API structure for this instance. </td></tr>
 </div><div class="memdoc">
 <p>Error information included in a callback function </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaf682776db13b51a982b047a8eb5fef2da0507dc19cc300d66e07d4b452a44c9a9"></a>PDM_ERROR_SHORT_CIRCUIT&#160;</td><td class="fielddoc"><p>Short circuit detection. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggaf682776db13b51a982b047a8eb5fef2da671ce73279c7542fa4fe0f04ec631b35"></a>PDM_ERROR_NONE&#160;</td><td class="fielddoc"><p>No error. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggaf682776db13b51a982b047a8eb5fef2da0507dc19cc300d66e07d4b452a44c9a9"></a>PDM_ERROR_SHORT_CIRCUIT&#160;</td><td class="fielddoc"><p>Short circuit detection. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="ggaf682776db13b51a982b047a8eb5fef2da70bb4c740eec0bdd92cf20e63e540ba7"></a>PDM_ERROR_OVERVOLTAGE_LOWER&#160;</td><td class="fielddoc"><p>Overvoltage lower limit exceeded detection. </p>
 </td></tr>
@@ -752,9 +845,9 @@ Pointer to the API structure for this instance. </td></tr>
 </div><div class="memdoc">
 <p>Possible status values returned by <a class="el" href="group___p_d_m___a_p_i.html#a2b1840e35134d539722e741e0b00042c">pdm_api_t::statusGet</a>. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga09df76d543b0cc6b39c5fed3bf1f4485a886d05c63fd087836c605e609908161c"></a>PDM_STATE_IN_USE&#160;</td><td class="fielddoc"><p>PDM is in use. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga09df76d543b0cc6b39c5fed3bf1f4485a886d05c63fd087836c605e609908161c"></a>PDM_STATE_IN_USE&#160;</td><td class="fielddoc"><p>PDM is actively reading data. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="gga09df76d543b0cc6b39c5fed3bf1f4485a571969657d1a5ca91391807510eed100"></a>PDM_STATE_STOPPED&#160;</td><td class="fielddoc"><p>PDM is stopped. </p>
+<tr><td class="fieldname"><a id="gga09df76d543b0cc6b39c5fed3bf1f4485a571969657d1a5ca91391807510eed100"></a>PDM_STATE_STOPPED&#160;</td><td class="fielddoc"><p>PDM is stopped and not actively reading data. </p>
 </td></tr>
 </table>
 
@@ -766,7 +859,7 @@ Pointer to the API structure for this instance. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

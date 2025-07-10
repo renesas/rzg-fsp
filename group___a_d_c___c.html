@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -212,7 +212,7 @@ Features</h2>
 <li>Software scan triggers<a class="anchor" id="um_adc_starting_a_conversion"></a></li>
 <li>Hardware scan triggers<ul>
 <li>Asynchronous trigger using an external pin (ADC_TRG)</li>
-<li>Synchronous trigger using the multi-function timer pulse unit 3 (MTU3a) *3</li>
+<li>Synchronous trigger using the multi-function timer pulse unit 3 (MTU3a)</li>
 <li>PWM timer (GPT) as the activation source</li>
 <li>In hardware trigger mode, the available trigger input modes are auto mode and step mode</li>
 </ul>
@@ -228,18 +228,18 @@ Features</h2>
 </li>
 <li>Configurable conversion mode:<ul>
 <li>Single mode to proceed A/D conversion only once</li>
-<li>Repeat mode to repeatedly proceed A/D conversion *4</li>
+<li>Repeat mode to repeatedly proceed A/D conversion *3</li>
 </ul>
 </li>
 <li>Optional callback when scan completes<a class="anchor" id="um_adc_interrupt_callback_data"></a></li>
 <li>An A/D conversion end interrupt (INTAD) can be generated on completion of A/D conversion</li>
-<li>Supports reading the data from the on-chip temperature sensor *5<a class="anchor" id="um_adc_support_the_on_chip_temperature_sensor"></a> *1 For RZ/G3S, ch8 is a dedicated channel for TSU. *2 The channel configuration of each module is shown below. <table class="doxtable">
+<li>Supports reading the data from the on-chip temperature sensor *4<a class="anchor" id="um_adc_support_the_on_chip_temperature_sensor"></a> *1 For RZ/G3S, channel 8 is a dedicated channel for TSU. *2 The channel configuration of each module is shown below. <table class="doxtable">
 <tr>
 <th></th><th>RZ/G2L </th><th>RZ/G2UL </th><th>RZ/G3S  </th></tr>
 <tr>
 <td>Channels </td><td>0 to 7 </td><td>0 to 1 </td><td>0 to 8 </td></tr>
 </table>
-*3 RZ/G3S does not support MTU3 driver. *4 Repeat mode is valid only in hardware trigger mode and step mode. *5 The value returned from the sensor can be converted into degrees Celsius in the application program. This is a function only for RZ/G3S.</li>
+*3 Repeat mode is valid only in hardware trigger mode and step mode. *4 The value returned from the sensor can be converted into degrees Celsius in the application program. This is a function only for RZ/G3S.</li>
 </ul>
 <h1><a class="anchor" id="r-adc-c-configuration"></a>
 Configuration</h1>
@@ -375,8 +375,7 @@ Usage Notes</h1>
 <h3>Software-trigger Mode</h3>
 <p>In software trigger mode, A/D conversion is started for the input of the analog input pins. The hardware trigger is invalid when software trigger mode is set.</p>
 <h3>Hardware-trigger Mode</h3>
-<p>There are two triggers in hardware trigger mode: asynchronous trigger using the ADC_TRG pin as the activation source and synchronous trigger using the multi-function timer pulse unit 3 (MTU3a) *1 or general purpose PWM timer (GPT) as the activation source. In hardware trigger mode, the available trigger input modes are auto mode and step mode. In auto mode, when a hardware trigger is input once, A/D conversion is repeated automatically for the conversion count in accordance with the specified conversion settings. In step mode, A/D conversion proceeds every time a hardware trigger is input. For example, if select mode, single mode, and 4- buffer mode are selected, conversion finishes when a hardware trigger has been input four times.</p>
-<p>*1 RZ/G3S does not support MTU3 driver.</p>
+<p>There are two triggers in hardware trigger mode: asynchronous trigger using the ADC_TRG pin as the activation source and synchronous trigger using the multi-function timer pulse unit 3 (MTU3a) or general purpose PWM timer (GPT) as the activation source. In hardware trigger mode, the available trigger input modes are auto mode and step mode. In auto mode, when a hardware trigger is input once, A/D conversion is repeated automatically for the conversion count in accordance with the specified conversion settings. In step mode, A/D conversion proceeds every time a hardware trigger is input. For example, if select mode, single mode, and 4- buffer mode are selected, conversion finishes when a hardware trigger has been input four times.</p>
 <h2>ADC Operating Modes</h2>
 <p>There are two operating modes: select mode and scan mode. The select mode has 1-buffer mode and 4-buffer mode as sub-modes.</p>
 <h3>Select Mode</h3>
@@ -504,6 +503,12 @@ Sampling period. (6~2800) </td></tr>
 external_trigger_filter</td>
 <td class="fielddoc">
 AD external trigger pin filter. </td></tr>
+<tr><td class="fieldtype">
+<a id="ab7fb736c6c4bc8ba6e8f315bcfd38277"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified unit. </td></tr>
 </table>
 
 </div>
@@ -1351,7 +1356,7 @@ Interrupt setting. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

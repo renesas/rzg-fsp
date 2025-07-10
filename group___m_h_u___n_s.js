@@ -9,6 +9,9 @@ var group___m_h_u___n_s =
       [ "p_shared_memory_tx", "group___m_h_u___n_s.html#aa4455658de7b85e233e61bfee994a130", null ],
       [ "p_shared_memory_rx", "group___m_h_u___n_s.html#af5fdb525ff4a77b4cddb17d066e8c246", null ]
     ] ],
+    [ "mhu_ns_extended_cfg_t", "group___m_h_u___n_s.html#structmhu__ns__extended__cfg__t", [
+      [ "p_reg", "group___m_h_u___n_s.html#aedb13a821cdc405e936c4cb9f45b32f3", null ]
+    ] ],
     [ "R_MHU_NS_Open", "group___m_h_u___n_s.html#ga38a24972860d1453ec85d28970d3eca4", null ],
     [ "R_MHU_NS_MsgSend", "group___m_h_u___n_s.html#gae5992c9313b0a0de777234abca176aaf", null ],
     [ "R_MHU_NS_Close", "group___m_h_u___n_s.html#ga40504624dee60aaebfb8710b91483930", null ],

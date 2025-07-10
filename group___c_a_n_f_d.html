@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -194,7 +194,7 @@ Features</h2>
 <h3>Common Features</h3>
 <ul>
 <li>Compatibility<ul>
-<li>Send and receive Classical CAN and CAN-FD frames on the same channel</li>
+<li>Send and receive Classical CAN and CAN-FD frames on the same channel<sup>1</sup></li>
 <li>Bitrate up to 1 Mbps with FD data phase speeds up to 4-8 Mbps</li>
 <li>Supports both ISO 11898-1</li>
 </ul>
@@ -245,8 +245,32 @@ Features</h2>
 </ul>
 </li>
 </ul>
+<p>*1: In CANFD mode, supports the transmission and reception of Classical CAN and CAN-FD frames.</p>
 <h3>Per-MPU Specifications</h3>
-<p>| | RZ/G2L, RZ/G2LC and RZ/G2UL | RZ/G3S | RZ/G3E |-|------------&mdash;|-----&mdash;| | Channels | 2 | 2 | 6 | | Max nominal bitrate | 1 Mbps | 1 Mbps | 1 Mbps | | Max data bitrate | 4 Mbps | 8 Mbps | 8 Mbps | | Filter rules | 128 | 128 | 256 | | TX message buffers | 16/ch | 32/ch | 32/ch | | RX message buffers | 32 | 32 | 96 | | RX FIFOs | 8 | 8 | 8 | | RX Buffer RAM | 3584 bytes | 9728 bytes | 29,184 bytes | | Standards | ISO | ISO | ISO | | Common FIFOs | 3/ch | 3/ch | 3/ch |</p>
+<table class="doxtable">
+<tr>
+<th></th><th>RZ/G2L, RZ/G2LC and RZ/G2UL </th><th>RZ/G3S </th><th>RZ/G3E  </th></tr>
+<tr>
+<td>Channels </td><td>2 </td><td>2 </td><td>6 </td></tr>
+<tr>
+<td>Max nominal bitrate </td><td>1 Mbps </td><td>1 Mbps </td><td>1 Mbps </td></tr>
+<tr>
+<td>Max data bitrate </td><td>4 Mbps </td><td>8 Mbps </td><td>8 Mbps </td></tr>
+<tr>
+<td>Filter rules </td><td>128 </td><td>128 </td><td>256 </td></tr>
+<tr>
+<td>TX message buffers </td><td>16/channel </td><td>32/channel </td><td>32/channel </td></tr>
+<tr>
+<td>RX message buffers </td><td>32 </td><td>32 </td><td>96 </td></tr>
+<tr>
+<td>RX FIFOs </td><td>8 </td><td>8 </td><td>8 </td></tr>
+<tr>
+<td>RX Buffer RAM </td><td>3584 bytes </td><td>9728 bytes </td><td>29,184 bytes </td></tr>
+<tr>
+<td>Standards </td><td>ISO </td><td>ISO </td><td>ISO </td></tr>
+<tr>
+<td>Common FIFOs </td><td>3/channel </td><td>3/channel </td><td>3/channel </td></tr>
+</table>
 <dl class="section note"><dt>Note</dt><dd>Each message buffer comprises 12 header bytes plus data length (8-64 bytes). Refer to the table above and configure the FIFO so that the RAM capacity is not exceeded.</dd></dl>
 <h1><a class="anchor" id="r-canfd-configuration"></a>
 Configuration</h1>
@@ -1686,7 +1710,12 @@ Disable</li>
 <h2><a class="anchor" id="r-canfd-clock-configuration"></a>
 Clock Configuration</h2>
 <p>The CANFD peripheral uses the clocks shown in the table below as its clock sources.</p>
-<p>| | RZ/G2L, RZ/G2LC and RZ/G2UL | RZ/G3S | RZ/G3E | |-|------------&mdash;|-----&mdash;| | Clock Source | P0 clock/2 or External CANFD Clock*1 | P4 clock/2 or External CANFD Clock *1 *2 | CANFD_0_pclk |</p>
+<table class="doxtable">
+<tr>
+<th></th><th>RZ/G2L, RZ/G2LC and RZ/G2UL </th><th>RZ/G3S </th><th>RZ/G3E  </th></tr>
+<tr>
+<td>Clock Source </td><td>P0 clock/2 or External CANFD Clock*1 </td><td>P4 clock/2 or External CANFD Clock *1 *2 </td><td>CANFD_0_pclk </td></tr>
+</table>
 <p>*1: Externally input clock to the CAN_CLK pin *2: Less than 80MHz</p>
 <p>To achieve an exact bitrate the CANFD source clock or divisor may need to be adjusted to meet the criteria in the formula below:</p>
 <div class="fragment"><div class="line">bitrate = canfd_clock_hz / ((time_segment_1 + time_segment_2 + 1) * prescalar)</div></div><!-- fragment --><p>For CANFD, the possible values for each element are as follows:</p>
@@ -1965,6 +1994,12 @@ Global configuration (global error callback channel only) </td></tr>
 txmb_merge_mode_enable</td>
 <td class="fielddoc">
 TXMB buffer marge mode configuration. </td></tr>
+<tr><td class="fieldtype">
+<a id="a643a6edb1c49ad7e4a200976323744d2"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified channel. </td></tr>
 </table>
 
 </div>
@@ -2548,7 +2583,7 @@ TXMB buffer marge mode configuration. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

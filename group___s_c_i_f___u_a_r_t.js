@@ -20,7 +20,8 @@ var group___s_c_i_f___u_a_r_t =
       [ "rts_fifo_trigger", "group___s_c_i_f___u_a_r_t.html#a04920b030d567052f3b4efb1f85753e9", null ],
       [ "uart_mode", "group___s_c_i_f___u_a_r_t.html#a1c9c1ba263a956a8224a1156d6bc03a1", null ],
       [ "flow_control", "group___s_c_i_f___u_a_r_t.html#aa761132ebac67c5cbbc3d6a505b97efe", null ],
-      [ "rs485_setting", "group___s_c_i_f___u_a_r_t.html#a9d0430a7c0d4a64847561b30630869cc", null ]
+      [ "rs485_setting", "group___s_c_i_f___u_a_r_t.html#a9d0430a7c0d4a64847561b30630869cc", null ],
+      [ "p_reg", "group___s_c_i_f___u_a_r_t.html#a5df6bde0d83e35f54de386a4f12dc4f1", null ]
     ] ],
     [ "scif_clk_src_t", "group___s_c_i_f___u_a_r_t.html#gaa31fbf8041a381d6da9c454be58ad613", [
       [ "SCIF_UART_CLOCK_INT", "group___s_c_i_f___u_a_r_t.html#ggaa31fbf8041a381d6da9c454be58ad613a51c6cc623adda130f372f24e12128e4b", null ],

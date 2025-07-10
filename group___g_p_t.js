@@ -19,6 +19,14 @@ var group___g_p_t =
       [ "interrupt_skip_source", "group___g_p_t.html#a4d31e40df7ea5e4be69fcbbe559a8213", null ],
       [ "interrupt_skip_count", "group___g_p_t.html#ac516350c554b9851aa9c66615e89b93b", null ],
       [ "interrupt_skip_adc", "group___g_p_t.html#ab5abdaac972544ec4e58df69d1f8a08f", null ],
+      [ "interrupt_skip_source_ext1", "group___g_p_t.html#aac268db75712185ba478b3c5ed097b79", null ],
+      [ "interrupt_skip_count_ext1", "group___g_p_t.html#a479e315a7b135906e0ce27d3c5a94386", null ],
+      [ "interrupt_skip_source_ext2", "group___g_p_t.html#a9fbfbda97d5f8b3f606c72c718cbbdd8", null ],
+      [ "interrupt_skip_count_ext2", "group___g_p_t.html#a955c9522ef4c9cf87a70b0bcf516f269", null ],
+      [ "interrupt_skip_func_ovf", "group___g_p_t.html#a4b4debd1f40763db56d831871a2945b9", null ],
+      [ "interrupt_skip_func_unf", "group___g_p_t.html#ad729946e1ed37ee00f2bc2af6bab15f3", null ],
+      [ "interrupt_skip_func_adc_a", "group___g_p_t.html#a13ebaa8c8b8ef831fa83e8c146d070d1", null ],
+      [ "interrupt_skip_func_adc_b", "group___g_p_t.html#a1ec36d55e823bbea753217f454fad154", null ],
       [ "gtioca_disable_setting", "group___g_p_t.html#af8c63e238ee298b4f1dac545a597eff7", null ],
       [ "gtiocb_disable_setting", "group___g_p_t.html#aa34079abac90aaced078650c626c9820", null ]
     ] ],
@@ -41,7 +49,8 @@ var group___g_p_t =
       [ "compare_match_value", "group___g_p_t.html#a675417f6a403fed9258fe678ae934171", null ],
       [ "compare_match_status", "group___g_p_t.html#a9220b2bd52f1ae03647b04e48610b8ff", null ],
       [ "p_pwm_cfg", "group___g_p_t.html#a55e5f85f57b77fd7ee5a1de7ff39da27", null ],
-      [ "gtior_setting", "group___g_p_t.html#ad8b8b467339a151f016017d175df2f9c", null ]
+      [ "gtior_setting", "group___g_p_t.html#ad8b8b467339a151f016017d175df2f9c", null ],
+      [ "p_reg", "group___g_p_t.html#a2ac23a360ba1091ffa01869c0f5cc184", null ]
     ] ],
     [ "gpt_io_pin_t", "group___g_p_t.html#gaabd4a03d16b1b4254cc44c7779f44c60", [
       [ "GPT_IO_PIN_GTIOCA", "group___g_p_t.html#ggaabd4a03d16b1b4254cc44c7779f44c60aec2d2c471241869efb57a9a48a5d0eda", null ],
@@ -137,7 +146,11 @@ var group___g_p_t =
       [ "GPT_POEG_LINK_POEG0", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943ae96e3845c4ea884a6d610a745a2c343c", null ],
       [ "GPT_POEG_LINK_POEG1", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943ae9be405a3d64f348534f67710b37658c", null ],
       [ "GPT_POEG_LINK_POEG2", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943a41eefcd7c70c85413a47d006127e112e", null ],
-      [ "GPT_POEG_LINK_POEG3", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943a7d98bec67e920f1f0f8a98ac18aaa7b5", null ]
+      [ "GPT_POEG_LINK_POEG3", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943a7d98bec67e920f1f0f8a98ac18aaa7b5", null ],
+      [ "GPT_POEG_LINK_POEG4", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943abc434a013565eec9950b3d60a0bd30f1", null ],
+      [ "GPT_POEG_LINK_POEG5", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943a469167ae05e11ca4d37b404cfe4a5dd6", null ],
+      [ "GPT_POEG_LINK_POEG6", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943aaf23a70597fc8b600d0d78bd00e86f71", null ],
+      [ "GPT_POEG_LINK_POEG7", "group___g_p_t.html#ggac13c16f82e0b7cafcdb8eb6892722943a9d9acb8fe08688b045a76c734689e8a8", null ]
     ] ],
     [ "gpt_output_disable_t", "group___g_p_t.html#ga7e57d68f5f5d9757bab01857e8252ade", [
       [ "GPT_OUTPUT_DISABLE_NONE", "group___g_p_t.html#gga7e57d68f5f5d9757bab01857e8252adeaa35910cb9d2f17f2488b4efdcb1b1fe9", null ],
@@ -169,13 +182,30 @@ var group___g_p_t =
       [ "GPT_INTERRUPT_SKIP_COUNT_4", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3ab30f5da89de49b73e5d27e376a6702d9", null ],
       [ "GPT_INTERRUPT_SKIP_COUNT_5", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a21aec2bf2296497576f4f746e83078e9", null ],
       [ "GPT_INTERRUPT_SKIP_COUNT_6", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a46d2a195d3c9ab5c94c949ce243fbc46", null ],
-      [ "GPT_INTERRUPT_SKIP_COUNT_7", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a1f87ae8bbf43b55f063cbcdbdc329d18", null ]
+      [ "GPT_INTERRUPT_SKIP_COUNT_7", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a1f87ae8bbf43b55f063cbcdbdc329d18", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_8", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3aad64c1abcd3861312ac1310bedeca374", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_9", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3abfea5fb3ec176b5f02f5c869960ae697", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_10", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a5410398268e09d88c757ff98904d033e", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_11", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3aeed173759506fdb9c273bc20b7b5392b", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_12", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a4dd07df8dc5da3b3a522f80652173fda", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_13", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a1aa4daa9db33adcabc79596b4b3d1160", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_14", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3a0cd4d728b8a33b779d343be628881eb6", null ],
+      [ "GPT_INTERRUPT_SKIP_COUNT_15", "group___g_p_t.html#ggac737ceea25e4989a9afbf47969a71ba3aa80e8a04dd9c0a8f9121d4a78df53ed9", null ]
     ] ],
     [ "gpt_interrupt_skip_adc_t", "group___g_p_t.html#ga9928e374919fa53240edaca52412beaa", [
       [ "GPT_INTERRUPT_SKIP_ADC_NONE", "group___g_p_t.html#gga9928e374919fa53240edaca52412beaaa9dee91a158ffa61d322cbbdac1ed99bd", null ],
       [ "GPT_INTERRUPT_SKIP_ADC_A", "group___g_p_t.html#gga9928e374919fa53240edaca52412beaaa43c4146c6bbaa9877dc6f1a34b6ccacf", null ],
       [ "GPT_INTERRUPT_SKIP_ADC_B", "group___g_p_t.html#gga9928e374919fa53240edaca52412beaaa9bc6d33154685e53dab457675e8161e8", null ],
       [ "GPT_INTERRUPT_SKIP_ADC_A_AND_B", "group___g_p_t.html#gga9928e374919fa53240edaca52412beaaa872ee214e5d3998245ac518730f9dde6", null ]
+    ] ],
+    [ "gpt_interrupt_skip_select_t", "group___g_p_t.html#gad297aa9dbe72334682b6171d1c972a1e", [
+      [ "GPT_INTERRUPT_SKIP_SELECT_NONE", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1ea3ea77622418bf775b58a902bb048ea43", null ],
+      [ "GPT_INTERRUPT_SKIP_SELECT_EITCNT1", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1ea44a277b45af8e450b7930233dc0d257c", null ],
+      [ "GPT_INTERRUPT_SKIP_SELECT_EITCNT2", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1eae7c09ef3e3ef643769b86c8a01c6f282", null ],
+      [ "GPT_INTERRUPT_SKIP_SELECT_EITCNT1_2", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1eaaa378a4cd2712117376a7c6921ea8569", null ],
+      [ "GPT_INTERRUPT_SKIP_SELECT_EITVTT1", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1eaed816dd30888e7b2f5659aedc7aad2e6", null ],
+      [ "GPT_INTERRUPT_SKIP_SELECT_EITVTT2", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1ea63b0ba65ae84729df0a6777f3714245c", null ],
+      [ "GPT_INTERRUPT_SKIP_SELECT_EITVTT1_2", "group___g_p_t.html#ggad297aa9dbe72334682b6171d1c972a1ea9bf899a81d74560746f108180a8e1b5c", null ]
     ] ],
     [ "gpt_pwm_output_delay_setting_t", "group___g_p_t.html#ga749be81f99469c5607a684976d9ae374", [
       [ "GPT_PWM_OUTPUT_DELAY_SETTING_0_32", "group___g_p_t.html#gga749be81f99469c5607a684976d9ae374ae167098278c50165bf61eec5987d4c53", null ],

@@ -37,7 +37,7 @@
   <td id="projectlogo"><img alt="Logo" src="logo_scaled.png"/></td>
   <td style="padding-left: 0.5em;">
    <div id="projectname">RZG Flexible Software Package Documentation
-   &#160;<span id="projectnumber">Release v3.0.0</span>
+   &#160;<span id="projectnumber">Release v3.1.0</span>
    </div>
   </td>
    <td>        <br /><div id="MSearchBox" class="MSearchBoxInactive">
@@ -303,8 +303,6 @@ Active High</li>
 </ul>
 </td><td>Active High </td><td>Enabling baud rate modulation reduces the percent error of the actual baud rate with respect to the requested baud rate. It does this by modulating the number of cycles per clock, so some bits are slightly longer than others. </td></tr>
 <tr>
-<td>Flow Control &gt; RS485 Driver Enable Port</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin port for the MPU. </td></tr>
-<tr>
 <td>Flow Control &gt; RS485 Driver Enable Pin</td><td>MCU Specific Options</td><td></td><td>Specify the flow control pin for the MPU. </td></tr>
 <tr>
 <td>Flow Control &gt; RS232C Automatic Flow Control</td><td>MCU Specific Options</td><td></td><td>Enable RS232C automatic flow control. </td></tr>
@@ -427,7 +425,7 @@ Enumerations</h2></td></tr>
 </div><table class="fieldtable">
 <tr><th colspan="3">Data Fields</th></tr>
 <tr><td class="fieldtype">
-<a id="ad2e400874b07aecf922dbc2db6b7cf42"></a>struct <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t_8semr__baudrate__bits__b">scif_baud_setting_t</a></td>
+<a id="ad2f6891b45ba1d05947f6f67b3f2944a"></a>struct <a class="el" href="group___s_c_i_f___u_a_r_t.html#structscif__baud__setting__t_8semr__baudrate__bits__b">scif_baud_setting_t</a></td>
 <td class="fieldname">
 semr_baudrate_bits_b</td>
 <td class="fielddoc">
@@ -558,6 +556,12 @@ CTS/RTS function. </td></tr>
 rs485_setting</td>
 <td class="fielddoc">
 RS-485 settings. </td></tr>
+<tr><td class="fieldtype">
+<a id="a5df6bde0d83e35f54de386a4f12dc4f1"></a>void *</td>
+<td class="fieldname">
+p_reg</td>
+<td class="fielddoc">
+Register base address for specified channel. </td></tr>
 </table>
 
 </div>
@@ -1219,7 +1223,7 @@ RS-485 settings. </td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-        <li class="footer">FSP Release v3.0.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
+        <li class="footer">FSP Release v3.1.0 User's Manual Copyright © (2025) Renesas Electronics Corporation. All Rights Reserved.</li>
   </ul>
 </div>
 </body>

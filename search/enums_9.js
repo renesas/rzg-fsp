@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['pdm_5fbuffer_5foverwrite_5fdetection_5fenable_5ft',['pdm_buffer_overwrite_detection_enable_t',['../group___p_d_m.html#gaceae8e5dc8a19d9beaae7dbb64e78742',1,'r_pdm.h']]],
   ['pdm_5fclk_5fdiv_5ft',['pdm_clk_div_t',['../group___p_d_m.html#ga2666e0193f3d484391172283f9532c71',1,'r_pdm.h']]],
   ['pdm_5fcompensation_5ffilter_5fshift_5ft',['pdm_compensation_filter_shift_t',['../group___p_d_m.html#gad6b9c09e74442b86d88d1718f30844bc',1,'r_pdm.h']]],
   ['pdm_5ferror_5ft',['pdm_error_t',['../group___p_d_m___a_p_i.html#gaf682776db13b51a982b047a8eb5fef2d',1,'r_pdm_api.h']]],
@@ -9,7 +10,10 @@ var searchData=
   ['pdm_5finterrupt_5fthreshold_5ft',['pdm_interrupt_threshold_t',['../group___p_d_m.html#gaa14fe788b2c7ab49898fb7030c7fbee8',1,'r_pdm.h']]],
   ['pdm_5flow_5fpass_5ffilter_5fshift_5ft',['pdm_low_pass_filter_shift_t',['../group___p_d_m.html#gacaad67afced89e9de93c82536d4dea0b',1,'r_pdm.h']]],
   ['pdm_5fmoving_5faverage_5fmode_5ft',['pdm_moving_average_mode_t',['../group___p_d_m.html#ga667e7ccab805f0976adc5015ecc35ecb',1,'r_pdm.h']]],
+  ['pdm_5fovervoltage_5flower_5flimit_5fenable_5ft',['pdm_overvoltage_lower_limit_enable_t',['../group___p_d_m.html#gae98d0a1699440f8d6405968bdb6a855a',1,'r_pdm.h']]],
+  ['pdm_5fovervoltage_5fupper_5flimit_5fenable_5ft',['pdm_overvoltage_upper_limit_enable_t',['../group___p_d_m.html#gaa418eb6efe7d4d243ea4af5a074b10ae',1,'r_pdm.h']]],
   ['pdm_5fpcm_5fwidth_5ft',['pdm_pcm_width_t',['../group___p_d_m___a_p_i.html#gac80768e70548497f4a739b84d0af572f',1,'r_pdm_api.h']]],
+  ['pdm_5fshort_5fcircuit_5fenable_5ft',['pdm_short_circuit_enable_t',['../group___p_d_m.html#gaf30a2284491fafaec6a835746e4001a9',1,'r_pdm.h']]],
   ['pdm_5fsinc_5ffilter_5fmode_5ft',['pdm_sinc_filter_mode_t',['../group___p_d_m.html#ga10725534d91789f15654a46786339569',1,'r_pdm.h']]],
   ['pdm_5fstate_5ft',['pdm_state_t',['../group___p_d_m___a_p_i.html#ga09df76d543b0cc6b39c5fed3bf1f4485',1,'r_pdm_api.h']]],
   ['poeg_5fgtetrg_5fnoise_5ffilter_5ft',['poeg_gtetrg_noise_filter_t',['../group___p_o_e_g___a_p_i.html#gab482b24d14d1c94f6f4ba9f5e39f8d0b',1,'r_poeg_api.h']]],

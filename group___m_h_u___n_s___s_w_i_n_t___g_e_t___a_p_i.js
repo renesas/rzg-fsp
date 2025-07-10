@@ -9,7 +9,8 @@ var group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i =
       [ "rx_ipl", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a0485d0bdeaa7786fa0a1059fa2b17172", null ],
       [ "rx_irq", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a2b7fe6de692d763e2ed654f7cb34976e", null ],
       [ "p_callback", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a7e503fe06a35c9645b5081bbfa0179ce", null ],
-      [ "p_context", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ab94275a9966c5a59c8bc8a06cbb2647c", null ]
+      [ "p_context", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#ab94275a9966c5a59c8bc8a06cbb2647c", null ],
+      [ "p_extend", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#aa9011f8bf8441d4e7b1aa08b1b863c92", null ]
     ] ],
     [ "mhu_ns_swint_get_api_t", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#structmhu__ns__swint__get__api__t", [
       [ "open", "group___m_h_u___n_s___s_w_i_n_t___g_e_t___a_p_i.html#a94dc2c05c8c387042d23a95b08a2f760", null ],

@@ -72,7 +72,8 @@ var group___i3_c___b =
       [ "abort_irq", "group___i3_c___b.html#a2e4966e32402d1d0a865f1a29ea2b980", null ],
       [ "wu_irq", "group___i3_c___b.html#afc989f369398b733654a708929df5f04", null ],
       [ "ipl", "group___i3_c___b.html#a6e93301fd2a08032aabf92fc72a196cb", null ],
-      [ "eei_ipl", "group___i3_c___b.html#afe8dc047bbc3484b976553478e8f1f53", null ]
+      [ "eei_ipl", "group___i3_c___b.html#afe8dc047bbc3484b976553478e8f1f53", null ],
+      [ "p_reg", "group___i3_c___b.html#afa59b88471c972b5ee94d70e026f8b54", null ]
     ] ],
     [ "I3C_B_ERROR_RECOVERY_VERSION_1", "group___i3_c___b.html#ga613539c3294eadbba8386934530c042d", null ],
     [ "I3C_B_ERROR_RECOVERY_VERSION_2", "group___i3_c___b.html#ga37a9316af0c201865007526dbd8ef35c", null ],
